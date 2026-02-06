@@ -42,8 +42,6 @@ export default defineEventHandler(async (event) => {
     return { received: true }
   }
 
-  console.log(`[Stripe Webhook] Received event: ${stripeEvent.type}`)
-
   try {
     switch (stripeEvent.type) {
       case 'checkout.session.completed': {
@@ -51,12 +49,9 @@ export default defineEventHandler(async (event) => {
         const clerkUserId = session.metadata?.clerkUserId
         const planId = session.metadata?.planId
 
-        console.log(`[Stripe Webhook] checkout.session.completed — clerkUserId=${clerkUserId}, planId=${planId}`)
-
         if (clerkUserId && planId) {
           const plan = PLANS.find((p) => p.id === planId)
           if (plan) {
-            console.log(`[Stripe Webhook] Syncing to APIM product: ${plan.apimProductId}`)
             await syncTierToApim(apimFetch, clerkUserId, plan.apimProductId)
           } else {
             console.warn(`[Stripe Webhook] No plan found for planId=${planId}`)
@@ -71,8 +66,6 @@ export default defineEventHandler(async (event) => {
         const subscription = stripeEvent.data.object as Stripe.Subscription
         const clerkUserId = subscription.metadata?.clerkUserId
 
-        console.log(`[Stripe Webhook] subscription.updated — clerkUserId=${clerkUserId}, status=${subscription.status}`)
-
         if (!clerkUserId) {
           console.warn('[Stripe Webhook] No clerkUserId in subscription metadata, skipping')
           break
@@ -84,19 +77,14 @@ export default defineEventHandler(async (event) => {
           // Price ID is the source of truth — portal upgrades change the price
           // but don't update our custom metadata
           const resolvedPlanId = planIdFromPriceId(priceId) || metadataPlanId
-
-          console.log(`[Stripe Webhook] Active subscription — metadataPlanId=${metadataPlanId}, priceId=${priceId}, resolvedPlanId=${resolvedPlanId}`)
-
           const plan = PLANS.find((p) => p.id === resolvedPlanId)
 
           if (plan) {
-            console.log(`[Stripe Webhook] Syncing to APIM product: ${plan.apimProductId}`)
             await syncTierToApim(apimFetch, clerkUserId, plan.apimProductId)
           } else {
-            console.warn(`[Stripe Webhook] Could not resolve plan — metadataPlanId=${metadataPlanId}, priceId=${priceId}`)
+            console.warn(`[Stripe Webhook] Could not resolve plan — priceId=${priceId}, metadataPlanId=${metadataPlanId}`)
           }
         } else {
-          console.log(`[Stripe Webhook] Subscription not active (${subscription.status}), downgrading to free`)
           await syncTierToApim(apimFetch, clerkUserId, 'free-tier')
         }
         break
@@ -105,8 +93,6 @@ export default defineEventHandler(async (event) => {
       case 'customer.subscription.deleted': {
         const subscription = stripeEvent.data.object as Stripe.Subscription
         const clerkUserId = subscription.metadata?.clerkUserId
-
-        console.log(`[Stripe Webhook] subscription.deleted — clerkUserId=${clerkUserId}`)
 
         if (clerkUserId) {
           await syncTierToApim(apimFetch, clerkUserId, 'free-tier')
@@ -118,14 +104,9 @@ export default defineEventHandler(async (event) => {
 
       case 'invoice.payment_failed': {
         const invoice = stripeEvent.data.object as Stripe.Invoice
-        console.warn(
-          `[Stripe Webhook] Payment failed for customer ${invoice.customer}`,
-        )
+        console.warn(`[Stripe Webhook] Payment failed for customer ${invoice.customer}`)
         break
       }
-
-      default:
-        console.log(`[Stripe Webhook] Unhandled event type: ${stripeEvent.type}`)
     }
   } catch (err) {
     console.error('[Stripe Webhook] Handler error:', err)
@@ -164,13 +145,9 @@ async function syncTierToApim(
     }>
   }
 
-  console.log(`[Stripe Webhook] syncTierToApim — user=${clerkUserId}, product=${apimProductId}`)
-
   const result = await apimFetch<SubscriptionListResponse>(
     `/users/${clerkUserId}/subscriptions`,
   )
-
-  console.log(`[Stripe Webhook] Found ${result.value.length} APIM subscriptions`)
 
   const activeSub = result.value.find(
     (s) => s.properties.state === 'active',
@@ -183,8 +160,6 @@ async function syncTierToApim(
     return
   }
 
-  console.log(`[Stripe Webhook] PATCHing APIM subscription ${activeSub.name} → /products/${apimProductId}`)
-
   await apimFetch(`/subscriptions/${activeSub.name}`, {
     method: 'PATCH',
     body: JSON.stringify({
@@ -193,8 +168,4 @@ async function syncTierToApim(
       },
     }),
   })
-
-  console.log(
-    `[Stripe Webhook] Successfully synced APIM tier for ${clerkUserId} → ${apimProductId}`,
-  )
 }
