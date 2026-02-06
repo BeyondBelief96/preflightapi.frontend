@@ -1,0 +1,7 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Disallow: /dashboard/
+Disallow: /sign-in
+Disallow: /sign-up
+
+Sitemap: https://preflightapi.com/sitemap.xml

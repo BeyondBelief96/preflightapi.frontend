@@ -1,0 +1,5746 @@
+{
+  "x-generator": "NSwag v14.6.3.0 (NJsonSchema v11.5.2.0 (Newtonsoft.Json v13.0.0.0))",
+  "openapi": "3.0.0",
+  "info": {
+    "title": "PreflightApi API",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "https://preflightapi-eastus-web-api-test-bmfecfftf6bgemdf.eastus-01.azurewebsites.net"
+    }
+  ],
+  "paths": {
+    "/api/v1/airports": {
+      "get": {
+        "tags": [
+          "Airport"
+        ],
+        "operationId": "Airport_GetAllAirports",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 3
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfAirportDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/airports/search": {
+      "get": {
+        "tags": [
+          "Airport"
+        ],
+        "operationId": "Airport_SearchAirports",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AirportDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/airports/{icaoCodeOrIdent}": {
+      "get": {
+        "tags": [
+          "Airport"
+        ],
+        "operationId": "Airport_GetAirportByIcaoCodeOrIdent",
+        "parameters": [
+          {
+            "name": "icaoCodeOrIdent",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AirportDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/airports/state/{stateCode}": {
+      "get": {
+        "tags": [
+          "Airport"
+        ],
+        "operationId": "Airport_GetAirportsByState",
+        "parameters": [
+          {
+            "name": "stateCode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 3
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfAirportDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/airports/states/{stateCodes}": {
+      "get": {
+        "tags": [
+          "Airport"
+        ],
+        "operationId": "Airport_GetAirportsByStates",
+        "parameters": [
+          {
+            "name": "stateCodes",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 3
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfAirportDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/airports/batch/{icaoCodesOrIdents}": {
+      "get": {
+        "tags": [
+          "Airport"
+        ],
+        "operationId": "Airport_GetAirportsByIcaoCodesOrIdents",
+        "parameters": [
+          {
+            "name": "icaoCodesOrIdents",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AirportDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/airports/prefix/{prefix}": {
+      "get": {
+        "tags": [
+          "Airport"
+        ],
+        "operationId": "Airport_GetAirportsByPrefix",
+        "parameters": [
+          {
+            "name": "prefix",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 3
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfAirportDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/airports/{icaoCodeOrIdent}/runways": {
+      "get": {
+        "tags": [
+          "Airport"
+        ],
+        "operationId": "Airport_GetRunwaysByAirport",
+        "parameters": [
+          {
+            "name": "icaoCodeOrIdent",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RunwayDto"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/airport-diagrams/{icaoCodeOrIdent}": {
+      "get": {
+        "tags": [
+          "AirportDiagram"
+        ],
+        "operationId": "AirportDiagram_GetAirportDiagrams",
+        "parameters": [
+          {
+            "name": "icaoCodeOrIdent",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AirportDiagramsResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/airsigmets": {
+      "get": {
+        "tags": [
+          "Airsigmet"
+        ],
+        "operationId": "Airsigmet_GetAllAirsigmets",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AirsigmetDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/airsigmets/hazard/{hazardType}": {
+      "get": {
+        "tags": [
+          "Airsigmet"
+        ],
+        "operationId": "Airsigmet_GetAirsigmetsByHazardType",
+        "parameters": [
+          {
+            "name": "hazardType",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AirsigmetDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/airsigmets/convective": {
+      "get": {
+        "tags": [
+          "Airsigmet"
+        ],
+        "operationId": "Airsigmet_GetConvectiveAirsigmets",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AirsigmetDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/airsigmets/ice": {
+      "get": {
+        "tags": [
+          "Airsigmet"
+        ],
+        "operationId": "Airsigmet_GetIceAirsigmets",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AirsigmetDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/airsigmets/turb": {
+      "get": {
+        "tags": [
+          "Airsigmet"
+        ],
+        "operationId": "Airsigmet_GetTurbAirsigmets",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AirsigmetDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/airsigmets/ifr": {
+      "get": {
+        "tags": [
+          "Airsigmet"
+        ],
+        "operationId": "Airsigmet_GetIfrAirsigmets",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AirsigmetDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/airsigmets/mtn-obscn": {
+      "get": {
+        "tags": [
+          "Airsigmet"
+        ],
+        "operationId": "Airsigmet_GetMtnObscnAirsigmets",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AirsigmetDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/airspaces/by-classes": {
+      "get": {
+        "tags": [
+          "Airspace"
+        ],
+        "operationId": "Airspace_GetByClasses",
+        "parameters": [
+          {
+            "name": "classes",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 3
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfAirspaceDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/airspaces/by-cities": {
+      "get": {
+        "tags": [
+          "Airspace"
+        ],
+        "operationId": "Airspace_GetByCity",
+        "parameters": [
+          {
+            "name": "cities",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 3
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfAirspaceDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/airspaces/by-states": {
+      "get": {
+        "tags": [
+          "Airspace"
+        ],
+        "operationId": "Airspace_GetByState",
+        "parameters": [
+          {
+            "name": "states",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 3
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfAirspaceDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/airspaces/special-use/by-type-codes": {
+      "get": {
+        "tags": [
+          "Airspace"
+        ],
+        "operationId": "Airspace_GetByTypeCode",
+        "parameters": [
+          {
+            "name": "typeCodes",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 3
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfSpecialUseAirspaceDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/airspaces/by-icao-or-idents": {
+      "get": {
+        "tags": [
+          "Airspace"
+        ],
+        "operationId": "Airspace_GetByIcaoOrIdent",
+        "parameters": [
+          {
+            "name": "icaoOrIdents",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AirspaceDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/airspaces/by-global-ids": {
+      "get": {
+        "tags": [
+          "Airspace"
+        ],
+        "operationId": "Airspace_GetByGlobalIds",
+        "parameters": [
+          {
+            "name": "globalIds",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AirspaceDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/airspaces/special-use/by-global-ids": {
+      "get": {
+        "tags": [
+          "Airspace"
+        ],
+        "operationId": "Airspace_GetSpecialUseByGlobalIds",
+        "parameters": [
+          {
+            "name": "globalIds",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SpecialUseAirspaceDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/chart-supplements/{icaoCodeOrIdent}": {
+      "get": {
+        "tags": [
+          "ChartSupplement"
+        ],
+        "operationId": "ChartSupplement_GetChartSupplementUrl",
+        "parameters": [
+          {
+            "name": "icaoCodeOrIdent",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChartSupplementUrlDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/communication-frequencies/{servicedFacility}": {
+      "get": {
+        "tags": [
+          "CommunicationFrequency"
+        ],
+        "operationId": "CommunicationFrequency_GetFrequenciesByServicedFacility",
+        "parameters": [
+          {
+            "name": "servicedFacility",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 3
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfCommunicationFrequencyDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/g-airmets": {
+      "get": {
+        "tags": [
+          "GAirmet"
+        ],
+        "operationId": "GAirmet_GetAllGAirmets",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GAirmetDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/g-airmets/{product}": {
+      "get": {
+        "tags": [
+          "GAirmet"
+        ],
+        "operationId": "GAirmet_GetGAirmetsByProduct",
+        "parameters": [
+          {
+            "name": "product",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GAirmetDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/g-airmets/sierra": {
+      "get": {
+        "tags": [
+          "GAirmet"
+        ],
+        "operationId": "GAirmet_GetSierraGAirmets",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GAirmetDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/g-airmets/tango": {
+      "get": {
+        "tags": [
+          "GAirmet"
+        ],
+        "operationId": "GAirmet_GetTangoGAirmets",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GAirmetDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/g-airmets/zulu": {
+      "get": {
+        "tags": [
+          "GAirmet"
+        ],
+        "operationId": "GAirmet_GetZuluGAirmets",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GAirmetDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/g-airmets/hazard/{hazardType}": {
+      "get": {
+        "tags": [
+          "GAirmet"
+        ],
+        "operationId": "GAirmet_GetGAirmetsByHazardType",
+        "parameters": [
+          {
+            "name": "hazardType",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GAirmetDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/g-airmets/hazard/mt-obsc": {
+      "get": {
+        "tags": [
+          "GAirmet"
+        ],
+        "operationId": "GAirmet_GetMtObscGAirmets",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GAirmetDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/g-airmets/hazard/ifr": {
+      "get": {
+        "tags": [
+          "GAirmet"
+        ],
+        "operationId": "GAirmet_GetIfrGAirmets",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GAirmetDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/g-airmets/hazard/turb-lo": {
+      "get": {
+        "tags": [
+          "GAirmet"
+        ],
+        "operationId": "GAirmet_GetTurbLoGAirmets",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GAirmetDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/g-airmets/hazard/turb-hi": {
+      "get": {
+        "tags": [
+          "GAirmet"
+        ],
+        "operationId": "GAirmet_GetTurbHiGAirmets",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GAirmetDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/g-airmets/hazard/llws": {
+      "get": {
+        "tags": [
+          "GAirmet"
+        ],
+        "operationId": "GAirmet_GetLlwsGAirmets",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GAirmetDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/g-airmets/hazard/sfc-wind": {
+      "get": {
+        "tags": [
+          "GAirmet"
+        ],
+        "operationId": "GAirmet_GetSfcWindGAirmets",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GAirmetDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/g-airmets/hazard/ice": {
+      "get": {
+        "tags": [
+          "GAirmet"
+        ],
+        "operationId": "GAirmet_GetIceGAirmets",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GAirmetDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/g-airmets/hazard/fzlvl": {
+      "get": {
+        "tags": [
+          "GAirmet"
+        ],
+        "operationId": "GAirmet_GetFzlvlGAirmets",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GAirmetDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/g-airmets/hazard/m-fzlvl": {
+      "get": {
+        "tags": [
+          "GAirmet"
+        ],
+        "operationId": "GAirmet_GetMFzlvlGAirmets",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GAirmetDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/metars/{icaoCodeOrIdent}": {
+      "get": {
+        "tags": [
+          "Metar"
+        ],
+        "operationId": "Metar_GetMetarForAirport",
+        "parameters": [
+          {
+            "name": "icaoCodeOrIdent",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetarDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/metars/state/{stateCode}": {
+      "get": {
+        "tags": [
+          "Metar"
+        ],
+        "operationId": "Metar_GetMetarsByState",
+        "parameters": [
+          {
+            "name": "stateCode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 3
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfMetarDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/metars/states/{stateCodes}": {
+      "get": {
+        "tags": [
+          "Metar"
+        ],
+        "operationId": "Metar_GetMetarsByStates",
+        "parameters": [
+          {
+            "name": "stateCodes",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 3
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfMetarDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/navlog/calculate": {
+      "post": {
+        "tags": [
+          "Navlog"
+        ],
+        "operationId": "Navlog_CalculateNavlog",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NavlogRequestDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NavlogResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/navlog/bearing-and-distance": {
+      "post": {
+        "tags": [
+          "Navlog"
+        ],
+        "operationId": "Navlog_CalculateBearingAndDistance",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BearingAndDistanceRequestDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BearingAndDistanceResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/navlog/winds-aloft/{forecast}": {
+      "get": {
+        "tags": [
+          "Navlog"
+        ],
+        "operationId": "Navlog_GetWindsAloftData",
+        "parameters": [
+          {
+            "name": "forecast",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WindsAloftDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/notams/{icaoCodeOrIdent}": {
+      "get": {
+        "tags": [
+          "Notam"
+        ],
+        "operationId": "Notam_GetNotamsForAirport",
+        "parameters": [
+          {
+            "name": "icaoCodeOrIdent",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotamResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/notams/radius": {
+      "get": {
+        "tags": [
+          "Notam"
+        ],
+        "operationId": "Notam_GetNotamsByRadius",
+        "parameters": [
+          {
+            "name": "latitude",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "radiusNm",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "double"
+            },
+            "x-position": 3
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotamResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/notams/route": {
+      "post": {
+        "tags": [
+          "Notam"
+        ],
+        "operationId": "Notam_GetNotamsForRoute",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NotamQueryByRouteRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotamResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/obstacles/search": {
+      "get": {
+        "tags": [
+          "Obstacle"
+        ],
+        "operationId": "Obstacle_SearchNearby",
+        "parameters": [
+          {
+            "name": "lat",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "decimal"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "lon",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "decimal"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "radiusNm",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "default": 5.0
+            },
+            "x-position": 3
+          },
+          {
+            "name": "minHeightAgl",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 6
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfObstacleDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/obstacles/state/{stateCode}": {
+      "get": {
+        "tags": [
+          "Obstacle"
+        ],
+        "operationId": "Obstacle_GetByState",
+        "parameters": [
+          {
+            "name": "stateCode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "minHeightAgl",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 4
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfObstacleDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/obstacles/{oasNumber}": {
+      "get": {
+        "tags": [
+          "Obstacle"
+        ],
+        "operationId": "Obstacle_GetByOasNumber",
+        "parameters": [
+          {
+            "name": "oasNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObstacleDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/obstacles/by-oas-numbers": {
+      "post": {
+        "tags": [
+          "Obstacle"
+        ],
+        "operationId": "Obstacle_GetByOasNumbers",
+        "requestBody": {
+          "x-name": "oasNumbers",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ObstacleDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/obstacles/bbox": {
+      "get": {
+        "tags": [
+          "Obstacle"
+        ],
+        "operationId": "Obstacle_GetByBoundingBox",
+        "parameters": [
+          {
+            "name": "minLat",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "decimal"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "maxLat",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "decimal"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "minLon",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "decimal"
+            },
+            "x-position": 3
+          },
+          {
+            "name": "maxLon",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "decimal"
+            },
+            "x-position": 4
+          },
+          {
+            "name": "minHeightAgl",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 6
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 7
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfObstacleDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/performance/crosswind/{icaoCodeOrIdent}": {
+      "get": {
+        "tags": [
+          "Performance"
+        ],
+        "operationId": "Performance_GetCrosswindForAirport",
+        "parameters": [
+          {
+            "name": "icaoCodeOrIdent",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AirportCrosswindResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/performance/crosswind/calculate": {
+      "post": {
+        "tags": [
+          "Performance"
+        ],
+        "operationId": "Performance_CalculateCrosswind",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrosswindCalculationRequestDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrosswindCalculationResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/performance/density-altitude/{icaoCodeOrIdent}": {
+      "get": {
+        "tags": [
+          "Performance"
+        ],
+        "operationId": "Performance_GetDensityAltitudeForAirport",
+        "parameters": [
+          {
+            "name": "icaoCodeOrIdent",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "TemperatureCelsiusOverride",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "AltimeterInHgOverride",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "nullable": true
+            },
+            "x-position": 3
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DensityAltitudeResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/performance/density-altitude/calculate": {
+      "post": {
+        "tags": [
+          "Performance"
+        ],
+        "operationId": "Performance_CalculateDensityAltitude",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DensityAltitudeRequestDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DensityAltitudeResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/pireps": {
+      "get": {
+        "tags": [
+          "Pirep"
+        ],
+        "operationId": "Pirep_GetAllPireps",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PirepDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tafs/{icaoCodeOrIdent}": {
+      "get": {
+        "tags": [
+          "Taf"
+        ],
+        "operationId": "Taf_GetTafByIcaoCodeOrIdent",
+        "parameters": [
+          {
+            "name": "icaoCodeOrIdent",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TafDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PaginatedResponseOfAirportDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AirportDto"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationMetadata"
+          }
+        }
+      },
+      "AirportDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "siteNo": {
+            "type": "string"
+          },
+          "icaoId": {
+            "type": "string",
+            "nullable": true
+          },
+          "arptId": {
+            "type": "string",
+            "nullable": true
+          },
+          "arptName": {
+            "type": "string",
+            "nullable": true
+          },
+          "siteTypeCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "stateCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "countryCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "stateName": {
+            "type": "string",
+            "nullable": true
+          },
+          "latDecimal": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "longDecimal": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "elev": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "magVarn": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "magHemis": {
+            "type": "string",
+            "nullable": true
+          },
+          "chartName": {
+            "type": "string",
+            "nullable": true
+          },
+          "arptStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "fuelTypes": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastInspection": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lastInfoResponse": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "customsFlag": {
+            "type": "string",
+            "nullable": true
+          },
+          "lndgRightsFlag": {
+            "type": "string",
+            "nullable": true
+          },
+          "jointUseFlag": {
+            "type": "string",
+            "nullable": true
+          },
+          "milLndgFlag": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactTitle": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactName": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactAddress1": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactAddress2": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactCity": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactState": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactZipCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactZipPlusFour": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactPhoneNumber": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "PaginationMetadata": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "nextCursor": {
+            "type": "string",
+            "nullable": true
+          },
+          "hasMore": {
+            "type": "boolean"
+          },
+          "limit": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ApiErrorResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "details": {
+            "type": "string",
+            "nullable": true
+          },
+          "validationErrors": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "timestamp": {
+            "type": "string"
+          },
+          "traceId": {
+            "type": "string",
+            "nullable": true
+          },
+          "path": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "RunwayDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "runwayId": {
+            "type": "string"
+          },
+          "length": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "width": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "surfaceType": {
+            "$ref": "#/components/schemas/RunwaySurfaceType"
+          },
+          "surfaceTreatment": {
+            "$ref": "#/components/schemas/RunwaySurfaceTreatment"
+          },
+          "pavementClassification": {
+            "type": "string",
+            "nullable": true
+          },
+          "edgeLightIntensity": {
+            "$ref": "#/components/schemas/RunwayEdgeLightIntensity"
+          },
+          "weightBearingSingleWheel": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "weightBearingDualWheel": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "weightBearingDualTandem": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "weightBearingDoubleDualTandem": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "runwayEnds": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RunwayEndDto"
+            }
+          }
+        }
+      },
+      "RunwaySurfaceType": {
+        "type": "string",
+        "description": "",
+        "x-enumNames": [
+          "Unknown",
+          "Concrete",
+          "Asphalt",
+          "Snow",
+          "Ice",
+          "Mats",
+          "Treated",
+          "Gravel",
+          "Turf",
+          "Dirt",
+          "PartiallyPaved",
+          "Rooftop",
+          "Water",
+          "Aluminum",
+          "Brick",
+          "Caliche",
+          "Coral",
+          "Deck",
+          "Grass",
+          "Metal",
+          "NonStandard",
+          "OilChip",
+          "Psp",
+          "Sand",
+          "Sod",
+          "Steel",
+          "Wood"
+        ],
+        "enum": [
+          "Unknown",
+          "Concrete",
+          "Asphalt",
+          "Snow",
+          "Ice",
+          "Mats",
+          "Treated",
+          "Gravel",
+          "Turf",
+          "Dirt",
+          "PartiallyPaved",
+          "Rooftop",
+          "Water",
+          "Aluminum",
+          "Brick",
+          "Caliche",
+          "Coral",
+          "Deck",
+          "Grass",
+          "Metal",
+          "NonStandard",
+          "OilChip",
+          "Psp",
+          "Sand",
+          "Sod",
+          "Steel",
+          "Wood"
+        ]
+      },
+      "RunwaySurfaceTreatment": {
+        "type": "string",
+        "description": "",
+        "x-enumNames": [
+          "Unknown",
+          "None",
+          "Grooved",
+          "PorousFrictionCourse",
+          "AggregateFrictionSealCoat",
+          "RubberizedFrictionSealCoat",
+          "WireComb"
+        ],
+        "enum": [
+          "Unknown",
+          "None",
+          "Grooved",
+          "PorousFrictionCourse",
+          "AggregateFrictionSealCoat",
+          "RubberizedFrictionSealCoat",
+          "WireComb"
+        ]
+      },
+      "RunwayEdgeLightIntensity": {
+        "type": "string",
+        "description": "",
+        "x-enumNames": [
+          "Unknown",
+          "None",
+          "High",
+          "Medium",
+          "Low",
+          "Flood",
+          "NonStandard",
+          "Perimeter",
+          "Strobe"
+        ],
+        "enum": [
+          "Unknown",
+          "None",
+          "High",
+          "Medium",
+          "Low",
+          "Flood",
+          "NonStandard",
+          "Perimeter",
+          "Strobe"
+        ]
+      },
+      "RunwayEndDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "runwayEndId": {
+            "type": "string"
+          },
+          "trueAlignment": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "approachType": {
+            "$ref": "#/components/schemas/InstrumentApproachType"
+          },
+          "rightHandTrafficPattern": {
+            "type": "boolean"
+          },
+          "markingsType": {
+            "$ref": "#/components/schemas/RunwayMarkingsType"
+          },
+          "markingsCondition": {
+            "$ref": "#/components/schemas/RunwayMarkingsCondition"
+          },
+          "latitude": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "longitude": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "elevation": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "thresholdCrossingHeight": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "visualGlidePathAngle": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "displacedThresholdLatitude": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "displacedThresholdLongitude": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "displacedThresholdElevation": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "displacedThresholdLength": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "touchdownZoneElevation": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "visualGlideSlopeIndicator": {
+            "$ref": "#/components/schemas/VisualGlideSlopeIndicatorType"
+          },
+          "runwayVisualRangeEquipment": {
+            "type": "string",
+            "nullable": true
+          },
+          "runwayVisibilityValueEquipment": {
+            "type": "boolean"
+          },
+          "approachLightSystem": {
+            "$ref": "#/components/schemas/ApproachLightSystemType"
+          },
+          "hasRunwayEndLights": {
+            "type": "boolean"
+          },
+          "hasCenterlineLights": {
+            "type": "boolean"
+          },
+          "hasTouchdownZoneLights": {
+            "type": "boolean"
+          },
+          "controllingObjectDescription": {
+            "type": "string",
+            "nullable": true
+          },
+          "controllingObjectMarking": {
+            "$ref": "#/components/schemas/ControllingObjectMarking"
+          },
+          "controllingObjectClearanceSlope": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "controllingObjectHeightAboveRunway": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "controllingObjectDistanceFromRunway": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "controllingObjectCenterlineOffset": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "InstrumentApproachType": {
+        "type": "string",
+        "description": "",
+        "x-enumNames": [
+          "Unknown",
+          "None",
+          "Ils",
+          "Mls",
+          "Sdf",
+          "Localizer",
+          "Lda",
+          "Ismls",
+          "IlsDme",
+          "SdfDme",
+          "LocDme",
+          "LocGs",
+          "LdaDme"
+        ],
+        "enum": [
+          "Unknown",
+          "None",
+          "Ils",
+          "Mls",
+          "Sdf",
+          "Localizer",
+          "Lda",
+          "Ismls",
+          "IlsDme",
+          "SdfDme",
+          "LocDme",
+          "LocGs",
+          "LdaDme"
+        ]
+      },
+      "RunwayMarkingsType": {
+        "type": "string",
+        "description": "",
+        "x-enumNames": [
+          "Unknown",
+          "None",
+          "PrecisionInstrument",
+          "NonPrecisionInstrument",
+          "Basic",
+          "NumbersOnly",
+          "NonStandard",
+          "Buoys",
+          "Stol"
+        ],
+        "enum": [
+          "Unknown",
+          "None",
+          "PrecisionInstrument",
+          "NonPrecisionInstrument",
+          "Basic",
+          "NumbersOnly",
+          "NonStandard",
+          "Buoys",
+          "Stol"
+        ]
+      },
+      "RunwayMarkingsCondition": {
+        "type": "string",
+        "description": "",
+        "x-enumNames": [
+          "Unknown",
+          "Good",
+          "Fair",
+          "Poor"
+        ],
+        "enum": [
+          "Unknown",
+          "Good",
+          "Fair",
+          "Poor"
+        ]
+      },
+      "VisualGlideSlopeIndicatorType": {
+        "type": "string",
+        "description": "",
+        "x-enumNames": [
+          "Unknown",
+          "None",
+          "Savasi2BoxLeft",
+          "Savasi2BoxRight",
+          "Vasi2BoxLeft",
+          "Vasi2BoxRight",
+          "Vasi4BoxLeft",
+          "Vasi4BoxRight",
+          "Vasi6BoxLeft",
+          "Vasi6BoxRight",
+          "Vasi12Box",
+          "Vasi16Box",
+          "Papi2LightLeft",
+          "Papi2LightRight",
+          "Papi4LightLeft",
+          "Papi4LightRight",
+          "TriColorLeft",
+          "TriColorRight",
+          "PulsatingLeft",
+          "PulsatingRight",
+          "PanelLeft",
+          "PanelRight",
+          "NonStandard",
+          "PrivateUse",
+          "NonSpecificVasi"
+        ],
+        "enum": [
+          "Unknown",
+          "None",
+          "Savasi2BoxLeft",
+          "Savasi2BoxRight",
+          "Vasi2BoxLeft",
+          "Vasi2BoxRight",
+          "Vasi4BoxLeft",
+          "Vasi4BoxRight",
+          "Vasi6BoxLeft",
+          "Vasi6BoxRight",
+          "Vasi12Box",
+          "Vasi16Box",
+          "Papi2LightLeft",
+          "Papi2LightRight",
+          "Papi4LightLeft",
+          "Papi4LightRight",
+          "TriColorLeft",
+          "TriColorRight",
+          "PulsatingLeft",
+          "PulsatingRight",
+          "PanelLeft",
+          "PanelRight",
+          "NonStandard",
+          "PrivateUse",
+          "NonSpecificVasi"
+        ]
+      },
+      "ApproachLightSystemType": {
+        "type": "string",
+        "description": "",
+        "x-enumNames": [
+          "Unknown",
+          "None",
+          "AirForceOverrun",
+          "Alsaf",
+          "Alsf1",
+          "Alsf2",
+          "Mals",
+          "Malsf",
+          "Malsr",
+          "Rail",
+          "Sals",
+          "Salsf",
+          "Ssals",
+          "Ssalf",
+          "Ssalr",
+          "Odals",
+          "Rlls",
+          "MilitaryOverrun",
+          "NonStandard"
+        ],
+        "enum": [
+          "Unknown",
+          "None",
+          "AirForceOverrun",
+          "Alsaf",
+          "Alsf1",
+          "Alsf2",
+          "Mals",
+          "Malsf",
+          "Malsr",
+          "Rail",
+          "Sals",
+          "Salsf",
+          "Ssals",
+          "Ssalf",
+          "Ssalr",
+          "Odals",
+          "Rlls",
+          "MilitaryOverrun",
+          "NonStandard"
+        ]
+      },
+      "ControllingObjectMarking": {
+        "type": "string",
+        "description": "",
+        "x-enumNames": [
+          "Unknown",
+          "None",
+          "Marked",
+          "Lighted",
+          "MarkedAndLighted"
+        ],
+        "enum": [
+          "Unknown",
+          "None",
+          "Marked",
+          "Lighted",
+          "MarkedAndLighted"
+        ]
+      },
+      "AirportDiagramsResponseDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "airportName": {
+            "type": "string"
+          },
+          "icaoIdent": {
+            "type": "string",
+            "nullable": true
+          },
+          "airportIdent": {
+            "type": "string",
+            "nullable": true
+          },
+          "diagrams": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AirportDiagramDto"
+            }
+          }
+        }
+      },
+      "AirportDiagramDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "chartName": {
+            "type": "string"
+          },
+          "pdfUrl": {
+            "type": "string"
+          }
+        }
+      },
+      "AirsigmetDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "rawText": {
+            "type": "string",
+            "nullable": true
+          },
+          "validTimeFrom": {
+            "type": "string",
+            "nullable": true
+          },
+          "validTimeTo": {
+            "type": "string",
+            "nullable": true
+          },
+          "altitude": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/AirsigmetAltitude"
+              }
+            ]
+          },
+          "movementDirDegrees": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "movementSpeedKt": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "hazard": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/AirsigmetHazardDto"
+              }
+            ]
+          },
+          "airsigmetType": {
+            "type": "string",
+            "nullable": true
+          },
+          "areas": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/AirsigmetArea"
+            }
+          }
+        }
+      },
+      "AirsigmetAltitude": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "minFtMsl": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "maxFtMsl": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "AirsigmetHazardDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/AirsigmetHazardType"
+              }
+            ]
+          },
+          "severity": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "AirsigmetHazardType": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "CONVECTIVE",
+          "ICE",
+          "TURB",
+          "IFR",
+          "MTN_OBSCN"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "AirsigmetArea": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "numPoints": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "points": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AirsigmetPoint"
+            }
+          }
+        }
+      },
+      "AirsigmetPoint": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "longitude": {
+            "type": "number",
+            "format": "float"
+          },
+          "latitude": {
+            "type": "number",
+            "format": "float"
+          }
+        }
+      },
+      "PaginatedResponseOfAirspaceDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AirspaceDto"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationMetadata"
+          }
+        }
+      },
+      "AirspaceDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "globalId": {
+            "type": "string",
+            "nullable": true
+          },
+          "ident": {
+            "type": "string",
+            "nullable": true
+          },
+          "icaoId": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "upperDesc": {
+            "type": "string",
+            "nullable": true
+          },
+          "upperVal": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "upperUom": {
+            "type": "string",
+            "nullable": true
+          },
+          "upperCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "lowerDesc": {
+            "type": "string",
+            "nullable": true
+          },
+          "lowerVal": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "lowerUom": {
+            "type": "string",
+            "nullable": true
+          },
+          "lowerCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "typeCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "localType": {
+            "type": "string",
+            "nullable": true
+          },
+          "class": {
+            "type": "string",
+            "nullable": true
+          },
+          "milCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "commName": {
+            "type": "string",
+            "nullable": true
+          },
+          "level": {
+            "type": "string",
+            "nullable": true
+          },
+          "sector": {
+            "type": "string",
+            "nullable": true
+          },
+          "onshore": {
+            "type": "string",
+            "nullable": true
+          },
+          "exclusion": {
+            "type": "string",
+            "nullable": true
+          },
+          "wkhrCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "wkhrRmk": {
+            "type": "string",
+            "nullable": true
+          },
+          "dst": {
+            "type": "string",
+            "nullable": true
+          },
+          "gmtOffset": {
+            "type": "string",
+            "nullable": true
+          },
+          "contAgent": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "state": {
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          },
+          "adhpId": {
+            "type": "string",
+            "nullable": true
+          },
+          "geometry": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/GeoJsonGeometry"
+              }
+            ]
+          }
+        }
+      },
+      "GeoJsonGeometry": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "coordinates": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "number",
+                  "format": "double"
+                }
+              }
+            }
+          }
+        }
+      },
+      "PaginatedResponseOfSpecialUseAirspaceDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SpecialUseAirspaceDto"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationMetadata"
+          }
+        }
+      },
+      "SpecialUseAirspaceDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "globalId": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "typeCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "class": {
+            "type": "string",
+            "nullable": true
+          },
+          "upperDesc": {
+            "type": "string",
+            "nullable": true
+          },
+          "upperVal": {
+            "type": "string",
+            "nullable": true
+          },
+          "upperUom": {
+            "type": "string",
+            "nullable": true
+          },
+          "upperCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "lowerDesc": {
+            "type": "string",
+            "nullable": true
+          },
+          "lowerVal": {
+            "type": "string",
+            "nullable": true
+          },
+          "lowerUom": {
+            "type": "string",
+            "nullable": true
+          },
+          "lowerCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "levelCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "state": {
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          },
+          "contAgent": {
+            "type": "string",
+            "nullable": true
+          },
+          "commName": {
+            "type": "string",
+            "nullable": true
+          },
+          "sector": {
+            "type": "string",
+            "nullable": true
+          },
+          "onshore": {
+            "type": "string",
+            "nullable": true
+          },
+          "exclusion": {
+            "type": "string",
+            "nullable": true
+          },
+          "timesOfUse": {
+            "type": "string",
+            "nullable": true
+          },
+          "gmtOffset": {
+            "type": "string",
+            "nullable": true
+          },
+          "dstCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "remarks": {
+            "type": "string",
+            "nullable": true
+          },
+          "geometry": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/GeoJsonGeometry"
+              }
+            ]
+          }
+        }
+      },
+      "ChartSupplementUrlDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "pdfUrl": {
+            "type": "string"
+          }
+        }
+      },
+      "PaginatedResponseOfCommunicationFrequencyDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CommunicationFrequencyDto"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationMetadata"
+          }
+        }
+      },
+      "CommunicationFrequencyDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "facilityCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "effectiveDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "facilityName": {
+            "type": "string",
+            "nullable": true
+          },
+          "facilityType": {
+            "type": "string"
+          },
+          "artccOrFssId": {
+            "type": "string",
+            "nullable": true
+          },
+          "cpdlc": {
+            "type": "string",
+            "nullable": true
+          },
+          "towerHours": {
+            "type": "string",
+            "nullable": true
+          },
+          "servicedFacility": {
+            "type": "string"
+          },
+          "servicedFacilityName": {
+            "type": "string",
+            "nullable": true
+          },
+          "servicedSiteType": {
+            "type": "string",
+            "nullable": true
+          },
+          "latitude": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "longitude": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "servicedCity": {
+            "type": "string",
+            "nullable": true
+          },
+          "servicedState": {
+            "type": "string",
+            "nullable": true
+          },
+          "servicedCountry": {
+            "type": "string",
+            "nullable": true
+          },
+          "towerOrCommCall": {
+            "type": "string",
+            "nullable": true
+          },
+          "primaryApproachRadioCall": {
+            "type": "string",
+            "nullable": true
+          },
+          "frequency": {
+            "type": "string",
+            "nullable": true
+          },
+          "sectorization": {
+            "type": "string",
+            "nullable": true
+          },
+          "frequencyUse": {
+            "type": "string",
+            "nullable": true
+          },
+          "remark": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "GAirmetDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "receiptTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "issueTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expireTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "validTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "product": {
+            "$ref": "#/components/schemas/GAirmetProduct"
+          },
+          "tag": {
+            "type": "string",
+            "nullable": true
+          },
+          "forecastHour": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hazard": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/GAirmetHazardType"
+              }
+            ]
+          },
+          "hazardSeverity": {
+            "type": "string",
+            "nullable": true
+          },
+          "geometryType": {
+            "type": "string",
+            "nullable": true
+          },
+          "dueTo": {
+            "type": "string",
+            "nullable": true
+          },
+          "altitudes": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/GAirmetAltitude"
+            }
+          },
+          "area": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/GAirmetArea"
+              }
+            ]
+          }
+        }
+      },
+      "GAirmetProduct": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "SIERRA",
+          "TANGO",
+          "ZULU"
+        ],
+        "enum": [
+          0,
+          1,
+          2
+        ]
+      },
+      "GAirmetHazardType": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "MT_OBSC",
+          "IFR",
+          "TURB_LO",
+          "TURB_HI",
+          "LLWS",
+          "SFC_WIND",
+          "ICE",
+          "FZLVL",
+          "M_FZLVL"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      "GAirmetAltitude": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "minFtMsl": {
+            "type": "string",
+            "nullable": true
+          },
+          "maxFtMsl": {
+            "type": "string",
+            "nullable": true
+          },
+          "levelFtMsl": {
+            "type": "string",
+            "nullable": true
+          },
+          "fzlAltitude": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/GAirmetFzlAltitude"
+              }
+            ]
+          }
+        }
+      },
+      "GAirmetFzlAltitude": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "minFtMsl": {
+            "type": "string",
+            "nullable": true
+          },
+          "maxFtMsl": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "GAirmetArea": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "numPoints": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "points": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GAirmetPoint"
+            }
+          }
+        }
+      },
+      "GAirmetPoint": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "longitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "latitude": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "MetarDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "rawText": {
+            "type": "string",
+            "nullable": true
+          },
+          "stationId": {
+            "type": "string",
+            "nullable": true
+          },
+          "observationTime": {
+            "type": "string",
+            "nullable": true
+          },
+          "latitude": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "longitude": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "tempC": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "dewpointC": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "windDirDegrees": {
+            "type": "string",
+            "nullable": true
+          },
+          "windSpeedKt": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "windGustKt": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "visibilityStatuteMi": {
+            "type": "string",
+            "nullable": true
+          },
+          "altimInHg": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "seaLevelPressureMb": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "qualityControlFlags": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/MetarQualityControlFlagsDto"
+              }
+            ]
+          },
+          "wxString": {
+            "type": "string",
+            "nullable": true
+          },
+          "skyCondition": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/MetarSkyConditionDto"
+            }
+          },
+          "flightCategory": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "MetarQualityControlFlagsDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "corrected": {
+            "type": "string",
+            "nullable": true
+          },
+          "auto": {
+            "type": "string",
+            "nullable": true
+          },
+          "autoStation": {
+            "type": "string",
+            "nullable": true
+          },
+          "maintenanceIndicatorOn": {
+            "type": "string",
+            "nullable": true
+          },
+          "noSignal": {
+            "type": "string",
+            "nullable": true
+          },
+          "lightningSensorOff": {
+            "type": "string",
+            "nullable": true
+          },
+          "freezingRainSensorOff": {
+            "type": "string",
+            "nullable": true
+          },
+          "presentWeatherSensorOff": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "MetarSkyConditionDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "skyCover": {
+            "type": "string"
+          },
+          "cloudBaseFtAgl": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "PaginatedResponseOfMetarDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MetarDto"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationMetadata"
+          }
+        }
+      },
+      "NavlogResponseDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "totalRouteDistance": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalRouteTimeHours": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalFuelUsed": {
+            "type": "number",
+            "format": "double"
+          },
+          "averageWindComponent": {
+            "type": "number",
+            "format": "double"
+          },
+          "legs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NavigationLegDto"
+            }
+          },
+          "airspaceGlobalIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "specialUseAirspaceGlobalIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "obstacleOasNumbers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "NavigationLegDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "legStartPoint": {
+            "$ref": "#/components/schemas/WaypointDto"
+          },
+          "legEndPoint": {
+            "$ref": "#/components/schemas/WaypointDto"
+          },
+          "trueCourse": {
+            "type": "number",
+            "format": "double"
+          },
+          "magneticHeading": {
+            "type": "number",
+            "format": "double"
+          },
+          "magneticCourse": {
+            "type": "number",
+            "format": "double"
+          },
+          "groundSpeed": {
+            "type": "number",
+            "format": "double"
+          },
+          "legDistance": {
+            "type": "number",
+            "format": "double"
+          },
+          "distanceRemaining": {
+            "type": "number",
+            "format": "double"
+          },
+          "startLegTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endLegTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "legFuelBurnGals": {
+            "type": "number",
+            "format": "double"
+          },
+          "remainingFuelGals": {
+            "type": "number",
+            "format": "double"
+          },
+          "windDir": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "windSpeed": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "headwindComponent": {
+            "type": "number",
+            "format": "double"
+          },
+          "tempC": {
+            "type": "number",
+            "format": "float"
+          }
+        }
+      },
+      "WaypointDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "altitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "waypointType": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/WaypointType"
+              }
+            ]
+          },
+          "refuelGallons": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "refuelToFull": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "isRefuelingStop": {
+            "type": "boolean",
+            "nullable": true
+          }
+        }
+      },
+      "WaypointType": {
+        "type": "string",
+        "description": "",
+        "x-enumNames": [
+          "Airport",
+          "Custom",
+          "CalculatedPoint",
+          "Navaid"
+        ],
+        "enum": [
+          "Airport",
+          "Custom",
+          "CalculatedPoint",
+          "Navaid"
+        ]
+      },
+      "NavlogRequestDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "waypoints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WaypointDto"
+            }
+          },
+          "performanceData": {
+            "$ref": "#/components/schemas/NavlogPerformanceDataDto"
+          },
+          "plannedCruisingAltitude": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "timeOfDeparture": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "NavlogPerformanceDataDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "climbTrueAirspeed": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cruiseTrueAirspeed": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "descentTrueAirspeed": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "climbFpm": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "descentFpm": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "climbFuelBurn": {
+            "type": "number",
+            "format": "double"
+          },
+          "cruiseFuelBurn": {
+            "type": "number",
+            "format": "double"
+          },
+          "descentFuelBurn": {
+            "type": "number",
+            "format": "double"
+          },
+          "sttFuelGals": {
+            "type": "number",
+            "format": "double"
+          },
+          "fuelOnBoardGals": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "BearingAndDistanceResponseDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "trueCourse": {
+            "type": "number",
+            "format": "double"
+          },
+          "magneticCourse": {
+            "type": "number",
+            "format": "double"
+          },
+          "distance": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "BearingAndDistanceRequestDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "startLatitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "startLongitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "endLatitude": {
+            "type": "number",
+            "format": "double"
+          },
+          "endLongitude": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "WindsAloftDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "validTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "forUseStartTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "forUseEndTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "windTemp": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WindsAloftSiteDto"
+            }
+          }
+        }
+      },
+      "WindsAloftSiteDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "lat": {
+            "type": "number",
+            "format": "float"
+          },
+          "lon": {
+            "type": "number",
+            "format": "float"
+          },
+          "windTemp": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/WindTempDto"
+            }
+          }
+        }
+      },
+      "WindTempDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "direction": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "speed": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "temperature": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          }
+        }
+      },
+      "NotamResponseDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "notams": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NotamDto"
+            }
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "retrievedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "queryLocation": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "NotamDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "geometry": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/NotamGeometryDto"
+              }
+            ]
+          },
+          "properties": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/NotamPropertiesDto"
+              }
+            ]
+          }
+        }
+      },
+      "NotamGeometryDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "coordinates": {
+            "nullable": true
+          },
+          "geometries": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/NotamGeometryDto"
+            }
+          }
+        }
+      },
+      "NotamPropertiesDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "coreNOTAMData": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CoreNotamDataDto"
+              }
+            ]
+          }
+        }
+      },
+      "CoreNotamDataDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "notamEvent": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/NotamEventDto"
+              }
+            ]
+          },
+          "notam": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/NotamDetailDto"
+              }
+            ]
+          },
+          "notamTranslation": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/NotamTranslationDto"
+            }
+          }
+        }
+      },
+      "NotamEventDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "encoding": {
+            "type": "string",
+            "nullable": true
+          },
+          "scenario": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "NotamDetailDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "number": {
+            "type": "string",
+            "nullable": true
+          },
+          "series": {
+            "type": "string",
+            "nullable": true
+          },
+          "year": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "issued": {
+            "type": "string",
+            "nullable": true
+          },
+          "affectedFir": {
+            "type": "string",
+            "nullable": true
+          },
+          "selectionCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "traffic": {
+            "type": "string",
+            "nullable": true
+          },
+          "purpose": {
+            "type": "string",
+            "nullable": true
+          },
+          "scope": {
+            "type": "string",
+            "nullable": true
+          },
+          "minimumFl": {
+            "type": "string",
+            "nullable": true
+          },
+          "maximumFl": {
+            "type": "string",
+            "nullable": true
+          },
+          "location": {
+            "type": "string",
+            "nullable": true
+          },
+          "icaoLocation": {
+            "type": "string",
+            "nullable": true
+          },
+          "effectiveStart": {
+            "type": "string",
+            "nullable": true
+          },
+          "effectiveEnd": {
+            "type": "string",
+            "nullable": true
+          },
+          "estimated": {
+            "type": "string",
+            "nullable": true
+          },
+          "text": {
+            "type": "string",
+            "nullable": true
+          },
+          "classification": {
+            "type": "string",
+            "nullable": true
+          },
+          "cancelationDate": {
+            "type": "string",
+            "nullable": true
+          },
+          "accountId": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastUpdated": {
+            "type": "string",
+            "nullable": true
+          },
+          "schedule": {
+            "type": "string",
+            "nullable": true
+          },
+          "lowerLimit": {
+            "type": "string",
+            "nullable": true
+          },
+          "upperLimit": {
+            "type": "string",
+            "nullable": true
+          },
+          "coordinates": {
+            "type": "string",
+            "nullable": true
+          },
+          "radius": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "NotamTranslationDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "simpleText": {
+            "type": "string",
+            "nullable": true
+          },
+          "domestic_message": {
+            "type": "string",
+            "nullable": true
+          },
+          "icao_message": {
+            "type": "string",
+            "nullable": true
+          },
+          "formattedText": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "NotamQueryByRouteRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "airportIdentifiers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "routePoints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RoutePointDto"
+            }
+          },
+          "corridorRadiusNm": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "includeCorridorNotams": {
+            "type": "boolean"
+          }
+        }
+      },
+      "RoutePointDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "airportIdentifier": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "latitude": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "radiusNm": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "isAirport": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PaginatedResponseOfObstacleDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ObstacleDto"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationMetadata"
+          }
+        }
+      },
+      "ObstacleDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "oasNumber": {
+            "type": "string"
+          },
+          "stateId": {
+            "type": "string",
+            "nullable": true
+          },
+          "cityName": {
+            "type": "string",
+            "nullable": true
+          },
+          "latitude": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "longitude": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "obstacleType": {
+            "type": "string",
+            "nullable": true
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "heightAgl": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "heightAmsl": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "lighting": {
+            "$ref": "#/components/schemas/ObstacleLighting"
+          },
+          "horizontalAccuracy": {
+            "$ref": "#/components/schemas/HorizontalAccuracy"
+          },
+          "verticalAccuracy": {
+            "$ref": "#/components/schemas/VerticalAccuracy"
+          },
+          "marking": {
+            "$ref": "#/components/schemas/ObstacleMarking"
+          },
+          "verificationStatus": {
+            "$ref": "#/components/schemas/VerificationStatus"
+          }
+        }
+      },
+      "ObstacleLighting": {
+        "type": "string",
+        "description": "",
+        "x-enumNames": [
+          "Unknown",
+          "Red",
+          "DualMediumWhiteStrobeRed",
+          "HighIntensityWhiteStrobeRed",
+          "MediumIntensityWhiteStrobe",
+          "HighIntensityWhiteStrobe",
+          "Flood",
+          "DualMediumCatenary",
+          "SynchronizedRedLighting",
+          "Lighted",
+          "None"
+        ],
+        "enum": [
+          "Unknown",
+          "Red",
+          "DualMediumWhiteStrobeRed",
+          "HighIntensityWhiteStrobeRed",
+          "MediumIntensityWhiteStrobe",
+          "HighIntensityWhiteStrobe",
+          "Flood",
+          "DualMediumCatenary",
+          "SynchronizedRedLighting",
+          "Lighted",
+          "None"
+        ]
+      },
+      "HorizontalAccuracy": {
+        "type": "string",
+        "description": "",
+        "x-enumNames": [
+          "Unknown",
+          "Within20Feet",
+          "Within50Feet",
+          "Within100Feet",
+          "Within250Feet",
+          "Within500Feet",
+          "Within1000Feet",
+          "WithinHalfNauticalMile",
+          "Within1NauticalMile"
+        ],
+        "enum": [
+          "Unknown",
+          "Within20Feet",
+          "Within50Feet",
+          "Within100Feet",
+          "Within250Feet",
+          "Within500Feet",
+          "Within1000Feet",
+          "WithinHalfNauticalMile",
+          "Within1NauticalMile"
+        ]
+      },
+      "VerticalAccuracy": {
+        "type": "string",
+        "description": "",
+        "x-enumNames": [
+          "Unknown",
+          "Within3Feet",
+          "Within10Feet",
+          "Within20Feet",
+          "Within50Feet",
+          "Within125Feet",
+          "Within250Feet",
+          "Within500Feet",
+          "Within1000Feet"
+        ],
+        "enum": [
+          "Unknown",
+          "Within3Feet",
+          "Within10Feet",
+          "Within20Feet",
+          "Within50Feet",
+          "Within125Feet",
+          "Within250Feet",
+          "Within500Feet",
+          "Within1000Feet"
+        ]
+      },
+      "ObstacleMarking": {
+        "type": "string",
+        "description": "",
+        "x-enumNames": [
+          "Unknown",
+          "OrangeOrOrangeWhitePaint",
+          "WhitePaintOnly",
+          "Marked",
+          "FlagMarker",
+          "SphericalMarker",
+          "None"
+        ],
+        "enum": [
+          "Unknown",
+          "OrangeOrOrangeWhitePaint",
+          "WhitePaintOnly",
+          "Marked",
+          "FlagMarker",
+          "SphericalMarker",
+          "None"
+        ]
+      },
+      "VerificationStatus": {
+        "type": "string",
+        "description": "",
+        "x-enumNames": [
+          "Unknown",
+          "Verified",
+          "Unverified"
+        ],
+        "enum": [
+          "Unknown",
+          "Verified",
+          "Unverified"
+        ]
+      },
+      "AirportCrosswindResponseDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "airportIdentifier": {
+            "type": "string"
+          },
+          "windDirectionDegrees": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "windSpeedKt": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "windGustKt": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "isVariableWind": {
+            "type": "boolean"
+          },
+          "rawMetar": {
+            "type": "string",
+            "nullable": true
+          },
+          "observationTime": {
+            "type": "string",
+            "nullable": true
+          },
+          "runways": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RunwayCrosswindComponentDto"
+            }
+          },
+          "recommendedRunway": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "RunwayCrosswindComponentDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "runwayEndId": {
+            "type": "string"
+          },
+          "magneticHeadingDegrees": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "crosswindKt": {
+            "type": "number",
+            "format": "double"
+          },
+          "headwindKt": {
+            "type": "number",
+            "format": "double"
+          },
+          "gustCrosswindKt": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "gustHeadwindKt": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "absoluteCrosswindKt": {
+            "type": "number",
+            "format": "double"
+          },
+          "hasHeadwind": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CrosswindCalculationResponseDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "crosswindKt": {
+            "type": "number",
+            "format": "double"
+          },
+          "headwindKt": {
+            "type": "number",
+            "format": "double"
+          },
+          "gustCrosswindKt": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "gustHeadwindKt": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "windDirectionDegrees": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "windSpeedKt": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "windGustKt": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "runwayHeadingDegrees": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isVariableWind": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CrosswindCalculationRequestDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "windDirectionDegrees": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "windSpeedKt": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "windGustKt": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "runwayHeadingDegrees": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "DensityAltitudeResponseDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "airportIdentifier": {
+            "type": "string",
+            "nullable": true
+          },
+          "fieldElevationFt": {
+            "type": "number",
+            "format": "double"
+          },
+          "pressureAltitudeFt": {
+            "type": "number",
+            "format": "double"
+          },
+          "densityAltitudeFt": {
+            "type": "number",
+            "format": "double"
+          },
+          "isaTemperatureCelsius": {
+            "type": "number",
+            "format": "double"
+          },
+          "actualTemperatureCelsius": {
+            "type": "number",
+            "format": "double"
+          },
+          "temperatureDeviationCelsius": {
+            "type": "number",
+            "format": "double"
+          },
+          "altimeterInHg": {
+            "type": "number",
+            "format": "double"
+          },
+          "rawMetar": {
+            "type": "string",
+            "nullable": true
+          },
+          "observationTime": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "DensityAltitudeRequestDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "fieldElevationFt": {
+            "type": "number",
+            "format": "double"
+          },
+          "altimeterInHg": {
+            "type": "number",
+            "format": "double"
+          },
+          "temperatureCelsius": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "PirepDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "rawText": {
+            "type": "string",
+            "nullable": true
+          },
+          "receiptTime": {
+            "type": "string",
+            "nullable": true
+          },
+          "observationTime": {
+            "type": "string",
+            "nullable": true
+          },
+          "qualityControlFlags": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PirepQualityControlFlags"
+              }
+            ]
+          },
+          "aircraftRef": {
+            "type": "string",
+            "nullable": true
+          },
+          "latitude": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "longitude": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "altitudeFtMsl": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "skyConditions": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/PirepSkyCondition"
+            }
+          },
+          "turbulenceConditions": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/PirepTurbulenceCondition"
+            }
+          },
+          "icingConditions": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/PirepIcingCondition"
+            }
+          },
+          "visibilityStatuteMi": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "wxString": {
+            "type": "string",
+            "nullable": true
+          },
+          "tempC": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "windDirDegrees": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "windSpeedKt": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "vertGustKt": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "reportType": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "PirepQualityControlFlags": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "midPointAssumed": {
+            "type": "string",
+            "nullable": true
+          },
+          "noTimeStamp": {
+            "type": "string",
+            "nullable": true
+          },
+          "fltLvlRange": {
+            "type": "string",
+            "nullable": true
+          },
+          "aboveGroundLevelIndicated": {
+            "type": "string",
+            "nullable": true
+          },
+          "noFltLvl": {
+            "type": "string",
+            "nullable": true
+          },
+          "badLocation": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "PirepSkyCondition": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "skyCover": {
+            "type": "string"
+          },
+          "cloudBaseFtMsl": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "cloudTopFtMsl": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "PirepTurbulenceCondition": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "turbulenceType": {
+            "type": "string",
+            "nullable": true
+          },
+          "turbulenceIntensity": {
+            "type": "string",
+            "nullable": true
+          },
+          "turbulenceBaseFtMsl": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "turbulenceTopFtMsl": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "turbulenceFreq": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "PirepIcingCondition": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "icingType": {
+            "type": "string",
+            "nullable": true
+          },
+          "icingIntensity": {
+            "type": "string",
+            "nullable": true
+          },
+          "icingBaseFtMsl": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "icingTopFtMsl": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "TafDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "rawText": {
+            "type": "string",
+            "nullable": true
+          },
+          "stationId": {
+            "type": "string",
+            "nullable": true
+          },
+          "issueTime": {
+            "type": "string",
+            "nullable": true
+          },
+          "bulletinTime": {
+            "type": "string",
+            "nullable": true
+          },
+          "validTimeFrom": {
+            "type": "string",
+            "nullable": true
+          },
+          "validTimeTo": {
+            "type": "string",
+            "nullable": true
+          },
+          "remarks": {
+            "type": "string",
+            "nullable": true
+          },
+          "latitude": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "longitude": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "elevationM": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "forecast": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/TafForecast"
+            }
+          }
+        }
+      },
+      "TafForecast": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "fcstTimeFrom": {
+            "type": "string",
+            "nullable": true
+          },
+          "fcstTimeTo": {
+            "type": "string",
+            "nullable": true
+          },
+          "changeIndicator": {
+            "type": "string",
+            "nullable": true
+          },
+          "timeBecoming": {
+            "type": "string",
+            "nullable": true
+          },
+          "probability": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "windDirDegrees": {
+            "type": "string",
+            "nullable": true
+          },
+          "windSpeedKt": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "windGustKt": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "windShearHgtFtAgl": {
+            "type": "integer",
+            "nullable": true
+          },
+          "windShearDirDegrees": {
+            "type": "integer",
+            "nullable": true
+          },
+          "windShearSpeedKt": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "visibilityStatuteMi": {
+            "type": "string",
+            "nullable": true
+          },
+          "altimInHg": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "vertVisFt": {
+            "type": "integer",
+            "nullable": true
+          },
+          "wxString": {
+            "type": "string",
+            "nullable": true
+          },
+          "notDecoded": {
+            "type": "string",
+            "nullable": true
+          },
+          "skyConditions": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/TafSkyCondition"
+            }
+          },
+          "turbulenceConditions": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/TafTurbulenceCondition"
+            }
+          },
+          "icingConditions": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/TafIcingCondition"
+            }
+          },
+          "temperature": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/TafTemperature"
+            }
+          }
+        }
+      },
+      "TafSkyCondition": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "skyCover": {
+            "type": "string"
+          },
+          "cloudBaseFtAgl": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "cloudType": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "TafTurbulenceCondition": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "turbulenceIntensity": {
+            "type": "string",
+            "nullable": true
+          },
+          "turbulenceMinAltFtAgl": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "turbulenceMaxAltFtAgl": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "TafIcingCondition": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "icingIntensity": {
+            "type": "string",
+            "nullable": true
+          },
+          "icingMinAltFtAgl": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "icingMaxAltFtAgl": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "TafTemperature": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "validTime": {
+            "type": "string",
+            "nullable": true
+          },
+          "sfcTempC": {
+            "type": "number",
+            "format": "float",
+            "nullable": true
+          },
+          "maxTempC": {
+            "type": "string",
+            "nullable": true
+          },
+          "minTempC": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npx shadcn@latest add card badge separator tabs navigation-menu dialog dropdown-menu avatar tooltip accordion scroll-area sheet sidebar table skeleton alert alert-dialog command popover toast sonner --yes)",
+      "Bash(npx shadcn@latest add:*)",
+      "Bash(npm run build:*)",
+      "Bash(ls \"C:\\\\Users\\\\brand\\\\source\\\\repos\\\\preflightapi.frontend\\\\src\\\\routes\\\\docs\\\\weather\"\" 2>/dev/null && ls \"C:Usersbrandsourcerepospreflightapi.frontendsrcroutesdocsairports\"\")",
+      "Bash(ls \"C:\\\\Users\\\\brand\\\\source\\\\repos\\\\preflightapi.frontend\\\\src\\\\routes\\\\docs\\\\airspace\"\" 2>/dev/null && ls \"C:Usersbrandsourcerepospreflightapi.frontendsrcroutesdocsnavigation\"\")",
+      "Bash(node -e:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npm uninstall:*)",
+      "WebSearch",
+      "WebFetch(domain:nitro.build)"
+    ]
+  }
+}
