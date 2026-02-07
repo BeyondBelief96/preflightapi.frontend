@@ -17,9 +17,42 @@ const sections = [
     ],
   },
   {
-    title: 'API Reference',
+    title: 'Weather',
     items: [
-      { label: 'Interactive API Docs', href: '/docs/api-reference' },
+      { label: 'METARs & TAFs', href: '/docs/metars-tafs' },
+      { label: 'PIREPs', href: '/docs/pireps' },
+      { label: 'AIRMETs & SIGMETs', href: '/docs/airmets-sigmets' },
+      { label: 'G-AIRMETs', href: '/docs/g-airmets' },
+    ],
+  },
+  {
+    title: 'Airports & Airspace',
+    items: [
+      { label: 'Airports', href: '/docs/airports' },
+      { label: 'Airspace', href: '/docs/airspace' },
+      { label: 'NOTAMs', href: '/docs/notams' },
+      { label: 'Obstacles', href: '/docs/obstacles' },
+    ],
+  },
+  {
+    title: 'Documents',
+    items: [
+      { label: 'Charts & Diagrams', href: '/docs/documents' },
+    ],
+  },
+  {
+    title: 'Performance',
+    items: [
+      { label: 'Crosswind Calculator', href: '/docs/crosswind' },
+      { label: 'Density Altitude', href: '/docs/density-altitude' },
+    ],
+  },
+  {
+    title: 'Navigation',
+    items: [
+      { label: 'Nav Log', href: '/docs/nav-log' },
+      { label: 'Bearing & Distance', href: '/docs/bearing-distance' },
+      { label: 'Winds Aloft', href: '/docs/winds-aloft' },
     ],
   },
 ]

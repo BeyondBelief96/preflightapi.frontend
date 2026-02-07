@@ -24,7 +24,6 @@
     "@clerk/tanstack-react-start": "^0.29.1",
     "@clerk/themes": "^2.4.51",
     "@faker-js/faker": "^10.0.0",
-    "@scalar/api-reference-react": "^0.8.52",
     "@t3-oss/env-core": "^0.13.8",
     "@tailwindcss/vite": "^4.0.6",
     "@tanstack/match-sorter-utils": "^8.19.4",

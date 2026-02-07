@@ -94,25 +94,25 @@ print(metar)`}
         <ul className="list-inside list-disc space-y-2 text-muted-foreground">
           <li>
             <Link
-              to="/docs/weather/metar"
+              to="/docs/metars-tafs"
               className="text-accent hover:underline"
             >
-              Weather Data
+              METARs & TAFs
             </Link>{' '}
-            - METAR, TAF, PIREP, AIRMET/SIGMET
+            - Surface weather observations and forecasts
           </li>
           <li>
             <Link
-              to="/docs/airports/search"
+              to="/docs/airports"
               className="text-accent hover:underline"
             >
-              Airport Data
+              Airports
             </Link>{' '}
             - Search, details, runways, frequencies
           </li>
           <li>
             <Link
-              to="/docs/airspace/controlled"
+              to="/docs/airspace"
               className="text-accent hover:underline"
             >
               Airspace
@@ -127,12 +127,12 @@ print(metar)`}
           </li>
           <li>
             <Link
-              to="/docs/navigation/nav-log"
+              to="/docs/nav-log"
               className="text-accent hover:underline"
             >
-              Navigation
+              Nav Log
             </Link>{' '}
-            - Flight planning and nav log calculations
+            - Flight navigation log calculations
           </li>
         </ul>
       </section>

@@ -1,4 +1,4 @@
-import { Link, Outlet, createFileRoute, useLocation } from '@tanstack/react-router'
+import { Link, Outlet, createFileRoute } from '@tanstack/react-router'
 import { ArrowLeft, Menu, X } from 'lucide-react'
 import { useState } from 'react'
 import { SignedIn, SignedOut, UserButton } from '@clerk/clerk-react'
@@ -19,8 +19,6 @@ export const Route = createFileRoute('/docs')({
 
 function DocsLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const location = useLocation()
-  const isApiReference = location.pathname === '/docs/api-reference'
 
   return (
     <div className="flex min-h-screen">
@@ -49,9 +47,7 @@ function DocsLayout() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-40 w-72 border-r bg-background transition-transform lg:static lg:translate-x-0 ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`fixed inset-y-0 left-0 z-40 w-72 border-r bg-background transition-transform lg:sticky lg:top-0 lg:h-screen lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
         <div className="flex h-16 items-center justify-between border-b px-6">
           <Link to="/" className="flex items-center gap-2">
@@ -96,13 +92,9 @@ function DocsLayout() {
             <UserButton />
           </SignedIn>
         </div>
-        {isApiReference ? (
+        <div className="mx-auto max-w-5xl px-6 py-10 lg:px-12">
           <Outlet />
-        ) : (
-          <div className="mx-auto max-w-4xl px-6 py-10 lg:px-12">
-            <Outlet />
-          </div>
-        )}
+        </div>
       </main>
     </div>
   )
