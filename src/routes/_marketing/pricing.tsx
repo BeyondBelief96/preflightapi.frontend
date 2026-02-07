@@ -6,7 +6,7 @@ import type {PlanDefinition} from '@/lib/constants';
 import { createPageHead } from '@/lib/seo'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { PLANS  } from '@/lib/constants'
+import { usePlans } from '@/hooks/use-plans'
 import {
   createCheckoutSession,
   getStripeSubscription,
@@ -24,7 +24,7 @@ export const Route = createFileRoute('/_marketing/pricing')({
   component: PricingPage,
 })
 
-const comparisonFeatures = [
+const staticComparisonFeatures = [
   {
     category: 'Weather Data',
     features: [
@@ -188,20 +188,44 @@ const comparisonFeatures = [
       },
     ],
   },
-  {
+]
+
+function formatLimit(
+  plans: Array<PlanDefinition>,
+  planId: string,
+  key: 'callsPerMonth' | 'ratePerMinute',
+  fallback: string,
+): string {
+  const plan = plans.find((p) => p.id === planId)
+  const value = plan?.limits[key]
+  return value != null ? value.toLocaleString() : fallback
+}
+
+function buildComparisonFeatures(plans: Array<PlanDefinition>) {
+  const limitsSection = {
     category: 'Support & Limits',
     features: [
       {
         name: 'API Calls / Month',
-        free: '500',
-        starter: '25,000',
-        professional: '250,000',
+        free: formatLimit(plans, 'free', 'callsPerMonth', 'Unlimited'),
+        starter: formatLimit(plans, 'starter', 'callsPerMonth', 'Unlimited'),
+        professional: formatLimit(
+          plans,
+          'professional',
+          'callsPerMonth',
+          'Unlimited',
+        ),
       },
       {
         name: 'Rate Limit (req/min)',
-        free: '10',
-        starter: '60',
-        professional: '300',
+        free: formatLimit(plans, 'free', 'ratePerMinute', 'Custom'),
+        starter: formatLimit(plans, 'starter', 'ratePerMinute', 'Custom'),
+        professional: formatLimit(
+          plans,
+          'professional',
+          'ratePerMinute',
+          'Custom',
+        ),
       },
       {
         name: 'Support',
@@ -210,10 +234,15 @@ const comparisonFeatures = [
         professional: 'Priority',
       },
     ],
-  },
-]
+  }
+
+  return [...staticComparisonFeatures, limitsSection]
+}
 
 function PricingPage() {
+  const { plans } = usePlans()
+  const comparisonFeatures = buildComparisonFeatures(plans)
+
   return (
     <div>
       {/* Header */}
@@ -235,7 +264,7 @@ function PricingPage() {
 
           {/* Plan cards */}
           <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {PLANS.map((plan) => (
+            {plans.map((plan) => (
               <div
                 key={plan.id}
                 className={`relative flex flex-col rounded-xl border p-6 ${
@@ -299,7 +328,7 @@ function PricingPage() {
                   <th className="pb-4 text-left text-sm font-medium text-muted-foreground">
                     Feature
                   </th>
-                  {PLANS.map((plan) => (
+                  {plans.map((plan) => (
                     <th
                       key={plan.id}
                       className="pb-4 text-center text-sm font-semibold"
@@ -400,7 +429,7 @@ function PlanCTA({ plan }: { plan: PlanDefinition }) {
 function ComparisonSection({
   section,
 }: {
-  section: (typeof comparisonFeatures)[number]
+  section: ReturnType<typeof buildComparisonFeatures>[number]
 }) {
   return (
     <>

@@ -12,7 +12,9 @@
       "Bash(npm uninstall:*)",
       "WebSearch",
       "WebFetch(domain:nitro.build)",
-      "Bash(npx eslint:*)"
+      "Bash(npx eslint:*)",
+      "Bash(grep:*)",
+      "Bash(npm run lint:*)"
     ]
   }
 }

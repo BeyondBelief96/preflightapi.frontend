@@ -1,11 +1,13 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { PLANS } from '@/lib/constants'
+import { usePlans } from '@/hooks/use-plans'
 
 export const Route = createFileRoute('/docs/rate-limits')({
   component: RateLimitsDocs,
 })
 
 function RateLimitsDocs() {
+  const { plans } = usePlans()
+
   return (
     <div className="space-y-8">
       <div>
@@ -29,7 +31,7 @@ function RateLimitsDocs() {
               </tr>
             </thead>
             <tbody>
-              {PLANS.map((plan) => (
+              {plans.map((plan) => (
                 <tr key={plan.id} className="border-b">
                   <td className="py-3 font-medium">{plan.name}</td>
                   <td className="py-3 text-muted-foreground">

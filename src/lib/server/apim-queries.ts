@@ -7,6 +7,7 @@ export const apimKeys = {
     [...apimKeys.all, 'keys', subscriptionId] as const,
   usage: (subscriptionId: string, period: string) =>
     [...apimKeys.all, 'usage', subscriptionId, period] as const,
+  tierConfig: () => [...apimKeys.all, 'tier-config'] as const,
 }
 
 export const stripeKeys = {

@@ -1,6 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { auth } from '@clerk/tanstack-react-start/server'
 import { apimFetch } from './apim-client'
+import { getTierConfig } from './tier-config'
 import type { ApimUsageReport } from '@/types/plans'
 import { PLANS } from '@/lib/constants'
 
@@ -324,3 +325,11 @@ export const getUsageAnalytics = createServerFn({ method: 'GET' })
       apiTimeMax: report.apiTimeMax,
     } satisfies ApimUsageReport
   })
+
+// --- Tier Configuration (public, no auth required) ---
+
+export const fetchTierConfig = createServerFn({ method: 'GET' }).handler(
+  async () => {
+    return getTierConfig()
+  },
+)

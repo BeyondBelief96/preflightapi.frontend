@@ -107,6 +107,25 @@ export const ENDPOINT_ACCESS: Record<string, EndpointTier> = {
   'navigation/nav-log': 'professional',
 } as const
 
+export const DEFAULT_PLAN_LIMITS: Record<
+  string,
+  { callsPerMonth: number | null; ratePerMinute: number | null }
+> = Object.fromEntries(PLANS.map((p) => [p.id, { ...p.limits }]))
+
+export const DEFAULT_PLAN_PRICES: Record<
+  string,
+  { price: number; interval: 'month' | 'year' }
+> = Object.fromEntries(
+  PLANS.map((p) => [
+    p.id,
+    { price: p.price ?? 0, interval: p.interval ?? 'month' },
+  ]),
+)
+
+export const DEFAULT_ENDPOINT_ACCESS: Record<string, EndpointTier> = {
+  ...ENDPOINT_ACCESS,
+}
+
 export const NAV_LINKS = {
   marketing: [
     { label: 'Pricing', href: '/pricing' },

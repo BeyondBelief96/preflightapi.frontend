@@ -10,12 +10,12 @@ import {
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useAuth } from '@clerk/clerk-react'
 import { z } from 'zod'
-import type {EndpointTier} from '@/lib/constants';
+import type {EndpointTier, PlanDefinition} from '@/lib/constants';
 import { createPageHead } from '@/lib/seo'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { ENDPOINT_ACCESS,  PLANS } from '@/lib/constants'
+import { usePlans } from '@/hooks/use-plans'
 import { getUsageAnalytics, getUserSubscription } from '@/lib/server/apim'
 import {
   createCheckoutSession,
@@ -84,9 +84,12 @@ const ENDPOINT_DOCS: Record<string, { label: string; href: string }> = {
   },
 }
 
-function getNewEndpoints(planId: string): Array<{ label: string; href: string }> {
+function getNewEndpoints(
+  planId: string,
+  endpointAccess: Record<string, EndpointTier>,
+): Array<{ label: string; href: string }> {
   const rank = TIER_RANK[planId as EndpointTier] ?? 0
-  return Object.entries(ENDPOINT_ACCESS)
+  return Object.entries(endpointAccess)
     .filter(([, tier]) => TIER_RANK[tier] > 0 && TIER_RANK[tier] <= rank)
     .map(([endpoint]) => ENDPOINT_DOCS[endpoint])
     .filter(Boolean)
@@ -95,6 +98,7 @@ function getNewEndpoints(planId: string): Array<{ label: string; href: string }>
 function BillingPage() {
   const { userId } = useAuth()
   const { checkout, plan: upgradedPlanId } = Route.useSearch()
+  const { plans, endpointAccess } = usePlans()
 
   const subscriptionsQuery = useQuery({
     queryKey: apimKeys.subscription(userId ?? ''),
@@ -113,12 +117,12 @@ function BillingPage() {
   )
 
   const currentPlan =
-    PLANS.find((p) => p.id === activeSubscription?.planId) ?? PLANS[0]
+    plans.find((p) => p.id === activeSubscription?.planId) ?? plans[0]
 
   const isPaid = currentPlan.id !== 'free'
   const stripeSub = stripeSubQuery.data
   const upgradedPlan = upgradedPlanId
-    ? PLANS.find((p) => p.id === upgradedPlanId)
+    ? plans.find((p) => p.id === upgradedPlanId)
     : undefined
 
   const now = new Date()
@@ -180,7 +184,7 @@ function BillingPage() {
     <div className="space-y-8">
       {/* Upgrade success onboarding */}
       {checkout === 'success' && upgradedPlan && (
-        <UpgradeSuccessCard plan={upgradedPlan} />
+        <UpgradeSuccessCard plan={upgradedPlan} endpointAccess={endpointAccess} />
       )}
       {checkout === 'success' && !upgradedPlan && (
         <div className="rounded-lg border border-green-500/20 bg-green-500/10 p-4">
@@ -246,7 +250,7 @@ function BillingPage() {
               </Button>
             ) : (
               <div className="flex gap-2">
-                {PLANS.filter((p) => p.id !== 'free').map((plan) => (
+                {plans.filter((p) => p.id !== 'free').map((plan) => (
                   <Button
                     key={plan.id}
                     variant={plan.highlighted ? 'default' : 'outline'}
@@ -344,8 +348,14 @@ function BillingPage() {
   )
 }
 
-function UpgradeSuccessCard({ plan }: { plan: (typeof PLANS)[number] }) {
-  const newEndpoints = getNewEndpoints(plan.id)
+function UpgradeSuccessCard({
+  plan,
+  endpointAccess,
+}: {
+  plan: PlanDefinition
+  endpointAccess: Record<string, EndpointTier>
+}) {
+  const newEndpoints = getNewEndpoints(plan.id, endpointAccess)
 
   return (
     <Card className="border-green-500/30 bg-green-500/5">

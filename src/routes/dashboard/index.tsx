@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { getUsageAnalytics, getUserSubscription } from '@/lib/server/apim'
 import { apimKeys } from '@/lib/server/apim-queries'
-import { PLANS } from '@/lib/constants'
+import { usePlans } from '@/hooks/use-plans'
 
 export const Route = createFileRoute('/dashboard/')({
   head: () =>
@@ -22,6 +22,7 @@ export const Route = createFileRoute('/dashboard/')({
 function DashboardOverview() {
   const { user } = useUser()
   const { userId } = useAuth()
+  const { plans } = usePlans()
 
   const subscriptionsQuery = useQuery({
     queryKey: apimKeys.subscription(userId ?? ''),
@@ -34,7 +35,7 @@ function DashboardOverview() {
   )
 
   const currentPlan =
-    PLANS.find((p) => p.id === activeSubscription?.planId) ?? PLANS[0]
+    plans.find((p) => p.id === activeSubscription?.planId) ?? plans[0]
 
   const now = new Date()
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
