@@ -47,7 +47,9 @@ function AirportSearchDocs() {
           <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
             GET
           </Badge>
-          <code className="text-sm font-semibold">/api/airports/search?query={'{term}'}</code>
+          <code className="text-sm font-semibold">
+            /api/airports/search?query={'{term}'}
+          </code>
         </div>
         <p className="text-muted-foreground">
           Search airports by ICAO code, FAA identifier, name, or city. Requires
@@ -109,7 +111,9 @@ function AirportSearchDocs() {
           <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
             GET
           </Badge>
-          <code className="text-sm font-semibold">/api/airports/{'{icaoCodeOrIdent}'}</code>
+          <code className="text-sm font-semibold">
+            /api/airports/{'{icaoCodeOrIdent}'}
+          </code>
         </div>
         <p className="text-muted-foreground">
           Get a specific airport by ICAO code or FAA identifier.
@@ -150,7 +154,9 @@ function AirportSearchDocs() {
           <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
             GET
           </Badge>
-          <code className="text-sm font-semibold">/api/airports/state/{'{stateCode}'}</code>
+          <code className="text-sm font-semibold">
+            /api/airports/state/{'{stateCode}'}
+          </code>
         </div>
         <p className="text-muted-foreground">
           Get all airports in a given state.
@@ -191,7 +197,9 @@ function AirportSearchDocs() {
           <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
             GET
           </Badge>
-          <code className="text-sm font-semibold">/api/airports/batch/{'{icaoCodesOrIdents}'}</code>
+          <code className="text-sm font-semibold">
+            /api/airports/batch/{'{icaoCodesOrIdents}'}
+          </code>
         </div>
         <p className="text-muted-foreground">
           Get multiple airports in a single request using comma-separated ICAO
@@ -234,7 +242,9 @@ function AirportSearchDocs() {
           <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
             GET
           </Badge>
-          <code className="text-sm font-semibold">/api/airports/prefix/{'{prefix}'}</code>
+          <code className="text-sm font-semibold">
+            /api/airports/prefix/{'{prefix}'}
+          </code>
         </div>
         <p className="text-muted-foreground">
           Get all airports whose ICAO code or FAA identifier starts with the

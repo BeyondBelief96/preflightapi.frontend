@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router'
-import { Button } from '@/components/ui/button'
 import { ArrowRight } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 export function CtaSection() {
   return (
@@ -15,19 +15,13 @@ export function CtaSection() {
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-4">
           <Link to="/sign-up">
-            <Button
-              size="lg"
-              className="gap-2"
-            >
+            <Button size="lg" className="gap-2">
               Create Free Account
               <ArrowRight className="h-4 w-4" />
             </Button>
           </Link>
           <Link to="/docs">
-            <Button
-              size="lg"
-              variant="outline"
-            >
+            <Button size="lg" variant="outline">
               Read the Docs
             </Button>
           </Link>

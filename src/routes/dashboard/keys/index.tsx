@@ -1,15 +1,15 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { Copy, Eye, EyeOff, Loader2, RotateCw } from 'lucide-react'
+import { useState } from 'react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useAuth } from '@clerk/clerk-react'
 import { createPageHead } from '@/lib/seo'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Copy, RotateCw, Eye, EyeOff, Loader2 } from 'lucide-react'
-import { useState } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { useAuth } from '@clerk/clerk-react'
 import {
-  getUserSubscription,
   getSubscriptionKeys,
+  getUserSubscription,
   regenerateKey,
 } from '@/lib/server/apim'
 import { apimKeys } from '@/lib/server/apim-queries'
@@ -185,9 +185,7 @@ function ApiKeysPage() {
                   variant="ghost"
                   size="icon"
                   onClick={() => toggleKeyVisibility('secondary')}
-                  title={
-                    revealedKeys['secondary'] ? 'Hide key' : 'Reveal key'
-                  }
+                  title={revealedKeys['secondary'] ? 'Hide key' : 'Reveal key'}
                 >
                   {revealedKeys['secondary'] ? (
                     <EyeOff className="h-4 w-4" />
@@ -240,8 +238,8 @@ function ApiKeysPage() {
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">
-            Include your API key in the{' '}
-            <code>Ocp-Apim-Subscription-Key</code> header with every request:
+            Include your API key in the <code>Ocp-Apim-Subscription-Key</code>{' '}
+            header with every request:
           </p>
           <pre className="mt-3 overflow-x-auto rounded-lg bg-aviation-dark p-4 text-sm text-white/90">
             {`curl -H "Ocp-Apim-Subscription-Key: your-api-key" \\

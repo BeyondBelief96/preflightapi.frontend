@@ -27,7 +27,9 @@ function MetarDocs() {
           <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
             GET
           </Badge>
-          <code className="text-sm font-semibold">/api/metars/{'{icaoCodeOrIdent}'}</code>
+          <code className="text-sm font-semibold">
+            /api/metars/{'{icaoCodeOrIdent}'}
+          </code>
         </div>
         <p className="text-muted-foreground">
           Get the current METAR for a specific airport by ICAO code or FAA
@@ -92,7 +94,9 @@ function MetarDocs() {
           <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
             GET
           </Badge>
-          <code className="text-sm font-semibold">/api/metars/state/{'{stateCode}'}</code>
+          <code className="text-sm font-semibold">
+            /api/metars/state/{'{stateCode}'}
+          </code>
         </div>
         <p className="text-muted-foreground">
           Get all current METARs for airports in a given state.
@@ -176,7 +180,11 @@ function MetarDocs() {
                 'string | null',
                 'Flight category: VFR, MVFR, IFR, or LIFR',
               ],
-              ['skyConditions', 'SkyCondition[]', 'Array of sky condition layers'],
+              [
+                'skyConditions',
+                'SkyCondition[]',
+                'Array of sky condition layers',
+              ],
             ].map(([field, type, desc]) => (
               <tr key={field} className="border-b">
                 <td className="py-2">

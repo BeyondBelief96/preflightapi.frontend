@@ -1,12 +1,11 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { Link, createFileRoute  } from '@tanstack/react-router'
+import { useAuth, useUser } from '@clerk/clerk-react'
+import { Activity, BookOpen, CreditCard, Key } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
 import { createPageHead } from '@/lib/seo'
-import { useUser, useAuth } from '@clerk/clerk-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Link } from '@tanstack/react-router'
-import { Key, CreditCard, BookOpen, Activity } from 'lucide-react'
-import { useQuery } from '@tanstack/react-query'
-import { getUserSubscription, getUsageAnalytics } from '@/lib/server/apim'
+import { getUsageAnalytics, getUserSubscription } from '@/lib/server/apim'
 import { apimKeys } from '@/lib/server/apim-queries'
 import { PLANS } from '@/lib/constants'
 
@@ -45,7 +44,11 @@ function DashboardOverview() {
     .toISOString()
     .split('T')[0]
   const todayStart = now.toISOString().split('T')[0]
-  const tomorrowStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1)
+  const tomorrowStart = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate() + 1,
+  )
     .toISOString()
     .split('T')[0]
 
@@ -99,7 +102,9 @@ function DashboardOverview() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">API Calls Today</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              API Calls Today
+            </CardTitle>
             <Activity className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>

@@ -17,7 +17,9 @@ function AuthenticationDocs() {
       </div>
 
       <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">Subscription Key Authentication</h2>
+        <h2 className="text-2xl font-semibold">
+          Subscription Key Authentication
+        </h2>
         <p className="text-muted-foreground">
           Include your subscription key in the{' '}
           <code>Ocp-Apim-Subscription-Key</code> header with every request:
@@ -38,12 +40,10 @@ Ocp-Apim-Subscription-Key: your-subscription-key-here`}
         </p>
         <ul className="list-inside list-disc space-y-2 text-muted-foreground">
           <li>
-            Rotate keys without downtime - regenerate the primary while your
-            app uses the secondary, then switch over
+            Rotate keys without downtime - regenerate the primary while your app
+            uses the secondary, then switch over
           </li>
-          <li>
-            Use different keys for different environments or services
-          </li>
+          <li>Use different keys for different environments or services</li>
           <li>
             Regenerate a compromised key immediately without affecting other
             services using the other key
@@ -52,13 +52,18 @@ Ocp-Apim-Subscription-Key: your-subscription-key-here`}
       </section>
 
       <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">Key Management Best Practices</h2>
+        <h2 className="text-2xl font-semibold">
+          Key Management Best Practices
+        </h2>
         <ul className="list-inside list-disc space-y-2 text-muted-foreground">
-          <li>Never embed API keys in client-side code or public repositories</li>
           <li>
-            Use environment variables to store keys in your application
+            Never embed API keys in client-side code or public repositories
           </li>
-          <li>Rotate keys periodically using the regenerate function in your dashboard</li>
+          <li>Use environment variables to store keys in your application</li>
+          <li>
+            Rotate keys periodically using the regenerate function in your
+            dashboard
+          </li>
           <li>
             If a key is compromised, regenerate it immediately from the{' '}
             <strong>API Keys</strong> page in your dashboard
@@ -69,8 +74,8 @@ Ocp-Apim-Subscription-Key: your-subscription-key-here`}
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold">Authentication Errors</h2>
         <p className="text-muted-foreground">
-          If authentication fails, the API returns a <code>401 Unauthorized</code>{' '}
-          response:
+          If authentication fails, the API returns a{' '}
+          <code>401 Unauthorized</code> response:
         </p>
         <pre className="overflow-x-auto rounded-lg bg-aviation-dark p-4 text-sm text-white/90">
           {`{

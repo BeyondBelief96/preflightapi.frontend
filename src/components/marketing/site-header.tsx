@@ -1,8 +1,8 @@
 import { Link } from '@tanstack/react-router'
-import { SignedIn, SignedOut } from '@clerk/clerk-react'
-import { Button } from '@/components/ui/button'
+import { SignedIn, SignedOut, UserButton } from '@clerk/clerk-react'
 import { Menu, X } from 'lucide-react'
 import { useState } from 'react'
+import { Button } from '@/components/ui/button'
 
 const navLinks = [
   { label: 'Pricing', href: '/pricing' },
@@ -68,6 +68,7 @@ export function SiteHeader() {
             <Link to="/dashboard">
               <Button size="sm">Dashboard</Button>
             </Link>
+            <UserButton />
           </SignedIn>
         </div>
 
@@ -113,14 +114,15 @@ export function SiteHeader() {
                 </Link>
               </SignedOut>
               <SignedIn>
-                <Link
-                  to="/dashboard"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
+                <Link to="/dashboard" onClick={() => setMobileMenuOpen(false)}>
                   <Button className="w-full" size="sm">
                     Dashboard
                   </Button>
                 </Link>
+                <div className="flex items-center gap-2 px-3">
+                  <UserButton />
+                  <span className="text-sm text-muted-foreground">Account</span>
+                </div>
               </SignedIn>
             </div>
           </div>

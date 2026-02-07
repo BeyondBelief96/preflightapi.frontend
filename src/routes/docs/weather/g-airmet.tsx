@@ -71,7 +71,9 @@ function GAirmetDocs() {
           <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
             GET
           </Badge>
-          <code className="text-sm font-semibold">/api/g-airmets/{'{product}'}</code>
+          <code className="text-sm font-semibold">
+            /api/g-airmets/{'{product}'}
+          </code>
         </div>
         <p className="text-muted-foreground">
           Get G-AIRMETs filtered by product type.
@@ -112,7 +114,9 @@ function GAirmetDocs() {
           <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
             GET
           </Badge>
-          <code className="text-sm font-semibold">/api/g-airmets/hazard/{'{hazardType}'}</code>
+          <code className="text-sm font-semibold">
+            /api/g-airmets/hazard/{'{hazardType}'}
+          </code>
         </div>
         <p className="text-muted-foreground">
           Get G-AIRMETs filtered by specific hazard type.
@@ -134,8 +138,8 @@ function GAirmetDocs() {
               </td>
               <td className="py-2 text-muted-foreground">string</td>
               <td className="py-2 text-muted-foreground">
-                Hazard type such as TURB-LO, TURB-HI, ICE, FZLVL, IFR,
-                MT_OBSC, SFC_WND, LLWS
+                Hazard type such as TURB-LO, TURB-HI, ICE, FZLVL, IFR, MT_OBSC,
+                SFC_WND, LLWS
               </td>
             </tr>
           </tbody>
@@ -162,14 +166,34 @@ function GAirmetDocs() {
           <tbody>
             {[
               ['product', 'string', 'Product type: SIERRA, TANGO, or ZULU'],
-              ['hazardType', 'string', 'Specific hazard type (e.g., TURB-LO, ICE, IFR)'],
+              [
+                'hazardType',
+                'string',
+                'Specific hazard type (e.g., TURB-LO, ICE, IFR)',
+              ],
               ['severity', 'string | null', 'Severity level when applicable'],
               ['validTimeFrom', 'string', 'ISO 8601 start of validity period'],
               ['validTimeTo', 'string', 'ISO 8601 end of validity period'],
-              ['minAltitude', 'number | null', 'Minimum affected altitude in feet MSL'],
-              ['maxAltitude', 'number | null', 'Maximum affected altitude in feet MSL'],
-              ['issueTime', 'string', 'ISO 8601 timestamp when the G-AIRMET was issued'],
-              ['area', 'Coordinate[]', 'Array of lat/lon points defining the affected area'],
+              [
+                'minAltitude',
+                'number | null',
+                'Minimum affected altitude in feet MSL',
+              ],
+              [
+                'maxAltitude',
+                'number | null',
+                'Maximum affected altitude in feet MSL',
+              ],
+              [
+                'issueTime',
+                'string',
+                'ISO 8601 timestamp when the G-AIRMET was issued',
+              ],
+              [
+                'area',
+                'Coordinate[]',
+                'Array of lat/lon points defining the affected area',
+              ],
             ].map(([field, type, desc]) => (
               <tr key={field} className="border-b">
                 <td className="py-2">

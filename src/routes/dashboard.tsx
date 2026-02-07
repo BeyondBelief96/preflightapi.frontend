@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet } from '@tanstack/react-router'
+import { Outlet, createFileRoute } from '@tanstack/react-router'
 import { DashboardSidebar } from '@/components/dashboard/dashboard-sidebar'
 import { DashboardHeader } from '@/components/dashboard/dashboard-header'
 

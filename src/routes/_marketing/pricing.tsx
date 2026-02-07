@@ -1,13 +1,16 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { Link, createFileRoute  } from '@tanstack/react-router'
+import { Check, Loader2, Minus } from 'lucide-react'
+import { useAuth } from '@clerk/clerk-react'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import type {PlanDefinition} from '@/lib/constants';
 import { createPageHead } from '@/lib/seo'
-import { Link } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Check, Minus, Loader2 } from 'lucide-react'
-import { PLANS, type PlanDefinition } from '@/lib/constants'
-import { useAuth } from '@clerk/clerk-react'
-import { useQuery, useMutation } from '@tanstack/react-query'
-import { createCheckoutSession, getStripeSubscription } from '@/lib/server/stripe'
+import { PLANS  } from '@/lib/constants'
+import {
+  createCheckoutSession,
+  getStripeSubscription,
+} from '@/lib/server/stripe'
 import { stripeKeys } from '@/lib/server/apim-queries'
 
 export const Route = createFileRoute('/_marketing/pricing')({
@@ -25,17 +28,32 @@ const comparisonFeatures = [
   {
     category: 'Weather Data',
     features: [
-      { name: 'METAR', free: true, starter: true, professional: true },
-      { name: 'TAF', free: true, starter: true, professional: true },
-      { name: 'PIREP', free: false, starter: true, professional: true },
       {
-        name: 'AIRMET/SIGMET',
+        name: 'METARs (current conditions)',
+        free: true,
+        starter: true,
+        professional: true,
+      },
+      {
+        name: 'TAFs (terminal forecasts)',
+        free: true,
+        starter: true,
+        professional: true,
+      },
+      {
+        name: 'PIREPs (pilot weather reports)',
         free: false,
         starter: true,
         professional: true,
       },
       {
-        name: 'G-AIRMET',
+        name: 'AIRMETs & SIGMETs (weather hazards)',
+        free: false,
+        starter: true,
+        professional: true,
+      },
+      {
+        name: 'G-AIRMETs (graphical weather areas)',
         free: false,
         starter: true,
         professional: true,
@@ -46,7 +64,7 @@ const comparisonFeatures = [
     category: 'Airport & Airspace',
     features: [
       {
-        name: 'Airport Search & Details',
+        name: 'Airport search & details (19,600+ US airports)',
         free: true,
         starter: true,
         professional: true,
@@ -58,31 +76,37 @@ const comparisonFeatures = [
         professional: true,
       },
       {
-        name: 'Communication Frequencies',
+        name: 'Communication frequencies',
         free: true,
         starter: true,
         professional: true,
       },
       {
-        name: 'Airport Diagrams',
+        name: 'Airport diagram PDFs',
         free: false,
         starter: false,
         professional: true,
       },
       {
-        name: 'Controlled Airspace',
+        name: 'Chart supplement (A/FD) PDFs',
+        free: false,
+        starter: false,
+        professional: true,
+      },
+      {
+        name: 'Controlled airspace (Class A\u2013E)',
         free: false,
         starter: true,
         professional: true,
       },
       {
-        name: 'Special Use Airspace',
+        name: 'Special use airspace (MOAs, restricted, etc.)',
         free: false,
         starter: true,
         professional: true,
       },
       {
-        name: 'Obstacle Database',
+        name: 'Obstacle database (625,000+ obstacles)',
         free: false,
         starter: true,
         professional: true,
@@ -90,23 +114,74 @@ const comparisonFeatures = [
     ],
   },
   {
-    category: 'Documents & Planning',
+    category: 'NOTAMs & Documents',
     features: [
-      { name: 'NOTAMs', free: false, starter: true, professional: true },
       {
-        name: 'Chart Supplements',
+        name: 'NOTAMs by airport',
+        free: false,
+        starter: true,
+        professional: true,
+      },
+      {
+        name: 'NOTAMs by geographic radius',
+        free: false,
+        starter: true,
+        professional: true,
+      },
+      {
+        name: 'NOTAMs by flight route',
+        free: false,
+        starter: true,
+        professional: true,
+      },
+    ],
+  },
+  {
+    category: 'Flight Planning',
+    features: [
+      {
+        name: 'Nav log with wind correction & fuel burn',
         free: false,
         starter: false,
         professional: true,
       },
       {
-        name: 'Navigation Log',
+        name: 'Bearing & distance between any two points',
         free: false,
         starter: false,
         professional: true,
       },
       {
-        name: 'Performance Calculator',
+        name: 'Winds aloft forecasts (6/12/24 hr)',
+        free: false,
+        starter: false,
+        professional: true,
+      },
+    ],
+  },
+  {
+    category: 'Performance Calculators',
+    features: [
+      {
+        name: 'Crosswind calculator (from live METAR)',
+        free: false,
+        starter: false,
+        professional: true,
+      },
+      {
+        name: 'Crosswind calculator (manual input)',
+        free: false,
+        starter: false,
+        professional: true,
+      },
+      {
+        name: 'Density altitude (from live METAR)',
+        free: false,
+        starter: false,
+        professional: true,
+      },
+      {
+        name: 'Density altitude (manual input)',
         free: false,
         starter: false,
         professional: true,
@@ -130,7 +205,7 @@ const comparisonFeatures = [
       },
       {
         name: 'Support',
-        free: 'Community',
+        free: 'Docs only',
         starter: 'Email',
         professional: 'Priority',
       },
@@ -150,7 +225,7 @@ function PricingPage() {
             </h1>
             <p className="mt-4 text-lg text-muted-foreground">
               Start free, upgrade when you need more. All plans include access
-              to our full documentation and community support.
+              to our full documentation.
             </p>
             <p className="mt-2 text-sm text-muted-foreground/70">
               Plans are named after pilot certificates — pick the one that
@@ -216,9 +291,7 @@ function PricingPage() {
       {/* Comparison table */}
       <section className="border-t bg-muted/30 py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-center text-2xl font-bold">
-            Feature Comparison
-          </h2>
+          <h2 className="text-center text-2xl font-bold">Feature Comparison</h2>
           <div className="mt-12 overflow-x-auto">
             <table className="w-full min-w-[600px]">
               <thead>
@@ -261,8 +334,7 @@ function PlanCTA({ plan }: { plan: PlanDefinition }) {
   const hasActiveSubscription = !!stripeSubQuery.data
 
   const checkoutMutation = useMutation({
-    mutationFn: (planId: string) =>
-      createCheckoutSession({ data: { planId } }),
+    mutationFn: (planId: string) => createCheckoutSession({ data: { planId } }),
     onSuccess: (data) => {
       if (data.url) {
         window.location.href = data.url
@@ -342,9 +414,7 @@ function ComparisonSection({
       </tr>
       {section.features.map((feature) => (
         <tr key={feature.name} className="border-b">
-          <td className="py-3 text-sm text-muted-foreground">
-            {feature.name}
-          </td>
+          <td className="py-3 text-sm text-muted-foreground">{feature.name}</td>
           {(['free', 'starter', 'professional'] as const).map((planId) => {
             const value = feature[planId]
             return (

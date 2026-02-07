@@ -17,7 +17,11 @@ function getCredential(): ClientSecretCredential {
       )
     }
 
-    credentialInstance = new ClientSecretCredential(tenantId, clientId, clientSecret)
+    credentialInstance = new ClientSecretCredential(
+      tenantId,
+      clientId,
+      clientSecret,
+    )
   }
   return credentialInstance
 }
@@ -55,7 +59,7 @@ export async function apimFetch<T = unknown>(
   const response = await fetch(url, {
     ...options,
     headers: {
-      'Authorization': `Bearer ${token.token}`,
+      Authorization: `Bearer ${token.token}`,
       'Content-Type': 'application/json',
       ...options.headers,
     },

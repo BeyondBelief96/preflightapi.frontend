@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { Mail } from 'lucide-react'
 import { createPageHead } from '@/lib/seo'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -11,7 +12,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Mail } from 'lucide-react'
 import { SITE_CONFIG } from '@/lib/constants'
 
 export const Route = createFileRoute('/_marketing/contact')({
@@ -38,7 +38,10 @@ function ContactPage() {
               plan? Fill out the form and we will get back to you within one
               business day.
             </p>
-            <form className="mt-8 space-y-6" onSubmit={(e) => e.preventDefault()}>
+            <form
+              className="mt-8 space-y-6"
+              onSubmit={(e) => e.preventDefault()}
+            >
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="firstName">First name</Label>
@@ -51,11 +54,7 @@ function ContactPage() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="john@example.com"
-                />
+                <Input id="email" type="email" placeholder="john@example.com" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="subject">Subject</Label>
@@ -65,7 +64,9 @@ function ContactPage() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="general">General Inquiry</SelectItem>
-                    <SelectItem value="professional">Professional Plan</SelectItem>
+                    <SelectItem value="professional">
+                      Professional Plan
+                    </SelectItem>
                     <SelectItem value="technical">Technical Support</SelectItem>
                     <SelectItem value="billing">Billing</SelectItem>
                     <SelectItem value="partnership">Partnership</SelectItem>
@@ -107,7 +108,7 @@ function ContactPage() {
               <div className="mt-8 border-t pt-8">
                 <h3 className="font-medium">Response Times</h3>
                 <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-                  <li>Student Pilot: Community support</li>
+                  <li>Student Pilot: Documentation &amp; self-service</li>
                   <li>Private Pilot: 1-2 business days</li>
                   <li>Commercial Pilot: Within 24 hours</li>
                 </ul>

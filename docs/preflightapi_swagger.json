@@ -13,9 +13,7 @@
   "paths": {
     "/api/v1/airports": {
       "get": {
-        "tags": [
-          "Airport"
-        ],
+        "tags": ["Airport"],
         "operationId": "Airport_GetAllAirports",
         "parameters": [
           {
@@ -62,9 +60,7 @@
     },
     "/api/v1/airports/search": {
       "get": {
-        "tags": [
-          "Airport"
-        ],
+        "tags": ["Airport"],
         "operationId": "Airport_SearchAirports",
         "parameters": [
           {
@@ -105,9 +101,7 @@
     },
     "/api/v1/airports/{icaoCodeOrIdent}": {
       "get": {
-        "tags": [
-          "Airport"
-        ],
+        "tags": ["Airport"],
         "operationId": "Airport_GetAirportByIcaoCodeOrIdent",
         "parameters": [
           {
@@ -146,9 +140,7 @@
     },
     "/api/v1/airports/state/{stateCode}": {
       "get": {
-        "tags": [
-          "Airport"
-        ],
+        "tags": ["Airport"],
         "operationId": "Airport_GetAirportsByState",
         "parameters": [
           {
@@ -195,9 +187,7 @@
     },
     "/api/v1/airports/states/{stateCodes}": {
       "get": {
-        "tags": [
-          "Airport"
-        ],
+        "tags": ["Airport"],
         "operationId": "Airport_GetAirportsByStates",
         "parameters": [
           {
@@ -244,9 +234,7 @@
     },
     "/api/v1/airports/batch/{icaoCodesOrIdents}": {
       "get": {
-        "tags": [
-          "Airport"
-        ],
+        "tags": ["Airport"],
         "operationId": "Airport_GetAirportsByIcaoCodesOrIdents",
         "parameters": [
           {
@@ -278,9 +266,7 @@
     },
     "/api/v1/airports/prefix/{prefix}": {
       "get": {
-        "tags": [
-          "Airport"
-        ],
+        "tags": ["Airport"],
         "operationId": "Airport_GetAirportsByPrefix",
         "parameters": [
           {
@@ -327,9 +313,7 @@
     },
     "/api/v1/airports/{icaoCodeOrIdent}/runways": {
       "get": {
-        "tags": [
-          "Airport"
-        ],
+        "tags": ["Airport"],
         "operationId": "Airport_GetRunwaysByAirport",
         "parameters": [
           {
@@ -371,9 +355,7 @@
     },
     "/api/v1/airport-diagrams/{icaoCodeOrIdent}": {
       "get": {
-        "tags": [
-          "AirportDiagram"
-        ],
+        "tags": ["AirportDiagram"],
         "operationId": "AirportDiagram_GetAirportDiagrams",
         "parameters": [
           {
@@ -412,9 +394,7 @@
     },
     "/api/v1/airsigmets": {
       "get": {
-        "tags": [
-          "Airsigmet"
-        ],
+        "tags": ["Airsigmet"],
         "operationId": "Airsigmet_GetAllAirsigmets",
         "responses": {
           "200": {
@@ -435,9 +415,7 @@
     },
     "/api/v1/airsigmets/hazard/{hazardType}": {
       "get": {
-        "tags": [
-          "Airsigmet"
-        ],
+        "tags": ["Airsigmet"],
         "operationId": "Airsigmet_GetAirsigmetsByHazardType",
         "parameters": [
           {
@@ -479,9 +457,7 @@
     },
     "/api/v1/airsigmets/convective": {
       "get": {
-        "tags": [
-          "Airsigmet"
-        ],
+        "tags": ["Airsigmet"],
         "operationId": "Airsigmet_GetConvectiveAirsigmets",
         "responses": {
           "200": {
@@ -502,9 +478,7 @@
     },
     "/api/v1/airsigmets/ice": {
       "get": {
-        "tags": [
-          "Airsigmet"
-        ],
+        "tags": ["Airsigmet"],
         "operationId": "Airsigmet_GetIceAirsigmets",
         "responses": {
           "200": {
@@ -525,9 +499,7 @@
     },
     "/api/v1/airsigmets/turb": {
       "get": {
-        "tags": [
-          "Airsigmet"
-        ],
+        "tags": ["Airsigmet"],
         "operationId": "Airsigmet_GetTurbAirsigmets",
         "responses": {
           "200": {
@@ -548,9 +520,7 @@
     },
     "/api/v1/airsigmets/ifr": {
       "get": {
-        "tags": [
-          "Airsigmet"
-        ],
+        "tags": ["Airsigmet"],
         "operationId": "Airsigmet_GetIfrAirsigmets",
         "responses": {
           "200": {
@@ -571,9 +541,7 @@
     },
     "/api/v1/airsigmets/mtn-obscn": {
       "get": {
-        "tags": [
-          "Airsigmet"
-        ],
+        "tags": ["Airsigmet"],
         "operationId": "Airsigmet_GetMtnObscnAirsigmets",
         "responses": {
           "200": {
@@ -594,9 +562,7 @@
     },
     "/api/v1/airspaces/by-classes": {
       "get": {
-        "tags": [
-          "Airspace"
-        ],
+        "tags": ["Airspace"],
         "operationId": "Airspace_GetByClasses",
         "parameters": [
           {
@@ -652,9 +618,7 @@
     },
     "/api/v1/airspaces/by-cities": {
       "get": {
-        "tags": [
-          "Airspace"
-        ],
+        "tags": ["Airspace"],
         "operationId": "Airspace_GetByCity",
         "parameters": [
           {
@@ -710,9 +674,7 @@
     },
     "/api/v1/airspaces/by-states": {
       "get": {
-        "tags": [
-          "Airspace"
-        ],
+        "tags": ["Airspace"],
         "operationId": "Airspace_GetByState",
         "parameters": [
           {
@@ -768,9 +730,7 @@
     },
     "/api/v1/airspaces/special-use/by-type-codes": {
       "get": {
-        "tags": [
-          "Airspace"
-        ],
+        "tags": ["Airspace"],
         "operationId": "Airspace_GetByTypeCode",
         "parameters": [
           {
@@ -826,9 +786,7 @@
     },
     "/api/v1/airspaces/by-icao-or-idents": {
       "get": {
-        "tags": [
-          "Airspace"
-        ],
+        "tags": ["Airspace"],
         "operationId": "Airspace_GetByIcaoOrIdent",
         "parameters": [
           {
@@ -869,9 +827,7 @@
     },
     "/api/v1/airspaces/by-global-ids": {
       "get": {
-        "tags": [
-          "Airspace"
-        ],
+        "tags": ["Airspace"],
         "operationId": "Airspace_GetByGlobalIds",
         "parameters": [
           {
@@ -912,9 +868,7 @@
     },
     "/api/v1/airspaces/special-use/by-global-ids": {
       "get": {
-        "tags": [
-          "Airspace"
-        ],
+        "tags": ["Airspace"],
         "operationId": "Airspace_GetSpecialUseByGlobalIds",
         "parameters": [
           {
@@ -955,9 +909,7 @@
     },
     "/api/v1/chart-supplements/{icaoCodeOrIdent}": {
       "get": {
-        "tags": [
-          "ChartSupplement"
-        ],
+        "tags": ["ChartSupplement"],
         "operationId": "ChartSupplement_GetChartSupplementUrl",
         "parameters": [
           {
@@ -996,9 +948,7 @@
     },
     "/api/v1/communication-frequencies/{servicedFacility}": {
       "get": {
-        "tags": [
-          "CommunicationFrequency"
-        ],
+        "tags": ["CommunicationFrequency"],
         "operationId": "CommunicationFrequency_GetFrequenciesByServicedFacility",
         "parameters": [
           {
@@ -1065,9 +1015,7 @@
     },
     "/api/v1/g-airmets": {
       "get": {
-        "tags": [
-          "GAirmet"
-        ],
+        "tags": ["GAirmet"],
         "operationId": "GAirmet_GetAllGAirmets",
         "responses": {
           "200": {
@@ -1088,9 +1036,7 @@
     },
     "/api/v1/g-airmets/{product}": {
       "get": {
-        "tags": [
-          "GAirmet"
-        ],
+        "tags": ["GAirmet"],
         "operationId": "GAirmet_GetGAirmetsByProduct",
         "parameters": [
           {
@@ -1132,9 +1078,7 @@
     },
     "/api/v1/g-airmets/sierra": {
       "get": {
-        "tags": [
-          "GAirmet"
-        ],
+        "tags": ["GAirmet"],
         "operationId": "GAirmet_GetSierraGAirmets",
         "responses": {
           "200": {
@@ -1155,9 +1099,7 @@
     },
     "/api/v1/g-airmets/tango": {
       "get": {
-        "tags": [
-          "GAirmet"
-        ],
+        "tags": ["GAirmet"],
         "operationId": "GAirmet_GetTangoGAirmets",
         "responses": {
           "200": {
@@ -1178,9 +1120,7 @@
     },
     "/api/v1/g-airmets/zulu": {
       "get": {
-        "tags": [
-          "GAirmet"
-        ],
+        "tags": ["GAirmet"],
         "operationId": "GAirmet_GetZuluGAirmets",
         "responses": {
           "200": {
@@ -1201,9 +1141,7 @@
     },
     "/api/v1/g-airmets/hazard/{hazardType}": {
       "get": {
-        "tags": [
-          "GAirmet"
-        ],
+        "tags": ["GAirmet"],
         "operationId": "GAirmet_GetGAirmetsByHazardType",
         "parameters": [
           {
@@ -1245,9 +1183,7 @@
     },
     "/api/v1/g-airmets/hazard/mt-obsc": {
       "get": {
-        "tags": [
-          "GAirmet"
-        ],
+        "tags": ["GAirmet"],
         "operationId": "GAirmet_GetMtObscGAirmets",
         "responses": {
           "200": {
@@ -1268,9 +1204,7 @@
     },
     "/api/v1/g-airmets/hazard/ifr": {
       "get": {
-        "tags": [
-          "GAirmet"
-        ],
+        "tags": ["GAirmet"],
         "operationId": "GAirmet_GetIfrGAirmets",
         "responses": {
           "200": {
@@ -1291,9 +1225,7 @@
     },
     "/api/v1/g-airmets/hazard/turb-lo": {
       "get": {
-        "tags": [
-          "GAirmet"
-        ],
+        "tags": ["GAirmet"],
         "operationId": "GAirmet_GetTurbLoGAirmets",
         "responses": {
           "200": {
@@ -1314,9 +1246,7 @@
     },
     "/api/v1/g-airmets/hazard/turb-hi": {
       "get": {
-        "tags": [
-          "GAirmet"
-        ],
+        "tags": ["GAirmet"],
         "operationId": "GAirmet_GetTurbHiGAirmets",
         "responses": {
           "200": {
@@ -1337,9 +1267,7 @@
     },
     "/api/v1/g-airmets/hazard/llws": {
       "get": {
-        "tags": [
-          "GAirmet"
-        ],
+        "tags": ["GAirmet"],
         "operationId": "GAirmet_GetLlwsGAirmets",
         "responses": {
           "200": {
@@ -1360,9 +1288,7 @@
     },
     "/api/v1/g-airmets/hazard/sfc-wind": {
       "get": {
-        "tags": [
-          "GAirmet"
-        ],
+        "tags": ["GAirmet"],
         "operationId": "GAirmet_GetSfcWindGAirmets",
         "responses": {
           "200": {
@@ -1383,9 +1309,7 @@
     },
     "/api/v1/g-airmets/hazard/ice": {
       "get": {
-        "tags": [
-          "GAirmet"
-        ],
+        "tags": ["GAirmet"],
         "operationId": "GAirmet_GetIceGAirmets",
         "responses": {
           "200": {
@@ -1406,9 +1330,7 @@
     },
     "/api/v1/g-airmets/hazard/fzlvl": {
       "get": {
-        "tags": [
-          "GAirmet"
-        ],
+        "tags": ["GAirmet"],
         "operationId": "GAirmet_GetFzlvlGAirmets",
         "responses": {
           "200": {
@@ -1429,9 +1351,7 @@
     },
     "/api/v1/g-airmets/hazard/m-fzlvl": {
       "get": {
-        "tags": [
-          "GAirmet"
-        ],
+        "tags": ["GAirmet"],
         "operationId": "GAirmet_GetMFzlvlGAirmets",
         "responses": {
           "200": {
@@ -1452,9 +1372,7 @@
     },
     "/api/v1/metars/{icaoCodeOrIdent}": {
       "get": {
-        "tags": [
-          "Metar"
-        ],
+        "tags": ["Metar"],
         "operationId": "Metar_GetMetarForAirport",
         "parameters": [
           {
@@ -1493,9 +1411,7 @@
     },
     "/api/v1/metars/state/{stateCode}": {
       "get": {
-        "tags": [
-          "Metar"
-        ],
+        "tags": ["Metar"],
         "operationId": "Metar_GetMetarsByState",
         "parameters": [
           {
@@ -1542,9 +1458,7 @@
     },
     "/api/v1/metars/states/{stateCodes}": {
       "get": {
-        "tags": [
-          "Metar"
-        ],
+        "tags": ["Metar"],
         "operationId": "Metar_GetMetarsByStates",
         "parameters": [
           {
@@ -1591,9 +1505,7 @@
     },
     "/api/v1/navlog/calculate": {
       "post": {
-        "tags": [
-          "Navlog"
-        ],
+        "tags": ["Navlog"],
         "operationId": "Navlog_CalculateNavlog",
         "requestBody": {
           "x-name": "request",
@@ -1653,9 +1565,7 @@
     },
     "/api/v1/navlog/bearing-and-distance": {
       "post": {
-        "tags": [
-          "Navlog"
-        ],
+        "tags": ["Navlog"],
         "operationId": "Navlog_CalculateBearingAndDistance",
         "requestBody": {
           "x-name": "request",
@@ -1705,9 +1615,7 @@
     },
     "/api/v1/navlog/winds-aloft/{forecast}": {
       "get": {
-        "tags": [
-          "Navlog"
-        ],
+        "tags": ["Navlog"],
         "operationId": "Navlog_GetWindsAloftData",
         "parameters": [
           {
@@ -1757,9 +1665,7 @@
     },
     "/api/v1/notams/{icaoCodeOrIdent}": {
       "get": {
-        "tags": [
-          "Notam"
-        ],
+        "tags": ["Notam"],
         "operationId": "Notam_GetNotamsForAirport",
         "parameters": [
           {
@@ -1808,9 +1714,7 @@
     },
     "/api/v1/notams/radius": {
       "get": {
-        "tags": [
-          "Notam"
-        ],
+        "tags": ["Notam"],
         "operationId": "Notam_GetNotamsByRadius",
         "parameters": [
           {
@@ -1877,9 +1781,7 @@
     },
     "/api/v1/notams/route": {
       "post": {
-        "tags": [
-          "Notam"
-        ],
+        "tags": ["Notam"],
         "operationId": "Notam_GetNotamsForRoute",
         "requestBody": {
           "x-name": "request",
@@ -1929,9 +1831,7 @@
     },
     "/api/v1/obstacles/search": {
       "get": {
-        "tags": [
-          "Obstacle"
-        ],
+        "tags": ["Obstacle"],
         "operationId": "Obstacle_SearchNearby",
         "parameters": [
           {
@@ -2017,9 +1917,7 @@
     },
     "/api/v1/obstacles/state/{stateCode}": {
       "get": {
-        "tags": [
-          "Obstacle"
-        ],
+        "tags": ["Obstacle"],
         "operationId": "Obstacle_GetByState",
         "parameters": [
           {
@@ -2086,9 +1984,7 @@
     },
     "/api/v1/obstacles/{oasNumber}": {
       "get": {
-        "tags": [
-          "Obstacle"
-        ],
+        "tags": ["Obstacle"],
         "operationId": "Obstacle_GetByOasNumber",
         "parameters": [
           {
@@ -2127,9 +2023,7 @@
     },
     "/api/v1/obstacles/by-oas-numbers": {
       "post": {
-        "tags": [
-          "Obstacle"
-        ],
+        "tags": ["Obstacle"],
         "operationId": "Obstacle_GetByOasNumbers",
         "requestBody": {
           "x-name": "oasNumbers",
@@ -2175,9 +2069,7 @@
     },
     "/api/v1/obstacles/bbox": {
       "get": {
-        "tags": [
-          "Obstacle"
-        ],
+        "tags": ["Obstacle"],
         "operationId": "Obstacle_GetByBoundingBox",
         "parameters": [
           {
@@ -2271,9 +2163,7 @@
     },
     "/api/v1/performance/crosswind/{icaoCodeOrIdent}": {
       "get": {
-        "tags": [
-          "Performance"
-        ],
+        "tags": ["Performance"],
         "operationId": "Performance_GetCrosswindForAirport",
         "parameters": [
           {
@@ -2332,9 +2222,7 @@
     },
     "/api/v1/performance/crosswind/calculate": {
       "post": {
-        "tags": [
-          "Performance"
-        ],
+        "tags": ["Performance"],
         "operationId": "Performance_CalculateCrosswind",
         "requestBody": {
           "x-name": "request",
@@ -2374,9 +2262,7 @@
     },
     "/api/v1/performance/density-altitude/{icaoCodeOrIdent}": {
       "get": {
-        "tags": [
-          "Performance"
-        ],
+        "tags": ["Performance"],
         "operationId": "Performance_GetDensityAltitudeForAirport",
         "parameters": [
           {
@@ -2455,9 +2341,7 @@
     },
     "/api/v1/performance/density-altitude/calculate": {
       "post": {
-        "tags": [
-          "Performance"
-        ],
+        "tags": ["Performance"],
         "operationId": "Performance_CalculateDensityAltitude",
         "requestBody": {
           "x-name": "request",
@@ -2497,9 +2381,7 @@
     },
     "/api/v1/pireps": {
       "get": {
-        "tags": [
-          "Pirep"
-        ],
+        "tags": ["Pirep"],
         "operationId": "Pirep_GetAllPireps",
         "responses": {
           "200": {
@@ -2520,9 +2402,7 @@
     },
     "/api/v1/tafs/{icaoCodeOrIdent}": {
       "get": {
-        "tags": [
-          "Taf"
-        ],
+        "tags": ["Taf"],
         "operationId": "Taf_GetTafByIcaoCodeOrIdent",
         "parameters": [
           {
@@ -3133,18 +3013,8 @@
       "RunwayMarkingsCondition": {
         "type": "string",
         "description": "",
-        "x-enumNames": [
-          "Unknown",
-          "Good",
-          "Fair",
-          "Poor"
-        ],
-        "enum": [
-          "Unknown",
-          "Good",
-          "Fair",
-          "Poor"
-        ]
+        "x-enumNames": ["Unknown", "Good", "Fair", "Poor"],
+        "enum": ["Unknown", "Good", "Fair", "Poor"]
       },
       "VisualGlideSlopeIndicatorType": {
         "type": "string",
@@ -3260,13 +3130,7 @@
           "Lighted",
           "MarkedAndLighted"
         ],
-        "enum": [
-          "Unknown",
-          "None",
-          "Marked",
-          "Lighted",
-          "MarkedAndLighted"
-        ]
+        "enum": ["Unknown", "None", "Marked", "Lighted", "MarkedAndLighted"]
       },
       "AirportDiagramsResponseDto": {
         "type": "object",
@@ -3399,20 +3263,8 @@
       "AirsigmetHazardType": {
         "type": "integer",
         "description": "",
-        "x-enumNames": [
-          "CONVECTIVE",
-          "ICE",
-          "TURB",
-          "IFR",
-          "MTN_OBSCN"
-        ],
-        "enum": [
-          0,
-          1,
-          2,
-          3,
-          4
-        ]
+        "x-enumNames": ["CONVECTIVE", "ICE", "TURB", "IFR", "MTN_OBSCN"],
+        "enum": [0, 1, 2, 3, 4]
       },
       "AirsigmetArea": {
         "type": "object",
@@ -3939,16 +3791,8 @@
       "GAirmetProduct": {
         "type": "integer",
         "description": "",
-        "x-enumNames": [
-          "SIERRA",
-          "TANGO",
-          "ZULU"
-        ],
-        "enum": [
-          0,
-          1,
-          2
-        ]
+        "x-enumNames": ["SIERRA", "TANGO", "ZULU"],
+        "enum": [0, 1, 2]
       },
       "GAirmetHazardType": {
         "type": "integer",
@@ -3964,17 +3808,7 @@
           "FZLVL",
           "M_FZLVL"
         ],
-        "enum": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8
-        ]
+        "enum": [0, 1, 2, 3, 4, 5, 6, 7, 8]
       },
       "GAirmetAltitude": {
         "type": "object",
@@ -4368,18 +4202,8 @@
       "WaypointType": {
         "type": "string",
         "description": "",
-        "x-enumNames": [
-          "Airport",
-          "Custom",
-          "CalculatedPoint",
-          "Navaid"
-        ],
-        "enum": [
-          "Airport",
-          "Custom",
-          "CalculatedPoint",
-          "Navaid"
-        ]
+        "x-enumNames": ["Airport", "Custom", "CalculatedPoint", "Navaid"],
+        "enum": ["Airport", "Custom", "CalculatedPoint", "Navaid"]
       },
       "NavlogRequestDto": {
         "type": "object",
@@ -5071,16 +4895,8 @@
       "VerificationStatus": {
         "type": "string",
         "description": "",
-        "x-enumNames": [
-          "Unknown",
-          "Verified",
-          "Unverified"
-        ],
-        "enum": [
-          "Unknown",
-          "Verified",
-          "Unverified"
-        ]
+        "x-enumNames": ["Unknown", "Verified", "Unverified"],
+        "enum": ["Unknown", "Verified", "Unverified"]
       },
       "AirportCrosswindResponseDto": {
         "type": "object",

@@ -11,7 +11,8 @@
       "Bash(npx tsc:*)",
       "Bash(npm uninstall:*)",
       "WebSearch",
-      "WebFetch(domain:nitro.build)"
+      "WebFetch(domain:nitro.build)",
+      "Bash(npx eslint:*)"
     ]
   }
 }

@@ -98,17 +98,41 @@ function PirepDocs() {
           <tbody>
             {[
               ['rawText', 'string', 'Raw PIREP text'],
-              ['reportType', 'string', 'Report type: UA (routine) or UUA (urgent)'],
+              [
+                'reportType',
+                'string',
+                'Report type: UA (routine) or UUA (urgent)',
+              ],
               ['location', 'object', 'Latitude and longitude of the report'],
               ['observationTime', 'string', 'ISO 8601 observation timestamp'],
               ['altitude', 'number | null', 'Altitude in feet MSL'],
-              ['aircraftType', 'string | null', 'ICAO aircraft type designator'],
-              ['turbulence', 'Turbulence | null', 'Turbulence conditions encountered'],
+              [
+                'aircraftType',
+                'string | null',
+                'ICAO aircraft type designator',
+              ],
+              [
+                'turbulence',
+                'Turbulence | null',
+                'Turbulence conditions encountered',
+              ],
               ['icing', 'Icing | null', 'Icing conditions encountered'],
-              ['visibility', 'number | null', 'Flight visibility in statute miles'],
-              ['temperature', 'number | null', 'Outside air temperature in Celsius'],
+              [
+                'visibility',
+                'number | null',
+                'Flight visibility in statute miles',
+              ],
+              [
+                'temperature',
+                'number | null',
+                'Outside air temperature in Celsius',
+              ],
               ['wind', 'Wind | null', 'Wind direction and speed at altitude'],
-              ['skyConditions', 'SkyCondition[]', 'Array of sky condition layers'],
+              [
+                'skyConditions',
+                'SkyCondition[]',
+                'Array of sky condition layers',
+              ],
             ].map(([field, type, desc]) => (
               <tr key={field} className="border-b">
                 <td className="py-2">
@@ -166,7 +190,11 @@ function PirepDocs() {
           </thead>
           <tbody>
             {[
-              ['intensity', 'string | null', 'NEG, TRC (trace), LGT, MOD, SEV, or HVY'],
+              [
+                'intensity',
+                'string | null',
+                'NEG, TRC (trace), LGT, MOD, SEV, or HVY',
+              ],
               ['type', 'string | null', 'RIME, CLR (clear), or MXD (mixed)'],
               ['baseAltitude', 'number | null', 'Base altitude in feet MSL'],
               ['topAltitude', 'number | null', 'Top altitude in feet MSL'],

@@ -1,9 +1,10 @@
-import { createFileRoute, Outlet, Link } from '@tanstack/react-router'
+import { Link, Outlet, createFileRoute } from '@tanstack/react-router'
+import { ArrowLeft, Menu, X } from 'lucide-react'
+import { useState } from 'react'
+import { SignedIn, SignedOut, UserButton } from '@clerk/clerk-react'
 import { createPageHead } from '@/lib/seo'
 import { DocsSidebar } from '@/components/docs/docs-sidebar'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, Menu, X } from 'lucide-react'
-import { useState } from 'react'
 
 export const Route = createFileRoute('/docs')({
   head: () =>
@@ -81,6 +82,18 @@ function DocsLayout() {
 
       {/* Main content */}
       <main className="flex-1 overflow-y-auto">
+        <div className="flex items-center justify-end gap-3 border-b px-6 py-2">
+          <SignedOut>
+            <Link to="/sign-in">
+              <Button variant="ghost" size="sm">
+                Sign In
+              </Button>
+            </Link>
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
+        </div>
         <div className="mx-auto max-w-4xl px-6 py-10 lg:px-12">
           <Outlet />
         </div>

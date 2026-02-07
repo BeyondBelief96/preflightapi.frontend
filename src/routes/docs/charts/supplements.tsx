@@ -29,7 +29,9 @@ function ChartSupplementsDocs() {
           <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
             GET
           </Badge>
-          <code className="text-sm font-semibold">/api/chart-supplements/{'{icaoCodeOrIdent}'}</code>
+          <code className="text-sm font-semibold">
+            /api/chart-supplements/{'{icaoCodeOrIdent}'}
+          </code>
         </div>
         <p className="text-muted-foreground">
           Get a pre-signed URL for the chart supplement PDF for a specific
@@ -94,11 +96,31 @@ function ChartSupplementsDocs() {
             {[
               ['icaoId', 'string | null', 'ICAO identifier for the airport'],
               ['faaIdentifier', 'string', 'FAA location identifier'],
-              ['chartName', 'string', 'Name of the chart supplement publication'],
-              ['pdfUrl', 'string', 'Pre-signed URL to download the PDF (temporary)'],
-              ['effectiveDate', 'string', 'Date the supplement became effective (YYYY-MM-DD)'],
-              ['expirationDate', 'string', 'Date the supplement expires (YYYY-MM-DD)'],
-              ['region', 'string', 'Chart supplement region (e.g., NE-1, SE-1, SW-1)'],
+              [
+                'chartName',
+                'string',
+                'Name of the chart supplement publication',
+              ],
+              [
+                'pdfUrl',
+                'string',
+                'Pre-signed URL to download the PDF (temporary)',
+              ],
+              [
+                'effectiveDate',
+                'string',
+                'Date the supplement became effective (YYYY-MM-DD)',
+              ],
+              [
+                'expirationDate',
+                'string',
+                'Date the supplement expires (YYYY-MM-DD)',
+              ],
+              [
+                'region',
+                'string',
+                'Chart supplement region (e.g., NE-1, SE-1, SW-1)',
+              ],
             ].map(([field, type, desc]) => (
               <tr key={field} className="border-b">
                 <td className="py-2">
@@ -143,9 +165,15 @@ function ChartSupplementsDocs() {
           </thead>
           <tbody>
             {[
-              ['NE-1', 'Northeast (CT, DC, DE, MA, MD, ME, NH, NJ, NY, PA, RI, VA, VT, WV)'],
+              [
+                'NE-1',
+                'Northeast (CT, DC, DE, MA, MD, ME, NH, NJ, NY, PA, RI, VA, VT, WV)',
+              ],
               ['SE-1', 'Southeast (AL, FL, GA, KY, MS, NC, PR, SC, TN, VI)'],
-              ['NC-1', 'North Central (IA, IL, IN, MI, MN, MO, ND, NE, OH, SD, WI)'],
+              [
+                'NC-1',
+                'North Central (IA, IL, IN, MI, MN, MO, ND, NE, OH, SD, WI)',
+              ],
               ['SC-1', 'South Central (AR, CO, KS, LA, NM, OK, TX)'],
               ['NW-1', 'Northwest (ID, MT, OR, WA, WY)'],
               ['SW-1', 'Southwest (AZ, CA, HI, NV, UT)'],

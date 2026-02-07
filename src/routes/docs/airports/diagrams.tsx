@@ -28,7 +28,9 @@ function DiagramsDocs() {
           <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
             GET
           </Badge>
-          <code className="text-sm font-semibold">/api/airport-diagrams/{'{icaoCodeOrIdent}'}</code>
+          <code className="text-sm font-semibold">
+            /api/airport-diagrams/{'{icaoCodeOrIdent}'}
+          </code>
         </div>
         <p className="text-muted-foreground">
           Get pre-signed URLs for airport diagram PDFs. The returned URLs are
@@ -94,9 +96,21 @@ function DiagramsDocs() {
               ['icaoId', 'string | null', 'ICAO identifier for the airport'],
               ['faaIdentifier', 'string', 'FAA location identifier'],
               ['chartName', 'string', 'Name of the diagram chart'],
-              ['pdfUrl', 'string', 'Pre-signed URL to download the PDF (temporary)'],
-              ['effectiveDate', 'string', 'Date the chart became effective (YYYY-MM-DD)'],
-              ['expirationDate', 'string', 'Date the chart expires (YYYY-MM-DD)'],
+              [
+                'pdfUrl',
+                'string',
+                'Pre-signed URL to download the PDF (temporary)',
+              ],
+              [
+                'effectiveDate',
+                'string',
+                'Date the chart became effective (YYYY-MM-DD)',
+              ],
+              [
+                'expirationDate',
+                'string',
+                'Date the chart expires (YYYY-MM-DD)',
+              ],
             ].map(([field, type, desc]) => (
               <tr key={field} className="border-b">
                 <td className="py-2">

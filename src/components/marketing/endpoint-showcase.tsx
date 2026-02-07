@@ -1,25 +1,27 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { codeToHtml } from 'shiki'
 
 const endpoints = [
   {
     id: 'metar',
     label: 'METAR',
     method: 'GET',
-    path: '/api/metars/KJFK',
+    path: '/api/v1/metars/KJFK',
     description: 'Get current weather observation for an airport',
     response: `{
-  "stationId": "KJFK",
+  "id": 42861,
   "rawText": "KJFK 051856Z 22012KT 10SM FEW250 18/06 A3012",
+  "stationId": "KJFK",
   "observationTime": "2025-01-05T18:56:00Z",
-  "temperature": 18,
-  "dewpoint": 6,
-  "windDirection": 220,
-  "windSpeed": 12,
-  "visibility": 10,
-  "altimeter": 30.12,
+  "tempC": 18.0,
+  "dewpointC": 6.0,
+  "windDirDegrees": 220,
+  "windSpeedKt": 12,
+  "visibilityStatuteMi": 10.0,
+  "altimInHg": 30.12,
   "flightCategory": "VFR",
-  "skyConditions": [
-    { "skyCover": "FEW", "cloudBase": 25000 }
+  "skyCondition": [
+    { "skyCover": "FEW", "cloudBaseFtAgl": 25000 }
   ]
 }`,
   },
@@ -27,54 +29,65 @@ const endpoints = [
     id: 'airport',
     label: 'Airport',
     method: 'GET',
-    path: '/api/airports/KLAX',
+    path: '/api/v1/airports/KLAX',
     description: 'Get detailed airport information',
     response: `{
+  "arptId": "LAX",
+  "arptName": "LOS ANGELES INTL",
   "icaoId": "KLAX",
-  "faaIdentifier": "LAX",
-  "name": "LOS ANGELES INTL",
-  "city": "LOS ANGELES",
-  "state": "CA",
-  "latitude": 33.9425,
-  "longitude": -118.4081,
-  "elevation": 128,
-  "fuelTypes": "100LL,JET-A"
+  "stateCode": "CA",
+  "latDecimal": 33.9425,
+  "longDecimal": -118.4081,
+  "elev": 128,
+  "fuelTypes": "100LL,JET-A",
+  "ctrlTowerCode": "Y",
+  "arptTypeCode": "A"
 }`,
   },
   {
     id: 'notam',
     label: 'NOTAMs',
     method: 'GET',
-    path: '/api/notams/KORD',
+    path: '/api/v1/notams/KORD',
     description: 'Get active NOTAMs for an airport',
-    response: `[
-  {
-    "id": "A0012/25",
-    "facilityId": "KORD",
-    "text": "RWY 10L/28R CLSD FOR MAINT",
-    "effectiveStart": "2025-01-05T06:00:00Z",
-    "effectiveEnd": "2025-01-12T06:00:00Z",
-    "classification": "AERODROME"
-  }
-]`,
+    response: `{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "coreNOTAMData": {
+          "notamNumber": "A0012/25",
+          "facilityDesignator": "KORD",
+          "text": "RWY 10L/28R CLSD FOR MAINT",
+          "effectiveStart": "2025-01-05T06:00:00Z",
+          "effectiveEnd": "2025-01-12T06:00:00Z",
+          "classification": "AERODROME"
+        }
+      }
+    }
+  ]
+}`,
   },
   {
     id: 'navlog',
     label: 'Nav Log',
     method: 'POST',
-    path: '/api/navlog/calculate',
+    path: '/api/v1/navlog/calculate',
     description: 'Calculate a navigation log for a flight route',
     response: `{
-  "totalDistance": 214.5,
-  "totalTime": "1:42",
+  "totalDistanceNm": 214.5,
+  "totalTimeEnRoute": "1:42",
+  "fuelRequired": 18.6,
   "legs": [
     {
       "from": "KJFK",
       "to": "BDR",
       "trueCourse": 45,
       "magneticCourse": 58,
-      "distance": 58.2,
-      "groundSpeed": 126
+      "distanceNm": 58.2,
+      "groundSpeedKt": 126,
+      "legTimeMin": 27.7
     }
   ]
 }`,
@@ -83,6 +96,20 @@ const endpoints = [
 
 export function EndpointShowcase() {
   const [activeEndpoint, setActiveEndpoint] = useState(endpoints[0])
+  const [highlightedResponses, setHighlightedResponses] = useState<
+    Record<string, string>
+  >({})
+
+  useEffect(() => {
+    endpoints.forEach((endpoint) => {
+      codeToHtml(endpoint.response, {
+        lang: 'json',
+        theme: 'github-dark',
+      }).then((html) => {
+        setHighlightedResponses((prev) => ({ ...prev, [endpoint.id]: html }))
+      })
+    })
+  }, [])
 
   return (
     <section className="border-y bg-muted/30 py-20">
@@ -130,7 +157,7 @@ export function EndpointShowcase() {
           </div>
 
           {/* Response preview */}
-          <div className="lg:col-span-3">
+          <div className="min-w-0 lg:col-span-3">
             <div className="overflow-hidden rounded-xl border bg-aviation-dark shadow-lg">
               <div className="flex items-center gap-2 border-b border-white/10 px-4 py-3">
                 <span
@@ -146,11 +173,21 @@ export function EndpointShowcase() {
                   {activeEndpoint.path}
                 </code>
               </div>
-              <pre className="overflow-x-auto p-4 text-sm leading-relaxed">
-                <code className="text-white/85">
-                  {activeEndpoint.response}
-                </code>
-              </pre>
+              <div className="overflow-x-auto p-4 text-sm leading-relaxed [&_pre]:!bg-transparent [&_code]:!bg-transparent">
+                {highlightedResponses[activeEndpoint.id] ? (
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: highlightedResponses[activeEndpoint.id],
+                    }}
+                  />
+                ) : (
+                  <pre>
+                    <code className="text-white/85">
+                      {activeEndpoint.response}
+                    </code>
+                  </pre>
+                )}
+              </div>
             </div>
           </div>
         </div>

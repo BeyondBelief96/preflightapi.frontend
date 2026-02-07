@@ -71,7 +71,9 @@ function AirmetSigmetDocs() {
           <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
             GET
           </Badge>
-          <code className="text-sm font-semibold">/api/airsigmets/hazard/{'{hazardType}'}</code>
+          <code className="text-sm font-semibold">
+            /api/airsigmets/hazard/{'{hazardType}'}
+          </code>
         </div>
         <p className="text-muted-foreground">
           Get AIRMETs/SIGMETs filtered by hazard type.
@@ -116,7 +118,10 @@ function AirmetSigmetDocs() {
 
         <div className="space-y-3">
           {[
-            ['/api/airsigmets/convective', 'Convective SIGMETs (thunderstorms)'],
+            [
+              '/api/airsigmets/convective',
+              'Convective SIGMETs (thunderstorms)',
+            ],
             ['/api/airsigmets/ice', 'Icing AIRMETs and SIGMETs'],
             ['/api/airsigmets/turb', 'Turbulence AIRMETs and SIGMETs'],
             ['/api/airsigmets/ifr', 'IFR condition AIRMETs'],
@@ -154,15 +159,35 @@ function AirmetSigmetDocs() {
             {[
               ['rawText', 'string', 'Raw AIRMET/SIGMET text'],
               ['airSigmetType', 'string', 'AIRMET or SIGMET'],
-              ['hazardType', 'string', 'CONVECTIVE, ICE, TURB, IFR, or MTN_OBSCN'],
+              [
+                'hazardType',
+                'string',
+                'CONVECTIVE, ICE, TURB, IFR, or MTN_OBSCN',
+              ],
               ['severity', 'string | null', 'Severity level when applicable'],
               ['validTimeFrom', 'string', 'ISO 8601 start of validity period'],
               ['validTimeTo', 'string', 'ISO 8601 end of validity period'],
-              ['minAltitude', 'number | null', 'Minimum affected altitude in feet MSL'],
-              ['maxAltitude', 'number | null', 'Maximum affected altitude in feet MSL'],
-              ['movementDirection', 'number | null', 'Movement direction in degrees'],
+              [
+                'minAltitude',
+                'number | null',
+                'Minimum affected altitude in feet MSL',
+              ],
+              [
+                'maxAltitude',
+                'number | null',
+                'Maximum affected altitude in feet MSL',
+              ],
+              [
+                'movementDirection',
+                'number | null',
+                'Movement direction in degrees',
+              ],
               ['movementSpeed', 'number | null', 'Movement speed in knots'],
-              ['area', 'Coordinate[]', 'Array of lat/lon points defining the affected area'],
+              [
+                'area',
+                'Coordinate[]',
+                'Array of lat/lon points defining the affected area',
+              ],
             ].map(([field, type, desc]) => (
               <tr key={field} className="border-b">
                 <td className="py-2">

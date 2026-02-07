@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router'
+import { Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Check } from 'lucide-react'
 import { PLANS } from '@/lib/constants'
 
 export function PricingPreview() {
@@ -16,7 +16,8 @@ export function PricingPreview() {
             Start free and scale as your application grows. No hidden fees.
           </p>
           <p className="mt-2 text-sm text-muted-foreground/70">
-            Plans named after pilot certificates — pick the one that matches your project's ambition.
+            Plans named after pilot certificates — pick the one that matches
+            your project's ambition.
           </p>
         </div>
         <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">

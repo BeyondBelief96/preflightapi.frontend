@@ -28,7 +28,9 @@ function TafDocs() {
           <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
             GET
           </Badge>
-          <code className="text-sm font-semibold">/api/tafs/{'{icaoCodeOrIdent}'}</code>
+          <code className="text-sm font-semibold">
+            /api/tafs/{'{icaoCodeOrIdent}'}
+          </code>
         </div>
         <p className="text-muted-foreground">
           Get the current TAF for a specific airport by ICAO code or FAA
@@ -137,9 +139,21 @@ function TafDocs() {
             {[
               ['stationId', 'string', 'ICAO station identifier'],
               ['rawText', 'string', 'Raw TAF text'],
-              ['issueTime', 'string', 'ISO 8601 timestamp when the TAF was issued'],
-              ['validTimeFrom', 'string', 'ISO 8601 start of the TAF validity period'],
-              ['validTimeTo', 'string', 'ISO 8601 end of the TAF validity period'],
+              [
+                'issueTime',
+                'string',
+                'ISO 8601 timestamp when the TAF was issued',
+              ],
+              [
+                'validTimeFrom',
+                'string',
+                'ISO 8601 start of the TAF validity period',
+              ],
+              [
+                'validTimeTo',
+                'string',
+                'ISO 8601 end of the TAF validity period',
+              ],
               ['forecasts', 'Forecast[]', 'Array of forecast periods'],
             ].map(([field, type, desc]) => (
               <tr key={field} className="border-b">
@@ -167,14 +181,30 @@ function TafDocs() {
           </thead>
           <tbody>
             {[
-              ['forecastTimeFrom', 'string', 'ISO 8601 start of this forecast period'],
-              ['forecastTimeTo', 'string', 'ISO 8601 end of this forecast period'],
-              ['changeIndicator', 'string | null', 'Change type: FM (from), TEMPO, BECMG, or PROB'],
+              [
+                'forecastTimeFrom',
+                'string',
+                'ISO 8601 start of this forecast period',
+              ],
+              [
+                'forecastTimeTo',
+                'string',
+                'ISO 8601 end of this forecast period',
+              ],
+              [
+                'changeIndicator',
+                'string | null',
+                'Change type: FM (from), TEMPO, BECMG, or PROB',
+              ],
               ['windDirection', 'number | null', 'Wind direction in degrees'],
               ['windSpeed', 'number | null', 'Wind speed in knots'],
               ['windGust', 'number | null', 'Wind gust speed in knots'],
               ['visibility', 'number | null', 'Visibility in statute miles'],
-              ['skyConditions', 'SkyCondition[]', 'Array of sky condition layers'],
+              [
+                'skyConditions',
+                'SkyCondition[]',
+                'Array of sky condition layers',
+              ],
             ].map(([field, type, desc]) => (
               <tr key={field} className="border-b">
                 <td className="py-2">

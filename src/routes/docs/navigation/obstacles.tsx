@@ -50,7 +50,11 @@ function ObstaclesDocs() {
               ['lat', 'number', 'Center latitude in decimal degrees'],
               ['lon', 'number', 'Center longitude in decimal degrees'],
               ['radiusNm', 'number', 'Search radius in nautical miles'],
-              ['minHeightAgl', 'number', 'Minimum height AGL in feet (optional)'],
+              [
+                'minHeightAgl',
+                'number',
+                'Minimum height AGL in feet (optional)',
+              ],
               ['limit', 'number', 'Maximum number of results (optional)'],
             ].map(([param, type, desc]) => (
               <tr key={param} className="border-b">
@@ -97,7 +101,9 @@ function ObstaclesDocs() {
           <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
             GET
           </Badge>
-          <code className="text-sm font-semibold">/api/obstacles/state/{'{stateCode}'}</code>
+          <code className="text-sm font-semibold">
+            /api/obstacles/state/{'{stateCode}'}
+          </code>
         </div>
         <p className="text-muted-foreground">
           Get all obstacles in a given state.
@@ -138,7 +144,9 @@ function ObstaclesDocs() {
           <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
             GET
           </Badge>
-          <code className="text-sm font-semibold">/api/obstacles/{'{oasNumber}'}</code>
+          <code className="text-sm font-semibold">
+            /api/obstacles/{'{oasNumber}'}
+          </code>
         </div>
         <p className="text-muted-foreground">
           Get a specific obstacle by its OAS (Obstruction Identification
@@ -180,7 +188,9 @@ function ObstaclesDocs() {
           <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">
             POST
           </Badge>
-          <code className="text-sm font-semibold">/api/obstacles/by-oas-numbers</code>
+          <code className="text-sm font-semibold">
+            /api/obstacles/by-oas-numbers
+          </code>
         </div>
         <p className="text-muted-foreground">
           Get multiple obstacles by their OAS numbers in a single request.
@@ -279,15 +289,35 @@ function ObstaclesDocs() {
           <tbody>
             {[
               ['oasNumber', 'string', 'Unique OAS number identifier'],
-              ['type', 'string', 'Obstacle type (e.g., TOWER, BLDG, STACK, CRANE, POLE)'],
+              [
+                'type',
+                'string',
+                'Obstacle type (e.g., TOWER, BLDG, STACK, CRANE, POLE)',
+              ],
               ['latitude', 'number', 'Latitude in decimal degrees'],
               ['longitude', 'number', 'Longitude in decimal degrees'],
               ['heightAgl', 'number', 'Height above ground level in feet'],
               ['heightMsl', 'number', 'Height above mean sea level in feet'],
-              ['lighting', 'string | null', 'Lighting code: R (red), D (dual), W (white), S (strobe), N (none)'],
-              ['marking', 'string | null', 'Marking code: P (painted), F (flag), N (none)'],
-              ['horizontalAccuracy', 'number | null', 'Horizontal position accuracy in feet'],
-              ['verticalAccuracy', 'number | null', 'Vertical position accuracy in feet'],
+              [
+                'lighting',
+                'string | null',
+                'Lighting code: R (red), D (dual), W (white), S (strobe), N (none)',
+              ],
+              [
+                'marking',
+                'string | null',
+                'Marking code: P (painted), F (flag), N (none)',
+              ],
+              [
+                'horizontalAccuracy',
+                'number | null',
+                'Horizontal position accuracy in feet',
+              ],
+              [
+                'verticalAccuracy',
+                'number | null',
+                'Vertical position accuracy in feet',
+              ],
               ['state', 'string', 'Two-letter state code'],
               ['city', 'string | null', 'Nearest city'],
             ].map(([field, type, desc]) => (

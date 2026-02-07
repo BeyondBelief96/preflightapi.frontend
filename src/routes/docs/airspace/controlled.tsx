@@ -16,8 +16,8 @@ function ControlledAirspaceDocs() {
           <TierBadge tier="starter" />
         </div>
         <p className="mt-4 text-lg text-muted-foreground">
-          Retrieve controlled airspace boundary data (Classes A, B, C, D, and E).
-          Query by airspace class, city, state, or ICAO/FAA identifier.
+          Retrieve controlled airspace boundary data (Classes A, B, C, D, and
+          E). Query by airspace class, city, state, or ICAO/FAA identifier.
         </p>
       </div>
 
@@ -27,7 +27,9 @@ function ControlledAirspaceDocs() {
           <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
             GET
           </Badge>
-          <code className="text-sm font-semibold">/api/airspaces/by-classes?classes={'{classes}'}</code>
+          <code className="text-sm font-semibold">
+            /api/airspaces/by-classes?classes={'{classes}'}
+          </code>
         </div>
         <p className="text-muted-foreground">
           Get controlled airspaces filtered by one or more airspace classes.
@@ -89,7 +91,9 @@ function ControlledAirspaceDocs() {
           <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
             GET
           </Badge>
-          <code className="text-sm font-semibold">/api/airspaces/by-cities?cities={'{cities}'}</code>
+          <code className="text-sm font-semibold">
+            /api/airspaces/by-cities?cities={'{cities}'}
+          </code>
         </div>
         <p className="text-muted-foreground">
           Get controlled airspaces filtered by one or more city names.
@@ -130,7 +134,9 @@ function ControlledAirspaceDocs() {
           <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
             GET
           </Badge>
-          <code className="text-sm font-semibold">/api/airspaces/by-states?states={'{states}'}</code>
+          <code className="text-sm font-semibold">
+            /api/airspaces/by-states?states={'{states}'}
+          </code>
         </div>
         <p className="text-muted-foreground">
           Get controlled airspaces filtered by one or more state codes.
@@ -171,7 +177,9 @@ function ControlledAirspaceDocs() {
           <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
             GET
           </Badge>
-          <code className="text-sm font-semibold">/api/airspaces/by-icao-or-idents?icaoOrIdents={'{icaoOrIdents}'}</code>
+          <code className="text-sm font-semibold">
+            /api/airspaces/by-icao-or-idents?icaoOrIdents={'{icaoOrIdents}'}
+          </code>
         </div>
         <p className="text-muted-foreground">
           Get controlled airspaces associated with specific airports by ICAO
@@ -194,8 +202,7 @@ function ControlledAirspaceDocs() {
               </td>
               <td className="py-2 text-muted-foreground">string</td>
               <td className="py-2 text-muted-foreground">
-                Comma-separated ICAO codes or FAA identifiers (e.g.,
-                KJFK,KLGA)
+                Comma-separated ICAO codes or FAA identifiers (e.g., KJFK,KLGA)
               </td>
             </tr>
           </tbody>
@@ -228,7 +235,11 @@ function ControlledAirspaceDocs() {
               ['icaoId', 'string | null', 'Associated ICAO identifier'],
               ['lowerAltitude', 'number', 'Lower altitude limit in feet MSL'],
               ['upperAltitude', 'number', 'Upper altitude limit in feet MSL'],
-              ['boundary', 'Coordinate[]', 'Array of lat/lon points defining the airspace boundary'],
+              [
+                'boundary',
+                'Coordinate[]',
+                'Array of lat/lon points defining the airspace boundary',
+              ],
             ].map(([field, type, desc]) => (
               <tr key={field} className="border-b">
                 <td className="py-2">

@@ -28,7 +28,9 @@ function RunwaysDocs() {
           <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
             GET
           </Badge>
-          <code className="text-sm font-semibold">/api/airports/{'{icaoCodeOrIdent}'}/runways</code>
+          <code className="text-sm font-semibold">
+            /api/airports/{'{icaoCodeOrIdent}'}/runways
+          </code>
         </div>
         <p className="text-muted-foreground">
           Get all runways and runway end details for a specific airport.
@@ -112,9 +114,21 @@ function RunwaysDocs() {
             {[
               ['length', 'number', 'Runway length in feet'],
               ['width', 'number', 'Runway width in feet'],
-              ['surfaceType', 'string | null', 'Surface material (e.g., ASPH, CONC, TURF)'],
-              ['surfaceCondition', 'string | null', 'Surface condition (e.g., GOOD, FAIR, POOR)'],
-              ['runwayEnds', 'RunwayEnd[]', 'Array of runway end objects (typically 2)'],
+              [
+                'surfaceType',
+                'string | null',
+                'Surface material (e.g., ASPH, CONC, TURF)',
+              ],
+              [
+                'surfaceCondition',
+                'string | null',
+                'Surface condition (e.g., GOOD, FAIR, POOR)',
+              ],
+              [
+                'runwayEnds',
+                'RunwayEnd[]',
+                'Array of runway end objects (typically 2)',
+              ],
             ].map(([field, type, desc]) => (
               <tr key={field} className="border-b">
                 <td className="py-2">
@@ -141,14 +155,42 @@ function RunwaysDocs() {
           </thead>
           <tbody>
             {[
-              ['designation', 'string', 'Runway end designator (e.g., 04L, 22R)'],
+              [
+                'designation',
+                'string',
+                'Runway end designator (e.g., 04L, 22R)',
+              ],
               ['trueHeading', 'number | null', 'True heading in degrees'],
-              ['elevationFeet', 'number | null', 'Runway end elevation in feet MSL'],
-              ['displacedThresholdFeet', 'number | null', 'Displaced threshold distance in feet'],
-              ['approachType', 'string | null', 'Instrument approach type (e.g., ILS, RNAV, VOR)'],
-              ['lighting', 'string | null', 'Runway edge lighting type (e.g., HIRL, MIRL, LIRL)'],
-              ['latitude', 'number | null', 'Runway end latitude in decimal degrees'],
-              ['longitude', 'number | null', 'Runway end longitude in decimal degrees'],
+              [
+                'elevationFeet',
+                'number | null',
+                'Runway end elevation in feet MSL',
+              ],
+              [
+                'displacedThresholdFeet',
+                'number | null',
+                'Displaced threshold distance in feet',
+              ],
+              [
+                'approachType',
+                'string | null',
+                'Instrument approach type (e.g., ILS, RNAV, VOR)',
+              ],
+              [
+                'lighting',
+                'string | null',
+                'Runway edge lighting type (e.g., HIRL, MIRL, LIRL)',
+              ],
+              [
+                'latitude',
+                'number | null',
+                'Runway end latitude in decimal degrees',
+              ],
+              [
+                'longitude',
+                'number | null',
+                'Runway end longitude in decimal degrees',
+              ],
             ].map(([field, type, desc]) => (
               <tr key={field} className="border-b">
                 <td className="py-2">

@@ -1,18 +1,22 @@
 import { Link } from '@tanstack/react-router'
 import {
-  LayoutDashboard,
-  Key,
-  CreditCard,
-  Settings,
   BookOpen,
+  CreditCard,
+  Key,
+  LayoutDashboard,
   Rocket,
+  Settings,
 } from 'lucide-react'
 
 const sidebarLinks = [
   { label: 'Overview', href: '/dashboard', icon: LayoutDashboard },
   { label: 'API Keys', href: '/dashboard/keys', icon: Key },
   { label: 'Billing', href: '/dashboard/billing', icon: CreditCard },
-  { label: 'Getting Started', href: '/dashboard/getting-started', icon: Rocket },
+  {
+    label: 'Getting Started',
+    href: '/dashboard/getting-started',
+    icon: Rocket,
+  },
   { label: 'Settings', href: '/dashboard/settings', icon: Settings },
 ]
 
@@ -50,8 +54,7 @@ export function DashboardSidebar() {
               to={link.href}
               className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
               activeProps={{
-                className:
-                  'bg-sidebar-accent text-sidebar-accent-foreground',
+                className: 'bg-sidebar-accent text-sidebar-accent-foreground',
               }}
               activeOptions={{ exact: link.href === '/dashboard' }}
             >

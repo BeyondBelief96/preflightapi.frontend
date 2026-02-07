@@ -1,16 +1,16 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
-import { Card, CardContent } from '@/components/ui/card'
-import { GATEWAY_URL } from '@/lib/gateway-url'
+import { Link, createFileRoute } from '@tanstack/react-router'
 import {
-  Cloud,
-  Plane,
-  Map,
   AlertTriangle,
-  Navigation,
   BookOpen,
+  Cloud,
   Key,
+  Map,
+  Navigation,
+  Plane,
   Zap,
 } from 'lucide-react'
+import { Card, CardContent } from '@/components/ui/card'
+import { GATEWAY_URL } from '@/lib/gateway-url'
 
 export const Route = createFileRoute('/docs/')({
   component: DocsIndex,
@@ -89,7 +89,8 @@ function DocsIndex() {
         </code>
         <p className="mt-2 text-sm text-muted-foreground">
           All API endpoints are relative to this base URL. Requests must include
-          an <code className="text-foreground">Ocp-Apim-Subscription-Key</code> header.
+          an <code className="text-foreground">Ocp-Apim-Subscription-Key</code>{' '}
+          header.
         </p>
       </div>
 

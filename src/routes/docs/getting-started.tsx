@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { Link, createFileRoute } from '@tanstack/react-router'
 import { GATEWAY_URL } from '@/lib/gateway-url'
 
 export const Route = createFileRoute('/docs/getting-started')({
@@ -31,10 +31,7 @@ function GettingStartedDocs() {
         <h2 className="text-2xl font-semibold">2. Get Your API Key</h2>
         <p className="text-muted-foreground">
           Navigate to the{' '}
-          <Link
-            to="/dashboard/keys"
-            className="text-accent hover:underline"
-          >
+          <Link to="/dashboard/keys" className="text-accent hover:underline">
             API Keys
           </Link>{' '}
           section of your dashboard. Your subscription includes a primary and
@@ -45,8 +42,8 @@ function GettingStartedDocs() {
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold">3. Make Your First Request</h2>
         <p className="text-muted-foreground">
-          Include your API key in the{' '}
-          <code>Ocp-Apim-Subscription-Key</code> header:
+          Include your API key in the <code>Ocp-Apim-Subscription-Key</code>{' '}
+          header:
         </p>
 
         <div className="space-y-4">

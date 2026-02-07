@@ -6,6 +6,7 @@ import { EndpointShowcase } from '@/components/marketing/endpoint-showcase'
 import { PricingPreview } from '@/components/marketing/pricing-preview'
 import { CtaSection } from '@/components/marketing/cta-section'
 import { StatsBar } from '@/components/marketing/stats-bar'
+import { WhySection } from '@/components/marketing/why-section'
 
 export const Route = createFileRoute('/_marketing/')({
   head: () =>
@@ -24,6 +25,7 @@ function LandingPage() {
       <HeroSection />
       <StatsBar />
       <FeaturesGrid />
+      <WhySection />
       <EndpointShowcase />
       <PricingPreview />
       <CtaSection />

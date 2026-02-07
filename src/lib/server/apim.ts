@@ -41,12 +41,13 @@ type SubscriptionListResponse = {
 
 // --- User Management ---
 
-export const getOrCreateApimUser = createServerFn({ method: 'GET' }).handler(async () => {
-  const userId = await requireAuth()
+export const getOrCreateApimUser = createServerFn({ method: 'GET' }).handler(
+  async () => {
+    const userId = await requireAuth()
 
-  const result = await apimFetch<{ properties: { firstName: string; lastName: string; email: string } }>(
-    `/users/${userId}`,
-    {
+    const result = await apimFetch<{
+      properties: { firstName: string; lastName: string; email: string }
+    }>(`/users/${userId}`, {
       method: 'PUT',
       body: JSON.stringify({
         properties: {
@@ -55,11 +56,11 @@ export const getOrCreateApimUser = createServerFn({ method: 'GET' }).handler(asy
           email: `${userId}@clerk.user`,
         },
       }),
-    },
-  )
+    })
 
-  return { userId, ...result.properties }
-})
+    return { userId, ...result.properties }
+  },
+)
 
 // --- Subscription Management ---
 
@@ -100,59 +101,71 @@ export const createSubscription = createServerFn({ method: 'POST' })
     }
   })
 
-export const getUserSubscription = createServerFn({ method: 'GET' }).handler(async () => {
-  const userId = await requireAuth()
+export const getUserSubscription = createServerFn({ method: 'GET' }).handler(
+  async () => {
+    const userId = await requireAuth()
 
-  // Ensure the APIM user exists before querying subscriptions
-  await apimFetch(`/users/${userId}`, {
-    method: 'PUT',
-    body: JSON.stringify({
-      properties: {
-        firstName: 'API',
-        lastName: 'User',
-        email: `${userId}@clerk.user`,
-      },
-    }),
-  })
-
-  // Fetch existing subscriptions
-  const result = await apimFetch<SubscriptionListResponse>(`/users/${userId}/subscriptions`)
-  let subscriptions = result.value
-
-  // Auto-provision a free-tier subscription if the user has none
-  if (subscriptions.length === 0) {
-    const freeTierSubId = `${userId}-free-tier`
-    await apimFetch(`/subscriptions/${freeTierSubId}`, {
+    // Ensure the APIM user exists before querying subscriptions
+    await apimFetch(`/users/${userId}`, {
       method: 'PUT',
       body: JSON.stringify({
         properties: {
-          ownerId: `/users/${userId}`,
-          scope: `/products/free-tier`,
-          displayName: 'Student Pilot (Free)',
-          state: 'active',
+          firstName: 'API',
+          lastName: 'User',
+          email: `${userId}@clerk.user`,
         },
       }),
     })
 
-    // Re-fetch subscriptions after provisioning
-    const refreshed = await apimFetch<SubscriptionListResponse>(`/users/${userId}/subscriptions`)
-    subscriptions = refreshed.value
-  }
+    // Fetch existing subscriptions
+    const result = await apimFetch<SubscriptionListResponse>(
+      `/users/${userId}/subscriptions`,
+    )
+    let subscriptions = result.value
 
-  return subscriptions.map((sub) => {
-    const productId = sub.properties.scope.split('/').pop() ?? ''
-    return {
-      id: sub.name,
-      name: sub.properties.displayName,
-      productId,
-      planId: planIdFromProductId(productId),
-      userId,
-      state: sub.properties.state as 'active' | 'suspended' | 'submitted' | 'rejected' | 'cancelled' | 'expired',
-      createdDate: sub.properties.createdDate,
-      expirationDate: sub.properties.expirationDate,
+    // Auto-provision a free-tier subscription if the user has none
+    if (subscriptions.length === 0) {
+      const freeTierSubId = `${userId}-free-tier`
+      await apimFetch(`/subscriptions/${freeTierSubId}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          properties: {
+            ownerId: `/users/${userId}`,
+            scope: `/products/free-tier`,
+            displayName: 'Student Pilot (Free)',
+            state: 'active',
+          },
+        }),
+      })
+
+      // Re-fetch subscriptions after provisioning
+      const refreshed = await apimFetch<SubscriptionListResponse>(
+        `/users/${userId}/subscriptions`,
+      )
+      subscriptions = refreshed.value
     }
-  })
-})
+
+    return subscriptions.map((sub) => {
+      const productId = sub.properties.scope.split('/').pop() ?? ''
+      return {
+        id: sub.name,
+        name: sub.properties.displayName,
+        productId,
+        planId: planIdFromProductId(productId),
+        userId,
+        state: sub.properties.state as
+          | 'active'
+          | 'suspended'
+          | 'submitted'
+          | 'rejected'
+          | 'cancelled'
+          | 'expired',
+        createdDate: sub.properties.createdDate,
+        expirationDate: sub.properties.expirationDate,
+      }
+    })
+  },
+)
 
 export const getSubscriptionKeys = createServerFn({ method: 'POST' })
   .inputValidator((input: { subscriptionId: string }) => input)
@@ -174,13 +187,18 @@ export const getSubscriptionKeys = createServerFn({ method: 'POST' })
   })
 
 export const regenerateKey = createServerFn({ method: 'POST' })
-  .inputValidator((input: { subscriptionId: string; keyType: 'primary' | 'secondary' }) => input)
+  .inputValidator(
+    (input: { subscriptionId: string; keyType: 'primary' | 'secondary' }) =>
+      input,
+  )
   .handler(async ({ data }) => {
     const userId = await requireAuth()
     requireOwnership(userId, data.subscriptionId)
 
     const endpoint =
-      data.keyType === 'primary' ? 'regeneratePrimaryKey' : 'regenerateSecondaryKey'
+      data.keyType === 'primary'
+        ? 'regeneratePrimaryKey'
+        : 'regenerateSecondaryKey'
 
     await apimFetch(`/subscriptions/${data.subscriptionId}/${endpoint}`, {
       method: 'POST',
@@ -198,7 +216,9 @@ export const regenerateKey = createServerFn({ method: 'POST' })
   })
 
 export const changeTier = createServerFn({ method: 'POST' })
-  .inputValidator((input: { subscriptionId: string; newProductId: string }) => input)
+  .inputValidator(
+    (input: { subscriptionId: string; newProductId: string }) => input,
+  )
   .handler(async ({ data }) => {
     const userId = await requireAuth()
     requireOwnership(userId, data.subscriptionId)
@@ -250,7 +270,8 @@ export const deleteSubscription = createServerFn({ method: 'POST' })
 
 export const getUsageAnalytics = createServerFn({ method: 'GET' })
   .inputValidator(
-    (input: { subscriptionId: string; fromDate: string; toDate: string }) => input,
+    (input: { subscriptionId: string; fromDate: string; toDate: string }) =>
+      input,
   )
   .handler(async ({ data }) => {
     const userId = await requireAuth()

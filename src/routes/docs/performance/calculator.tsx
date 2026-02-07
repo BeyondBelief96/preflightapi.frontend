@@ -28,7 +28,9 @@ function PerformanceCalculatorDocs() {
           <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
             GET
           </Badge>
-          <code className="text-sm font-semibold">/api/performance/crosswind/{'{icaoCodeOrIdent}'}</code>
+          <code className="text-sm font-semibold">
+            /api/performance/crosswind/{'{icaoCodeOrIdent}'}
+          </code>
         </div>
         <p className="text-muted-foreground">
           Calculate the crosswind and headwind/tailwind components for each
@@ -118,7 +120,9 @@ function PerformanceCalculatorDocs() {
           <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">
             POST
           </Badge>
-          <code className="text-sm font-semibold">/api/performance/crosswind/calculate</code>
+          <code className="text-sm font-semibold">
+            /api/performance/crosswind/calculate
+          </code>
         </div>
         <p className="text-muted-foreground">
           Calculate crosswind and headwind/tailwind components with
@@ -138,7 +142,11 @@ function PerformanceCalculatorDocs() {
             {[
               ['windDirection', 'number', 'Wind direction in degrees (0-360)'],
               ['windSpeed', 'number', 'Wind speed in knots'],
-              ['windGust', 'number | null', 'Wind gust speed in knots (optional)'],
+              [
+                'windGust',
+                'number | null',
+                'Wind gust speed in knots (optional)',
+              ],
               ['runwayHeading', 'number', 'Runway heading in degrees (0-360)'],
             ].map(([field, type, desc]) => (
               <tr key={field} className="border-b">
@@ -183,7 +191,9 @@ function PerformanceCalculatorDocs() {
           <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
             GET
           </Badge>
-          <code className="text-sm font-semibold">/api/performance/density-altitude/{'{icaoCodeOrIdent}'}</code>
+          <code className="text-sm font-semibold">
+            /api/performance/density-altitude/{'{icaoCodeOrIdent}'}
+          </code>
         </div>
         <p className="text-muted-foreground">
           Calculate the density altitude at an airport using current METAR data
@@ -240,7 +250,9 @@ function PerformanceCalculatorDocs() {
           <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">
             POST
           </Badge>
-          <code className="text-sm font-semibold">/api/performance/density-altitude/calculate</code>
+          <code className="text-sm font-semibold">
+            /api/performance/density-altitude/calculate
+          </code>
         </div>
         <p className="text-muted-foreground">
           Calculate density altitude with manually-provided values for
@@ -258,10 +270,22 @@ function PerformanceCalculatorDocs() {
           </thead>
           <tbody>
             {[
-              ['fieldElevation', 'number', 'Airport field elevation in feet MSL'],
+              [
+                'fieldElevation',
+                'number',
+                'Airport field elevation in feet MSL',
+              ],
               ['temperature', 'number', 'Outside air temperature in Celsius'],
-              ['altimeter', 'number', 'Altimeter setting in inches of mercury (inHg)'],
-              ['dewpoint', 'number | null', 'Dewpoint in Celsius (optional, improves accuracy)'],
+              [
+                'altimeter',
+                'number',
+                'Altimeter setting in inches of mercury (inHg)',
+              ],
+              [
+                'dewpoint',
+                'number | null',
+                'Dewpoint in Celsius (optional, improves accuracy)',
+              ],
             ].map(([field, type, desc]) => (
               <tr key={field} className="border-b">
                 <td className="py-2">
@@ -316,10 +340,26 @@ function PerformanceCalculatorDocs() {
           <tbody>
             {[
               ['crosswindComponent', 'number', 'Crosswind component in knots'],
-              ['headwindComponent', 'number', 'Headwind component in knots (negative = tailwind)'],
-              ['crosswindDirection', 'string', 'LEFT or RIGHT relative to runway heading'],
-              ['gustCrosswindComponent', 'number | null', 'Gust crosswind component in knots'],
-              ['gustHeadwindComponent', 'number | null', 'Gust headwind component in knots'],
+              [
+                'headwindComponent',
+                'number',
+                'Headwind component in knots (negative = tailwind)',
+              ],
+              [
+                'crosswindDirection',
+                'string',
+                'LEFT or RIGHT relative to runway heading',
+              ],
+              [
+                'gustCrosswindComponent',
+                'number | null',
+                'Gust crosswind component in knots',
+              ],
+              [
+                'gustHeadwindComponent',
+                'number | null',
+                'Gust headwind component in knots',
+              ],
             ].map(([field, type, desc]) => (
               <tr key={field} className="border-b">
                 <td className="py-2">
@@ -335,7 +375,9 @@ function PerformanceCalculatorDocs() {
 
       {/* Density altitude response fields */}
       <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">Density Altitude Response Fields</h2>
+        <h2 className="text-2xl font-semibold">
+          Density Altitude Response Fields
+        </h2>
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b">
@@ -346,15 +388,35 @@ function PerformanceCalculatorDocs() {
           </thead>
           <tbody>
             {[
-              ['stationId', 'string', 'ICAO station identifier (METAR-based only)'],
-              ['fieldElevation', 'number', 'Airport field elevation in feet MSL'],
+              [
+                'stationId',
+                'string',
+                'ICAO station identifier (METAR-based only)',
+              ],
+              [
+                'fieldElevation',
+                'number',
+                'Airport field elevation in feet MSL',
+              ],
               ['temperature', 'number', 'Temperature in Celsius'],
               ['dewpoint', 'number | null', 'Dewpoint in Celsius'],
               ['altimeter', 'number', 'Altimeter setting in inHg'],
               ['pressureAltitude', 'number', 'Pressure altitude in feet'],
-              ['densityAltitude', 'number', 'Calculated density altitude in feet'],
-              ['standardTemperature', 'number', 'ISA standard temperature at the field elevation in Celsius'],
-              ['temperatureDeviation', 'number', 'Deviation from standard temperature in Celsius'],
+              [
+                'densityAltitude',
+                'number',
+                'Calculated density altitude in feet',
+              ],
+              [
+                'standardTemperature',
+                'number',
+                'ISA standard temperature at the field elevation in Celsius',
+              ],
+              [
+                'temperatureDeviation',
+                'number',
+                'Deviation from standard temperature in Celsius',
+              ],
             ].map(([field, type, desc]) => (
               <tr key={field} className="border-b">
                 <td className="py-2">

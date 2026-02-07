@@ -47,10 +47,18 @@ function NavLogDocs() {
           </thead>
           <tbody>
             {[
-              ['waypoints', 'string[]', 'Array of ICAO codes, identifiers, or lat/lon strings'],
+              [
+                'waypoints',
+                'string[]',
+                'Array of ICAO codes, identifiers, or lat/lon strings',
+              ],
               ['altitude', 'number', 'Cruise altitude in feet MSL'],
               ['trueAirspeed', 'number', 'True airspeed in knots'],
-              ['fuelBurnRate', 'number | null', 'Fuel burn rate in gallons per hour (optional)'],
+              [
+                'fuelBurnRate',
+                'number | null',
+                'Fuel burn rate in gallons per hour (optional)',
+              ],
             ].map(([field, type, desc]) => (
               <tr key={field} className="border-b">
                 <td className="py-2">
@@ -108,7 +116,9 @@ function NavLogDocs() {
           <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">
             POST
           </Badge>
-          <code className="text-sm font-semibold">/api/navlog/bearing-and-distance</code>
+          <code className="text-sm font-semibold">
+            /api/navlog/bearing-and-distance
+          </code>
         </div>
         <p className="text-muted-foreground">
           Calculate the bearing and distance between two geographic points.
@@ -125,8 +135,16 @@ function NavLogDocs() {
           </thead>
           <tbody>
             {[
-              ['from', 'string', 'Origin point - ICAO code, identifier, or "lat,lon"'],
-              ['to', 'string', 'Destination point - ICAO code, identifier, or "lat,lon"'],
+              [
+                'from',
+                'string',
+                'Origin point - ICAO code, identifier, or "lat,lon"',
+              ],
+              [
+                'to',
+                'string',
+                'Destination point - ICAO code, identifier, or "lat,lon"',
+              ],
             ].map(([field, type, desc]) => (
               <tr key={field} className="border-b">
                 <td className="py-2">
@@ -168,7 +186,9 @@ function NavLogDocs() {
           <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
             GET
           </Badge>
-          <code className="text-sm font-semibold">/api/navlog/winds-aloft/{'{forecast}'}</code>
+          <code className="text-sm font-semibold">
+            /api/navlog/winds-aloft/{'{forecast}'}
+          </code>
         </div>
         <p className="text-muted-foreground">
           Get winds aloft forecast data. Available for 6, 12, and 24 hour
@@ -253,14 +273,34 @@ function NavLogDocs() {
               ['to', 'string', 'Destination waypoint identifier'],
               ['trueCourse', 'number', 'True course in degrees'],
               ['magneticCourse', 'number', 'Magnetic course in degrees'],
-              ['trueHeading', 'number', 'True heading with wind correction in degrees'],
-              ['magneticHeading', 'number', 'Magnetic heading with wind correction in degrees'],
+              [
+                'trueHeading',
+                'number',
+                'True heading with wind correction in degrees',
+              ],
+              [
+                'magneticHeading',
+                'number',
+                'Magnetic heading with wind correction in degrees',
+              ],
               ['distanceNm', 'number', 'Leg distance in nautical miles'],
               ['groundSpeed', 'number', 'Estimated ground speed in knots'],
               ['timeMinutes', 'number', 'Estimated leg time in minutes'],
-              ['fuelGallons', 'number | null', 'Estimated fuel burn in gallons'],
-              ['windDirection', 'number | null', 'Wind direction at cruise altitude in degrees'],
-              ['windSpeed', 'number | null', 'Wind speed at cruise altitude in knots'],
+              [
+                'fuelGallons',
+                'number | null',
+                'Estimated fuel burn in gallons',
+              ],
+              [
+                'windDirection',
+                'number | null',
+                'Wind direction at cruise altitude in degrees',
+              ],
+              [
+                'windSpeed',
+                'number | null',
+                'Wind speed at cruise altitude in knots',
+              ],
             ].map(([field, type, desc]) => (
               <tr key={field} className="border-b">
                 <td className="py-2">

@@ -1,21 +1,28 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { Link, createFileRoute  } from '@tanstack/react-router'
+import {
+  ArrowRight,
+  BookOpen,
+  Check,
+  ExternalLink,
+  KeyRound,
+  Loader2,
+} from 'lucide-react'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { useAuth } from '@clerk/clerk-react'
+import { z } from 'zod'
+import type {EndpointTier} from '@/lib/constants';
 import { createPageHead } from '@/lib/seo'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Check, Loader2, ExternalLink, ArrowRight, KeyRound, BookOpen } from 'lucide-react'
-import { PLANS, ENDPOINT_ACCESS, type EndpointTier } from '@/lib/constants'
-import { Link } from '@tanstack/react-router'
-import { useQuery, useMutation } from '@tanstack/react-query'
-import { useAuth } from '@clerk/clerk-react'
-import { getUserSubscription, getUsageAnalytics } from '@/lib/server/apim'
+import { ENDPOINT_ACCESS,  PLANS } from '@/lib/constants'
+import { getUsageAnalytics, getUserSubscription } from '@/lib/server/apim'
 import {
   createCheckoutSession,
   createPortalSession,
   getStripeSubscription,
 } from '@/lib/server/stripe'
 import { apimKeys, stripeKeys } from '@/lib/server/apim-queries'
-import { z } from 'zod'
 
 const billingSearchSchema = z.object({
   checkout: z.enum(['success', 'canceled']).optional(),
@@ -40,20 +47,44 @@ const TIER_RANK: Record<EndpointTier, number> = {
 }
 
 const ENDPOINT_DOCS: Record<string, { label: string; href: string }> = {
-  'pirep': { label: 'PIREPs', href: '/docs/weather/pirep' },
-  'airmet-sigmet': { label: 'AIRMETs/SIGMETs', href: '/docs/weather/airmet-sigmet' },
+  pirep: { label: 'PIREPs', href: '/docs/weather/pirep' },
+  'airmet-sigmet': {
+    label: 'AIRMETs/SIGMETs',
+    href: '/docs/weather/airmet-sigmet',
+  },
   'g-airmet': { label: 'G-AIRMETs', href: '/docs/weather/g-airmet' },
-  'airspace/controlled': { label: 'Controlled Airspace', href: '/docs/airspace/controlled' },
-  'airspace/special-use': { label: 'Special Use Airspace', href: '/docs/airspace/special-use' },
-  'navigation/obstacles': { label: 'Obstacle Database', href: '/docs/navigation/obstacles' },
-  'notams': { label: 'NOTAMs', href: '/docs/notams' },
-  'airports/diagrams': { label: 'Airport Diagrams', href: '/docs/airports/diagrams' },
-  'charts/supplements': { label: 'Chart Supplements', href: '/docs/charts/supplements' },
-  'performance/calculator': { label: 'Performance Calculator', href: '/docs/performance/calculator' },
-  'navigation/nav-log': { label: 'Navigation Log', href: '/docs/navigation/nav-log' },
+  'airspace/controlled': {
+    label: 'Controlled Airspace',
+    href: '/docs/airspace/controlled',
+  },
+  'airspace/special-use': {
+    label: 'Special Use Airspace',
+    href: '/docs/airspace/special-use',
+  },
+  'navigation/obstacles': {
+    label: 'Obstacle Database',
+    href: '/docs/navigation/obstacles',
+  },
+  notams: { label: 'NOTAMs', href: '/docs/notams' },
+  'airports/diagrams': {
+    label: 'Airport Diagrams',
+    href: '/docs/airports/diagrams',
+  },
+  'charts/supplements': {
+    label: 'Chart Supplements',
+    href: '/docs/charts/supplements',
+  },
+  'performance/calculator': {
+    label: 'Performance Calculator',
+    href: '/docs/performance/calculator',
+  },
+  'navigation/nav-log': {
+    label: 'Navigation Log',
+    href: '/docs/navigation/nav-log',
+  },
 }
 
-function getNewEndpoints(planId: string): { label: string; href: string }[] {
+function getNewEndpoints(planId: string): Array<{ label: string; href: string }> {
   const rank = TIER_RANK[planId as EndpointTier] ?? 0
   return Object.entries(ENDPOINT_ACCESS)
     .filter(([, tier]) => TIER_RANK[tier] > 0 && TIER_RANK[tier] <= rank)
@@ -114,8 +145,7 @@ function BillingPage() {
   })
 
   const checkoutMutation = useMutation({
-    mutationFn: (planId: string) =>
-      createCheckoutSession({ data: { planId } }),
+    mutationFn: (planId: string) => createCheckoutSession({ data: { planId } }),
     onSuccess: (data) => {
       if (data.url) {
         window.location.href = data.url
@@ -134,7 +164,9 @@ function BillingPage() {
 
   const callsUsed = usageQuery.data?.callCountTotal ?? 0
   const callsLimit = currentPlan.limits.callsPerMonth
-  const usagePercent = callsLimit ? Math.min((callsUsed / callsLimit) * 100, 100) : 0
+  const usagePercent = callsLimit
+    ? Math.min((callsUsed / callsLimit) * 100, 100)
+    : 0
 
   if (subscriptionsQuery.isLoading) {
     return (
@@ -176,7 +208,11 @@ function BillingPage() {
             <div>
               <div className="flex items-center gap-3">
                 <h3 className="text-2xl font-bold">{currentPlan.name}</h3>
-                <Badge>{activeSubscription?.state === 'active' ? 'Active' : 'Inactive'}</Badge>
+                <Badge>
+                  {activeSubscription?.state === 'active'
+                    ? 'Active'
+                    : 'Inactive'}
+                </Badge>
               </div>
               <p className="mt-1 text-muted-foreground">
                 {currentPlan.price === 0
@@ -265,8 +301,8 @@ function BillingPage() {
           </div>
           {usageQuery.isError && (
             <p className="mt-4 text-sm text-muted-foreground">
-              Unable to load usage data. Usage will appear when APIM
-              credentials are configured.
+              Unable to load usage data. Usage will appear when APIM credentials
+              are configured.
             </p>
           )}
         </CardContent>
@@ -308,11 +344,7 @@ function BillingPage() {
   )
 }
 
-function UpgradeSuccessCard({
-  plan,
-}: {
-  plan: (typeof PLANS)[number]
-}) {
+function UpgradeSuccessCard({ plan }: { plan: (typeof PLANS)[number] }) {
   const newEndpoints = getNewEndpoints(plan.id)
 
   return (
@@ -366,7 +398,8 @@ function UpgradeSuccessCard({
               </ul>
               <Link to="/docs">
                 <Button variant="link" className="mt-2 h-auto p-0 text-sm">
-                  Browse full documentation <ArrowRight className="ml-1 h-3 w-3" />
+                  Browse full documentation{' '}
+                  <ArrowRight className="ml-1 h-3 w-3" />
                 </Button>
               </Link>
             </div>

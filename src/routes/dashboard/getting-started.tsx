@@ -1,10 +1,9 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { Link, createFileRoute  } from '@tanstack/react-router'
+import { ArrowRight, Check } from 'lucide-react'
+import { useUser } from '@clerk/clerk-react'
 import { createPageHead } from '@/lib/seo'
-import { Link } from '@tanstack/react-router'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Check, ArrowRight } from 'lucide-react'
-import { useUser } from '@clerk/clerk-react'
 import { GATEWAY_URL } from '@/lib/gateway-url'
 
 export const Route = createFileRoute('/dashboard/getting-started')({
@@ -27,7 +26,8 @@ const steps = [
   {
     id: 'plan',
     title: 'Choose a plan',
-    description: 'Select a plan that fits your needs. Start free or upgrade anytime.',
+    description:
+      'Select a plan that fits your needs. Start free or upgrade anytime.',
     href: '/dashboard/billing',
     cta: 'View Plans',
   },
@@ -65,7 +65,11 @@ function GettingStartedPage() {
         {steps.map((step, index) => (
           <Card
             key={step.id}
-            className={step.completed ? 'border-aviation-success/50 bg-aviation-success/5' : ''}
+            className={
+              step.completed
+                ? 'border-aviation-success/50 bg-aviation-success/5'
+                : ''
+            }
           >
             <CardContent className="flex items-start gap-4 p-6">
               <div className="mt-0.5">

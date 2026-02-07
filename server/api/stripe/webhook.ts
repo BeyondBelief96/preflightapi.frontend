@@ -1,5 +1,5 @@
-import { defineEventHandler, readRawBody, getHeader } from 'h3'
-import Stripe from 'stripe'
+import { defineEventHandler, getHeader, readRawBody } from 'h3'
+import type Stripe from 'stripe'
 
 export default defineEventHandler(async (event) => {
   let getStripe: typeof import('../../../src/lib/server/stripe-client').getStripe
@@ -7,7 +7,8 @@ export default defineEventHandler(async (event) => {
   let PLANS: typeof import('../../../src/lib/constants').PLANS
 
   try {
-    const stripeClientMod = await import('../../../src/lib/server/stripe-client')
+    const stripeClientMod =
+      await import('../../../src/lib/server/stripe-client')
     const apimClientMod = await import('../../../src/lib/server/apim-client')
     const constantsMod = await import('../../../src/lib/constants')
     getStripe = stripeClientMod.getStripe
@@ -45,7 +46,7 @@ export default defineEventHandler(async (event) => {
   try {
     switch (stripeEvent.type) {
       case 'checkout.session.completed': {
-        const session = stripeEvent.data.object as Stripe.Checkout.Session
+        const session = stripeEvent.data.object
         const clerkUserId = session.metadata?.clerkUserId
         const planId = session.metadata?.planId
 
@@ -57,17 +58,21 @@ export default defineEventHandler(async (event) => {
             console.warn(`[Stripe Webhook] No plan found for planId=${planId}`)
           }
         } else {
-          console.warn('[Stripe Webhook] Missing clerkUserId or planId in checkout session metadata')
+          console.warn(
+            '[Stripe Webhook] Missing clerkUserId or planId in checkout session metadata',
+          )
         }
         break
       }
 
       case 'customer.subscription.updated': {
-        const subscription = stripeEvent.data.object as Stripe.Subscription
+        const subscription = stripeEvent.data.object
         const clerkUserId = subscription.metadata?.clerkUserId
 
         if (!clerkUserId) {
-          console.warn('[Stripe Webhook] No clerkUserId in subscription metadata, skipping')
+          console.warn(
+            '[Stripe Webhook] No clerkUserId in subscription metadata, skipping',
+          )
           break
         }
 
@@ -82,7 +87,9 @@ export default defineEventHandler(async (event) => {
           if (plan) {
             await syncTierToApim(apimFetch, clerkUserId, plan.apimProductId)
           } else {
-            console.warn(`[Stripe Webhook] Could not resolve plan — priceId=${priceId}, metadataPlanId=${metadataPlanId}`)
+            console.warn(
+              `[Stripe Webhook] Could not resolve plan — priceId=${priceId}, metadataPlanId=${metadataPlanId}`,
+            )
           }
         } else {
           await syncTierToApim(apimFetch, clerkUserId, 'free-tier')
@@ -91,20 +98,24 @@ export default defineEventHandler(async (event) => {
       }
 
       case 'customer.subscription.deleted': {
-        const subscription = stripeEvent.data.object as Stripe.Subscription
+        const subscription = stripeEvent.data.object
         const clerkUserId = subscription.metadata?.clerkUserId
 
         if (clerkUserId) {
           await syncTierToApim(apimFetch, clerkUserId, 'free-tier')
         } else {
-          console.warn('[Stripe Webhook] No clerkUserId in deleted subscription metadata')
+          console.warn(
+            '[Stripe Webhook] No clerkUserId in deleted subscription metadata',
+          )
         }
         break
       }
 
       case 'invoice.payment_failed': {
-        const invoice = stripeEvent.data.object as Stripe.Invoice
-        console.warn(`[Stripe Webhook] Payment failed for customer ${invoice.customer}`)
+        const invoice = stripeEvent.data.object
+        console.warn(
+          `[Stripe Webhook] Payment failed for customer ${invoice.customer}`,
+        )
         break
       }
     }
@@ -149,9 +160,7 @@ async function syncTierToApim(
     `/users/${clerkUserId}/subscriptions`,
   )
 
-  const activeSub = result.value.find(
-    (s) => s.properties.state === 'active',
-  )
+  const activeSub = result.value.find((s) => s.properties.state === 'active')
 
   if (!activeSub) {
     console.warn(

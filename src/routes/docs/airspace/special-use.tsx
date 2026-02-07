@@ -29,7 +29,9 @@ function SpecialUseAirspaceDocs() {
           <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
             GET
           </Badge>
-          <code className="text-sm font-semibold">/api/airspaces/special-use/by-type-codes?typeCodes={'{typeCodes}'}</code>
+          <code className="text-sm font-semibold">
+            /api/airspaces/special-use/by-type-codes?typeCodes={'{typeCodes}'}
+          </code>
         </div>
         <p className="text-muted-foreground">
           Get special use airspaces filtered by one or more type codes.
@@ -108,7 +110,9 @@ function SpecialUseAirspaceDocs() {
           <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
             GET
           </Badge>
-          <code className="text-sm font-semibold">/api/airspaces/special-use/by-global-ids?globalIds={'{globalIds}'}</code>
+          <code className="text-sm font-semibold">
+            /api/airspaces/special-use/by-global-ids?globalIds={'{globalIds}'}
+          </code>
         </div>
         <p className="text-muted-foreground">
           Get specific special use airspaces by their global identifiers.
@@ -158,13 +162,33 @@ function SpecialUseAirspaceDocs() {
             {[
               ['globalId', 'string', 'Unique global identifier for the SUA'],
               ['name', 'string', 'Name of the special use airspace'],
-              ['typeCode', 'string', 'Type code: R (restricted), P (prohibited), MOA, W (warning), A (alert)'],
+              [
+                'typeCode',
+                'string',
+                'Type code: R (restricted), P (prohibited), MOA, W (warning), A (alert)',
+              ],
               ['lowerAltitude', 'number', 'Lower altitude limit in feet MSL'],
               ['upperAltitude', 'number', 'Upper altitude limit in feet MSL'],
-              ['controllingAgency', 'string | null', 'ATC facility controlling the airspace'],
-              ['schedulingAgency', 'string | null', 'Agency responsible for scheduling use'],
-              ['hoursOfOperation', 'string | null', 'Operating schedule (e.g., CONTINUOUS, BY NOTAM)'],
-              ['boundary', 'Coordinate[]', 'Array of lat/lon points defining the airspace boundary'],
+              [
+                'controllingAgency',
+                'string | null',
+                'ATC facility controlling the airspace',
+              ],
+              [
+                'schedulingAgency',
+                'string | null',
+                'Agency responsible for scheduling use',
+              ],
+              [
+                'hoursOfOperation',
+                'string | null',
+                'Operating schedule (e.g., CONTINUOUS, BY NOTAM)',
+              ],
+              [
+                'boundary',
+                'Coordinate[]',
+                'Array of lat/lon points defining the airspace boundary',
+              ],
             ].map(([field, type, desc]) => (
               <tr key={field} className="border-b">
                 <td className="py-2">
@@ -191,11 +215,31 @@ function SpecialUseAirspaceDocs() {
           </thead>
           <tbody>
             {[
-              ['P', 'Prohibited', 'Flight is prohibited under all circumstances'],
-              ['R', 'Restricted', 'Flight restricted during active times; hazardous activities'],
-              ['MOA', 'Military Operations Area', 'Military training and operations; VFR flight permitted'],
-              ['W', 'Warning', 'Similar to restricted but extends into international waters'],
-              ['A', 'Alert', 'High volume of pilot training or unusual aerial activity'],
+              [
+                'P',
+                'Prohibited',
+                'Flight is prohibited under all circumstances',
+              ],
+              [
+                'R',
+                'Restricted',
+                'Flight restricted during active times; hazardous activities',
+              ],
+              [
+                'MOA',
+                'Military Operations Area',
+                'Military training and operations; VFR flight permitted',
+              ],
+              [
+                'W',
+                'Warning',
+                'Similar to restricted but extends into international waters',
+              ],
+              [
+                'A',
+                'Alert',
+                'High volume of pilot training or unusual aerial activity',
+              ],
             ].map(([code, name, desc]) => (
               <tr key={code} className="border-b">
                 <td className="py-2">

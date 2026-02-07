@@ -5,8 +5,7 @@ const footerLinks = {
   Product: [
     { label: 'Pricing', href: '/pricing' },
     { label: 'Documentation', href: '/docs' },
-    { label: 'API Status', href: '#' },
-    { label: 'Changelog', href: '#' },
+    { label: 'Getting Started', href: '/docs/getting-started' },
   ],
   Company: [
     { label: 'About', href: '/about' },
@@ -17,9 +16,9 @@ const footerLinks = {
     { label: 'Privacy Policy', href: '/legal/privacy' },
   ],
   Developers: [
-    { label: 'Getting Started', href: '/docs/getting-started' },
+    { label: 'Authentication', href: '/docs/authentication' },
     { label: 'API Reference', href: '/docs' },
-    { label: 'SDKs & Libraries', href: '#' },
+    { label: 'Rate Limits', href: '/docs/rate-limits' },
   ],
 }
 
@@ -61,9 +60,7 @@ export function SiteFooter() {
                 <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z" />
               </svg>
             </div>
-            <span className="text-sm font-medium">
-              {SITE_CONFIG.name}
-            </span>
+            <span className="text-sm font-medium">{SITE_CONFIG.name}</span>
           </div>
           <p className="text-sm text-muted-foreground">
             &copy; {new Date().getFullYear()} {SITE_CONFIG.name}. All rights

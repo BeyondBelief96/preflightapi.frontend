@@ -35,7 +35,8 @@ const errorCodes = [
   {
     code: '500',
     name: 'Internal Server Error',
-    description: 'An unexpected error occurred. Contact support if it persists.',
+    description:
+      'An unexpected error occurred. Contact support if it persists.',
   },
 ]
 

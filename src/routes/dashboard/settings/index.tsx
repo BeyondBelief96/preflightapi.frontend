@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { createPageHead } from '@/lib/seo'
 import { UserProfile } from '@clerk/clerk-react'
+import { createPageHead } from '@/lib/seo'
 
 export const Route = createFileRoute('/dashboard/settings/')({
   head: () =>

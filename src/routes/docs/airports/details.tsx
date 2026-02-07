@@ -28,7 +28,9 @@ function AirportDetailsDocs() {
           <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
             GET
           </Badge>
-          <code className="text-sm font-semibold">/api/airports/{'{icaoCodeOrIdent}'}</code>
+          <code className="text-sm font-semibold">
+            /api/airports/{'{icaoCodeOrIdent}'}
+          </code>
         </div>
         <p className="text-muted-foreground">
           Returns the full detail record for a specific airport.
@@ -99,11 +101,7 @@ function AirportDetailsDocs() {
                 'number',
                 'Airport reference point longitude in decimal degrees',
               ],
-              [
-                'elevation',
-                'number',
-                'Airport field elevation in feet MSL',
-              ],
+              ['elevation', 'number', 'Airport field elevation in feet MSL'],
               [
                 'magneticVariation',
                 'string | null',

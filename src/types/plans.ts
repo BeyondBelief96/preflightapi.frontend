@@ -14,8 +14,8 @@ export interface UsageStats {
   callsThisMonth: number
   callsLimit: number | null
   callsToday: number
-  dailyUsage: { date: string; calls: number }[]
-  endpointBreakdown: { endpoint: string; calls: number }[]
+  dailyUsage: Array<{ date: string; calls: number }>
+  endpointBreakdown: Array<{ endpoint: string; calls: number }>
 }
 
 export interface ApimSubscription {
@@ -23,7 +23,13 @@ export interface ApimSubscription {
   name: string
   productId: string
   userId: string
-  state: 'active' | 'suspended' | 'submitted' | 'rejected' | 'cancelled' | 'expired'
+  state:
+    | 'active'
+    | 'suspended'
+    | 'submitted'
+    | 'rejected'
+    | 'cancelled'
+    | 'expired'
   primaryKey: string
   secondaryKey: string
   createdDate: string

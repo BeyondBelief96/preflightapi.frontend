@@ -28,7 +28,9 @@ function FrequenciesDocs() {
           <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
             GET
           </Badge>
-          <code className="text-sm font-semibold">/api/communication-frequencies/{'{servicedFacility}'}</code>
+          <code className="text-sm font-semibold">
+            /api/communication-frequencies/{'{servicedFacility}'}
+          </code>
         </div>
         <p className="text-muted-foreground">
           Get all communication frequencies for a specific facility by its ICAO
@@ -124,12 +126,28 @@ function FrequenciesDocs() {
           </thead>
           <tbody>
             {[
-              ['frequencyType', 'string', 'Type code (e.g., ATIS, TWR, GND, APP, DEP, CD, CTAF)'],
+              [
+                'frequencyType',
+                'string',
+                'Type code (e.g., ATIS, TWR, GND, APP, DEP, CD, CTAF)',
+              ],
               ['frequency', 'string', 'Frequency in MHz (e.g., "128.725")'],
               ['frequencyName', 'string', 'Name or callsign for the frequency'],
-              ['servicedFacility', 'string', 'FAA identifier of the facility being serviced'],
-              ['chartingCode', 'string | null', 'Chart abbreviation (e.g., TWR, GND CON, CLNC DEL)'],
-              ['narrative', 'string | null', 'Description or narrative for the frequency'],
+              [
+                'servicedFacility',
+                'string',
+                'FAA identifier of the facility being serviced',
+              ],
+              [
+                'chartingCode',
+                'string | null',
+                'Chart abbreviation (e.g., TWR, GND CON, CLNC DEL)',
+              ],
+              [
+                'narrative',
+                'string | null',
+                'Description or narrative for the frequency',
+              ],
             ].map(([field, type, desc]) => (
               <tr key={field} className="border-b">
                 <td className="py-2">

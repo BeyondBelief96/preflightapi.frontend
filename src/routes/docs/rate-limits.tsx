@@ -25,9 +25,7 @@ function RateLimitsDocs() {
                 <th className="py-3 text-left font-semibold">
                   Requests / Minute
                 </th>
-                <th className="py-3 text-left font-semibold">
-                  Calls / Month
-                </th>
+                <th className="py-3 text-left font-semibold">Calls / Month</th>
               </tr>
             </thead>
             <tbody>

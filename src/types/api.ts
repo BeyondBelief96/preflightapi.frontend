@@ -35,7 +35,7 @@ export interface Metar {
   visibility: number | null
   altimeter: number | null
   flightCategory: string | null
-  skyConditions: SkyCondition[]
+  skyConditions: Array<SkyCondition>
 }
 
 export interface SkyCondition {
@@ -49,7 +49,7 @@ export interface Taf {
   issueTime: string
   validTimeFrom: string
   validTimeTo: string
-  forecasts: TafForecast[]
+  forecasts: Array<TafForecast>
 }
 
 export interface TafForecast {
@@ -59,7 +59,7 @@ export interface TafForecast {
   windDirection: number | null
   windSpeed: number | null
   visibility: number | null
-  skyConditions: SkyCondition[]
+  skyConditions: Array<SkyCondition>
 }
 
 export interface Airport {
@@ -82,7 +82,7 @@ export interface Runway {
   length: number | null
   width: number | null
   surfaceType: string | null
-  runwayEnds: RunwayEnd[]
+  runwayEnds: Array<RunwayEnd>
 }
 
 export interface RunwayEnd {
@@ -131,7 +131,7 @@ export interface ApiErrorResponse {
   code: string
   message: string
   details: string | null
-  validationErrors: Record<string, string[]> | null
+  validationErrors: Record<string, Array<string>> | null
   timestamp: string
   traceId: string
 }

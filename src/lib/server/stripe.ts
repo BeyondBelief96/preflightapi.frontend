@@ -1,10 +1,9 @@
 import { createServerFn } from '@tanstack/react-start'
-import { auth } from '@clerk/tanstack-react-start/server'
-import { clerkClient } from '@clerk/tanstack-react-start/server'
+import { auth, clerkClient  } from '@clerk/tanstack-react-start/server'
 import { getStripe } from './stripe-client'
+import type { StripeSubscriptionStatus } from '@/types/plans'
 import { PLANS } from '@/lib/constants'
 import { env } from '@/env'
-import type { StripeSubscriptionStatus } from '@/types/plans'
 
 const PRICE_ID_MAP: Record<string, () => string | undefined> = {
   starter: () => env.STRIPE_STARTER_PRICE_ID,
@@ -65,7 +64,9 @@ export const createCheckoutSession = createServerFn({ method: 'POST' })
     const plan = PLANS.find((p) => p.id === data.planId)
     const priceId = getPriceIdForPlan(data.planId)
     if (!plan || !priceId) {
-      throw new Error(`Invalid plan or missing Stripe price ID for: ${data.planId}`)
+      throw new Error(
+        `Invalid plan or missing Stripe price ID for: ${data.planId}`,
+      )
     }
 
     const customerId = await getOrCreateStripeCustomer(userId)
@@ -145,7 +146,7 @@ export const getStripeSubscription = createServerFn({ method: 'GET' }).handler(
 
     const firstItem = sub.items.data[0]
     const planId =
-      (sub.metadata.planId as string) ||
+      (sub.metadata.planId) ||
       planIdFromPriceId(firstItem?.price.id ?? '') ||
       'free'
 

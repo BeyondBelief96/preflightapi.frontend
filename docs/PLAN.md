@@ -13,17 +13,21 @@ Build the marketing site, authentication flows, user dashboard, API key manageme
 ## Architecture Decisions
 
 ### Route Layout Strategy
+
 Two pathless layout routes provide distinct shells:
+
 - **`_marketing.tsx`** - Public header/footer, SSR for SEO
 - **`_dashboard.tsx`** - Authenticated sidebar/header, protected routes
 - **`docs.tsx`** - Separate docs layout with sidebar navigation
 
 ### Data Flow
+
 - **Public pages**: Full SSR via `head()` for SEO
 - **Dashboard pages**: Client-side behind auth guard, TanStack Query for data
 - **Server functions**: BFF (Backend for Frontend) pattern - all Azure APIM and Stripe calls go through `createServerFn`, never exposing secrets to the client
 
 ### Stripe + Azure APIM Integration
+
 ```
 User clicks "Subscribe to Pro" on pricing page
   -> Stripe Checkout session created (server function)
@@ -35,6 +39,7 @@ User clicks "Subscribe to Pro" on pricing page
 ```
 
 ### State Management
+
 - **TanStack Query**: All server state (API keys, usage, billing)
 - **TanStack Router search params**: Docs version, filters
 - **Clerk**: All auth state
@@ -47,6 +52,7 @@ User clicks "Subscribe to Pro" on pricing page
 **Goal:** Clean slate, project structure, design system, Vercel deployment config.
 
 ### Delete demo files
+
 - `src/routes/demo/` (entire directory)
 - `src/routes/index.tsx` (replace with marketing landing)
 - `src/data/demo-table-data.ts`, `src/data/demo.punk-songs.ts`
@@ -56,6 +62,7 @@ User clicks "Subscribe to Pro" on pricing page
 - `public/tanstack-circle-logo.png`, `public/tanstack-word-logo-white.svg`
 
 ### Create project structure
+
 ```
 src/
   lib/
@@ -76,6 +83,7 @@ src/
 ```
 
 ### Design system setup
+
 - **Modify `src/styles.css`**: Aviation-themed color palette
   - Primary: Deep navy blue (trust, professionalism)
   - Accent: Sky blue (aviation)
@@ -85,6 +93,7 @@ src/
 - **Create text logo**: "PreflightAPI" wordmark using CSS
 
 ### Install additional shadcn components
+
 ```
 card, badge, separator, tabs, navigation-menu, dialog, dropdown-menu,
 avatar, tooltip, accordion, scroll-area, sheet, sidebar, table,
@@ -92,7 +101,9 @@ skeleton, alert, alert-dialog, command, popover, toast
 ```
 
 ### Modify `src/env.ts`
+
 Add environment variables:
+
 ```
 Server: AZURE_APIM_GATEWAY_URL, AZURE_APIM_MANAGEMENT_URL,
         AZURE_APIM_SAS_TOKEN, PREFLIGHT_API_BASE_URL,
@@ -101,16 +112,19 @@ Client: VITE_STRIPE_PUBLISHABLE_KEY
 ```
 
 ### Modify `src/__root.tsx`
+
 - Remove demo `<Header />` from shell
 - Add `errorComponent` and `notFoundComponent`
 - Shell only provides ClerkProvider + HTML wrapper + devtools
 - Each layout route provides its own header/footer
 
 ### Configure for Vercel
+
 - Add `vercel.json` or configure TanStack Start's Vercel preset in vite config
 - Update deployment configuration for SSR on Vercel
 
 ### Files to modify
+
 - `src/routes/__root.tsx` - Remove demo header, add error handling
 - `src/env.ts` - Add new env vars
 - `src/styles.css` - Aviation theme
@@ -118,6 +132,7 @@ Client: VITE_STRIPE_PUBLISHABLE_KEY
 - `package.json` - Add new dependencies
 
 ### New dependencies
+
 ```
 shiki (syntax highlighting), recharts (charts), date-fns (dates),
 stripe (payments), @stripe/stripe-js (client)
@@ -130,6 +145,7 @@ stripe (payments), @stripe/stripe-js (client)
 **Goal:** Professional landing page, pricing, about, legal pages. All SSR for SEO.
 
 ### Route structure
+
 ```
 src/routes/
   _marketing.tsx                    # Layout: public header + footer
@@ -144,6 +160,7 @@ src/routes/
 ```
 
 ### Components to create
+
 ```
 src/components/marketing/
   site-header.tsx         # Nav bar: logo, links (Pricing, Docs, About), Sign In / Get Started CTAs
@@ -159,6 +176,7 @@ src/components/marketing/
 ```
 
 ### Landing page sections (top to bottom)
+
 1. **Hero**: "Aviation Data API for Developers" + animated code snippet showing a METAR request/response + "Get Started Free" and "View Documentation" CTAs
 2. **Stats bar**: 20,000+ airports, real-time weather, 10+ data categories
 3. **Features grid**: 6 cards covering Weather (METAR/TAF/PIREP), Airport Data, Airspace, NOTAMs, Flight Planning, Performance Calculations
@@ -167,6 +185,7 @@ src/components/marketing/
 6. **CTA banner**: "Start building with PreflightAPI today"
 
 ### SEO helper (`src/lib/seo.ts`)
+
 Reusable function to generate `head()` configs with title, description, OG tags, Twitter cards.
 
 ---
@@ -176,6 +195,7 @@ Reusable function to generate `head()` configs with title, description, OG tags,
 **Goal:** Sign-in/sign-up, auth guards, dashboard layout.
 
 ### Route structure
+
 ```
 src/routes/
   sign-in.tsx                       # Clerk <SignIn /> (bare layout, centered)
@@ -187,15 +207,18 @@ src/routes/
 ```
 
 ### Auth guard in `_dashboard.tsx`
+
 Use `beforeLoad` to check Clerk auth status. Redirect unauthenticated users to `/sign-in`. Clerk middleware in `src/start.ts` already handles server-side token validation.
 
 ### Clerk configuration notes
+
 - Set `afterSignInUrl: '/dashboard'` and `afterSignUpUrl: '/dashboard/getting-started'` in ClerkProvider
 - Use Clerk's `<UserButton />` in dashboard header
 - Use `<SignIn />` and `<SignUp />` components (not redirect-based) for custom-styled pages
 - Clerk environment variables: `VITE_CLERK_PUBLISHABLE_KEY` (client), `CLERK_SECRET_KEY` (server)
 
 ### Dashboard components
+
 ```
 src/components/dashboard/
   dashboard-sidebar.tsx       # Collapsible sidebar: Overview, API Keys, Billing, Docs, Settings
@@ -211,6 +234,7 @@ src/components/dashboard/
 **Goal:** Create, view, rotate, and revoke API keys via Azure APIM.
 
 ### Route structure
+
 ```
 src/routes/_dashboard/
   keys/
@@ -218,16 +242,20 @@ src/routes/_dashboard/
 ```
 
 ### Server functions (`src/server/api-keys.ts`)
+
 All APIM calls proxied through server functions (secrets stay server-side):
+
 - `listApiKeys` - List user's APIM subscriptions
 - `createApiKey` - Create new APIM subscription (name + plan product)
 - `rotateApiKey` - Regenerate primary/secondary key
 - `revokeApiKey` - Delete/suspend subscription
 
 ### Azure APIM client (`src/server/apim.ts`)
+
 Wrapper around Azure APIM Management REST API. **Initially stubbed** with mock data since APIM isn't set up yet. Interface designed so swapping in real APIM calls later is seamless.
 
 ### Components
+
 ```
 src/components/dashboard/
   api-key-table.tsx           # Table of keys (name, created, last used, status, actions)
@@ -238,6 +266,7 @@ src/components/dashboard/
 ```
 
 ### UX flow
+
 1. User clicks "Create API Key"
 2. Dialog: enter name (e.g., "Production", "Development"), select environment
 3. Key is created - shown ONCE in a reveal component with copy-to-clipboard
@@ -251,6 +280,7 @@ src/components/dashboard/
 **Goal:** Comprehensive, searchable, interactive documentation for all API endpoints.
 
 ### Route structure
+
 ```
 src/routes/
   docs.tsx                          # Docs layout (own sidebar, outside _marketing)
@@ -286,6 +316,7 @@ src/routes/
 ```
 
 ### Documentation data layer
+
 ```
 src/content/docs/
   endpoints.ts              # Master registry of all endpoints
@@ -302,6 +333,7 @@ src/content/docs/
 Each endpoint definition includes: method, path, description, parameters (name, type, required, description), response schema, code examples (cURL/JS/Python/C#), sample responses.
 
 ### Documentation components
+
 ```
 src/components/docs/
   docs-sidebar.tsx              # Left sidebar with collapsible categories
@@ -318,12 +350,14 @@ src/components/docs/
 ```
 
 ### Versioning strategy
+
 - Endpoint definitions organized by version directory (`v1/`, future `v2/`)
 - Version selector in docs sidebar header
 - URL search param `?v=v1` controls active version
 - All versions accessible simultaneously
 
 ### Search
+
 - Client-side using `@tanstack/match-sorter-utils` (already installed)
 - Index built from endpoint definitions
 - `Cmd+K` shortcut opens Command palette
@@ -335,18 +369,20 @@ src/components/docs/
 **Goal:** Subscription management with Stripe, plan selection, billing dashboard.
 
 ### How Stripe + APIM work together
-| Concern | Handled By |
-|---------|-----------|
-| Charging credit cards | Stripe |
-| Subscription lifecycle | Stripe |
-| Invoices & receipts | Stripe |
-| Payment methods | Stripe |
-| API key generation | Azure APIM |
-| Rate limiting | Azure APIM |
-| Route-level access | Azure APIM |
-| Usage metering | Azure APIM |
+
+| Concern                | Handled By |
+| ---------------------- | ---------- |
+| Charging credit cards  | Stripe     |
+| Subscription lifecycle | Stripe     |
+| Invoices & receipts    | Stripe     |
+| Payment methods        | Stripe     |
+| API key generation     | Azure APIM |
+| Rate limiting          | Azure APIM |
+| Route-level access     | Azure APIM |
+| Usage metering         | Azure APIM |
 
 ### Stripe webhook flow
+
 ```
 Stripe fires webhook -> API route in TanStack Start -> Server function:
   checkout.session.completed -> Create APIM user + subscription for the plan's product
@@ -355,29 +391,52 @@ Stripe fires webhook -> API route in TanStack Start -> Server function:
 ```
 
 ### Plan definitions (`src/lib/constants.ts`)
+
 ```typescript
 export const PLANS = [
-  { id: 'free', name: 'Free', price: 0, stripePriceId: null,
+  {
+    id: 'free',
+    name: 'Free',
+    price: 0,
+    stripePriceId: null,
     apimProductId: 'preflight-free',
     limits: { callsPerMonth: 1000, ratePerMinute: 10 },
-    features: ['METAR & TAF data', 'Airport search', 'Community support'] },
-  { id: 'standard', name: 'Standard', price: 29, stripePriceId: 'price_...',
+    features: ['METAR & TAF data', 'Airport search', 'Community support'],
+  },
+  {
+    id: 'standard',
+    name: 'Standard',
+    price: 29,
+    stripePriceId: 'price_...',
     apimProductId: 'preflight-standard',
     limits: { callsPerMonth: 50_000, ratePerMinute: 60 },
-    features: ['All weather data', 'NOTAMs', 'Nav log', 'Email support'] },
-  { id: 'pro', name: 'Professional', price: 99, stripePriceId: 'price_...',
+    features: ['All weather data', 'NOTAMs', 'Nav log', 'Email support'],
+  },
+  {
+    id: 'pro',
+    name: 'Professional',
+    price: 99,
+    stripePriceId: 'price_...',
     apimProductId: 'preflight-pro',
     limits: { callsPerMonth: 500_000, ratePerMinute: 300 },
-    features: ['All endpoints', 'Performance calc', 'Priority support'] },
-  { id: 'enterprise', name: 'Enterprise', price: null, stripePriceId: null,
+    features: ['All endpoints', 'Performance calc', 'Priority support'],
+  },
+  {
+    id: 'enterprise',
+    name: 'Enterprise',
+    price: null,
+    stripePriceId: null,
     apimProductId: 'preflight-enterprise',
     limits: { callsPerMonth: null, ratePerMinute: null },
-    features: ['Unlimited', 'SLA', 'Dedicated support', 'Custom integration'] },
+    features: ['Unlimited', 'SLA', 'Dedicated support', 'Custom integration'],
+  },
 ]
 ```
-*Note: Exact limits TBD - placeholders above are reasonable starting points.*
+
+_Note: Exact limits TBD - placeholders above are reasonable starting points._
 
 ### Route structure
+
 ```
 src/routes/
   _dashboard/
@@ -388,12 +447,14 @@ src/routes/
 ```
 
 ### Server functions (`src/server/billing.ts`)
+
 - `createCheckoutSession` - Creates Stripe Checkout session for plan upgrade
 - `createBillingPortalSession` - Opens Stripe's billing portal (manage payment methods, invoices)
 - `getCurrentSubscription` - Gets user's active plan from Stripe
 - `handleStripeWebhook` - Processes webhook events
 
 ### Components
+
 ```
 src/components/pricing/
   pricing-toggle.tsx              # Monthly/annual billing toggle
@@ -411,6 +472,7 @@ src/components/dashboard/
 **Goal:** Usage analytics, onboarding, account settings.
 
 ### Route structure
+
 ```
 src/routes/_dashboard/
   getting-started.tsx         # Onboarding checklist
@@ -420,10 +482,12 @@ src/routes/_dashboard/
 ```
 
 ### Server functions (`src/server/usage.ts`)
+
 - `getUsageStats` - Fetch usage from APIM Analytics API (stubbed initially)
 - `getRecentActivity` - Recent API call log
 
 ### Components
+
 ```
 src/components/dashboard/
   getting-started-checklist.tsx   # Steps: Create account ✓, Choose plan, Create key, Make first call
@@ -439,56 +503,63 @@ src/components/dashboard/
 **Goal:** Error handling, analytics, performance, security.
 
 ### Error handling
+
 - Add `errorComponent` to `__root.tsx` and `_dashboard.tsx`
 - Create `src/components/error-boundary.tsx` and `src/components/not-found.tsx`
 - Global 404 page with helpful navigation
 
 ### Performance
+
 - Route-level code splitting (automatic with TanStack Router)
 - `defaultPreload: 'intent'` already configured
 - Image optimization (WebP, lazy loading)
 - Font subsetting for Inter + JetBrains Mono
 
 ### SEO & Metadata
+
 - `sitemap.xml` generation (API route)
 - Update `robots.txt`
 - Structured data (JSON-LD) for Organization
 - OG images for key pages
 
 ### Security
+
 - CSP headers via middleware
 - CORS configuration
 - Stripe webhook signature verification
 - APIM SAS token only on server side
 
 ### Analytics
+
 - Plausible or PostHog integration (privacy-friendly)
 - Page view tracking via router subscription
 - Custom events: sign-up, key creation, plan upgrade
 
 ### Health check
+
 - `src/routes/api/health.ts` - Health check endpoint for monitoring
 
 ---
 
 ## Phase Summary
 
-| Phase | Description | Key Deliverables |
-|-------|-------------|-----------------|
-| 0 | Foundation & Cleanup | Clean project, design system, env vars, shadcn components |
-| 1 | Marketing Site | Landing page, pricing page, about, contact, legal |
-| 2 | Auth & Dashboard Shell | Sign-in/up, dashboard layout, sidebar, auth guard |
-| 3 | API Key Management | Key CRUD UI, APIM server functions (stubbed) |
-| 4 | API Documentation | Full docs site, interactive examples, search, versioning |
-| 5 | Billing (Stripe) | Checkout, webhooks, billing dashboard, plan management |
-| 6 | Dashboard Features | Usage analytics, onboarding, settings |
-| 7 | Production Hardening | Error handling, SEO, analytics, security, performance |
+| Phase | Description            | Key Deliverables                                          |
+| ----- | ---------------------- | --------------------------------------------------------- |
+| 0     | Foundation & Cleanup   | Clean project, design system, env vars, shadcn components |
+| 1     | Marketing Site         | Landing page, pricing page, about, contact, legal         |
+| 2     | Auth & Dashboard Shell | Sign-in/up, dashboard layout, sidebar, auth guard         |
+| 3     | API Key Management     | Key CRUD UI, APIM server functions (stubbed)              |
+| 4     | API Documentation      | Full docs site, interactive examples, search, versioning  |
+| 5     | Billing (Stripe)       | Checkout, webhooks, billing dashboard, plan management    |
+| 6     | Dashboard Features     | Usage analytics, onboarding, settings                     |
+| 7     | Production Hardening   | Error handling, SEO, analytics, security, performance     |
 
 ---
 
 ## Verification Plan
 
 After each phase, verify by:
+
 1. `npm run dev` - Development server starts without errors
 2. `npm run build` - Production build succeeds
 3. Manual navigation of all new routes

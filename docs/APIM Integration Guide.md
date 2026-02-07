@@ -8,40 +8,40 @@ Reference for building the frontend management portal's APIM integration. This d
 
 ### Environment Details (Test)
 
-| Resource | Value |
-|----------|-------|
-| APIM Service Name | `preflightapi-apim-service-test` |
-| Resource Group | `rg-preflightapi-eastus-test` |
-| Gateway URL | `https://preflightapi-apim-service-test.azure-api.net` |
+| Resource                | Value                                                                                                                                                                             |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| APIM Service Name       | `preflightapi-apim-service-test`                                                                                                                                                  |
+| Resource Group          | `rg-preflightapi-eastus-test`                                                                                                                                                     |
+| Gateway URL             | `https://preflightapi-apim-service-test.azure-api.net`                                                                                                                            |
 | Management API Base URL | `https://management.azure.com/subscriptions/{subscriptionId}/resourceGroups/rg-preflightapi-eastus-test/providers/Microsoft.ApiManagement/service/preflightapi-apim-service-test` |
-| API Version | `2024-05-01` |
+| API Version             | `2024-05-01`                                                                                                                                                                      |
 
 ### Products (Tiers)
 
-| Product ID | Display Name | Rate Limit | Monthly Quota | Subscription Required |
-|------------|-------------|-----------|---------------|----------------------|
-| `free-tier` | Free Tier | 10 req/min | 500/month | Yes |
-| `starter-tier` | Starter Tier | 60 req/min | 25,000/month | Yes |
-| `professional-tier` | Professional Tier | 300 req/min | 250,000/month | Yes |
+| Product ID          | Display Name      | Rate Limit  | Monthly Quota | Subscription Required |
+| ------------------- | ----------------- | ----------- | ------------- | --------------------- |
+| `free-tier`         | Free Tier         | 10 req/min  | 500/month     | Yes                   |
+| `starter-tier`      | Starter Tier      | 60 req/min  | 25,000/month  | Yes                   |
+| `professional-tier` | Professional Tier | 300 req/min | 250,000/month | Yes                   |
 
 ### Endpoint Access per Tier
 
-| Endpoint | Free | Starter | Professional |
-|----------|------|---------|-------------|
-| METARs (`/api/v1/metars`) | Yes | Yes | Yes |
-| TAFs (`/api/v1/tafs`) | Yes | Yes | Yes |
-| Airports (`/api/v1/airports`) | Yes | Yes | Yes |
-| Communication Frequencies (`/api/v1/communication-frequencies`) | Yes | Yes | Yes |
-| Airspace (`/api/v1/airspaces`) | No | Yes | Yes |
-| PIREPs (`/api/v1/pireps`) | No | Yes | Yes |
-| AIRSIGMETs (`/api/v1/airsigmets`) | No | Yes | Yes |
-| G-AIRMETs (`/api/v1/g-airmets`) | No | Yes | Yes |
-| Obstacles (`/api/v1/obstacles`) | No | Yes | Yes |
-| NOTAMs (`/api/v1/notams`) | No | Yes | Yes |
-| Airport Diagrams (`/api/v1/airport-diagrams`) | No | No | Yes |
-| Chart Supplements (`/api/v1/chart-supplements`) | No | No | Yes |
-| Performance Calculations (`/api/v1/performance`) | No | No | Yes |
-| Navlog / Flight Planning (`/api/v1/navlog`) | No | No | Yes |
+| Endpoint                                                        | Free | Starter | Professional |
+| --------------------------------------------------------------- | ---- | ------- | ------------ |
+| METARs (`/api/v1/metars`)                                       | Yes  | Yes     | Yes          |
+| TAFs (`/api/v1/tafs`)                                           | Yes  | Yes     | Yes          |
+| Airports (`/api/v1/airports`)                                   | Yes  | Yes     | Yes          |
+| Communication Frequencies (`/api/v1/communication-frequencies`) | Yes  | Yes     | Yes          |
+| Airspace (`/api/v1/airspaces`)                                  | No   | Yes     | Yes          |
+| PIREPs (`/api/v1/pireps`)                                       | No   | Yes     | Yes          |
+| AIRSIGMETs (`/api/v1/airsigmets`)                               | No   | Yes     | Yes          |
+| G-AIRMETs (`/api/v1/g-airmets`)                                 | No   | Yes     | Yes          |
+| Obstacles (`/api/v1/obstacles`)                                 | No   | Yes     | Yes          |
+| NOTAMs (`/api/v1/notams`)                                       | No   | Yes     | Yes          |
+| Airport Diagrams (`/api/v1/airport-diagrams`)                   | No   | No      | Yes          |
+| Chart Supplements (`/api/v1/chart-supplements`)                 | No   | No      | Yes          |
+| Performance Calculations (`/api/v1/performance`)                | No   | No      | Yes          |
+| Navlog / Flight Planning (`/api/v1/navlog`)                     | No   | No      | Yes          |
 
 ### How Customers Use Their API Key
 
@@ -74,10 +74,10 @@ Content-Type: application/json
 For the frontend server functions, use the `@azure/identity` package with `ClientSecretCredential` or `DefaultAzureCredential` to obtain tokens.
 
 ```typescript
-import { ClientSecretCredential } from "@azure/identity";
+import { ClientSecretCredential } from '@azure/identity'
 
-const credential = new ClientSecretCredential(tenantId, clientId, clientSecret);
-const token = await credential.getToken("https://management.azure.com/.default");
+const credential = new ClientSecretCredential(tenantId, clientId, clientSecret)
+const token = await credential.getToken('https://management.azure.com/.default')
 // Use token.token in Authorization header
 ```
 
@@ -115,6 +115,7 @@ PUT /users/{userId}
 ```
 
 **Notes:**
+
 - Use the Clerk user ID as the `{userId}` to keep them linked.
 - The APIM user is just a logical grouping for subscriptions — it has no login capabilities.
 
@@ -142,11 +143,13 @@ PUT /subscriptions/{subscriptionId}
 ```
 
 **Product IDs for `scope`:**
+
 - Free: `/products/free-tier`
 - Starter: `/products/starter-tier`
 - Professional: `/products/professional-tier`
 
 **Notes:**
+
 - Generate a unique `{subscriptionId}` (e.g., UUID or Clerk user ID + product).
 - The response includes the generated primary and secondary keys.
 - Store the `subscriptionId` in your database linked to the Clerk user.
@@ -217,6 +220,7 @@ PATCH /subscriptions/{subscriptionId}
 ```
 
 **Notes:**
+
 - The API keys stay the same — only the product (and therefore rate limits, quotas, and endpoint access) changes.
 - This should be triggered by a Stripe webhook (`customer.subscription.updated`).
 
@@ -241,6 +245,7 @@ PATCH /subscriptions/{subscriptionId}
 ```
 
 **Notes:**
+
 - Suspended subscriptions return `403` for all API calls.
 - You can reactivate by setting `state` back to `"active"`.
 - Triggered by Stripe webhook (`invoice.payment_failed` or `customer.subscription.deleted`).
@@ -268,6 +273,7 @@ GET /reports/bySubscription?$filter=timestamp ge datetime'{startDate}' and times
 ```
 
 **Response includes per-subscription:**
+
 - `callCountSuccess` — successful requests
 - `callCountBlocked` — blocked by rate limit/quota
 - `callCountFailed` — backend errors
@@ -337,10 +343,10 @@ Your server functions need a mapping between Stripe products/prices and APIM pro
 
 ```typescript
 const STRIPE_TO_APIM_PRODUCT: Record<string, string> = {
-  "price_free_monthly": "free-tier",
-  "price_starter_monthly": "starter-tier",
-  "price_professional_monthly": "professional-tier",
-};
+  price_free_monthly: 'free-tier',
+  price_starter_monthly: 'starter-tier',
+  price_professional_monthly: 'professional-tier',
+}
 ```
 
 When a Stripe webhook fires with a price ID, look up the corresponding APIM product ID and update the subscription accordingly.

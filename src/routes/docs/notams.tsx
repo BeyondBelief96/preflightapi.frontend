@@ -29,7 +29,9 @@ function NotamsDocs() {
           <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
             GET
           </Badge>
-          <code className="text-sm font-semibold">/api/notams/{'{icaoCodeOrIdent}'}</code>
+          <code className="text-sm font-semibold">
+            /api/notams/{'{icaoCodeOrIdent}'}
+          </code>
         </div>
         <p className="text-muted-foreground">
           Get all active NOTAMs for a specific airport by ICAO code or FAA
@@ -166,10 +168,22 @@ function NotamsDocs() {
           </thead>
           <tbody>
             {[
-              ['departure', 'string', 'Departure airport ICAO code or identifier'],
-              ['destination', 'string', 'Destination airport ICAO code or identifier'],
+              [
+                'departure',
+                'string',
+                'Departure airport ICAO code or identifier',
+              ],
+              [
+                'destination',
+                'string',
+                'Destination airport ICAO code or identifier',
+              ],
               ['waypoints', 'string[]', 'Optional intermediate waypoints'],
-              ['corridorWidthNm', 'number', 'Route corridor width in nautical miles (optional)'],
+              [
+                'corridorWidthNm',
+                'number',
+                'Route corridor width in nautical miles (optional)',
+              ],
             ].map(([field, type, desc]) => (
               <tr key={field} className="border-b">
                 <td className="py-2">
@@ -213,13 +227,33 @@ function NotamsDocs() {
               ['facilityId', 'string', 'FAA facility identifier'],
               ['icaoId', 'string | null', 'ICAO identifier for the location'],
               ['notamText', 'string', 'Full NOTAM text'],
-              ['classification', 'string', 'NOTAM classification (e.g., NOTAM, FDC, TFR)'],
-              ['effectiveStart', 'string', 'ISO 8601 start of effective period'],
-              ['effectiveEnd', 'string | null', 'ISO 8601 end of effective period (null if permanent)'],
-              ['issueTime', 'string', 'ISO 8601 timestamp when the NOTAM was issued'],
+              [
+                'classification',
+                'string',
+                'NOTAM classification (e.g., NOTAM, FDC, TFR)',
+              ],
+              [
+                'effectiveStart',
+                'string',
+                'ISO 8601 start of effective period',
+              ],
+              [
+                'effectiveEnd',
+                'string | null',
+                'ISO 8601 end of effective period (null if permanent)',
+              ],
+              [
+                'issueTime',
+                'string',
+                'ISO 8601 timestamp when the NOTAM was issued',
+              ],
               ['latitude', 'number | null', 'Latitude in decimal degrees'],
               ['longitude', 'number | null', 'Longitude in decimal degrees'],
-              ['affectedFacility', 'string | null', 'Description of affected facility or area'],
+              [
+                'affectedFacility',
+                'string | null',
+                'Description of affected facility or area',
+              ],
             ].map(([field, type, desc]) => (
               <tr key={field} className="border-b">
                 <td className="py-2">
