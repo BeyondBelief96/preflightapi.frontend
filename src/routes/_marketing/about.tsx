@@ -184,7 +184,7 @@ function AboutPage() {
                 data: 'Controlled & special-use airspace boundaries — updated every 56 days',
               },
               {
-                source: 'FAA NOTAM System',
+                source: 'FAA NMS (NOTAM Management System)',
                 data: 'Active NOTAMs by airport, geographic radius, or flight route',
               },
               {
