@@ -20,7 +20,7 @@ export function CodeBlock({ code, language, className }: CodeBlockProps) {
   }, [code, language])
 
   return (
-    <div className={cn('group relative overflow-hidden rounded-lg border bg-[#0d1117]', className)}>
+    <div className={cn('group relative overflow-x-auto rounded-lg border bg-[#0d1117]', className)}>
       <div className="absolute right-2 top-2 opacity-0 transition-opacity group-hover:opacity-100">
         <CopyButton text={code} />
       </div>

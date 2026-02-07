@@ -1,9 +1,13 @@
+import { useState } from 'react'
+import { Play, ChevronDown, ChevronUp } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { MethodBadge } from './method-badge'
 import { TierBadge } from './tier-badge'
 import { ParameterTable } from './parameter-table'
 import { SchemaViewer } from './schema-viewer'
 import { ResponseViewer } from './response-viewer'
 import { CodeExamples } from './code-examples'
+import { TryItPlayground } from './try-it-playground'
 import type { ParsedEndpoint } from '@/lib/docs/types'
 
 interface EndpointCardProps {
@@ -22,6 +26,7 @@ function humanizeOperationId(operationId: string): string {
 
 export function EndpointCard({ endpoint }: EndpointCardProps) {
   const title = humanizeOperationId(endpoint.operationId)
+  const [playgroundOpen, setPlaygroundOpen] = useState(false)
 
   return (
     <div id={endpoint.operationId} className="scroll-mt-20 space-y-4 rounded-lg border p-5">
@@ -80,6 +85,25 @@ export function EndpointCard({ endpoint }: EndpointCardProps) {
       <div className="space-y-2">
         <h4 className="text-sm font-semibold text-muted-foreground">Code Examples</h4>
         <CodeExamples endpoint={endpoint} />
+      </div>
+
+      {/* Try It playground */}
+      <div className="space-y-2">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setPlaygroundOpen(!playgroundOpen)}
+          className="gap-2"
+        >
+          <Play className="h-3.5 w-3.5" />
+          Try It
+          {playgroundOpen ? (
+            <ChevronUp className="h-3.5 w-3.5" />
+          ) : (
+            <ChevronDown className="h-3.5 w-3.5" />
+          )}
+        </Button>
+        {playgroundOpen && <TryItPlayground endpoint={endpoint} />}
       </div>
     </div>
   )

@@ -30,7 +30,7 @@ const EXAMPLE_VALUES: Record<string, string> = {
   maxLon: '-73.0',
 }
 
-function getExampleValue(param: { name: string; type: string }): string {
+export function getExampleValue(param: { name: string; type: string }): string {
   if (EXAMPLE_VALUES[param.name]) return EXAMPLE_VALUES[param.name]
   if (param.type === 'integer') return '25'
   if (param.type === 'number') return '10.0'
@@ -59,7 +59,7 @@ function buildUrl(endpoint: ParsedEndpoint): string {
   return url
 }
 
-function getExampleBody(endpoint: ParsedEndpoint): string | undefined {
+export function getExampleBody(endpoint: ParsedEndpoint): string | undefined {
   if (!endpoint.requestBody?.schema) return undefined
   const fields = endpoint.requestBody.schema.fields
   if (!fields.length) return '{}'
