@@ -1,14 +1,5 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
-import {
-  AlertTriangle,
-  BookOpen,
-  Cloud,
-  Key,
-  Map,
-  Navigation,
-  Plane,
-  Zap,
-} from 'lucide-react'
+import { BookOpen, Code2, Key, Zap } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { GATEWAY_URL } from '@/lib/gateway-url'
 
@@ -24,34 +15,11 @@ const categories = [
     href: '/docs/getting-started',
   },
   {
-    icon: Cloud,
-    title: 'Weather Data',
-    description: 'METAR, TAF, PIREP, AIRMET/SIGMET, and G-AIRMET endpoints.',
-    href: '/docs/weather/metar',
-  },
-  {
-    icon: Plane,
-    title: 'Airport Data',
-    description: 'Airport search, details, runways, frequencies, and diagrams.',
-    href: '/docs/airports/search',
-  },
-  {
-    icon: Map,
-    title: 'Airspace',
-    description: 'Controlled and special use airspace boundary data.',
-    href: '/docs/airspace/controlled',
-  },
-  {
-    icon: Navigation,
-    title: 'Navigation & Planning',
-    description: 'Navigation log calculations and obstacle database.',
-    href: '/docs/navigation/nav-log',
-  },
-  {
-    icon: AlertTriangle,
-    title: 'NOTAMs',
-    description: 'Notices to Air Missions by airport, radius, or route.',
-    href: '/docs/notams',
+    icon: Code2,
+    title: 'API Reference',
+    description:
+      'Interactive documentation for all endpoints — weather, airports, airspace, navigation, NOTAMs, and more.',
+    href: '/docs/api-reference',
   },
 ]
 
@@ -78,6 +46,13 @@ function DocsIndex() {
         >
           <Key className="h-4 w-4" />
           Authentication
+        </Link>
+        <Link
+          to="/docs/api-reference"
+          className="inline-flex items-center gap-2 rounded-lg bg-muted px-4 py-2 text-sm font-medium transition-colors hover:bg-muted/80"
+        >
+          <Code2 className="h-4 w-4" />
+          API Reference
         </Link>
       </div>
 

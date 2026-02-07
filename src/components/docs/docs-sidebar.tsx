@@ -17,45 +17,9 @@ const sections = [
     ],
   },
   {
-    title: 'Weather',
+    title: 'API Reference',
     items: [
-      { label: 'METAR', href: '/docs/weather/metar' },
-      { label: 'TAF', href: '/docs/weather/taf' },
-      { label: 'PIREP', href: '/docs/weather/pirep' },
-      { label: 'AIRMET/SIGMET', href: '/docs/weather/airmet-sigmet' },
-      { label: 'G-AIRMET', href: '/docs/weather/g-airmet' },
-    ],
-  },
-  {
-    title: 'Airports',
-    items: [
-      { label: 'Search & Lookup', href: '/docs/airports/search' },
-      { label: 'Airport Details', href: '/docs/airports/details' },
-      { label: 'Runways', href: '/docs/airports/runways' },
-      { label: 'Frequencies', href: '/docs/airports/frequencies' },
-      { label: 'Diagrams', href: '/docs/airports/diagrams' },
-    ],
-  },
-  {
-    title: 'Airspace',
-    items: [
-      { label: 'Controlled Airspace', href: '/docs/airspace/controlled' },
-      { label: 'Special Use Airspace', href: '/docs/airspace/special-use' },
-    ],
-  },
-  {
-    title: 'Navigation & Planning',
-    items: [
-      { label: 'Navigation Log', href: '/docs/navigation/nav-log' },
-      { label: 'Obstacles', href: '/docs/navigation/obstacles' },
-    ],
-  },
-  {
-    title: 'Other',
-    items: [
-      { label: 'NOTAMs', href: '/docs/notams' },
-      { label: 'Chart Supplements', href: '/docs/charts/supplements' },
-      { label: 'Performance Calculator', href: '/docs/performance/calculator' },
+      { label: 'Interactive API Docs', href: '/docs/api-reference' },
     ],
   },
 ]

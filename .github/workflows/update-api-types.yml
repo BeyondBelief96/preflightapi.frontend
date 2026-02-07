@@ -1,0 +1,77 @@
+name: Update API Types
+
+on:
+  push:
+    branches: [develop, master]
+  repository_dispatch:
+    types: [api-deployed]
+  workflow_dispatch:
+    inputs:
+      spec_url:
+        description: 'Override the OpenAPI spec URL (leave empty to use branch default)'
+        required: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-types:
+    name: Fetch spec & regenerate types
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.client_payload.branch || github.ref_name }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Determine spec URL
+        id: spec
+        run: |
+          BRANCH="${{ github.event.client_payload.branch || github.ref_name }}"
+          if [ -n "${{ inputs.spec_url }}" ]; then
+            echo "url=${{ inputs.spec_url }}" >> "$GITHUB_OUTPUT"
+          elif [ "$BRANCH" = "master" ]; then
+            echo "url=${PROD_URL}" >> "$GITHUB_OUTPUT"
+          else
+            echo "url=${TEST_URL}" >> "$GITHUB_OUTPUT"
+          fi
+          echo "branch=${BRANCH}" >> "$GITHUB_OUTPUT"
+        env:
+          PROD_URL: ${{ vars.PROD_API_SPEC_URL || vars.TEST_API_SPEC_URL || 'https://preflightapi-eastus-web-api-test-bmfecfftf6bgemdf.eastus-01.azurewebsites.net/swagger/v1/swagger.json' }}
+          TEST_URL: ${{ vars.TEST_API_SPEC_URL || 'https://preflightapi-eastus-web-api-test-bmfecfftf6bgemdf.eastus-01.azurewebsites.net/swagger/v1/swagger.json' }}
+
+      - name: Fetch OpenAPI spec
+        run: npm run update-api-spec -- --url "${{ steps.spec.outputs.url }}"
+
+      - name: Generate TypeScript types
+        run: npm run generate-api-types
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: 'chore: update generated API types'
+          branch: auto/update-api-types-${{ steps.spec.outputs.branch }}
+          base: ${{ steps.spec.outputs.branch }}
+          title: 'chore: update generated API types (${{ steps.spec.outputs.branch }})'
+          body: |
+            Auto-updated API types from the latest OpenAPI spec.
+
+            **Spec URL:** `${{ steps.spec.outputs.url }}`
+            **Branch:** `${{ steps.spec.outputs.branch }}`
+            **Triggered by:** ${{ github.event_name == 'repository_dispatch' && 'backend deploy' || github.event_name == 'workflow_dispatch' && 'manual dispatch' || format('push to {0}', steps.spec.outputs.branch) }}
+
+            ---
+            **Files updated:**
+            - `docs/preflightapi_swagger.json` — raw OpenAPI spec
+            - `src/generated/api.ts` — TypeScript types
+            - `public/api-spec.json` — static spec for Scalar docs
+          labels: automated,dependencies
+          delete-branch: true

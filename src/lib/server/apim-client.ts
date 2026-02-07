@@ -60,6 +60,7 @@ export async function apimFetch<T = unknown>(
     ...options,
     headers: {
       Authorization: `Bearer ${token.token}`,
+      Accept: 'application/json',
       'Content-Type': 'application/json',
       ...options.headers,
     },

@@ -14,7 +14,11 @@
       "WebFetch(domain:nitro.build)",
       "Bash(npx eslint:*)",
       "Bash(grep:*)",
-      "Bash(npm run lint:*)"
+      "Bash(npm run lint:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:scalar.com)",
+      "WebFetch(domain:guides.scalar.com)",
+      "Bash(npm run generate-api-types:*)"
     ]
   }
 }
