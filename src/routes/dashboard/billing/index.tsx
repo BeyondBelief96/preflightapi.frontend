@@ -15,6 +15,7 @@ import { createPageHead } from '@/lib/seo'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { Skeleton } from '@/components/ui/skeleton'
 import { usePlans } from '@/hooks/use-plans'
 import { getUsageAnalytics, getUserSubscription } from '@/lib/server/apim'
 import {
@@ -174,8 +175,62 @@ function BillingPage() {
 
   if (subscriptionsQuery.isLoading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      <div className="space-y-8">
+        {/* Current Plan skeleton */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Current Plan</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between">
+              <div className="space-y-2">
+                <div className="flex items-center gap-3">
+                  <Skeleton className="h-8 w-32" />
+                  <Skeleton className="h-5 w-14 rounded-full" />
+                </div>
+                <Skeleton className="h-4 w-48" />
+              </div>
+              <Skeleton className="h-10 w-44" />
+            </div>
+            <div className="mt-6 space-y-2">
+              <Skeleton className="h-4 w-24" />
+              <div className="grid gap-2 sm:grid-cols-2">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <Skeleton key={i} className="h-5 w-48" />
+                ))}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Usage skeleton */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Usage This Month</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex justify-between">
+                <Skeleton className="h-4 w-16" />
+                <Skeleton className="h-4 w-28" />
+              </div>
+              <Skeleton className="h-2 w-full rounded-full" />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Billing History skeleton */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Billing History</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between">
+              <Skeleton className="h-4 w-64" />
+              <Skeleton className="h-10 w-36" />
+            </div>
+          </CardContent>
+        </Card>
       </div>
     )
   }

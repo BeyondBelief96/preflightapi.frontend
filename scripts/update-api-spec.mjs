@@ -15,7 +15,6 @@ import { fileURLToPath } from 'node:url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const OUTPUT_PATH = resolve(__dirname, '..', 'docs', 'preflightapi_swagger.json')
-const PUBLIC_PATH = resolve(__dirname, '..', 'public', 'api-spec.json')
 
 const DEFAULT_API_URL = 'https://preflightapi-eastus-web-api-test-bmfecfftf6bgemdf.eastus-01.azurewebsites.net'
 const APIM_GATEWAY_URL = 'https://preflightapi-apim-service-test.azure-api.net'
@@ -62,9 +61,7 @@ async function main() {
 
     const specJson = JSON.stringify(spec, null, 2) + '\n'
     writeFileSync(OUTPUT_PATH, specJson)
-    writeFileSync(PUBLIC_PATH, specJson)
     console.log(`OpenAPI spec saved to: ${OUTPUT_PATH}`)
-    console.log(`Static spec copied to: ${PUBLIC_PATH}`)
     console.log(`\nRun 'npm run generate-api-types' to regenerate TypeScript types.`)
   } catch (error) {
     console.error(`Failed to fetch OpenAPI spec: ${error.message}`)

@@ -15,8 +15,7 @@
     "start": "node .output/server/index.mjs",
     "sync-api": "npm run update-api-spec && npm run generate-api-types",
     "update-api-spec": "node scripts/update-api-spec.mjs",
-    "generate-api-types": "openapi-typescript docs/preflightapi_swagger.json -o src/generated/api.ts --root-types --root-types-no-schema-prefix",
-    "postgenerate-api-types": "node scripts/copy-spec-to-public.mjs"
+    "generate-api-types": "openapi-typescript docs/preflightapi_swagger.json -o src/generated/api.ts --root-types --root-types-no-schema-prefix"
   },
   "dependencies": {
     "@azure/identity": "^4.13.0",

@@ -1,4 +1,4 @@
-import spec from '../../../public/api-spec.json'
+import spec from '../../../docs/preflightapi_swagger.json'
 import { ENDPOINT_ACCESS } from '@/lib/constants'
 import type { EndpointTier } from '@/lib/constants'
 import type {

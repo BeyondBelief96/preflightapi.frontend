@@ -163,9 +163,6 @@ function CodeTabs() {
 export function HeroSection() {
   return (
     <section className="relative overflow-hidden">
-      {/* Background gradient */}
-      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-primary/5 via-background to-background" />
-
       <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
         <div className="grid items-start gap-12 lg:grid-cols-2">
           {/* Left: Copy */}

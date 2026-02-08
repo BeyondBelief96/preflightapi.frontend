@@ -21,7 +21,7 @@ function SettingsPage() {
           Manage your profile, email, and security settings.
         </p>
       </div>
-      <div className="overflow-hidden rounded-xl">
+      <div className="mx-auto max-w-3xl overflow-hidden rounded-xl">
         <UserProfile
           routing="hash"
           appearance={{

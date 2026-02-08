@@ -1,10 +1,11 @@
-import { Link, Outlet, createFileRoute } from '@tanstack/react-router'
+import { Link, Outlet, createFileRoute, useLocation } from '@tanstack/react-router'
 import { ArrowLeft, Menu, X } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { SignedIn, SignedOut, UserButton } from '@clerk/clerk-react'
 import { createPageHead } from '@/lib/seo'
 import { DocsSidebar } from '@/components/docs/docs-sidebar'
 import { Button } from '@/components/ui/button'
+import { AnimatedBackdrop } from '@/components/animated-backdrop'
 
 export const Route = createFileRoute('/docs')({
   head: () =>
@@ -19,6 +20,11 @@ export const Route = createFileRoute('/docs')({
 
 function DocsLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const { pathname } = useLocation()
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
 
   return (
     <div className="flex min-h-screen">
@@ -68,18 +74,29 @@ function DocsLayout() {
               Preflight<span className="text-accent">API</span>
             </span>
           </Link>
-          <Link to="/">
-            <Button variant="ghost" size="sm" className="gap-1 text-xs">
-              <ArrowLeft className="h-3 w-3" />
-              Home
-            </Button>
-          </Link>
+          <SignedIn>
+            <Link to="/dashboard">
+              <Button variant="ghost" size="sm" className="gap-1 text-xs">
+                <ArrowLeft className="h-3 w-3" />
+                Dashboard
+              </Button>
+            </Link>
+          </SignedIn>
+          <SignedOut>
+            <Link to="/">
+              <Button variant="ghost" size="sm" className="gap-1 text-xs">
+                <ArrowLeft className="h-3 w-3" />
+                Home
+              </Button>
+            </Link>
+          </SignedOut>
         </div>
         <DocsSidebar onNavigate={() => setSidebarOpen(false)} />
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 overflow-y-auto">
+      <main className="relative flex-1 overflow-y-auto">
+        <AnimatedBackdrop />
         <div className="flex items-center justify-end gap-3 border-b px-6 py-2">
           <SignedOut>
             <Link to="/sign-in">
@@ -89,6 +106,11 @@ function DocsLayout() {
             </Link>
           </SignedOut>
           <SignedIn>
+            <Link to="/dashboard">
+              <Button variant="ghost" size="sm">
+                Dashboard
+              </Button>
+            </Link>
             <UserButton />
           </SignedIn>
         </div>
