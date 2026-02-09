@@ -98,7 +98,7 @@ export const getUserSubscription = createServerFn({ method: 'GET' }).handler(
           properties: {
             ownerId: `/users/${userId}`,
             scope: `/products/free-tier`,
-            displayName: 'Student Pilot (Free)',
+            displayName: userId,
             state: 'active',
           },
         }),
