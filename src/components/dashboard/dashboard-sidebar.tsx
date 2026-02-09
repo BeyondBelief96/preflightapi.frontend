@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import { UserButton } from '@clerk/clerk-react'
 import {
   BookOpen,
   CreditCard,
@@ -79,6 +80,21 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
           <BookOpen className="h-4 w-4" />
           API Documentation
         </Link>
+      </div>
+
+      {/* User profile */}
+      <div className="border-t px-5 py-4">
+        <UserButton
+          showName
+          appearance={{
+            elements: {
+              rootBox: 'w-full',
+              userButtonTrigger: 'w-full justify-start',
+              userButtonBox: 'flex-row-reverse gap-3',
+              avatarBox: 'h-8 w-8',
+            },
+          }}
+        />
       </div>
     </div>
   )

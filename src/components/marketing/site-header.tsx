@@ -72,18 +72,28 @@ export function SiteHeader() {
           </SignedIn>
         </div>
 
-        {/* Mobile Menu Button */}
-        <button
-          type="button"
-          className="md:hidden"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        >
-          {mobileMenuOpen ? (
-            <X className="h-6 w-6" />
-          ) : (
-            <Menu className="h-6 w-6" />
-          )}
-        </button>
+        {/* Mobile Header Actions */}
+        <div className="flex items-center gap-3 md:hidden">
+          <SignedIn>
+            <UserButton
+              appearance={{
+                elements: {
+                  avatarBox: 'h-8 w-8',
+                },
+              }}
+            />
+          </SignedIn>
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu */}
@@ -100,8 +110,8 @@ export function SiteHeader() {
                 {link.label}
               </Link>
             ))}
-            <div className="mt-3 flex flex-col gap-2 border-t pt-3">
-              <SignedOut>
+            <SignedOut>
+              <div className="mt-3 flex flex-col gap-2 border-t pt-3">
                 <Link to="/sign-in" onClick={() => setMobileMenuOpen(false)}>
                   <Button variant="ghost" className="w-full" size="sm">
                     Sign In
@@ -112,19 +122,17 @@ export function SiteHeader() {
                     Get Started
                   </Button>
                 </Link>
-              </SignedOut>
-              <SignedIn>
+              </div>
+            </SignedOut>
+            <SignedIn>
+              <div className="mt-3 flex flex-col gap-2 border-t pt-3">
                 <Link to="/dashboard" onClick={() => setMobileMenuOpen(false)}>
                   <Button className="w-full" size="sm">
                     Dashboard
                   </Button>
                 </Link>
-                <div className="flex items-center gap-2 px-3">
-                  <UserButton />
-                  <span className="text-sm text-muted-foreground">Account</span>
-                </div>
-              </SignedIn>
-            </div>
+              </div>
+            </SignedIn>
           </div>
         </div>
       )}

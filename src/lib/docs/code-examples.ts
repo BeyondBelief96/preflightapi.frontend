@@ -59,10 +59,100 @@ function buildUrl(endpoint: ParsedEndpoint): string {
   return url
 }
 
+/**
+ * Realistic prefilled request bodies for POST endpoints.
+ * Keyed by API path so the playground is immediately usable.
+ */
+function getExampleBodies(): Record<string, unknown> {
+  return {
+  '/api/v1/navlog/calculate': {
+    waypoints: [
+      {
+        id: 'KCLT',
+        name: 'Charlotte Douglas Intl',
+        latitude: 35.214,
+        longitude: -80.9431,
+        altitude: 748,
+        waypointType: 'Airport',
+        isRefuelingStop: false,
+      },
+      {
+        id: 'KTYS',
+        name: 'McGhee Tyson',
+        latitude: 35.811,
+        longitude: -83.994,
+        altitude: 981,
+        waypointType: 'Airport',
+        isRefuelingStop: true,
+        refuelToFull: true,
+      },
+      {
+        id: 'KBNA',
+        name: 'Nashville Intl',
+        latitude: 36.1245,
+        longitude: -86.6782,
+        altitude: 599,
+        waypointType: 'Airport',
+        isRefuelingStop: false,
+      },
+    ],
+    performanceData: {
+      climbTrueAirspeed: 80,
+      cruiseTrueAirspeed: 120,
+      descentTrueAirspeed: 100,
+      climbFpm: 500,
+      descentFpm: 500,
+      climbFuelBurn: 10.0,
+      cruiseFuelBurn: 8.5,
+      descentFuelBurn: 5.0,
+      sttFuelGals: 1.2,
+      fuelOnBoardGals: 40.0,
+    },
+    plannedCruisingAltitude: 7500,
+    timeOfDeparture: new Date(
+      Date.now() + 2 * 60 * 60 * 1000,
+    ).toISOString().replace(/\.\d+Z$/, 'Z'),
+  },
+  '/api/v1/navlog/bearing-and-distance': {
+    startLatitude: 35.214,
+    startLongitude: -80.9431,
+    endLatitude: 36.1245,
+    endLongitude: -86.6782,
+  },
+  '/api/v1/performance/crosswind/calculate': {
+    windDirectionDegrees: 230,
+    windSpeedKt: 15,
+    windGustKt: 22,
+    runwayHeadingDegrees: 180,
+  },
+  '/api/v1/performance/density-altitude/calculate': {
+    fieldElevationFt: 748,
+    altimeterInHg: 29.92,
+    temperatureCelsius: 30,
+  },
+  '/api/v1/notams/route': {
+    airportIdentifiers: ['KCLT', 'KTYS', 'KBNA'],
+    corridorRadiusNm: 25,
+  },
+  '/api/v1/obstacles/by-oas-numbers': [
+    '12-345678',
+    '12-345679',
+  ],
+  }
+}
+
 export function getExampleBody(endpoint: ParsedEndpoint): string | undefined {
-  if (!endpoint.requestBody?.schema) return undefined
-  const fields = endpoint.requestBody.schema.fields
-  if (!fields.length) return '{}'
+  const examples = getExampleBodies()
+  if (!endpoint.requestBody?.schema && !examples[endpoint.path])
+    return undefined
+
+  // Use curated example if available
+  if (examples[endpoint.path]) {
+    return JSON.stringify(examples[endpoint.path], null, 2)
+  }
+
+  const fields = endpoint.requestBody?.schema?.fields
+  if (!fields?.length) return '{}'
 
   const obj: Record<string, unknown> = {}
   for (const f of fields) {

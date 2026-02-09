@@ -14,12 +14,12 @@ function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div className="flex h-screen bg-muted/30">
+    <div className="flex h-screen">
       <DashboardSidebar open={sidebarOpen} onOpenChange={setSidebarOpen} />
       <div className="flex flex-1 flex-col overflow-hidden">
         <DashboardHeader onMenuClick={() => setSidebarOpen(true)} />
         <main className="relative flex-1 overflow-y-auto p-6">
-          <AnimatedBackdrop />
+          <AnimatedBackdrop subtle />
           <div className="mx-auto max-w-5xl">
             <Outlet />
           </div>
@@ -33,12 +33,12 @@ function DashboardPending() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div className="flex h-screen bg-muted/30">
+    <div className="flex h-screen">
       <DashboardSidebar open={sidebarOpen} onOpenChange={setSidebarOpen} />
       <div className="flex flex-1 flex-col overflow-hidden">
         <DashboardHeader onMenuClick={() => setSidebarOpen(true)} />
         <main className="relative flex-1 overflow-y-auto p-6">
-          <AnimatedBackdrop />
+          <AnimatedBackdrop subtle />
           <div className="mx-auto max-w-5xl space-y-8">
             <div className="space-y-2">
               <Skeleton className="h-8 w-48" />

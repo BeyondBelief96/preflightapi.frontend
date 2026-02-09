@@ -81,8 +81,8 @@ function DocsLayout() {
 
       {/* Main content */}
       <main className="relative flex-1 overflow-y-auto">
-        <AnimatedBackdrop />
-        <div className="sticky top-0 z-30 flex items-center gap-3 border-b bg-background/95 px-4 py-2 backdrop-blur-sm supports-[backdrop-filter]:bg-background/60 lg:px-6">
+        <AnimatedBackdrop subtle />
+        <div className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b bg-background/95 px-4 backdrop-blur-sm supports-[backdrop-filter]:bg-background/60 lg:px-6">
           <Button
             variant="ghost"
             size="icon"
