@@ -1,4 +1,5 @@
-import { Link, createFileRoute  } from '@tanstack/react-router'
+import { useEffect, useRef, useState } from 'react'
+import { Link, createFileRoute } from '@tanstack/react-router'
 import {
   ArrowRight,
   BookOpen,
@@ -6,11 +7,14 @@ import {
   ExternalLink,
   KeyRound,
   Loader2,
+  X,
 } from 'lucide-react'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '@clerk/clerk-react'
+import { toast } from 'sonner'
 import { z } from 'zod'
-import type {EndpointTier, PlanDefinition} from '@/lib/constants';
+import type { EndpointTier, PlanDefinition } from '@/lib/constants'
+import { SITE_CONFIG } from '@/lib/constants'
 import { createPageHead } from '@/lib/seo'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -22,6 +26,7 @@ import {
   createCheckoutSession,
   createPortalSession,
   getStripeSubscription,
+  reconcileSubscription,
 } from '@/lib/server/stripe'
 import { apimKeys, stripeKeys } from '@/lib/server/apim-queries'
 
@@ -96,10 +101,14 @@ function getNewEndpoints(
     .filter(Boolean)
 }
 
+const MAX_RECONCILE_RETRIES = 3
+const RECONCILE_BASE_DELAY = 3000
+
 function BillingPage() {
   const { userId } = useAuth()
   const { checkout, plan: upgradedPlanId } = Route.useSearch()
   const { plans, endpointAccess } = usePlans()
+  const queryClient = useQueryClient()
 
   const subscriptionsQuery = useQuery({
     queryKey: apimKeys.subscription(userId ?? ''),
@@ -125,6 +134,70 @@ function BillingPage() {
   const upgradedPlan = upgradedPlanId
     ? plans.find((p) => p.id === upgradedPlanId)
     : undefined
+
+  // --- Reconciliation (runs silently in background) ---
+  const [showSuccessBanner, setShowSuccessBanner] = useState(
+    checkout === 'success',
+  )
+  const retryCountRef = useRef(0)
+  const reconcileTriggeredRef = useRef(false)
+  const mismatchTriggeredRef = useRef(false)
+
+  const reconcileMutation = useMutation({
+    mutationFn: () => reconcileSubscription(),
+    onSuccess: (result) => {
+      if (result.status === 'synced') {
+        queryClient.invalidateQueries({
+          queryKey: apimKeys.subscription(userId ?? ''),
+        })
+        queryClient.invalidateQueries({
+          queryKey: stripeKeys.subscription(userId ?? ''),
+        })
+      }
+    },
+    onError: () => {
+      if (retryCountRef.current < MAX_RECONCILE_RETRIES - 1) {
+        const delay =
+          RECONCILE_BASE_DELAY * Math.pow(2, retryCountRef.current)
+        retryCountRef.current += 1
+        setTimeout(() => reconcileMutation.mutate(), delay)
+      } else {
+        toast.error('Plan activation delayed', {
+          description: `Your payment was received. If your plan doesn't update shortly, contact ${SITE_CONFIG.supportEmail}.`,
+          duration: 10000,
+        })
+      }
+    },
+  })
+
+  // Auto-trigger on checkout success (with delay for webhook)
+  useEffect(() => {
+    if (checkout !== 'success' || reconcileTriggeredRef.current) return
+    reconcileTriggeredRef.current = true
+    const timer = setTimeout(() => {
+      reconcileMutation.mutate()
+    }, RECONCILE_BASE_DELAY)
+    return () => clearTimeout(timer)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [checkout])
+
+  // Background mismatch detection
+  useEffect(() => {
+    if (mismatchTriggeredRef.current) return
+    if (!stripeSub || !activeSubscription) return
+
+    const expectedProductId = plans.find(
+      (p) => p.id === stripeSub.planId,
+    )?.apimProductId
+    if (
+      expectedProductId &&
+      activeSubscription.productId !== expectedProductId
+    ) {
+      mismatchTriggeredRef.current = true
+      reconcileMutation.mutate()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stripeSub?.planId, activeSubscription?.productId])
 
   const now = new Date()
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
@@ -237,24 +310,22 @@ function BillingPage() {
 
   return (
     <div className="space-y-8">
-      {/* Upgrade success onboarding */}
-      {checkout === 'success' && upgradedPlan && (
-        <UpgradeSuccessCard plan={upgradedPlan} endpointAccess={endpointAccess} />
-      )}
-      {checkout === 'success' && !upgradedPlan && (
-        <div className="rounded-lg border border-green-500/20 bg-green-500/10 p-4">
-          <p className="text-sm font-medium text-green-700 dark:text-green-400">
-            Your subscription is being activated! It may take a moment for your
-            plan to update.
-          </p>
-        </div>
+      {/* Upgrade success */}
+      {showSuccessBanner && upgradedPlan && (
+        <UpgradeSuccessCard
+          plan={upgradedPlan}
+          endpointAccess={endpointAccess}
+          onDismiss={() => setShowSuccessBanner(false)}
+        />
       )}
       {checkout === 'canceled' && (
-        <div className="rounded-lg border border-yellow-500/20 bg-yellow-500/10 p-4">
-          <p className="text-sm font-medium text-yellow-700 dark:text-yellow-400">
-            Checkout was canceled. You can try again whenever you're ready.
-          </p>
-        </div>
+        <Card className="border-l-4 border-l-aviation-warning">
+          <CardContent className="flex items-center gap-3 p-4">
+            <p className="text-sm text-muted-foreground">
+              Checkout was canceled. You can try again whenever you're ready.
+            </p>
+          </CardContent>
+        </Card>
       )}
 
       {/* Current plan */}
@@ -408,22 +479,31 @@ function BillingPage() {
 function UpgradeSuccessCard({
   plan,
   endpointAccess,
+  onDismiss,
 }: {
   plan: PlanDefinition
   endpointAccess: Record<string, EndpointTier>
+  onDismiss: () => void
 }) {
   const newEndpoints = getNewEndpoints(plan.id, endpointAccess)
 
   return (
-    <Card className="border-green-500/30 bg-green-500/5">
-      <CardHeader>
-        <CardTitle className="text-green-700 dark:text-green-400">
-          Welcome to the {plan.name} plan!
-        </CardTitle>
+    <Card className="animate-fade-in-up border-l-4 border-l-accent">
+      <CardHeader className="flex flex-row items-start justify-between gap-4">
+        <CardTitle>Welcome to the {plan.name} plan!</CardTitle>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-7 w-7 shrink-0 text-muted-foreground"
+          onClick={onDismiss}
+        >
+          <X className="h-4 w-4" />
+          <span className="sr-only">Dismiss</span>
+        </Button>
       </CardHeader>
       <CardContent className="space-y-6">
         <p className="text-sm text-muted-foreground">
-          Your upgrade is being activated. Here's what you need to know:
+          Your upgrade is active. Here's what you need to know:
         </p>
 
         {/* API keys note */}

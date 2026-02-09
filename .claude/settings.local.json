@@ -25,7 +25,8 @@
       "Bash(git commit -m \"$\\(cat <<''EOF''\nfix: regenerate package-lock.json for nitro-nightly compatibility\n\nFresh lock file resolves chokidar@5, lru-cache@11, readdirp@5\nthat the latest nitro-nightly requires, fixing npm ci in CI.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
       "Bash(git push:*)",
       "Bash(python3:*)",
-      "Bash(npx vite build)"
+      "Bash(npx vite build)",
+      "Bash(find:*)"
     ]
   }
 }
