@@ -17,6 +17,7 @@ export const env = createEnv({
     STRIPE_STARTER_PRICE_ID: z.string().optional(),
     STRIPE_PROFESSIONAL_PRICE_ID: z.string().optional(),
     CLERK_SECRET_KEY: z.string().optional(),
+    RESEND_API_KEY: z.string().optional(),
   },
 
   /**
@@ -33,6 +34,7 @@ export const env = createEnv({
       .url()
       .optional()
       .default('https://preflightapi-apim-service-test.azure-api.net'),
+    VITE_WAITLIST_MODE: z.string().optional().default('false'),
   },
 
   /**

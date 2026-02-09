@@ -2,9 +2,10 @@ import { Link } from '@tanstack/react-router'
 import { Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { PLANS } from '@/lib/constants'
+import { usePlans } from '@/hooks/use-plans'
 
 export function PricingPreview() {
+  const { plans } = usePlans()
   return (
     <section className="py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -21,7 +22,7 @@ export function PricingPreview() {
           </p>
         </div>
         <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {PLANS.map((plan) => (
+          {plans.map((plan) => (
             <div
               key={plan.id}
               className={`relative flex flex-col rounded-xl border p-6 ${

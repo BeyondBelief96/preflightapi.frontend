@@ -1,20 +1,28 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
-import { GATEWAY_URL } from '@/lib/gateway-url'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { CodeBlock } from '@/components/docs/code-block'
+import { API_BASE_URL } from '@/lib/gateway-url'
 
 export const Route = createFileRoute('/docs/getting-started')({
   component: GettingStartedDocs,
 })
 
+const tabTriggerClass =
+  'rounded-none border-b-2 border-transparent px-3 py-1.5 text-xs data-[state=active]:border-accent data-[state=active]:bg-transparent'
+
 function GettingStartedDocs() {
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       <div>
         <h1 className="text-3xl font-bold">Getting Started</h1>
         <p className="mt-4 text-lg text-muted-foreground">
-          Get up and running with PreflightAPI in under 5 minutes.
+          Get up and running with PreflightAPI in under 5 minutes. By the end of
+          this guide you'll have made your first API call and seen real METAR
+          data come back.
         </p>
       </div>
 
+      {/* Step 1 */}
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold">1. Create an Account</h2>
         <p className="text-muted-foreground">
@@ -22,121 +30,309 @@ function GettingStartedDocs() {
           <Link to="/sign-up" className="text-accent hover:underline">
             preflightapi.com/sign-up
           </Link>
-          . No credit card required. The Student Pilot plan is free and includes
-          500 API calls per month.
+          . No credit card required. You'll start on the{' '}
+          <strong className="text-foreground">Student Pilot</strong> plan, which
+          is free and includes 500 API calls per month — enough to explore every
+          endpoint.
         </p>
       </section>
 
+      {/* Step 2 */}
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold">2. Get Your API Key</h2>
         <p className="text-muted-foreground">
-          Navigate to the{' '}
+          After signing in, navigate to the{' '}
           <Link to="/dashboard/keys" className="text-accent hover:underline">
             API Keys
           </Link>{' '}
-          section of your dashboard. Your subscription includes a primary and
-          secondary key - use either one to authenticate requests.
+          page in your dashboard. Your subscription includes a{' '}
+          <strong className="text-foreground">primary</strong> and{' '}
+          <strong className="text-foreground">secondary</strong> key — both work
+          identically. Having two keys lets you rotate one without downtime. Copy
+          either key to use in the next step.
         </p>
+        <div className="rounded-lg border bg-muted/30 p-4">
+          <p className="text-sm text-muted-foreground">
+            Keep your API key secret. Never embed it in client-side code or
+            commit it to a public repository. Use environment variables to store
+            it in your application. See the{' '}
+            <Link
+              to="/docs/authentication"
+              className="text-accent hover:underline"
+            >
+              authentication guide
+            </Link>{' '}
+            for best practices.
+          </p>
+        </div>
       </section>
 
+      {/* Step 3 */}
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold">3. Make Your First Request</h2>
         <p className="text-muted-foreground">
-          Include your API key in the <code>Ocp-Apim-Subscription-Key</code>{' '}
-          header:
+          Include your API key in the{' '}
+          <code>Ocp-Apim-Subscription-Key</code> header. Let's fetch the
+          current METAR for JFK International Airport:
         </p>
 
-        <div className="space-y-4">
-          <div>
-            <h3 className="mb-2 text-sm font-semibold">cURL</h3>
-            <pre className="overflow-x-auto rounded-lg bg-aviation-dark p-4 text-sm text-white/90">
-              {`curl -H "Ocp-Apim-Subscription-Key: your-api-key" \\
-  ${GATEWAY_URL}/api/v1/metars/KJFK`}
-            </pre>
-          </div>
-
-          <div>
-            <h3 className="mb-2 text-sm font-semibold">JavaScript</h3>
-            <pre className="overflow-x-auto rounded-lg bg-aviation-dark p-4 text-sm text-white/90">
-              {`const response = await fetch(
-  "${GATEWAY_URL}/api/v1/metars/KJFK",
+        <Tabs defaultValue="curl" className="w-full">
+          <TabsList className="h-auto bg-transparent p-0">
+            <TabsTrigger value="curl" className={tabTriggerClass}>
+              cURL
+            </TabsTrigger>
+            <TabsTrigger value="typescript" className={tabTriggerClass}>
+              TypeScript
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="curl" className="mt-2">
+            <CodeBlock
+              language="bash"
+              code={`curl -H "Ocp-Apim-Subscription-Key: YOUR_API_KEY" \\
+  "${API_BASE_URL}/metars/KJFK"`}
+            />
+          </TabsContent>
+          <TabsContent value="typescript" className="mt-2">
+            <CodeBlock
+              language="typescript"
+              code={`const response = await fetch(
+  '${API_BASE_URL}/metars/KJFK',
   {
-    headers: { "Ocp-Apim-Subscription-Key": "your-api-key" }
+    headers: {
+      'Ocp-Apim-Subscription-Key': process.env.PREFLIGHT_API_KEY!,
+    },
+  },
+)
+
+const data: Metar = await response.json()
+console.log(data)`}
+            />
+          </TabsContent>
+        </Tabs>
+
+        <p className="text-sm text-muted-foreground">
+          A successful response returns the current METAR observation:
+        </p>
+
+        <CodeBlock
+          language="json"
+          code={`{
+  "icaoId": "KJFK",
+  "reportTime": "2026-01-15T14:56:00Z",
+  "rawOb": "KJFK 151456Z 31012KT 10SM FEW250 M04/M18 A3042 RMK AO2 SLP308 T10441183",
+  "temp": -4.4,
+  "dewp": -18.3,
+  "wdir": 310,
+  "wspd": 12,
+  "wgst": null,
+  "visib": 10,
+  "altim": 30.42,
+  "slp": 1030.8,
+  "fltcat": "VFR",
+  "clouds": [
+    { "cover": "FEW", "base": 25000 }
+  ],
+  "wxString": null
+}`}
+        />
+      </section>
+
+      {/* Step 4 */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-semibold">
+          4. Understand the Response
+        </h2>
+        <p className="text-muted-foreground">
+          Single-resource endpoints (like fetching a METAR by ICAO code) return
+          the object directly. Collection endpoints that return multiple items
+          use a paginated wrapper:
+        </p>
+
+        <CodeBlock
+          language="json"
+          code={`{
+  "data": [
+    { "icaoId": "KJFK", "fltcat": "VFR", ... },
+    { "icaoId": "KLGA", "fltcat": "MVFR", ... }
+  ],
+  "pagination": {
+    "nextCursor": "eyJpZCI6MTAwfQ==",
+    "hasMore": true,
+    "limit": 100
   }
-);
-const metar = await response.json();
-console.log(metar);`}
-            </pre>
+}`}
+        />
+
+        <p className="text-muted-foreground">
+          To fetch the next page, pass the <code>nextCursor</code> value as
+          the <code>cursor</code> query parameter. You can also control page
+          size with the <code>limit</code> parameter (1–500, default 100).
+        </p>
+
+        <CodeBlock
+          language="bash"
+          code={`curl -H "Ocp-Apim-Subscription-Key: YOUR_API_KEY" \\
+  "${API_BASE_URL}/airports/search?state=NY&cursor=eyJpZCI6MTAwfQ==&limit=50"`}
+        />
+      </section>
+
+      {/* Step 5 */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-semibold">5. Explore the API</h2>
+        <p className="text-muted-foreground">
+          Now that you've made your first request, explore the full range of
+          aviation data available. Here's a suggested learning path:
+        </p>
+
+        <div className="space-y-6">
+          <div>
+            <h3 className="mb-2 text-sm font-semibold text-foreground">
+              Weather
+            </h3>
+            <ul className="list-inside list-disc space-y-1.5 text-muted-foreground">
+              <li>
+                <Link
+                  to="/docs/metars-tafs"
+                  className="text-accent hover:underline"
+                >
+                  METARs & TAFs
+                </Link>{' '}
+                — Start here. Surface observations and terminal forecasts for
+                any US airport.
+              </li>
+              <li>
+                <Link
+                  to="/docs/pireps"
+                  className="text-accent hover:underline"
+                >
+                  PIREPs
+                </Link>{' '}
+                — Pilot reports of turbulence, icing, and sky conditions.
+              </li>
+              <li>
+                <Link
+                  to="/docs/airmets-sigmets"
+                  className="text-accent hover:underline"
+                >
+                  AIRMETs & SIGMETs
+                </Link>{' '}
+                — Weather advisories and significant weather hazards.
+              </li>
+              <li>
+                <Link
+                  to="/docs/g-airmets"
+                  className="text-accent hover:underline"
+                >
+                  G-AIRMETs
+                </Link>{' '}
+                — Graphical AIRMET hazard areas with polygon boundaries.
+              </li>
+            </ul>
           </div>
 
           <div>
-            <h3 className="mb-2 text-sm font-semibold">Python</h3>
-            <pre className="overflow-x-auto rounded-lg bg-aviation-dark p-4 text-sm text-white/90">
-              {`import requests
+            <h3 className="mb-2 text-sm font-semibold text-foreground">
+              Airports & Airspace
+            </h3>
+            <ul className="list-inside list-disc space-y-1.5 text-muted-foreground">
+              <li>
+                <Link
+                  to="/docs/airports"
+                  className="text-accent hover:underline"
+                >
+                  Airports
+                </Link>{' '}
+                — Search 19,600+ US airports, get details, runways, and
+                frequencies.
+              </li>
+              <li>
+                <Link
+                  to="/docs/airspace"
+                  className="text-accent hover:underline"
+                >
+                  Airspace
+                </Link>{' '}
+                — Query controlled (Class B/C/D/E) and special-use airspace
+                boundaries.
+              </li>
+              <li>
+                <Link
+                  to="/docs/notams"
+                  className="text-accent hover:underline"
+                >
+                  NOTAMs
+                </Link>{' '}
+                — Notices to Air Missions by airport, radius, or route.
+              </li>
+              <li>
+                <Link
+                  to="/docs/obstacles"
+                  className="text-accent hover:underline"
+                >
+                  Obstacles
+                </Link>{' '}
+                — 625,000+ FAA-charted obstacles (towers, cranes, antennas).
+              </li>
+            </ul>
+          </div>
 
-response = requests.get(
-    "${GATEWAY_URL}/api/v1/metars/KJFK",
-    headers={"Ocp-Apim-Subscription-Key": "your-api-key"}
-)
-metar = response.json()
-print(metar)`}
-            </pre>
+          <div>
+            <h3 className="mb-2 text-sm font-semibold text-foreground">
+              Flight Planning
+            </h3>
+            <ul className="list-inside list-disc space-y-1.5 text-muted-foreground">
+              <li>
+                <Link
+                  to="/docs/crosswind"
+                  className="text-accent hover:underline"
+                >
+                  Crosswind Calculator
+                </Link>{' '}
+                — Compute crosswind and headwind components from live METAR or
+                manual input.
+              </li>
+              <li>
+                <Link
+                  to="/docs/density-altitude"
+                  className="text-accent hover:underline"
+                >
+                  Density Altitude
+                </Link>{' '}
+                — Calculate density altitude for performance planning.
+              </li>
+              <li>
+                <Link
+                  to="/docs/nav-log"
+                  className="text-accent hover:underline"
+                >
+                  Nav Log
+                </Link>{' '}
+                — Full flight navigation log with wind correction and fuel burn.
+              </li>
+              <li>
+                <Link
+                  to="/docs/bearing-distance"
+                  className="text-accent hover:underline"
+                >
+                  Bearing & Distance
+                </Link>{' '}
+                — Point-to-point calculations between any two coordinates.
+              </li>
+              <li>
+                <Link
+                  to="/docs/winds-aloft"
+                  className="text-accent hover:underline"
+                >
+                  Winds Aloft
+                </Link>{' '}
+                — Forecast winds at altitude for 6, 12, and 24 hour periods.
+              </li>
+            </ul>
           </div>
         </div>
       </section>
 
-      <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">4. Explore the API</h2>
-        <p className="text-muted-foreground">
-          Browse our endpoint documentation to discover all the aviation data
-          available:
-        </p>
-        <ul className="list-inside list-disc space-y-2 text-muted-foreground">
-          <li>
-            <Link
-              to="/docs/weather/metar"
-              className="text-accent hover:underline"
-            >
-              Weather Data
-            </Link>{' '}
-            - METAR, TAF, PIREP, AIRMET/SIGMET
-          </li>
-          <li>
-            <Link
-              to="/docs/airports/search"
-              className="text-accent hover:underline"
-            >
-              Airport Data
-            </Link>{' '}
-            - Search, details, runways, frequencies
-          </li>
-          <li>
-            <Link
-              to="/docs/airspace/controlled"
-              className="text-accent hover:underline"
-            >
-              Airspace
-            </Link>{' '}
-            - Controlled and special use airspace
-          </li>
-          <li>
-            <Link to="/docs/notams" className="text-accent hover:underline">
-              NOTAMs
-            </Link>{' '}
-            - Notices to Air Missions
-          </li>
-          <li>
-            <Link
-              to="/docs/navigation/nav-log"
-              className="text-accent hover:underline"
-            >
-              Navigation
-            </Link>{' '}
-            - Flight planning and nav log calculations
-          </li>
-        </ul>
-      </section>
-
+      {/* Need Help */}
       <section className="rounded-lg border bg-muted/30 p-6">
         <h2 className="text-lg font-semibold">Need Help?</h2>
         <p className="mt-2 text-muted-foreground">
@@ -146,8 +342,15 @@ print(metar)`}
             className="text-accent hover:underline"
           >
             authentication guide
-          </Link>{' '}
-          and{' '}
+          </Link>
+          ,{' '}
+          <Link
+            to="/docs/rate-limits"
+            className="text-accent hover:underline"
+          >
+            rate limits
+          </Link>
+          , and{' '}
           <Link to="/docs/errors" className="text-accent hover:underline">
             error handling reference
           </Link>

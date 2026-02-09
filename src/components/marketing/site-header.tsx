@@ -3,11 +3,12 @@ import { SignedIn, SignedOut, UserButton } from '@clerk/clerk-react'
 import { Menu, X } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { isWaitlistMode } from '@/lib/waitlist'
 
 const navLinks = [
   { label: 'Pricing', href: '/pricing' },
   { label: 'Docs', href: '/docs' },
-  { label: 'About', href: '/about' },
+  { label: 'About PreflightAPI', href: '/about' },
 ]
 
 export function SiteHeader() {
@@ -55,14 +56,22 @@ export function SiteHeader() {
         {/* Desktop Auth Buttons */}
         <div className="hidden items-center gap-3 md:flex">
           <SignedOut>
-            <Link to="/sign-in">
-              <Button variant="ghost" size="sm">
-                Sign In
-              </Button>
-            </Link>
-            <Link to="/sign-up">
-              <Button size="sm">Get Started</Button>
-            </Link>
+            {isWaitlistMode ? (
+              <Link to="/waitlist">
+                <Button size="sm">Join Waitlist</Button>
+              </Link>
+            ) : (
+              <>
+                <Link to="/sign-in">
+                  <Button variant="ghost" size="sm">
+                    Sign In
+                  </Button>
+                </Link>
+                <Link to="/sign-up">
+                  <Button size="sm">Get Started</Button>
+                </Link>
+              </>
+            )}
           </SignedOut>
           <SignedIn>
             <Link to="/dashboard">
@@ -72,18 +81,28 @@ export function SiteHeader() {
           </SignedIn>
         </div>
 
-        {/* Mobile Menu Button */}
-        <button
-          type="button"
-          className="md:hidden"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        >
-          {mobileMenuOpen ? (
-            <X className="h-6 w-6" />
-          ) : (
-            <Menu className="h-6 w-6" />
-          )}
-        </button>
+        {/* Mobile Header Actions */}
+        <div className="flex items-center gap-3 md:hidden">
+          <SignedIn>
+            <UserButton
+              appearance={{
+                elements: {
+                  avatarBox: 'h-8 w-8',
+                },
+              }}
+            />
+          </SignedIn>
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu */}
@@ -100,31 +119,48 @@ export function SiteHeader() {
                 {link.label}
               </Link>
             ))}
-            <div className="mt-3 flex flex-col gap-2 border-t pt-3">
-              <SignedOut>
-                <Link to="/sign-in" onClick={() => setMobileMenuOpen(false)}>
-                  <Button variant="ghost" className="w-full" size="sm">
-                    Sign In
-                  </Button>
-                </Link>
-                <Link to="/sign-up" onClick={() => setMobileMenuOpen(false)}>
-                  <Button className="w-full" size="sm">
-                    Get Started
-                  </Button>
-                </Link>
-              </SignedOut>
-              <SignedIn>
+            <SignedOut>
+              <div className="mt-3 flex flex-col gap-2 border-t pt-3">
+                {isWaitlistMode ? (
+                  <Link
+                    to="/waitlist"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <Button className="w-full" size="sm">
+                      Join Waitlist
+                    </Button>
+                  </Link>
+                ) : (
+                  <>
+                    <Link
+                      to="/sign-in"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <Button variant="ghost" className="w-full" size="sm">
+                        Sign In
+                      </Button>
+                    </Link>
+                    <Link
+                      to="/sign-up"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <Button className="w-full" size="sm">
+                        Get Started
+                      </Button>
+                    </Link>
+                  </>
+                )}
+              </div>
+            </SignedOut>
+            <SignedIn>
+              <div className="mt-3 flex flex-col gap-2 border-t pt-3">
                 <Link to="/dashboard" onClick={() => setMobileMenuOpen(false)}>
                   <Button className="w-full" size="sm">
                     Dashboard
                   </Button>
                 </Link>
-                <div className="flex items-center gap-2 px-3">
-                  <UserButton />
-                  <span className="text-sm text-muted-foreground">Account</span>
-                </div>
-              </SignedIn>
-            </div>
+              </div>
+            </SignedIn>
           </div>
         </div>
       )}

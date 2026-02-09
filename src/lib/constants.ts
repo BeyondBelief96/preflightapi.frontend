@@ -43,7 +43,7 @@ export const PLANS: Array<PlanDefinition> = [
   {
     id: 'starter',
     name: 'Private Pilot',
-    price: 29.99,
+    price: 49,
     interval: 'month',
     apimProductId: 'starter-tier',
     limits: { callsPerMonth: 25_000, ratePerMinute: 60 },
@@ -55,6 +55,8 @@ export const PLANS: Array<PlanDefinition> = [
       'Controlled & special-use airspace boundaries',
       '625,000+ obstacles (towers, cranes, etc.)',
       'NOTAMs by airport, radius, or route',
+      'Bearing & distance between any two points',
+      'Winds aloft forecasts (6/12/24 hr)',
       'Up to 25,000 API calls/month',
       '60 requests/minute',
       'Email support',
@@ -64,7 +66,7 @@ export const PLANS: Array<PlanDefinition> = [
   {
     id: 'professional',
     name: 'Commercial Pilot',
-    price: 79.99,
+    price: 199,
     interval: 'month',
     apimProductId: 'professional-tier',
     limits: { callsPerMonth: 250_000, ratePerMinute: 300 },
@@ -75,8 +77,6 @@ export const PLANS: Array<PlanDefinition> = [
       'Crosswind calculator (live METAR or manual)',
       'Density altitude calculator (live METAR or manual)',
       'Nav log with wind correction & fuel burn',
-      'Bearing & distance between any two points',
-      'Winds aloft forecasts (6/12/24 hr)',
       'Up to 250,000 API calls/month',
       '300 requests/minute',
       'Priority email support',
@@ -101,11 +101,32 @@ export const ENDPOINT_ACCESS: Record<string, EndpointTier> = {
   'airspace/special-use': 'starter',
   'navigation/obstacles': 'starter',
   notams: 'starter',
+  'navigation/bearing-distance': 'starter',
+  'navigation/winds-aloft': 'starter',
   'airports/diagrams': 'professional',
   'charts/supplements': 'professional',
   'performance/calculator': 'professional',
   'navigation/nav-log': 'professional',
 } as const
+
+export const DEFAULT_PLAN_LIMITS: Record<
+  string,
+  { callsPerMonth: number | null; ratePerMinute: number | null }
+> = Object.fromEntries(PLANS.map((p) => [p.id, { ...p.limits }]))
+
+export const DEFAULT_PLAN_PRICES: Record<
+  string,
+  { price: number; interval: 'month' | 'year' }
+> = Object.fromEntries(
+  PLANS.map((p) => [
+    p.id,
+    { price: p.price ?? 0, interval: p.interval ?? 'month' },
+  ]),
+)
+
+export const DEFAULT_ENDPOINT_ACCESS: Record<string, EndpointTier> = {
+  ...ENDPOINT_ACCESS,
+}
 
 export const NAV_LINKS = {
   marketing: [

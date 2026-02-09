@@ -3,14 +3,19 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "predev": "npm run sync-api || echo [sync-api] Skipped, using existing spec",
     "dev": "vite dev --port 3000",
+    "prebuild": "npm run sync-api || echo [sync-api] Skipped, using existing spec",
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
     "lint": "eslint",
     "format": "prettier",
     "check": "prettier --write . && eslint --fix",
-    "start": "node .output/server/index.mjs"
+    "start": "node .output/server/index.mjs",
+    "sync-api": "npm run update-api-spec && npm run generate-api-types",
+    "update-api-spec": "node scripts/update-api-spec.mjs",
+    "generate-api-types": "openapi-typescript docs/preflightapi_swagger.json -o src/generated/api.ts --root-types --root-types-no-schema-prefix"
   },
   "dependencies": {
     "@azure/identity": "^4.13.0",
@@ -42,6 +47,7 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "recharts": "^3.7.0",
+    "resend": "^6.9.1",
     "shiki": "^3.22.0",
     "sonner": "^2.0.7",
     "stripe": "^20.3.1",
@@ -61,6 +67,7 @@
     "@types/react-dom": "^19.2.0",
     "@vitejs/plugin-react": "^5.0.4",
     "jsdom": "^27.0.0",
+    "openapi-typescript": "^7.10.1",
     "prettier": "^3.5.3",
     "typescript": "^5.7.2",
     "vite": "^7.1.7",

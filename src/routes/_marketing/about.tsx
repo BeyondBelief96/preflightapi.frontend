@@ -2,15 +2,24 @@ import { Link, createFileRoute } from '@tanstack/react-router'
 import { ArrowRight } from 'lucide-react'
 import { createPageHead } from '@/lib/seo'
 import { Button } from '@/components/ui/button'
+import { isWaitlistMode } from '@/lib/waitlist'
 
 export const Route = createFileRoute('/_marketing/about')({
-  head: () =>
-    createPageHead({
+  head: () => ({
+    ...createPageHead({
       title: 'About',
       description:
         'The story behind PreflightAPI — built by a pilot and software engineer who needed a better way to access aviation data.',
       path: '/about',
     }),
+    links: [
+      {
+        rel: 'preload',
+        href: '/pacific_northwest_flying.jpg',
+        as: 'image',
+      },
+    ],
+  }),
   component: AboutPage,
 })
 
@@ -44,6 +53,7 @@ function AboutPage() {
               src="/pacific_northwest_flying.jpg"
               alt="Flying over the Puget Sound in the Pacific Northwest"
               className="h-[280px] w-full object-cover sm:h-[380px] lg:h-[440px]"
+              fetchPriority="high"
             />
           </div>
           <p className="mt-3 text-center text-sm text-muted-foreground">
@@ -77,6 +87,8 @@ function AboutPage() {
                   src="/student_pilot.jpg"
                   alt="Cessna on the ramp at sunset during student pilot training"
                   className="h-[300px] w-full object-cover"
+                  loading="lazy"
+                  decoding="async"
                 />
               </div>
               <p className="text-center text-sm text-muted-foreground">
@@ -98,6 +110,8 @@ function AboutPage() {
                     src="/private_pilot.jpg"
                     alt="Brandon standing in front of a Cessna after passing the private pilot checkride"
                     className="h-[220px] w-full object-cover"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
                 <div className="overflow-hidden rounded-xl">
@@ -105,6 +119,8 @@ function AboutPage() {
                     src="/private_pilot_2.jpg"
                     alt="Brandon receiving his temporary certificate from his examiner"
                     className="h-[220px] w-full object-cover"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
               </div>
@@ -184,7 +200,7 @@ function AboutPage() {
                 data: 'Controlled & special-use airspace boundaries — updated every 56 days',
               },
               {
-                source: 'FAA NOTAM System',
+                source: 'FAA NMS (NOTAM Management System)',
                 data: 'Active NOTAMs by airport, geographic radius, or flight route',
               },
               {
@@ -223,9 +239,9 @@ function AboutPage() {
             month — no credit card required.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <Link to="/sign-up">
+            <Link to={isWaitlistMode ? '/waitlist' : '/sign-up'}>
               <Button size="lg" className="gap-2">
-                Get Started Free
+                {isWaitlistMode ? 'Join the Waitlist' : 'Get Started Free'}
                 <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>

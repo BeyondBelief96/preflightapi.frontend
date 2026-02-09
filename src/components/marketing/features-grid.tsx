@@ -30,7 +30,7 @@ const features = [
     icon: AlertTriangle,
     title: 'NOTAMs',
     description:
-      'Notices to Air Missions sourced from the FAA NOTAM system. Query by airport, geographic radius, or flight route corridor.',
+      'Notices to Air Missions sourced from the FAA NMS (NOTAM Management System). Query by airport, geographic radius, or flight route corridor.',
   },
   {
     icon: Navigation,

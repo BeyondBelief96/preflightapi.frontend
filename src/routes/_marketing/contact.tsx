@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Mail } from 'lucide-react'
+import { Mail, CheckCircle, AlertCircle, Loader2 } from 'lucide-react'
+import { useState } from 'react'
 import { createPageHead } from '@/lib/seo'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -13,6 +14,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { SITE_CONFIG } from '@/lib/constants'
+import { sendContactEmail } from '@/lib/server/contact'
 
 export const Route = createFileRoute('/_marketing/contact')({
   head: () =>
@@ -26,6 +28,39 @@ export const Route = createFileRoute('/_marketing/contact')({
 })
 
 function ContactPage() {
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [email, setEmail] = useState('')
+  const [subject, setSubject] = useState('')
+  const [message, setMessage] = useState('')
+  const [status, setStatus] = useState<
+    'idle' | 'sending' | 'success' | 'error'
+  >('idle')
+  const [errorMsg, setErrorMsg] = useState('')
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    setStatus('sending')
+    setErrorMsg('')
+
+    try {
+      await sendContactEmail({
+        data: { firstName, lastName, email, subject, message },
+      })
+      setStatus('success')
+      setFirstName('')
+      setLastName('')
+      setEmail('')
+      setSubject('')
+      setMessage('')
+    } catch (err) {
+      setStatus('error')
+      setErrorMsg(
+        err instanceof Error ? err.message : 'Something went wrong.',
+      )
+    }
+  }
+
   return (
     <div className="py-20">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
@@ -35,56 +70,113 @@ function ContactPage() {
             <h1 className="text-4xl font-bold tracking-tight">Get in Touch</h1>
             <p className="mt-4 text-lg text-muted-foreground">
               Have a question about PreflightAPI? Interested in upgrading your
-              plan? Fill out the form and we will get back to you within one
-              business day.
+              plan? Fill out the form and we will get back to you as soon as
+              possible.
             </p>
-            <form
-              className="mt-8 space-y-6"
-              onSubmit={(e) => e.preventDefault()}
-            >
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="firstName">First name</Label>
-                  <Input id="firstName" placeholder="John" />
+
+            {status === 'success' ? (
+              <div className="mt-8 flex items-start gap-3 rounded-xl border border-aviation-success/30 bg-aviation-success/10 p-6">
+                <CheckCircle className="mt-0.5 h-5 w-5 shrink-0 text-aviation-success" />
+                <div>
+                  <p className="font-medium">Message sent!</p>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    Thanks for reaching out. We will get back to you soon.
+                  </p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="mt-4"
+                    onClick={() => setStatus('idle')}
+                  >
+                    Send another message
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="firstName">First name</Label>
+                    <Input
+                      id="firstName"
+                      placeholder="John"
+                      required
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="lastName">Last name</Label>
+                    <Input
+                      id="lastName"
+                      placeholder="Doe"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                    />
+                  </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="lastName">Last name</Label>
-                  <Input id="lastName" placeholder="Doe" />
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="john@example.com"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
                 </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" placeholder="john@example.com" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="subject">Subject</Label>
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a topic" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="general">General Inquiry</SelectItem>
-                    <SelectItem value="professional">
-                      Professional Plan
-                    </SelectItem>
-                    <SelectItem value="technical">Technical Support</SelectItem>
-                    <SelectItem value="billing">Billing</SelectItem>
-                    <SelectItem value="partnership">Partnership</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="message">Message</Label>
-                <Textarea
-                  id="message"
-                  placeholder="Tell us about your project or question..."
-                  rows={5}
-                />
-              </div>
-              <Button type="submit" size="lg">
-                Send Message
-              </Button>
-            </form>
+                <div className="space-y-2">
+                  <Label htmlFor="subject">Subject</Label>
+                  <Select value={subject} onValueChange={setSubject} required>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a topic" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="general">General Inquiry</SelectItem>
+                      <SelectItem value="technical">
+                        Technical Support
+                      </SelectItem>
+                      <SelectItem value="billing">Billing</SelectItem>
+                      <SelectItem value="partnership">Partnership</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="message">Message</Label>
+                  <Textarea
+                    id="message"
+                    placeholder="Tell us about your project or question..."
+                    rows={5}
+                    required
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                  />
+                </div>
+
+                {status === 'error' && (
+                  <div className="flex items-start gap-3 rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm">
+                    <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
+                    <p>{errorMsg || 'Failed to send message. Please try again.'}</p>
+                  </div>
+                )}
+
+                <Button
+                  type="submit"
+                  size="lg"
+                  disabled={status === 'sending'}
+                >
+                  {status === 'sending' ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    'Send Message'
+                  )}
+                </Button>
+              </form>
+            )}
           </div>
 
           {/* Contact info */}
@@ -106,12 +198,10 @@ function ContactPage() {
                 </div>
               </div>
               <div className="mt-8 border-t pt-8">
-                <h3 className="font-medium">Response Times</h3>
-                <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-                  <li>Student Pilot: Documentation &amp; self-service</li>
-                  <li>Private Pilot: 1-2 business days</li>
-                  <li>Commercial Pilot: Within 24 hours</li>
-                </ul>
+                <h3 className="font-medium">Response Time</h3>
+                <p className="mt-3 text-sm text-muted-foreground">
+                  We typically respond within 1-2 business days.
+                </p>
               </div>
             </div>
           </div>

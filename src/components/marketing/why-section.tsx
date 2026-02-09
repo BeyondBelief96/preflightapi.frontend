@@ -6,19 +6,19 @@ const reasons = [
     icon: Layers,
     title: 'One API, Not Six',
     description:
-      'METARs, TAFs, airports, airspace, NOTAMs, obstacles, diagrams, performance tools — all from a single REST endpoint. No juggling multiple government sources.',
+      'Weather, airports, airspace, NOTAMs, flight planning, and performance tools — all in one place. Stop stitching together data from NOAA, the FAA, and ArcGIS yourself.',
   },
   {
     icon: RefreshCw,
-    title: 'Always Current',
+    title: 'Always Up to Date',
     description:
-      'Automated pipelines sync weather every 5-30 minutes and NASR data on 28/56-day FAA cycles. You get the latest data without building your own CRON jobs.',
+      'Weather data refreshes every few minutes, and airport information stays in sync with FAA publication cycles. You always get the latest data without lifting a finger.',
   },
   {
     icon: Database,
-    title: 'Clean, Typed JSON',
+    title: 'Ready-to-Use JSON',
     description:
-      'Raw government data normalized into predictable, well-documented JSON responses. No parsing XML, decoding fixed-width files, or wrestling with GIS formats.',
+      'Every response is clean, consistent JSON — no decoding raw weather strings or wrangling government file formats. Just plug it into your app and go.',
   },
 ]
 
@@ -38,10 +38,11 @@ export function WhySection() {
               <span className="text-accent">Ship Your App.</span>
             </h2>
             <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-              US aviation data is scattered across half a dozen government
-              sources — each with its own format, update schedule, and quirks.
-              PreflightAPI does the hard work of aggregating, normalizing, and
-              serving it all so you can focus on building.
+              FAA data is spread across dozens of files in hard-to-use formats,
+              published on overlapping cycles. Weather feeds need constant
+              polling and parsing. That&apos;s weeks of plumbing before you
+              write a single line of product code. PreflightAPI gives you all of
+              it through one clean API — so you can ship in days, not months.
             </p>
             <Link
               to="/about"

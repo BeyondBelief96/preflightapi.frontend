@@ -1,6 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { auth } from '@clerk/tanstack-react-start/server'
 import { apimFetch } from './apim-client'
+import { getTierConfig } from './tier-config'
 import type { ApimUsageReport } from '@/types/plans'
 import { PLANS } from '@/lib/constants'
 
@@ -64,43 +65,6 @@ export const getOrCreateApimUser = createServerFn({ method: 'GET' }).handler(
 
 // --- Subscription Management ---
 
-export const createSubscription = createServerFn({ method: 'POST' })
-  .inputValidator((input: { productId: string; displayName?: string }) => input)
-  .handler(async ({ data }) => {
-    const userId = await requireAuth()
-    const subId = `${userId}-${data.productId}`
-
-    const result = await apimFetch<{
-      id: string
-      name: string
-      properties: {
-        ownerId: string
-        scope: string
-        displayName: string
-        state: string
-        createdDate: string
-        expirationDate: string | null
-      }
-    }>(`/subscriptions/${subId}`, {
-      method: 'PUT',
-      body: JSON.stringify({
-        properties: {
-          ownerId: `/users/${userId}`,
-          scope: `/products/${data.productId}`,
-          displayName: data.displayName ?? `${data.productId} subscription`,
-          state: 'active',
-        },
-      }),
-    })
-
-    return {
-      id: result.name,
-      productId: data.productId,
-      state: result.properties.state,
-      createdDate: result.properties.createdDate,
-    }
-  })
-
 export const getUserSubscription = createServerFn({ method: 'GET' }).handler(
   async () => {
     const userId = await requireAuth()
@@ -117,13 +81,15 @@ export const getUserSubscription = createServerFn({ method: 'GET' }).handler(
       }),
     })
 
-    // Fetch existing subscriptions
+    // Fetch existing subscriptions (all states, not just active)
     const result = await apimFetch<SubscriptionListResponse>(
       `/users/${userId}/subscriptions`,
     )
     let subscriptions = result.value
 
-    // Auto-provision a free-tier subscription if the user has none
+    // Auto-provision a free-tier subscription only if the user has NO
+    // subscriptions in any state. This prevents creating a duplicate
+    // free-tier sub when a paid subscription was recently cancelled/suspended.
     if (subscriptions.length === 0) {
       const freeTierSubId = `${userId}-free-tier`
       await apimFetch(`/subscriptions/${freeTierSubId}`, {
@@ -132,7 +98,7 @@ export const getUserSubscription = createServerFn({ method: 'GET' }).handler(
           properties: {
             ownerId: `/users/${userId}`,
             scope: `/products/free-tier`,
-            displayName: 'Student Pilot (Free)',
+            displayName: userId,
             state: 'active',
           },
         }),
@@ -215,57 +181,6 @@ export const regenerateKey = createServerFn({ method: 'POST' })
     return keys
   })
 
-export const changeTier = createServerFn({ method: 'POST' })
-  .inputValidator(
-    (input: { subscriptionId: string; newProductId: string }) => input,
-  )
-  .handler(async ({ data }) => {
-    const userId = await requireAuth()
-    requireOwnership(userId, data.subscriptionId)
-
-    await apimFetch(`/subscriptions/${data.subscriptionId}`, {
-      method: 'PATCH',
-      body: JSON.stringify({
-        properties: {
-          scope: `/products/${data.newProductId}`,
-        },
-      }),
-    })
-
-    return { success: true }
-  })
-
-export const suspendSubscription = createServerFn({ method: 'POST' })
-  .inputValidator((input: { subscriptionId: string }) => input)
-  .handler(async ({ data }) => {
-    const userId = await requireAuth()
-    requireOwnership(userId, data.subscriptionId)
-
-    await apimFetch(`/subscriptions/${data.subscriptionId}`, {
-      method: 'PATCH',
-      body: JSON.stringify({
-        properties: {
-          state: 'suspended',
-        },
-      }),
-    })
-
-    return { success: true }
-  })
-
-export const deleteSubscription = createServerFn({ method: 'POST' })
-  .inputValidator((input: { subscriptionId: string }) => input)
-  .handler(async ({ data }) => {
-    const userId = await requireAuth()
-    requireOwnership(userId, data.subscriptionId)
-
-    await apimFetch(`/subscriptions/${data.subscriptionId}`, {
-      method: 'DELETE',
-    })
-
-    return { success: true }
-  })
-
 // --- Usage Analytics ---
 
 export const getUsageAnalytics = createServerFn({ method: 'GET' })
@@ -324,3 +239,11 @@ export const getUsageAnalytics = createServerFn({ method: 'GET' })
       apiTimeMax: report.apiTimeMax,
     } satisfies ApimUsageReport
   })
+
+// --- Tier Configuration (public, no auth required) ---
+
+export const fetchTierConfig = createServerFn({ method: 'GET' }).handler(
+  async () => {
+    return getTierConfig()
+  },
+)

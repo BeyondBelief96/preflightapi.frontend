@@ -2,7 +2,10 @@ import { Link } from '@tanstack/react-router'
 import { ArrowRight, Terminal } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { codeToHtml } from 'shiki'
+import { ApiStatusBadge } from '@/components/marketing/api-status-badge'
 import { Button } from '@/components/ui/button'
+import { API_BASE_PATH } from '@/lib/api-metadata'
+import { isWaitlistMode } from '@/lib/waitlist'
 
 const codeExamples = [
   {
@@ -13,7 +16,7 @@ const codeExamples = [
     code: `import type { MetarDto } from './types'
 
 const res = await fetch(
-  'https://api.preflightapi.io/api/v1/metars/KJFK',
+  \`https://api.preflightapi.io${API_BASE_PATH}/metars/KJFK\`,
   {
     headers: {
       'Ocp-Apim-Subscription-Key': 'your-api-key',
@@ -33,7 +36,7 @@ console.log(metar.flightCategory) // "VFR"`,
 import type { MetarDto } from './types'
 
 const client = axios.create({
-  baseURL: 'https://api.preflightapi.io/api/v1',
+  baseURL: 'https://api.preflightapi.io${API_BASE_PATH}',
   headers: {
     'Ocp-Apim-Subscription-Key': 'your-api-key',
   },
@@ -57,7 +60,7 @@ export function useMetar(stationId: string) {
     queryKey: ['metar', stationId],
     queryFn: async (): Promise<MetarDto> => {
       const res = await fetch(
-        \`https://api.preflightapi.io/api/v1/metars/\${stationId}\`,
+        \`https://api.preflightapi.io${API_BASE_PATH}/metars/\${stationId}\`,
         {
           headers: {
             'Ocp-Apim-Subscription-Key': 'your-api-key',
@@ -79,7 +82,7 @@ import type { MetarDto } from '../types'
 
 export const weatherApi = createApi({
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://api.preflightapi.io/api/v1',
+    baseUrl: 'https://api.preflightapi.io${API_BASE_PATH}',
     prepareHeaders: (headers) => {
       headers.set(
         'Ocp-Apim-Subscription-Key',
@@ -163,17 +166,11 @@ function CodeTabs() {
 export function HeroSection() {
   return (
     <section className="relative overflow-hidden">
-      {/* Background gradient */}
-      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-primary/5 via-background to-background" />
-
       <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
         <div className="grid items-start gap-12 lg:grid-cols-2">
           {/* Left: Copy */}
           <div>
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border bg-muted/50 px-4 py-1.5 text-sm text-muted-foreground">
-              <span className="h-2 w-2 rounded-full bg-aviation-success" />
-              All systems operational
-            </div>
+            <ApiStatusBadge />
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
               Aviation Data <span className="text-accent">for Developers</span>
             </h1>
@@ -187,9 +184,9 @@ export function HeroSection() {
               software.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
-              <Link to="/sign-up">
+              <Link to={isWaitlistMode ? '/waitlist' : '/sign-up'}>
                 <Button size="lg" className="gap-2">
-                  Get Started Free
+                  {isWaitlistMode ? 'Join the Waitlist' : 'Get Started Free'}
                   <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>

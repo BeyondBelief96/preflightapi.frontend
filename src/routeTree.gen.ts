@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WaitlistRouteImport } from './routes/waitlist'
 import { Route as SignUpRouteImport } from './routes/sign-up'
 import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as DocsRouteImport } from './routes/docs'
@@ -17,11 +18,26 @@ import { Route as MarketingRouteImport } from './routes/_marketing'
 import { Route as DocsIndexRouteImport } from './routes/docs/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as MarketingIndexRouteImport } from './routes/_marketing/index'
+import { Route as DocsWindsAloftRouteImport } from './routes/docs/winds-aloft'
 import { Route as DocsRateLimitsRouteImport } from './routes/docs/rate-limits'
+import { Route as DocsPirepsRouteImport } from './routes/docs/pireps'
+import { Route as DocsOpenapiRouteImport } from './routes/docs/openapi'
+import { Route as DocsObstaclesRouteImport } from './routes/docs/obstacles'
 import { Route as DocsNotamsRouteImport } from './routes/docs/notams'
+import { Route as DocsNavLogRouteImport } from './routes/docs/nav-log'
+import { Route as DocsMetarsTafsRouteImport } from './routes/docs/metars-tafs'
 import { Route as DocsGettingStartedRouteImport } from './routes/docs/getting-started'
+import { Route as DocsGAirmetsRouteImport } from './routes/docs/g-airmets'
 import { Route as DocsErrorsRouteImport } from './routes/docs/errors'
+import { Route as DocsDocumentsRouteImport } from './routes/docs/documents'
+import { Route as DocsDensityAltitudeRouteImport } from './routes/docs/density-altitude'
+import { Route as DocsCrosswindRouteImport } from './routes/docs/crosswind'
+import { Route as DocsBearingDistanceRouteImport } from './routes/docs/bearing-distance'
 import { Route as DocsAuthenticationRouteImport } from './routes/docs/authentication'
+import { Route as DocsApiReferenceRouteImport } from './routes/docs/api-reference'
+import { Route as DocsAirspaceRouteImport } from './routes/docs/airspace'
+import { Route as DocsAirportsRouteImport } from './routes/docs/airports'
+import { Route as DocsAirmetsSigmetsRouteImport } from './routes/docs/airmets-sigmets'
 import { Route as DashboardGettingStartedRouteImport } from './routes/dashboard/getting-started'
 import { Route as MarketingPricingRouteImport } from './routes/_marketing/pricing'
 import { Route as MarketingContactRouteImport } from './routes/_marketing/contact'
@@ -29,25 +45,14 @@ import { Route as MarketingAboutRouteImport } from './routes/_marketing/about'
 import { Route as DashboardSettingsIndexRouteImport } from './routes/dashboard/settings/index'
 import { Route as DashboardKeysIndexRouteImport } from './routes/dashboard/keys/index'
 import { Route as DashboardBillingIndexRouteImport } from './routes/dashboard/billing/index'
-import { Route as DocsWeatherTafRouteImport } from './routes/docs/weather/taf'
-import { Route as DocsWeatherPirepRouteImport } from './routes/docs/weather/pirep'
-import { Route as DocsWeatherMetarRouteImport } from './routes/docs/weather/metar'
-import { Route as DocsWeatherGAirmetRouteImport } from './routes/docs/weather/g-airmet'
-import { Route as DocsWeatherAirmetSigmetRouteImport } from './routes/docs/weather/airmet-sigmet'
-import { Route as DocsPerformanceCalculatorRouteImport } from './routes/docs/performance/calculator'
-import { Route as DocsNavigationObstaclesRouteImport } from './routes/docs/navigation/obstacles'
-import { Route as DocsNavigationNavLogRouteImport } from './routes/docs/navigation/nav-log'
-import { Route as DocsChartsSupplementsRouteImport } from './routes/docs/charts/supplements'
-import { Route as DocsAirspaceSpecialUseRouteImport } from './routes/docs/airspace/special-use'
-import { Route as DocsAirspaceControlledRouteImport } from './routes/docs/airspace/controlled'
-import { Route as DocsAirportsSearchRouteImport } from './routes/docs/airports/search'
-import { Route as DocsAirportsRunwaysRouteImport } from './routes/docs/airports/runways'
-import { Route as DocsAirportsFrequenciesRouteImport } from './routes/docs/airports/frequencies'
-import { Route as DocsAirportsDiagramsRouteImport } from './routes/docs/airports/diagrams'
-import { Route as DocsAirportsDetailsRouteImport } from './routes/docs/airports/details'
 import { Route as MarketingLegalTermsRouteImport } from './routes/_marketing/legal/terms'
 import { Route as MarketingLegalPrivacyRouteImport } from './routes/_marketing/legal/privacy'
 
+const WaitlistRoute = WaitlistRouteImport.update({
+  id: '/waitlist',
+  path: '/waitlist',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SignUpRoute = SignUpRouteImport.update({
   id: '/sign-up',
   path: '/sign-up',
@@ -87,9 +92,29 @@ const MarketingIndexRoute = MarketingIndexRouteImport.update({
   path: '/',
   getParentRoute: () => MarketingRoute,
 } as any)
+const DocsWindsAloftRoute = DocsWindsAloftRouteImport.update({
+  id: '/winds-aloft',
+  path: '/winds-aloft',
+  getParentRoute: () => DocsRoute,
+} as any)
 const DocsRateLimitsRoute = DocsRateLimitsRouteImport.update({
   id: '/rate-limits',
   path: '/rate-limits',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsPirepsRoute = DocsPirepsRouteImport.update({
+  id: '/pireps',
+  path: '/pireps',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsOpenapiRoute = DocsOpenapiRouteImport.update({
+  id: '/openapi',
+  path: '/openapi',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsObstaclesRoute = DocsObstaclesRouteImport.update({
+  id: '/obstacles',
+  path: '/obstacles',
   getParentRoute: () => DocsRoute,
 } as any)
 const DocsNotamsRoute = DocsNotamsRouteImport.update({
@@ -97,9 +122,24 @@ const DocsNotamsRoute = DocsNotamsRouteImport.update({
   path: '/notams',
   getParentRoute: () => DocsRoute,
 } as any)
+const DocsNavLogRoute = DocsNavLogRouteImport.update({
+  id: '/nav-log',
+  path: '/nav-log',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsMetarsTafsRoute = DocsMetarsTafsRouteImport.update({
+  id: '/metars-tafs',
+  path: '/metars-tafs',
+  getParentRoute: () => DocsRoute,
+} as any)
 const DocsGettingStartedRoute = DocsGettingStartedRouteImport.update({
   id: '/getting-started',
   path: '/getting-started',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsGAirmetsRoute = DocsGAirmetsRouteImport.update({
+  id: '/g-airmets',
+  path: '/g-airmets',
   getParentRoute: () => DocsRoute,
 } as any)
 const DocsErrorsRoute = DocsErrorsRouteImport.update({
@@ -107,9 +147,49 @@ const DocsErrorsRoute = DocsErrorsRouteImport.update({
   path: '/errors',
   getParentRoute: () => DocsRoute,
 } as any)
+const DocsDocumentsRoute = DocsDocumentsRouteImport.update({
+  id: '/documents',
+  path: '/documents',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsDensityAltitudeRoute = DocsDensityAltitudeRouteImport.update({
+  id: '/density-altitude',
+  path: '/density-altitude',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsCrosswindRoute = DocsCrosswindRouteImport.update({
+  id: '/crosswind',
+  path: '/crosswind',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsBearingDistanceRoute = DocsBearingDistanceRouteImport.update({
+  id: '/bearing-distance',
+  path: '/bearing-distance',
+  getParentRoute: () => DocsRoute,
+} as any)
 const DocsAuthenticationRoute = DocsAuthenticationRouteImport.update({
   id: '/authentication',
   path: '/authentication',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsApiReferenceRoute = DocsApiReferenceRouteImport.update({
+  id: '/api-reference',
+  path: '/api-reference',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsAirspaceRoute = DocsAirspaceRouteImport.update({
+  id: '/airspace',
+  path: '/airspace',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsAirportsRoute = DocsAirportsRouteImport.update({
+  id: '/airports',
+  path: '/airports',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsAirmetsSigmetsRoute = DocsAirmetsSigmetsRouteImport.update({
+  id: '/airmets-sigmets',
+  path: '/airmets-sigmets',
   getParentRoute: () => DocsRoute,
 } as any)
 const DashboardGettingStartedRoute = DashboardGettingStartedRouteImport.update({
@@ -147,87 +227,6 @@ const DashboardBillingIndexRoute = DashboardBillingIndexRouteImport.update({
   path: '/billing/',
   getParentRoute: () => DashboardRoute,
 } as any)
-const DocsWeatherTafRoute = DocsWeatherTafRouteImport.update({
-  id: '/weather/taf',
-  path: '/weather/taf',
-  getParentRoute: () => DocsRoute,
-} as any)
-const DocsWeatherPirepRoute = DocsWeatherPirepRouteImport.update({
-  id: '/weather/pirep',
-  path: '/weather/pirep',
-  getParentRoute: () => DocsRoute,
-} as any)
-const DocsWeatherMetarRoute = DocsWeatherMetarRouteImport.update({
-  id: '/weather/metar',
-  path: '/weather/metar',
-  getParentRoute: () => DocsRoute,
-} as any)
-const DocsWeatherGAirmetRoute = DocsWeatherGAirmetRouteImport.update({
-  id: '/weather/g-airmet',
-  path: '/weather/g-airmet',
-  getParentRoute: () => DocsRoute,
-} as any)
-const DocsWeatherAirmetSigmetRoute = DocsWeatherAirmetSigmetRouteImport.update({
-  id: '/weather/airmet-sigmet',
-  path: '/weather/airmet-sigmet',
-  getParentRoute: () => DocsRoute,
-} as any)
-const DocsPerformanceCalculatorRoute =
-  DocsPerformanceCalculatorRouteImport.update({
-    id: '/performance/calculator',
-    path: '/performance/calculator',
-    getParentRoute: () => DocsRoute,
-  } as any)
-const DocsNavigationObstaclesRoute = DocsNavigationObstaclesRouteImport.update({
-  id: '/navigation/obstacles',
-  path: '/navigation/obstacles',
-  getParentRoute: () => DocsRoute,
-} as any)
-const DocsNavigationNavLogRoute = DocsNavigationNavLogRouteImport.update({
-  id: '/navigation/nav-log',
-  path: '/navigation/nav-log',
-  getParentRoute: () => DocsRoute,
-} as any)
-const DocsChartsSupplementsRoute = DocsChartsSupplementsRouteImport.update({
-  id: '/charts/supplements',
-  path: '/charts/supplements',
-  getParentRoute: () => DocsRoute,
-} as any)
-const DocsAirspaceSpecialUseRoute = DocsAirspaceSpecialUseRouteImport.update({
-  id: '/airspace/special-use',
-  path: '/airspace/special-use',
-  getParentRoute: () => DocsRoute,
-} as any)
-const DocsAirspaceControlledRoute = DocsAirspaceControlledRouteImport.update({
-  id: '/airspace/controlled',
-  path: '/airspace/controlled',
-  getParentRoute: () => DocsRoute,
-} as any)
-const DocsAirportsSearchRoute = DocsAirportsSearchRouteImport.update({
-  id: '/airports/search',
-  path: '/airports/search',
-  getParentRoute: () => DocsRoute,
-} as any)
-const DocsAirportsRunwaysRoute = DocsAirportsRunwaysRouteImport.update({
-  id: '/airports/runways',
-  path: '/airports/runways',
-  getParentRoute: () => DocsRoute,
-} as any)
-const DocsAirportsFrequenciesRoute = DocsAirportsFrequenciesRouteImport.update({
-  id: '/airports/frequencies',
-  path: '/airports/frequencies',
-  getParentRoute: () => DocsRoute,
-} as any)
-const DocsAirportsDiagramsRoute = DocsAirportsDiagramsRouteImport.update({
-  id: '/airports/diagrams',
-  path: '/airports/diagrams',
-  getParentRoute: () => DocsRoute,
-} as any)
-const DocsAirportsDetailsRoute = DocsAirportsDetailsRouteImport.update({
-  id: '/airports/details',
-  path: '/airports/details',
-  getParentRoute: () => DocsRoute,
-} as any)
 const MarketingLegalTermsRoute = MarketingLegalTermsRouteImport.update({
   id: '/legal/terms',
   path: '/legal/terms',
@@ -245,35 +244,35 @@ export interface FileRoutesByFullPath {
   '/docs': typeof DocsRouteWithChildren
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/waitlist': typeof WaitlistRoute
   '/about': typeof MarketingAboutRoute
   '/contact': typeof MarketingContactRoute
   '/pricing': typeof MarketingPricingRoute
   '/dashboard/getting-started': typeof DashboardGettingStartedRoute
+  '/docs/airmets-sigmets': typeof DocsAirmetsSigmetsRoute
+  '/docs/airports': typeof DocsAirportsRoute
+  '/docs/airspace': typeof DocsAirspaceRoute
+  '/docs/api-reference': typeof DocsApiReferenceRoute
   '/docs/authentication': typeof DocsAuthenticationRoute
+  '/docs/bearing-distance': typeof DocsBearingDistanceRoute
+  '/docs/crosswind': typeof DocsCrosswindRoute
+  '/docs/density-altitude': typeof DocsDensityAltitudeRoute
+  '/docs/documents': typeof DocsDocumentsRoute
   '/docs/errors': typeof DocsErrorsRoute
+  '/docs/g-airmets': typeof DocsGAirmetsRoute
   '/docs/getting-started': typeof DocsGettingStartedRoute
+  '/docs/metars-tafs': typeof DocsMetarsTafsRoute
+  '/docs/nav-log': typeof DocsNavLogRoute
   '/docs/notams': typeof DocsNotamsRoute
+  '/docs/obstacles': typeof DocsObstaclesRoute
+  '/docs/openapi': typeof DocsOpenapiRoute
+  '/docs/pireps': typeof DocsPirepsRoute
   '/docs/rate-limits': typeof DocsRateLimitsRoute
+  '/docs/winds-aloft': typeof DocsWindsAloftRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/docs/': typeof DocsIndexRoute
   '/legal/privacy': typeof MarketingLegalPrivacyRoute
   '/legal/terms': typeof MarketingLegalTermsRoute
-  '/docs/airports/details': typeof DocsAirportsDetailsRoute
-  '/docs/airports/diagrams': typeof DocsAirportsDiagramsRoute
-  '/docs/airports/frequencies': typeof DocsAirportsFrequenciesRoute
-  '/docs/airports/runways': typeof DocsAirportsRunwaysRoute
-  '/docs/airports/search': typeof DocsAirportsSearchRoute
-  '/docs/airspace/controlled': typeof DocsAirspaceControlledRoute
-  '/docs/airspace/special-use': typeof DocsAirspaceSpecialUseRoute
-  '/docs/charts/supplements': typeof DocsChartsSupplementsRoute
-  '/docs/navigation/nav-log': typeof DocsNavigationNavLogRoute
-  '/docs/navigation/obstacles': typeof DocsNavigationObstaclesRoute
-  '/docs/performance/calculator': typeof DocsPerformanceCalculatorRoute
-  '/docs/weather/airmet-sigmet': typeof DocsWeatherAirmetSigmetRoute
-  '/docs/weather/g-airmet': typeof DocsWeatherGAirmetRoute
-  '/docs/weather/metar': typeof DocsWeatherMetarRoute
-  '/docs/weather/pirep': typeof DocsWeatherPirepRoute
-  '/docs/weather/taf': typeof DocsWeatherTafRoute
   '/dashboard/billing/': typeof DashboardBillingIndexRoute
   '/dashboard/keys/': typeof DashboardKeysIndexRoute
   '/dashboard/settings/': typeof DashboardSettingsIndexRoute
@@ -281,36 +280,36 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/waitlist': typeof WaitlistRoute
   '/about': typeof MarketingAboutRoute
   '/contact': typeof MarketingContactRoute
   '/pricing': typeof MarketingPricingRoute
   '/dashboard/getting-started': typeof DashboardGettingStartedRoute
+  '/docs/airmets-sigmets': typeof DocsAirmetsSigmetsRoute
+  '/docs/airports': typeof DocsAirportsRoute
+  '/docs/airspace': typeof DocsAirspaceRoute
+  '/docs/api-reference': typeof DocsApiReferenceRoute
   '/docs/authentication': typeof DocsAuthenticationRoute
+  '/docs/bearing-distance': typeof DocsBearingDistanceRoute
+  '/docs/crosswind': typeof DocsCrosswindRoute
+  '/docs/density-altitude': typeof DocsDensityAltitudeRoute
+  '/docs/documents': typeof DocsDocumentsRoute
   '/docs/errors': typeof DocsErrorsRoute
+  '/docs/g-airmets': typeof DocsGAirmetsRoute
   '/docs/getting-started': typeof DocsGettingStartedRoute
+  '/docs/metars-tafs': typeof DocsMetarsTafsRoute
+  '/docs/nav-log': typeof DocsNavLogRoute
   '/docs/notams': typeof DocsNotamsRoute
+  '/docs/obstacles': typeof DocsObstaclesRoute
+  '/docs/openapi': typeof DocsOpenapiRoute
+  '/docs/pireps': typeof DocsPirepsRoute
   '/docs/rate-limits': typeof DocsRateLimitsRoute
+  '/docs/winds-aloft': typeof DocsWindsAloftRoute
   '/': typeof MarketingIndexRoute
   '/dashboard': typeof DashboardIndexRoute
   '/docs': typeof DocsIndexRoute
   '/legal/privacy': typeof MarketingLegalPrivacyRoute
   '/legal/terms': typeof MarketingLegalTermsRoute
-  '/docs/airports/details': typeof DocsAirportsDetailsRoute
-  '/docs/airports/diagrams': typeof DocsAirportsDiagramsRoute
-  '/docs/airports/frequencies': typeof DocsAirportsFrequenciesRoute
-  '/docs/airports/runways': typeof DocsAirportsRunwaysRoute
-  '/docs/airports/search': typeof DocsAirportsSearchRoute
-  '/docs/airspace/controlled': typeof DocsAirspaceControlledRoute
-  '/docs/airspace/special-use': typeof DocsAirspaceSpecialUseRoute
-  '/docs/charts/supplements': typeof DocsChartsSupplementsRoute
-  '/docs/navigation/nav-log': typeof DocsNavigationNavLogRoute
-  '/docs/navigation/obstacles': typeof DocsNavigationObstaclesRoute
-  '/docs/performance/calculator': typeof DocsPerformanceCalculatorRoute
-  '/docs/weather/airmet-sigmet': typeof DocsWeatherAirmetSigmetRoute
-  '/docs/weather/g-airmet': typeof DocsWeatherGAirmetRoute
-  '/docs/weather/metar': typeof DocsWeatherMetarRoute
-  '/docs/weather/pirep': typeof DocsWeatherPirepRoute
-  '/docs/weather/taf': typeof DocsWeatherTafRoute
   '/dashboard/billing': typeof DashboardBillingIndexRoute
   '/dashboard/keys': typeof DashboardKeysIndexRoute
   '/dashboard/settings': typeof DashboardSettingsIndexRoute
@@ -322,36 +321,36 @@ export interface FileRoutesById {
   '/docs': typeof DocsRouteWithChildren
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/waitlist': typeof WaitlistRoute
   '/_marketing/about': typeof MarketingAboutRoute
   '/_marketing/contact': typeof MarketingContactRoute
   '/_marketing/pricing': typeof MarketingPricingRoute
   '/dashboard/getting-started': typeof DashboardGettingStartedRoute
+  '/docs/airmets-sigmets': typeof DocsAirmetsSigmetsRoute
+  '/docs/airports': typeof DocsAirportsRoute
+  '/docs/airspace': typeof DocsAirspaceRoute
+  '/docs/api-reference': typeof DocsApiReferenceRoute
   '/docs/authentication': typeof DocsAuthenticationRoute
+  '/docs/bearing-distance': typeof DocsBearingDistanceRoute
+  '/docs/crosswind': typeof DocsCrosswindRoute
+  '/docs/density-altitude': typeof DocsDensityAltitudeRoute
+  '/docs/documents': typeof DocsDocumentsRoute
   '/docs/errors': typeof DocsErrorsRoute
+  '/docs/g-airmets': typeof DocsGAirmetsRoute
   '/docs/getting-started': typeof DocsGettingStartedRoute
+  '/docs/metars-tafs': typeof DocsMetarsTafsRoute
+  '/docs/nav-log': typeof DocsNavLogRoute
   '/docs/notams': typeof DocsNotamsRoute
+  '/docs/obstacles': typeof DocsObstaclesRoute
+  '/docs/openapi': typeof DocsOpenapiRoute
+  '/docs/pireps': typeof DocsPirepsRoute
   '/docs/rate-limits': typeof DocsRateLimitsRoute
+  '/docs/winds-aloft': typeof DocsWindsAloftRoute
   '/_marketing/': typeof MarketingIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/docs/': typeof DocsIndexRoute
   '/_marketing/legal/privacy': typeof MarketingLegalPrivacyRoute
   '/_marketing/legal/terms': typeof MarketingLegalTermsRoute
-  '/docs/airports/details': typeof DocsAirportsDetailsRoute
-  '/docs/airports/diagrams': typeof DocsAirportsDiagramsRoute
-  '/docs/airports/frequencies': typeof DocsAirportsFrequenciesRoute
-  '/docs/airports/runways': typeof DocsAirportsRunwaysRoute
-  '/docs/airports/search': typeof DocsAirportsSearchRoute
-  '/docs/airspace/controlled': typeof DocsAirspaceControlledRoute
-  '/docs/airspace/special-use': typeof DocsAirspaceSpecialUseRoute
-  '/docs/charts/supplements': typeof DocsChartsSupplementsRoute
-  '/docs/navigation/nav-log': typeof DocsNavigationNavLogRoute
-  '/docs/navigation/obstacles': typeof DocsNavigationObstaclesRoute
-  '/docs/performance/calculator': typeof DocsPerformanceCalculatorRoute
-  '/docs/weather/airmet-sigmet': typeof DocsWeatherAirmetSigmetRoute
-  '/docs/weather/g-airmet': typeof DocsWeatherGAirmetRoute
-  '/docs/weather/metar': typeof DocsWeatherMetarRoute
-  '/docs/weather/pirep': typeof DocsWeatherPirepRoute
-  '/docs/weather/taf': typeof DocsWeatherTafRoute
   '/dashboard/billing/': typeof DashboardBillingIndexRoute
   '/dashboard/keys/': typeof DashboardKeysIndexRoute
   '/dashboard/settings/': typeof DashboardSettingsIndexRoute
@@ -364,35 +363,35 @@ export interface FileRouteTypes {
     | '/docs'
     | '/sign-in'
     | '/sign-up'
+    | '/waitlist'
     | '/about'
     | '/contact'
     | '/pricing'
     | '/dashboard/getting-started'
+    | '/docs/airmets-sigmets'
+    | '/docs/airports'
+    | '/docs/airspace'
+    | '/docs/api-reference'
     | '/docs/authentication'
+    | '/docs/bearing-distance'
+    | '/docs/crosswind'
+    | '/docs/density-altitude'
+    | '/docs/documents'
     | '/docs/errors'
+    | '/docs/g-airmets'
     | '/docs/getting-started'
+    | '/docs/metars-tafs'
+    | '/docs/nav-log'
     | '/docs/notams'
+    | '/docs/obstacles'
+    | '/docs/openapi'
+    | '/docs/pireps'
     | '/docs/rate-limits'
+    | '/docs/winds-aloft'
     | '/dashboard/'
     | '/docs/'
     | '/legal/privacy'
     | '/legal/terms'
-    | '/docs/airports/details'
-    | '/docs/airports/diagrams'
-    | '/docs/airports/frequencies'
-    | '/docs/airports/runways'
-    | '/docs/airports/search'
-    | '/docs/airspace/controlled'
-    | '/docs/airspace/special-use'
-    | '/docs/charts/supplements'
-    | '/docs/navigation/nav-log'
-    | '/docs/navigation/obstacles'
-    | '/docs/performance/calculator'
-    | '/docs/weather/airmet-sigmet'
-    | '/docs/weather/g-airmet'
-    | '/docs/weather/metar'
-    | '/docs/weather/pirep'
-    | '/docs/weather/taf'
     | '/dashboard/billing/'
     | '/dashboard/keys/'
     | '/dashboard/settings/'
@@ -400,36 +399,36 @@ export interface FileRouteTypes {
   to:
     | '/sign-in'
     | '/sign-up'
+    | '/waitlist'
     | '/about'
     | '/contact'
     | '/pricing'
     | '/dashboard/getting-started'
+    | '/docs/airmets-sigmets'
+    | '/docs/airports'
+    | '/docs/airspace'
+    | '/docs/api-reference'
     | '/docs/authentication'
+    | '/docs/bearing-distance'
+    | '/docs/crosswind'
+    | '/docs/density-altitude'
+    | '/docs/documents'
     | '/docs/errors'
+    | '/docs/g-airmets'
     | '/docs/getting-started'
+    | '/docs/metars-tafs'
+    | '/docs/nav-log'
     | '/docs/notams'
+    | '/docs/obstacles'
+    | '/docs/openapi'
+    | '/docs/pireps'
     | '/docs/rate-limits'
+    | '/docs/winds-aloft'
     | '/'
     | '/dashboard'
     | '/docs'
     | '/legal/privacy'
     | '/legal/terms'
-    | '/docs/airports/details'
-    | '/docs/airports/diagrams'
-    | '/docs/airports/frequencies'
-    | '/docs/airports/runways'
-    | '/docs/airports/search'
-    | '/docs/airspace/controlled'
-    | '/docs/airspace/special-use'
-    | '/docs/charts/supplements'
-    | '/docs/navigation/nav-log'
-    | '/docs/navigation/obstacles'
-    | '/docs/performance/calculator'
-    | '/docs/weather/airmet-sigmet'
-    | '/docs/weather/g-airmet'
-    | '/docs/weather/metar'
-    | '/docs/weather/pirep'
-    | '/docs/weather/taf'
     | '/dashboard/billing'
     | '/dashboard/keys'
     | '/dashboard/settings'
@@ -440,36 +439,36 @@ export interface FileRouteTypes {
     | '/docs'
     | '/sign-in'
     | '/sign-up'
+    | '/waitlist'
     | '/_marketing/about'
     | '/_marketing/contact'
     | '/_marketing/pricing'
     | '/dashboard/getting-started'
+    | '/docs/airmets-sigmets'
+    | '/docs/airports'
+    | '/docs/airspace'
+    | '/docs/api-reference'
     | '/docs/authentication'
+    | '/docs/bearing-distance'
+    | '/docs/crosswind'
+    | '/docs/density-altitude'
+    | '/docs/documents'
     | '/docs/errors'
+    | '/docs/g-airmets'
     | '/docs/getting-started'
+    | '/docs/metars-tafs'
+    | '/docs/nav-log'
     | '/docs/notams'
+    | '/docs/obstacles'
+    | '/docs/openapi'
+    | '/docs/pireps'
     | '/docs/rate-limits'
+    | '/docs/winds-aloft'
     | '/_marketing/'
     | '/dashboard/'
     | '/docs/'
     | '/_marketing/legal/privacy'
     | '/_marketing/legal/terms'
-    | '/docs/airports/details'
-    | '/docs/airports/diagrams'
-    | '/docs/airports/frequencies'
-    | '/docs/airports/runways'
-    | '/docs/airports/search'
-    | '/docs/airspace/controlled'
-    | '/docs/airspace/special-use'
-    | '/docs/charts/supplements'
-    | '/docs/navigation/nav-log'
-    | '/docs/navigation/obstacles'
-    | '/docs/performance/calculator'
-    | '/docs/weather/airmet-sigmet'
-    | '/docs/weather/g-airmet'
-    | '/docs/weather/metar'
-    | '/docs/weather/pirep'
-    | '/docs/weather/taf'
     | '/dashboard/billing/'
     | '/dashboard/keys/'
     | '/dashboard/settings/'
@@ -481,10 +480,18 @@ export interface RootRouteChildren {
   DocsRoute: typeof DocsRouteWithChildren
   SignInRoute: typeof SignInRoute
   SignUpRoute: typeof SignUpRoute
+  WaitlistRoute: typeof WaitlistRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/waitlist': {
+      id: '/waitlist'
+      path: '/waitlist'
+      fullPath: '/waitlist'
+      preLoaderRoute: typeof WaitlistRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sign-up': {
       id: '/sign-up'
       path: '/sign-up'
@@ -541,11 +548,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MarketingIndexRouteImport
       parentRoute: typeof MarketingRoute
     }
+    '/docs/winds-aloft': {
+      id: '/docs/winds-aloft'
+      path: '/winds-aloft'
+      fullPath: '/docs/winds-aloft'
+      preLoaderRoute: typeof DocsWindsAloftRouteImport
+      parentRoute: typeof DocsRoute
+    }
     '/docs/rate-limits': {
       id: '/docs/rate-limits'
       path: '/rate-limits'
       fullPath: '/docs/rate-limits'
       preLoaderRoute: typeof DocsRateLimitsRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/pireps': {
+      id: '/docs/pireps'
+      path: '/pireps'
+      fullPath: '/docs/pireps'
+      preLoaderRoute: typeof DocsPirepsRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/openapi': {
+      id: '/docs/openapi'
+      path: '/openapi'
+      fullPath: '/docs/openapi'
+      preLoaderRoute: typeof DocsOpenapiRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/obstacles': {
+      id: '/docs/obstacles'
+      path: '/obstacles'
+      fullPath: '/docs/obstacles'
+      preLoaderRoute: typeof DocsObstaclesRouteImport
       parentRoute: typeof DocsRoute
     }
     '/docs/notams': {
@@ -555,11 +590,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DocsNotamsRouteImport
       parentRoute: typeof DocsRoute
     }
+    '/docs/nav-log': {
+      id: '/docs/nav-log'
+      path: '/nav-log'
+      fullPath: '/docs/nav-log'
+      preLoaderRoute: typeof DocsNavLogRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/metars-tafs': {
+      id: '/docs/metars-tafs'
+      path: '/metars-tafs'
+      fullPath: '/docs/metars-tafs'
+      preLoaderRoute: typeof DocsMetarsTafsRouteImport
+      parentRoute: typeof DocsRoute
+    }
     '/docs/getting-started': {
       id: '/docs/getting-started'
       path: '/getting-started'
       fullPath: '/docs/getting-started'
       preLoaderRoute: typeof DocsGettingStartedRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/g-airmets': {
+      id: '/docs/g-airmets'
+      path: '/g-airmets'
+      fullPath: '/docs/g-airmets'
+      preLoaderRoute: typeof DocsGAirmetsRouteImport
       parentRoute: typeof DocsRoute
     }
     '/docs/errors': {
@@ -569,11 +625,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DocsErrorsRouteImport
       parentRoute: typeof DocsRoute
     }
+    '/docs/documents': {
+      id: '/docs/documents'
+      path: '/documents'
+      fullPath: '/docs/documents'
+      preLoaderRoute: typeof DocsDocumentsRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/density-altitude': {
+      id: '/docs/density-altitude'
+      path: '/density-altitude'
+      fullPath: '/docs/density-altitude'
+      preLoaderRoute: typeof DocsDensityAltitudeRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/crosswind': {
+      id: '/docs/crosswind'
+      path: '/crosswind'
+      fullPath: '/docs/crosswind'
+      preLoaderRoute: typeof DocsCrosswindRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/bearing-distance': {
+      id: '/docs/bearing-distance'
+      path: '/bearing-distance'
+      fullPath: '/docs/bearing-distance'
+      preLoaderRoute: typeof DocsBearingDistanceRouteImport
+      parentRoute: typeof DocsRoute
+    }
     '/docs/authentication': {
       id: '/docs/authentication'
       path: '/authentication'
       fullPath: '/docs/authentication'
       preLoaderRoute: typeof DocsAuthenticationRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/api-reference': {
+      id: '/docs/api-reference'
+      path: '/api-reference'
+      fullPath: '/docs/api-reference'
+      preLoaderRoute: typeof DocsApiReferenceRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/airspace': {
+      id: '/docs/airspace'
+      path: '/airspace'
+      fullPath: '/docs/airspace'
+      preLoaderRoute: typeof DocsAirspaceRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/airports': {
+      id: '/docs/airports'
+      path: '/airports'
+      fullPath: '/docs/airports'
+      preLoaderRoute: typeof DocsAirportsRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/airmets-sigmets': {
+      id: '/docs/airmets-sigmets'
+      path: '/airmets-sigmets'
+      fullPath: '/docs/airmets-sigmets'
+      preLoaderRoute: typeof DocsAirmetsSigmetsRouteImport
       parentRoute: typeof DocsRoute
     }
     '/dashboard/getting-started': {
@@ -624,118 +736,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/billing/'
       preLoaderRoute: typeof DashboardBillingIndexRouteImport
       parentRoute: typeof DashboardRoute
-    }
-    '/docs/weather/taf': {
-      id: '/docs/weather/taf'
-      path: '/weather/taf'
-      fullPath: '/docs/weather/taf'
-      preLoaderRoute: typeof DocsWeatherTafRouteImport
-      parentRoute: typeof DocsRoute
-    }
-    '/docs/weather/pirep': {
-      id: '/docs/weather/pirep'
-      path: '/weather/pirep'
-      fullPath: '/docs/weather/pirep'
-      preLoaderRoute: typeof DocsWeatherPirepRouteImport
-      parentRoute: typeof DocsRoute
-    }
-    '/docs/weather/metar': {
-      id: '/docs/weather/metar'
-      path: '/weather/metar'
-      fullPath: '/docs/weather/metar'
-      preLoaderRoute: typeof DocsWeatherMetarRouteImport
-      parentRoute: typeof DocsRoute
-    }
-    '/docs/weather/g-airmet': {
-      id: '/docs/weather/g-airmet'
-      path: '/weather/g-airmet'
-      fullPath: '/docs/weather/g-airmet'
-      preLoaderRoute: typeof DocsWeatherGAirmetRouteImport
-      parentRoute: typeof DocsRoute
-    }
-    '/docs/weather/airmet-sigmet': {
-      id: '/docs/weather/airmet-sigmet'
-      path: '/weather/airmet-sigmet'
-      fullPath: '/docs/weather/airmet-sigmet'
-      preLoaderRoute: typeof DocsWeatherAirmetSigmetRouteImport
-      parentRoute: typeof DocsRoute
-    }
-    '/docs/performance/calculator': {
-      id: '/docs/performance/calculator'
-      path: '/performance/calculator'
-      fullPath: '/docs/performance/calculator'
-      preLoaderRoute: typeof DocsPerformanceCalculatorRouteImport
-      parentRoute: typeof DocsRoute
-    }
-    '/docs/navigation/obstacles': {
-      id: '/docs/navigation/obstacles'
-      path: '/navigation/obstacles'
-      fullPath: '/docs/navigation/obstacles'
-      preLoaderRoute: typeof DocsNavigationObstaclesRouteImport
-      parentRoute: typeof DocsRoute
-    }
-    '/docs/navigation/nav-log': {
-      id: '/docs/navigation/nav-log'
-      path: '/navigation/nav-log'
-      fullPath: '/docs/navigation/nav-log'
-      preLoaderRoute: typeof DocsNavigationNavLogRouteImport
-      parentRoute: typeof DocsRoute
-    }
-    '/docs/charts/supplements': {
-      id: '/docs/charts/supplements'
-      path: '/charts/supplements'
-      fullPath: '/docs/charts/supplements'
-      preLoaderRoute: typeof DocsChartsSupplementsRouteImport
-      parentRoute: typeof DocsRoute
-    }
-    '/docs/airspace/special-use': {
-      id: '/docs/airspace/special-use'
-      path: '/airspace/special-use'
-      fullPath: '/docs/airspace/special-use'
-      preLoaderRoute: typeof DocsAirspaceSpecialUseRouteImport
-      parentRoute: typeof DocsRoute
-    }
-    '/docs/airspace/controlled': {
-      id: '/docs/airspace/controlled'
-      path: '/airspace/controlled'
-      fullPath: '/docs/airspace/controlled'
-      preLoaderRoute: typeof DocsAirspaceControlledRouteImport
-      parentRoute: typeof DocsRoute
-    }
-    '/docs/airports/search': {
-      id: '/docs/airports/search'
-      path: '/airports/search'
-      fullPath: '/docs/airports/search'
-      preLoaderRoute: typeof DocsAirportsSearchRouteImport
-      parentRoute: typeof DocsRoute
-    }
-    '/docs/airports/runways': {
-      id: '/docs/airports/runways'
-      path: '/airports/runways'
-      fullPath: '/docs/airports/runways'
-      preLoaderRoute: typeof DocsAirportsRunwaysRouteImport
-      parentRoute: typeof DocsRoute
-    }
-    '/docs/airports/frequencies': {
-      id: '/docs/airports/frequencies'
-      path: '/airports/frequencies'
-      fullPath: '/docs/airports/frequencies'
-      preLoaderRoute: typeof DocsAirportsFrequenciesRouteImport
-      parentRoute: typeof DocsRoute
-    }
-    '/docs/airports/diagrams': {
-      id: '/docs/airports/diagrams'
-      path: '/airports/diagrams'
-      fullPath: '/docs/airports/diagrams'
-      preLoaderRoute: typeof DocsAirportsDiagramsRouteImport
-      parentRoute: typeof DocsRoute
-    }
-    '/docs/airports/details': {
-      id: '/docs/airports/details'
-      path: '/airports/details'
-      fullPath: '/docs/airports/details'
-      preLoaderRoute: typeof DocsAirportsDetailsRouteImport
-      parentRoute: typeof DocsRoute
     }
     '/_marketing/legal/terms': {
       id: '/_marketing/legal/terms'
@@ -797,53 +797,51 @@ const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
 )
 
 interface DocsRouteChildren {
+  DocsAirmetsSigmetsRoute: typeof DocsAirmetsSigmetsRoute
+  DocsAirportsRoute: typeof DocsAirportsRoute
+  DocsAirspaceRoute: typeof DocsAirspaceRoute
+  DocsApiReferenceRoute: typeof DocsApiReferenceRoute
   DocsAuthenticationRoute: typeof DocsAuthenticationRoute
+  DocsBearingDistanceRoute: typeof DocsBearingDistanceRoute
+  DocsCrosswindRoute: typeof DocsCrosswindRoute
+  DocsDensityAltitudeRoute: typeof DocsDensityAltitudeRoute
+  DocsDocumentsRoute: typeof DocsDocumentsRoute
   DocsErrorsRoute: typeof DocsErrorsRoute
+  DocsGAirmetsRoute: typeof DocsGAirmetsRoute
   DocsGettingStartedRoute: typeof DocsGettingStartedRoute
+  DocsMetarsTafsRoute: typeof DocsMetarsTafsRoute
+  DocsNavLogRoute: typeof DocsNavLogRoute
   DocsNotamsRoute: typeof DocsNotamsRoute
+  DocsObstaclesRoute: typeof DocsObstaclesRoute
+  DocsOpenapiRoute: typeof DocsOpenapiRoute
+  DocsPirepsRoute: typeof DocsPirepsRoute
   DocsRateLimitsRoute: typeof DocsRateLimitsRoute
+  DocsWindsAloftRoute: typeof DocsWindsAloftRoute
   DocsIndexRoute: typeof DocsIndexRoute
-  DocsAirportsDetailsRoute: typeof DocsAirportsDetailsRoute
-  DocsAirportsDiagramsRoute: typeof DocsAirportsDiagramsRoute
-  DocsAirportsFrequenciesRoute: typeof DocsAirportsFrequenciesRoute
-  DocsAirportsRunwaysRoute: typeof DocsAirportsRunwaysRoute
-  DocsAirportsSearchRoute: typeof DocsAirportsSearchRoute
-  DocsAirspaceControlledRoute: typeof DocsAirspaceControlledRoute
-  DocsAirspaceSpecialUseRoute: typeof DocsAirspaceSpecialUseRoute
-  DocsChartsSupplementsRoute: typeof DocsChartsSupplementsRoute
-  DocsNavigationNavLogRoute: typeof DocsNavigationNavLogRoute
-  DocsNavigationObstaclesRoute: typeof DocsNavigationObstaclesRoute
-  DocsPerformanceCalculatorRoute: typeof DocsPerformanceCalculatorRoute
-  DocsWeatherAirmetSigmetRoute: typeof DocsWeatherAirmetSigmetRoute
-  DocsWeatherGAirmetRoute: typeof DocsWeatherGAirmetRoute
-  DocsWeatherMetarRoute: typeof DocsWeatherMetarRoute
-  DocsWeatherPirepRoute: typeof DocsWeatherPirepRoute
-  DocsWeatherTafRoute: typeof DocsWeatherTafRoute
 }
 
 const DocsRouteChildren: DocsRouteChildren = {
+  DocsAirmetsSigmetsRoute: DocsAirmetsSigmetsRoute,
+  DocsAirportsRoute: DocsAirportsRoute,
+  DocsAirspaceRoute: DocsAirspaceRoute,
+  DocsApiReferenceRoute: DocsApiReferenceRoute,
   DocsAuthenticationRoute: DocsAuthenticationRoute,
+  DocsBearingDistanceRoute: DocsBearingDistanceRoute,
+  DocsCrosswindRoute: DocsCrosswindRoute,
+  DocsDensityAltitudeRoute: DocsDensityAltitudeRoute,
+  DocsDocumentsRoute: DocsDocumentsRoute,
   DocsErrorsRoute: DocsErrorsRoute,
+  DocsGAirmetsRoute: DocsGAirmetsRoute,
   DocsGettingStartedRoute: DocsGettingStartedRoute,
+  DocsMetarsTafsRoute: DocsMetarsTafsRoute,
+  DocsNavLogRoute: DocsNavLogRoute,
   DocsNotamsRoute: DocsNotamsRoute,
+  DocsObstaclesRoute: DocsObstaclesRoute,
+  DocsOpenapiRoute: DocsOpenapiRoute,
+  DocsPirepsRoute: DocsPirepsRoute,
   DocsRateLimitsRoute: DocsRateLimitsRoute,
+  DocsWindsAloftRoute: DocsWindsAloftRoute,
   DocsIndexRoute: DocsIndexRoute,
-  DocsAirportsDetailsRoute: DocsAirportsDetailsRoute,
-  DocsAirportsDiagramsRoute: DocsAirportsDiagramsRoute,
-  DocsAirportsFrequenciesRoute: DocsAirportsFrequenciesRoute,
-  DocsAirportsRunwaysRoute: DocsAirportsRunwaysRoute,
-  DocsAirportsSearchRoute: DocsAirportsSearchRoute,
-  DocsAirspaceControlledRoute: DocsAirspaceControlledRoute,
-  DocsAirspaceSpecialUseRoute: DocsAirspaceSpecialUseRoute,
-  DocsChartsSupplementsRoute: DocsChartsSupplementsRoute,
-  DocsNavigationNavLogRoute: DocsNavigationNavLogRoute,
-  DocsNavigationObstaclesRoute: DocsNavigationObstaclesRoute,
-  DocsPerformanceCalculatorRoute: DocsPerformanceCalculatorRoute,
-  DocsWeatherAirmetSigmetRoute: DocsWeatherAirmetSigmetRoute,
-  DocsWeatherGAirmetRoute: DocsWeatherGAirmetRoute,
-  DocsWeatherMetarRoute: DocsWeatherMetarRoute,
-  DocsWeatherPirepRoute: DocsWeatherPirepRoute,
-  DocsWeatherTafRoute: DocsWeatherTafRoute,
 }
 
 const DocsRouteWithChildren = DocsRoute._addFileChildren(DocsRouteChildren)
@@ -854,6 +852,7 @@ const rootRouteChildren: RootRouteChildren = {
   DocsRoute: DocsRouteWithChildren,
   SignInRoute: SignInRoute,
   SignUpRoute: SignUpRoute,
+  WaitlistRoute: WaitlistRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
