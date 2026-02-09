@@ -5,7 +5,6 @@ import { SignedIn, SignedOut, UserButton } from '@clerk/clerk-react'
 import { createPageHead } from '@/lib/seo'
 import { DocsSidebar } from '@/components/docs/docs-sidebar'
 import { Button } from '@/components/ui/button'
-import { AnimatedBackdrop } from '@/components/animated-backdrop'
 
 export const Route = createFileRoute('/docs')({
   head: () =>
@@ -81,7 +80,6 @@ function DocsLayout() {
 
       {/* Main content */}
       <main className="relative flex-1 overflow-y-auto">
-        <AnimatedBackdrop subtle />
         <div className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b bg-background/95 px-4 backdrop-blur-sm supports-[backdrop-filter]:bg-background/60 lg:px-6">
           <Button
             variant="ghost"

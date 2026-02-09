@@ -2,12 +2,12 @@ import { Outlet, createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
 import { DashboardSidebar } from '@/components/dashboard/dashboard-sidebar'
 import { DashboardHeader } from '@/components/dashboard/dashboard-header'
-import { AnimatedBackdrop } from '@/components/animated-backdrop'
 import { Skeleton } from '@/components/ui/skeleton'
 
 export const Route = createFileRoute('/dashboard')({
   component: DashboardLayout,
   pendingComponent: DashboardPending,
+  notFoundComponent: DashboardNotFound,
 })
 
 function DashboardLayout() {
@@ -19,12 +19,22 @@ function DashboardLayout() {
       <div className="flex flex-1 flex-col overflow-hidden">
         <DashboardHeader onMenuClick={() => setSidebarOpen(true)} />
         <main className="relative flex-1 overflow-y-auto p-6">
-          <AnimatedBackdrop subtle />
           <div className="mx-auto max-w-5xl">
             <Outlet />
           </div>
         </main>
       </div>
+    </div>
+  )
+}
+
+function DashboardNotFound() {
+  return (
+    <div className="flex flex-col items-center justify-center py-20 text-center">
+      <h2 className="text-2xl font-semibold">Page Not Found</h2>
+      <p className="text-muted-foreground mt-2">
+        The dashboard page you're looking for doesn't exist.
+      </p>
     </div>
   )
 }
@@ -38,7 +48,6 @@ function DashboardPending() {
       <div className="flex flex-1 flex-col overflow-hidden">
         <DashboardHeader onMenuClick={() => setSidebarOpen(true)} />
         <main className="relative flex-1 overflow-y-auto p-6">
-          <AnimatedBackdrop subtle />
           <div className="mx-auto max-w-5xl space-y-8">
             <div className="space-y-2">
               <Skeleton className="h-8 w-48" />
