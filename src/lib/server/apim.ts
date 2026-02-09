@@ -216,57 +216,6 @@ export const regenerateKey = createServerFn({ method: 'POST' })
     return keys
   })
 
-export const changeTier = createServerFn({ method: 'POST' })
-  .inputValidator(
-    (input: { subscriptionId: string; newProductId: string }) => input,
-  )
-  .handler(async ({ data }) => {
-    const userId = await requireAuth()
-    requireOwnership(userId, data.subscriptionId)
-
-    await apimFetch(`/subscriptions/${data.subscriptionId}`, {
-      method: 'PATCH',
-      body: JSON.stringify({
-        properties: {
-          scope: `/products/${data.newProductId}`,
-        },
-      }),
-    })
-
-    return { success: true }
-  })
-
-export const suspendSubscription = createServerFn({ method: 'POST' })
-  .inputValidator((input: { subscriptionId: string }) => input)
-  .handler(async ({ data }) => {
-    const userId = await requireAuth()
-    requireOwnership(userId, data.subscriptionId)
-
-    await apimFetch(`/subscriptions/${data.subscriptionId}`, {
-      method: 'PATCH',
-      body: JSON.stringify({
-        properties: {
-          state: 'suspended',
-        },
-      }),
-    })
-
-    return { success: true }
-  })
-
-export const deleteSubscription = createServerFn({ method: 'POST' })
-  .inputValidator((input: { subscriptionId: string }) => input)
-  .handler(async ({ data }) => {
-    const userId = await requireAuth()
-    requireOwnership(userId, data.subscriptionId)
-
-    await apimFetch(`/subscriptions/${data.subscriptionId}`, {
-      method: 'DELETE',
-    })
-
-    return { success: true }
-  })
-
 // --- Usage Analytics ---
 
 export const getUsageAnalytics = createServerFn({ method: 'GET' })

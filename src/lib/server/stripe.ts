@@ -48,6 +48,18 @@ async function getOrCreateStripeCustomer(clerkUserId: string): Promise<string> {
         ?.emailAddress ?? undefined,
   })
 
+  // Race condition check: another concurrent request may have already set the ID
+  const freshUser = await clerk.users.getUser(clerkUserId)
+  const concurrentId = (
+    freshUser.privateMetadata as { stripeCustomerId?: string }
+  ).stripeCustomerId
+
+  if (concurrentId) {
+    // Another request won the race — delete our duplicate and use theirs
+    await stripe.customers.del(customer.id)
+    return concurrentId
+  }
+
   await clerk.users.updateUserMetadata(clerkUserId, {
     privateMetadata: { stripeCustomerId: customer.id },
   })

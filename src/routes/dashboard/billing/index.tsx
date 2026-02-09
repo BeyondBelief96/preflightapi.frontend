@@ -141,7 +141,6 @@ function BillingPage() {
   )
   const retryCountRef = useRef(0)
   const reconcileTriggeredRef = useRef(false)
-  const mismatchTriggeredRef = useRef(false)
 
   const reconcileMutation = useMutation({
     mutationFn: () => reconcileSubscription(),
@@ -180,24 +179,6 @@ function BillingPage() {
     return () => clearTimeout(timer)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [checkout])
-
-  // Background mismatch detection
-  useEffect(() => {
-    if (mismatchTriggeredRef.current) return
-    if (!stripeSub || !activeSubscription) return
-
-    const expectedProductId = plans.find(
-      (p) => p.id === stripeSub.planId,
-    )?.apimProductId
-    if (
-      expectedProductId &&
-      activeSubscription.productId !== expectedProductId
-    ) {
-      mismatchTriggeredRef.current = true
-      reconcileMutation.mutate()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stripeSub?.planId, activeSubscription?.productId])
 
   const now = new Date()
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
