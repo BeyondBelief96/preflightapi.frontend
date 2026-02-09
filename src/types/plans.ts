@@ -53,4 +53,5 @@ export interface StripeSubscriptionStatus {
   planId: PlanId
   currentPeriodEnd: string
   cancelAtPeriodEnd: boolean
+  cancelAt: string | null
 }

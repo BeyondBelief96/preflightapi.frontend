@@ -65,43 +65,6 @@ export const getOrCreateApimUser = createServerFn({ method: 'GET' }).handler(
 
 // --- Subscription Management ---
 
-export const createSubscription = createServerFn({ method: 'POST' })
-  .inputValidator((input: { productId: string; displayName?: string }) => input)
-  .handler(async ({ data }) => {
-    const userId = await requireAuth()
-    const subId = `${userId}-${data.productId}`
-
-    const result = await apimFetch<{
-      id: string
-      name: string
-      properties: {
-        ownerId: string
-        scope: string
-        displayName: string
-        state: string
-        createdDate: string
-        expirationDate: string | null
-      }
-    }>(`/subscriptions/${subId}`, {
-      method: 'PUT',
-      body: JSON.stringify({
-        properties: {
-          ownerId: `/users/${userId}`,
-          scope: `/products/${data.productId}`,
-          displayName: data.displayName ?? `${data.productId} subscription`,
-          state: 'active',
-        },
-      }),
-    })
-
-    return {
-      id: result.name,
-      productId: data.productId,
-      state: result.properties.state,
-      createdDate: result.properties.createdDate,
-    }
-  })
-
 export const getUserSubscription = createServerFn({ method: 'GET' }).handler(
   async () => {
     const userId = await requireAuth()
@@ -118,13 +81,15 @@ export const getUserSubscription = createServerFn({ method: 'GET' }).handler(
       }),
     })
 
-    // Fetch existing subscriptions
+    // Fetch existing subscriptions (all states, not just active)
     const result = await apimFetch<SubscriptionListResponse>(
       `/users/${userId}/subscriptions`,
     )
     let subscriptions = result.value
 
-    // Auto-provision a free-tier subscription if the user has none
+    // Auto-provision a free-tier subscription only if the user has NO
+    // subscriptions in any state. This prevents creating a duplicate
+    // free-tier sub when a paid subscription was recently cancelled/suspended.
     if (subscriptions.length === 0) {
       const freeTierSubId = `${userId}-free-tier`
       await apimFetch(`/subscriptions/${freeTierSubId}`, {

@@ -171,6 +171,9 @@ async function getStripeSubscriptionInternal(
       (firstItem?.current_period_end ?? 0) * 1000,
     ).toISOString(),
     cancelAtPeriodEnd: sub.cancel_at_period_end,
+    cancelAt: sub.cancel_at
+      ? new Date(sub.cancel_at * 1000).toISOString()
+      : null,
   }
 }
 
@@ -210,15 +213,15 @@ export const reconcileSubscription = createServerFn({
   const apimSubs = await apimFetch<SubscriptionListResponse>(
     `/users/${userId}/subscriptions`,
   )
-  const activeSub = apimSubs.value.find((s) => s.properties.state === 'active')
-  if (!activeSub) {
+  const activeSubs = apimSubs.value.filter(
+    (s) => s.properties.state === 'active',
+  )
+  if (activeSubs.length === 0) {
     return { status: 'no_stripe_sub' }
   }
 
-  const apimProductId = activeSub.properties.scope.split('/').pop() ?? ''
   const expectedPlan = PLANS.find((p) => p.id === stripeSub.planId)
-
-  if (!expectedPlan || apimProductId === expectedPlan.apimProductId) {
+  if (!expectedPlan) {
     return {
       status: 'already_in_sync',
       stripePlanId: stripeSub.planId,
@@ -226,16 +229,37 @@ export const reconcileSubscription = createServerFn({
     }
   }
 
-  // 3. Mismatch detected — sync APIM to match Stripe
-  const previousPlanId =
-    PLANS.find((p) => apimProductId.includes(p.apimProductId))?.id ?? 'free'
+  // Check if any active sub is mismatched
+  const mismatched = activeSubs.filter(
+    (s) =>
+      s.properties.scope.split('/').pop() !== expectedPlan.apimProductId,
+  )
 
-  await apimFetch(`/subscriptions/${activeSub.name}`, {
-    method: 'PATCH',
-    body: JSON.stringify({
-      properties: { scope: `/products/${expectedPlan.apimProductId}` },
-    }),
-  })
+  if (mismatched.length === 0) {
+    return {
+      status: 'already_in_sync',
+      stripePlanId: stripeSub.planId,
+      apimPlanId: stripeSub.planId,
+    }
+  }
+
+  // 3. Mismatch detected — sync ALL active APIM subs to match Stripe
+  const previousProductId =
+    mismatched[0].properties.scope.split('/').pop() ?? ''
+  const previousPlanId =
+    PLANS.find((p) => previousProductId.includes(p.apimProductId))?.id ??
+    'free'
+
+  await Promise.all(
+    mismatched.map((sub) =>
+      apimFetch(`/subscriptions/${sub.name}`, {
+        method: 'PATCH',
+        body: JSON.stringify({
+          properties: { scope: `/products/${expectedPlan.apimProductId}` },
+        }),
+      }),
+    ),
+  )
 
   return {
     status: 'synced',

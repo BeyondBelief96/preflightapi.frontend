@@ -112,6 +112,46 @@ export default defineEventHandler(async (event) => {
         break
       }
 
+      case 'customer.subscription.paused': {
+        const subscription = stripeEvent.data.object
+        const clerkUserId = await resolveClerkUserId(stripe, subscription)
+
+        if (clerkUserId) {
+          await syncTierToApim(apimFetch, clerkUserId, 'free-tier')
+        } else {
+          console.warn(
+            '[Stripe Webhook] Could not resolve clerkUserId for paused subscription',
+          )
+        }
+        break
+      }
+
+      case 'customer.subscription.resumed': {
+        const subscription = stripeEvent.data.object
+        const clerkUserId = await resolveClerkUserId(stripe, subscription)
+
+        if (!clerkUserId) {
+          console.warn(
+            '[Stripe Webhook] Could not resolve clerkUserId for resumed subscription',
+          )
+          break
+        }
+
+        const metadataPlanId = subscription.metadata?.planId
+        const priceId = subscription.items.data[0]?.price.id
+        const resolvedPlanId = planIdFromPriceId(priceId) || metadataPlanId
+        const plan = PLANS.find((p) => p.id === resolvedPlanId)
+
+        if (plan) {
+          await syncTierToApim(apimFetch, clerkUserId, plan.apimProductId)
+        } else {
+          console.warn(
+            `[Stripe Webhook] Could not resolve plan for resumed sub — priceId=${priceId}, metadataPlanId=${metadataPlanId}`,
+          )
+        }
+        break
+      }
+
       case 'customer.subscription.deleted': {
         const subscription = stripeEvent.data.object
         const clerkUserId = await resolveClerkUserId(stripe, subscription)
@@ -206,21 +246,28 @@ async function syncTierToApim(
     `/users/${clerkUserId}/subscriptions`,
   )
 
-  const activeSub = result.value.find((s) => s.properties.state === 'active')
+  const activeSubs = result.value.filter(
+    (s) => s.properties.state === 'active',
+  )
 
-  if (!activeSub) {
+  if (activeSubs.length === 0) {
     console.warn(
       `[Stripe Webhook] No active APIM subscription found for user ${clerkUserId}`,
     )
     return
   }
 
-  await apimFetch(`/subscriptions/${activeSub.name}`, {
-    method: 'PATCH',
-    body: JSON.stringify({
-      properties: {
-        scope: `/products/${apimProductId}`,
-      },
-    }),
-  })
+  // Sync ALL active subscriptions to prevent orphaned subs with stale tiers
+  await Promise.all(
+    activeSubs.map((sub) =>
+      apimFetch(`/subscriptions/${sub.name}`, {
+        method: 'PATCH',
+        body: JSON.stringify({
+          properties: {
+            scope: `/products/${apimProductId}`,
+          },
+        }),
+      }),
+    ),
+  )
 }
