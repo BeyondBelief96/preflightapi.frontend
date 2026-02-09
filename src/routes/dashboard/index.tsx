@@ -118,7 +118,9 @@ function DashboardOverview() {
   const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0)
     .toISOString()
     .split('T')[0]
-  const todayStart = now.toISOString().split('T')[0]
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+    .toISOString()
+    .split('T')[0]
   const tomorrowStart = new Date(
     now.getFullYear(),
     now.getMonth(),
@@ -266,8 +268,26 @@ function DashboardOverview() {
             <p className="text-xs text-muted-foreground">
               {dailyUsageQuery.isError
                 ? 'Unable to load usage data'
-                : 'Requests today'}
+                : dailyBudget
+                  ? `of ~${Math.round(dailyBudget).toLocaleString()} daily budget`
+                  : 'Requests today'}
             </p>
+            {callsLimit && !dailyUsageQuery.isLoading && (
+              <div className="mt-2 flex items-center gap-3 text-[10px]">
+                <span className="flex items-center gap-1">
+                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-foreground" />
+                  Normal
+                </span>
+                <span className="flex items-center gap-1">
+                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-aviation-warning" />
+                  {'≥60%'}
+                </span>
+                <span className="flex items-center gap-1">
+                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-destructive" />
+                  {'>85%'}
+                </span>
+              </div>
+            )}
           </CardContent>
         </Card>
         <Card>
