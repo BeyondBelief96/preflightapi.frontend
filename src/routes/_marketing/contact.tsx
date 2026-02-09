@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { Mail, CheckCircle, AlertCircle, Loader2 } from 'lucide-react'
+import { AlertCircle, CheckCircle, Loader2, Mail } from 'lucide-react'
 import { useState } from 'react'
 import { createPageHead } from '@/lib/seo'
 import { Button } from '@/components/ui/button'

@@ -1,5 +1,5 @@
-import { API_BASE_PATH } from '@/lib/api-metadata'
 import type { ParsedEndpoint } from './types'
+import { API_BASE_PATH } from '@/lib/api-metadata'
 
 const GATEWAY_URL = 'https://preflightapi-apim-service.azure-api.net'
 

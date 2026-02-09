@@ -1051,7 +1051,7 @@ export interface components {
         /** @description Cursor-based paginated response wrapper. */
         PaginatedResponseOfAirportDto: {
             /** @description The page of results. */
-            data?: components["schemas"]["AirportDto"][];
+            data?: Array<components["schemas"]["AirportDto"]>;
             /** @description Pagination metadata including cursor for next page. */
             pagination?: components["schemas"]["PaginationMetadata"];
         };
@@ -1162,7 +1162,7 @@ export interface components {
             details?: string | null;
             /** @description Field-level validation errors (only for validation failures). */
             validationErrors?: {
-                [key: string]: string[];
+                [key: string]: Array<string>;
             } | null;
             /** @description UTC timestamp when the error occurred. */
             timestamp?: string;
@@ -1219,7 +1219,7 @@ export interface components {
              */
             weightBearingDoubleDualTandem?: number | null;
             /** @description Runway end details for each direction. */
-            runwayEnds?: components["schemas"]["RunwayEndDto"][];
+            runwayEnds?: Array<components["schemas"]["RunwayEndDto"]>;
         };
         /** @enum {string} */
         RunwaySurfaceType: "Unknown" | "Concrete" | "Asphalt" | "Snow" | "Ice" | "Mats" | "Treated" | "Gravel" | "Turf" | "Dirt" | "PartiallyPaved" | "Rooftop" | "Water" | "Aluminum" | "Brick" | "Caliche" | "Coral" | "Deck" | "Grass" | "Metal" | "NonStandard" | "OilChip" | "Psp" | "Sand" | "Sod" | "Steel" | "Wood";
@@ -1356,7 +1356,7 @@ export interface components {
             /** @description FAA airport identifier (e.g., DFW). */
             airportIdent?: string | null;
             /** @description List of available airport diagrams with download URLs. */
-            diagrams?: components["schemas"]["AirportDiagramDto"][];
+            diagrams?: Array<components["schemas"]["AirportDiagramDto"]>;
         };
         /** @description An airport diagram with a pre-signed URL for PDF access. */
         AirportDiagramDto: {
@@ -1395,7 +1395,7 @@ export interface components {
             /** @description Advisory type: AIRMET or SIGMET. */
             airsigmetType?: string | null;
             /** @description Geographic areas affected by the advisory. */
-            areas?: components["schemas"]["AirsigmetArea"][] | null;
+            areas?: Array<components["schemas"]["AirsigmetArea"]> | null;
         };
         AirsigmetAltitude: {
             /** Format: int32 */
@@ -1415,7 +1415,7 @@ export interface components {
         AirsigmetArea: {
             /** Format: int32 */
             numPoints?: number;
-            points?: components["schemas"]["AirsigmetPoint"][];
+            points?: Array<components["schemas"]["AirsigmetPoint"]>;
         };
         AirsigmetPoint: {
             /** Format: float */
@@ -1426,7 +1426,7 @@ export interface components {
         /** @description Cursor-based paginated response wrapper. */
         PaginatedResponseOfAirspaceDto: {
             /** @description The page of results. */
-            data?: components["schemas"]["AirspaceDto"][];
+            data?: Array<components["schemas"]["AirspaceDto"]>;
             /** @description Pagination metadata including cursor for next page. */
             pagination?: components["schemas"]["PaginationMetadata"];
         };
@@ -1506,12 +1506,12 @@ export interface components {
             /** @description Geometry type (e.g., Polygon, MultiPolygon). */
             type?: string;
             /** @description Coordinate array defining the geometry boundary. */
-            coordinates?: number[][][];
+            coordinates?: Array<Array<Array<number>>>;
         };
         /** @description Cursor-based paginated response wrapper. */
         PaginatedResponseOfSpecialUseAirspaceDto: {
             /** @description The page of results. */
-            data?: components["schemas"]["SpecialUseAirspaceDto"][];
+            data?: Array<components["schemas"]["SpecialUseAirspaceDto"]>;
             /** @description Pagination metadata including cursor for next page. */
             pagination?: components["schemas"]["PaginationMetadata"];
         };
@@ -1579,7 +1579,7 @@ export interface components {
             /** @description Airport ICAO code or FAA identifier. */
             airportCode?: string | null;
             /** @description List of chart supplement pages with download URLs. */
-            supplements?: components["schemas"]["ChartSupplementDto"][];
+            supplements?: Array<components["schemas"]["ChartSupplementDto"]>;
         };
         /** @description A chart supplement page with a pre-signed URL for PDF access. */
         ChartSupplementDto: {
@@ -1589,7 +1589,7 @@ export interface components {
         /** @description Cursor-based paginated response wrapper. */
         PaginatedResponseOfCommunicationFrequencyDto: {
             /** @description The page of results. */
-            data?: components["schemas"]["CommunicationFrequencyDto"][];
+            data?: Array<components["schemas"]["CommunicationFrequencyDto"]>;
             /** @description Pagination metadata including cursor for next page. */
             pagination?: components["schemas"]["PaginationMetadata"];
         };
@@ -1697,7 +1697,7 @@ export interface components {
             /** @description Cause of the hazard. */
             dueTo?: string | null;
             /** @description Altitude ranges for the advisory. */
-            altitudes?: components["schemas"]["GAirmetAltitude"][] | null;
+            altitudes?: Array<components["schemas"]["GAirmetAltitude"]> | null;
             /** @description Geographic area affected by the advisory. */
             area?: components["schemas"]["GAirmetArea"] | null;
         };
@@ -1718,7 +1718,7 @@ export interface components {
         GAirmetArea: {
             /** Format: int32 */
             numPoints?: number;
-            points?: components["schemas"]["GAirmetPoint"][];
+            points?: Array<components["schemas"]["GAirmetPoint"]>;
         };
         GAirmetPoint: {
             /** Format: double */
@@ -1788,7 +1788,7 @@ export interface components {
             /** @description Present weather string (e.g., "-RA" for light rain). */
             wxString?: string | null;
             /** @description Sky condition layers (cloud cover and bases). */
-            skyCondition?: components["schemas"]["MetarSkyConditionDto"][] | null;
+            skyCondition?: Array<components["schemas"]["MetarSkyConditionDto"]> | null;
             /** @description Flight category: VFR, MVFR, IFR, or LIFR. */
             flightCategory?: string | null;
         };
@@ -1824,7 +1824,7 @@ export interface components {
         /** @description Cursor-based paginated response wrapper. */
         PaginatedResponseOfMetarDto: {
             /** @description The page of results. */
-            data?: components["schemas"]["MetarDto"][];
+            data?: Array<components["schemas"]["MetarDto"]>;
             /** @description Pagination metadata including cursor for next page. */
             pagination?: components["schemas"]["PaginationMetadata"];
         };
@@ -1851,13 +1851,13 @@ export interface components {
              */
             averageWindComponent?: number;
             /** @description Individual navigation legs with computed data. */
-            legs?: components["schemas"]["NavigationLegDto"][];
+            legs?: Array<components["schemas"]["NavigationLegDto"]>;
             /** @description Global IDs of controlled airspaces along the route. */
-            airspaceGlobalIds?: string[];
+            airspaceGlobalIds?: Array<string>;
             /** @description Global IDs of special use airspaces along the route. */
-            specialUseAirspaceGlobalIds?: string[];
+            specialUseAirspaceGlobalIds?: Array<string>;
             /** @description OAS numbers of obstacles along the route. */
-            obstacleOasNumbers?: string[];
+            obstacleOasNumbers?: Array<string>;
         };
         /** @description A single navigation leg between two waypoints with computed flight data. */
         NavigationLegDto: {
@@ -1974,7 +1974,7 @@ export interface components {
         /** @description Request to calculate a VFR navigation log for a cross-country flight. */
         NavlogRequestDto: {
             /** @description Ordered list of waypoints defining the route. */
-            waypoints?: components["schemas"]["WaypointDto"][];
+            waypoints?: Array<components["schemas"]["WaypointDto"]>;
             /** @description Aircraft performance parameters for the flight. */
             performanceData?: components["schemas"]["NavlogPerformanceDataDto"];
             /**
@@ -2100,7 +2100,7 @@ export interface components {
              */
             forUseEndTime?: string;
             /** @description Wind and temperature data for each reporting site. */
-            windTemp?: components["schemas"]["WindsAloftSiteDto"][];
+            windTemp?: Array<components["schemas"]["WindsAloftSiteDto"]>;
         };
         /** @description Winds aloft data for a single reporting site. */
         WindsAloftSiteDto: {
@@ -2141,7 +2141,7 @@ export interface components {
         };
         /** @description Response wrapper for NOTAM queries */
         NotamResponseDto: {
-            notams?: components["schemas"]["NotamDto"][];
+            notams?: Array<components["schemas"]["NotamDto"]>;
             /** Format: int32 */
             totalCount?: number;
             /** Format: date-time */
@@ -2168,7 +2168,7 @@ export interface components {
              */
             coordinates?: unknown;
             /** @description For GeometryCollection type - contains child geometries */
-            geometries?: components["schemas"]["NotamGeometryDto"][] | null;
+            geometries?: Array<components["schemas"]["NotamGeometryDto"]> | null;
         };
         NotamPropertiesDto: {
             coreNOTAMData?: components["schemas"]["CoreNotamDataDto"] | null;
@@ -2176,7 +2176,7 @@ export interface components {
         CoreNotamDataDto: {
             notamEvent?: components["schemas"]["NotamEventDto"] | null;
             notam?: components["schemas"]["NotamDetailDto"] | null;
-            notamTranslation?: components["schemas"]["NotamTranslationDto"][] | null;
+            notamTranslation?: Array<components["schemas"]["NotamTranslationDto"]> | null;
         };
         /** @description NOTAM event metadata */
         NotamEventDto: {
@@ -2269,13 +2269,13 @@ export interface components {
              * @description List of airport identifiers (ICAO codes or FAA identifiers) along the route.
              *     Use this for simple airport-only queries. For mixed airport/waypoint routes, use RoutePoints instead.
              */
-            airportIdentifiers?: string[];
+            airportIdentifiers?: Array<string>;
             /**
              * @description Ordered list of route points (airports and/or waypoints) in flight sequence.
              *     Each point can be either an airport (by identifier) or a waypoint (by lat/lon).
              *     If both AirportIdentifiers and RoutePoints are provided, RoutePoints takes precedence.
              */
-            routePoints?: components["schemas"]["RoutePointDto"][];
+            routePoints?: Array<components["schemas"]["RoutePointDto"]>;
             /**
              * Format: double
              * @description Default radius in nautical miles for waypoints without a specific radius.
@@ -2312,7 +2312,7 @@ export interface components {
         /** @description Cursor-based paginated response wrapper. */
         PaginatedResponseOfObstacleDto: {
             /** @description The page of results. */
-            data?: components["schemas"]["ObstacleDto"][];
+            data?: Array<components["schemas"]["ObstacleDto"]>;
             /** @description Pagination metadata including cursor for next page. */
             pagination?: components["schemas"]["PaginationMetadata"];
         };
@@ -2398,7 +2398,7 @@ export interface components {
             /** @description METAR observation time */
             observationTime?: string | null;
             /** @description Crosswind components for each runway end at the airport */
-            runways?: components["schemas"]["RunwayCrosswindComponentDto"][];
+            runways?: Array<components["schemas"]["RunwayCrosswindComponentDto"]>;
             /** @description Recommended runway end identifier (lowest crosswind with headwind) */
             recommendedRunway?: string | null;
         };
@@ -2602,11 +2602,11 @@ export interface components {
              */
             altitudeFtMsl?: number | null;
             /** @description Reported sky conditions. */
-            skyConditions?: components["schemas"]["PirepSkyCondition"][] | null;
+            skyConditions?: Array<components["schemas"]["PirepSkyCondition"]> | null;
             /** @description Reported turbulence conditions. */
-            turbulenceConditions?: components["schemas"]["PirepTurbulenceCondition"][] | null;
+            turbulenceConditions?: Array<components["schemas"]["PirepTurbulenceCondition"]> | null;
             /** @description Reported icing conditions. */
-            icingConditions?: components["schemas"]["PirepIcingCondition"][] | null;
+            icingConditions?: Array<components["schemas"]["PirepIcingCondition"]> | null;
             /**
              * Format: int32
              * @description Flight visibility in statute miles.
@@ -2701,7 +2701,7 @@ export interface components {
              */
             elevationM?: number | null;
             /** @description Forecast periods within the TAF. */
-            forecast?: components["schemas"]["TafForecast"][] | null;
+            forecast?: Array<components["schemas"]["TafForecast"]> | null;
         };
         TafForecast: {
             fcstTimeFrom?: string | null;
@@ -2725,10 +2725,10 @@ export interface components {
             vertVisFt?: number | null;
             wxString?: string | null;
             notDecoded?: string | null;
-            skyConditions?: components["schemas"]["TafSkyCondition"][] | null;
-            turbulenceConditions?: components["schemas"]["TafTurbulenceCondition"][] | null;
-            icingConditions?: components["schemas"]["TafIcingCondition"][] | null;
-            temperature?: components["schemas"]["TafTemperature"][] | null;
+            skyConditions?: Array<components["schemas"]["TafSkyCondition"]> | null;
+            turbulenceConditions?: Array<components["schemas"]["TafTurbulenceCondition"]> | null;
+            icingConditions?: Array<components["schemas"]["TafIcingCondition"]> | null;
+            temperature?: Array<components["schemas"]["TafTemperature"]> | null;
         };
         TafSkyCondition: {
             skyCover?: string;
@@ -2899,7 +2899,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AirportDto"][];
+                    "application/json": Array<components["schemas"]["AirportDto"]>;
                 };
             };
             /** @description If the query is less than 2 characters */
@@ -3019,7 +3019,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AirportDto"][];
+                    "application/json": Array<components["schemas"]["AirportDto"]>;
                 };
             };
         };
@@ -3070,7 +3070,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["RunwayDto"][];
+                    "application/json": Array<components["schemas"]["RunwayDto"]>;
                 };
             };
             /** @description If the airport is not found */
@@ -3131,7 +3131,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AirsigmetDto"][];
+                    "application/json": Array<components["schemas"]["AirsigmetDto"]>;
                 };
             };
         };
@@ -3154,7 +3154,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AirsigmetDto"][];
+                    "application/json": Array<components["schemas"]["AirsigmetDto"]>;
                 };
             };
             /** @description If the hazard type is invalid */
@@ -3183,7 +3183,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AirsigmetDto"][];
+                    "application/json": Array<components["schemas"]["AirsigmetDto"]>;
                 };
             };
         };
@@ -3203,7 +3203,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AirsigmetDto"][];
+                    "application/json": Array<components["schemas"]["AirsigmetDto"]>;
                 };
             };
         };
@@ -3223,7 +3223,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AirsigmetDto"][];
+                    "application/json": Array<components["schemas"]["AirsigmetDto"]>;
                 };
             };
         };
@@ -3243,7 +3243,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AirsigmetDto"][];
+                    "application/json": Array<components["schemas"]["AirsigmetDto"]>;
                 };
             };
         };
@@ -3263,7 +3263,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AirsigmetDto"][];
+                    "application/json": Array<components["schemas"]["AirsigmetDto"]>;
                 };
             };
         };
@@ -3430,7 +3430,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AirspaceDto"][];
+                    "application/json": Array<components["schemas"]["AirspaceDto"]>;
                 };
             };
             /** @description If the identifiers parameter is empty */
@@ -3462,7 +3462,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AirspaceDto"][];
+                    "application/json": Array<components["schemas"]["AirspaceDto"]>;
                 };
             };
             /** @description If the global IDs parameter is empty */
@@ -3494,7 +3494,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["SpecialUseAirspaceDto"][];
+                    "application/json": Array<components["schemas"]["SpecialUseAirspaceDto"]>;
                 };
             };
             /** @description If the global IDs parameter is empty */
@@ -3601,7 +3601,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["GAirmetDto"][];
+                    "application/json": Array<components["schemas"]["GAirmetDto"]>;
                 };
             };
         };
@@ -3624,7 +3624,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["GAirmetDto"][];
+                    "application/json": Array<components["schemas"]["GAirmetDto"]>;
                 };
             };
             /** @description If the product type is invalid */
@@ -3653,7 +3653,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["GAirmetDto"][];
+                    "application/json": Array<components["schemas"]["GAirmetDto"]>;
                 };
             };
         };
@@ -3673,7 +3673,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["GAirmetDto"][];
+                    "application/json": Array<components["schemas"]["GAirmetDto"]>;
                 };
             };
         };
@@ -3693,7 +3693,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["GAirmetDto"][];
+                    "application/json": Array<components["schemas"]["GAirmetDto"]>;
                 };
             };
         };
@@ -3716,7 +3716,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["GAirmetDto"][];
+                    "application/json": Array<components["schemas"]["GAirmetDto"]>;
                 };
             };
             /** @description If the hazard type is invalid */
@@ -3745,7 +3745,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["GAirmetDto"][];
+                    "application/json": Array<components["schemas"]["GAirmetDto"]>;
                 };
             };
         };
@@ -3765,7 +3765,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["GAirmetDto"][];
+                    "application/json": Array<components["schemas"]["GAirmetDto"]>;
                 };
             };
         };
@@ -3785,7 +3785,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["GAirmetDto"][];
+                    "application/json": Array<components["schemas"]["GAirmetDto"]>;
                 };
             };
         };
@@ -3805,7 +3805,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["GAirmetDto"][];
+                    "application/json": Array<components["schemas"]["GAirmetDto"]>;
                 };
             };
         };
@@ -3825,7 +3825,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["GAirmetDto"][];
+                    "application/json": Array<components["schemas"]["GAirmetDto"]>;
                 };
             };
         };
@@ -3845,7 +3845,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["GAirmetDto"][];
+                    "application/json": Array<components["schemas"]["GAirmetDto"]>;
                 };
             };
         };
@@ -3865,7 +3865,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["GAirmetDto"][];
+                    "application/json": Array<components["schemas"]["GAirmetDto"]>;
                 };
             };
         };
@@ -3885,7 +3885,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["GAirmetDto"][];
+                    "application/json": Array<components["schemas"]["GAirmetDto"]>;
                 };
             };
         };
@@ -3905,7 +3905,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["GAirmetDto"][];
+                    "application/json": Array<components["schemas"]["GAirmetDto"]>;
                 };
             };
         };
@@ -4380,7 +4380,7 @@ export interface operations {
         /** @description List of OAS numbers (maximum 1000) */
         requestBody: {
             content: {
-                "application/json": string[];
+                "application/json": Array<string>;
             };
         };
         responses: {
@@ -4390,7 +4390,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ObstacleDto"][];
+                    "application/json": Array<components["schemas"]["ObstacleDto"]>;
                 };
             };
             /** @description If the list is empty or exceeds 1000 items */
@@ -4634,7 +4634,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["PirepDto"][];
+                    "application/json": Array<components["schemas"]["PirepDto"]>;
                 };
             };
         };

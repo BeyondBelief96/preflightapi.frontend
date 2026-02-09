@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { Play, ChevronDown, ChevronUp } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { ChevronDown, ChevronUp, Play } from 'lucide-react'
 import { MethodBadge } from './method-badge'
 import { TierBadge } from './tier-badge'
 import { ParameterTable } from './parameter-table'
@@ -9,6 +8,7 @@ import { ResponseViewer } from './response-viewer'
 import { CodeExamples } from './code-examples'
 import { TryItPlayground } from './try-it-playground'
 import type { ParsedEndpoint } from '@/lib/docs/types'
+import { Button } from '@/components/ui/button'
 
 interface EndpointCardProps {
   endpoint: ParsedEndpoint

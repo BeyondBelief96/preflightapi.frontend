@@ -1,6 +1,6 @@
-import { cn } from '@/lib/utils'
 import { SchemaViewer } from './schema-viewer'
 import type { ParsedResponse } from '@/lib/docs/types'
+import { cn } from '@/lib/utils'
 
 interface ResponseViewerProps {
   responses: Array<ParsedResponse>

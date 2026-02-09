@@ -1,5 +1,10 @@
-import { useState, useMemo } from 'react'
-import { Loader2, Send, Eye, EyeOff, ChevronDown, ChevronUp } from 'lucide-react'
+import { useMemo, useState } from 'react'
+import { ChevronDown, ChevronUp, Eye, EyeOff, Loader2, Send } from 'lucide-react'
+import { CodeBlock } from './code-block'
+import { CopyButton } from './copy-button'
+import { MethodBadge } from './method-badge'
+import type { ProxyResult } from '@/lib/server/api-proxy'
+import type { ParsedEndpoint, ParsedParameter } from '@/lib/docs/types'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -12,14 +17,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { CodeBlock } from './code-block'
-import { CopyButton } from './copy-button'
-import { MethodBadge } from './method-badge'
 import { useApiKeyStorage } from '@/hooks/use-api-key-storage'
-import { getExampleValue, getExampleBody } from '@/lib/docs/code-examples'
+import { getExampleBody, getExampleValue } from '@/lib/docs/code-examples'
 import { proxyApiRequest } from '@/lib/server/api-proxy'
-import type { ProxyResult } from '@/lib/server/api-proxy'
-import type { ParsedEndpoint, ParsedParameter } from '@/lib/docs/types'
 import { GATEWAY_URL } from '@/lib/gateway-url'
 
 const MAX_DISPLAY_BYTES = 100 * 1024 // 100KB
@@ -28,7 +28,7 @@ interface TryItPlaygroundProps {
   endpoint: ParsedEndpoint
 }
 
-function initParamValues(params: ParsedParameter[]): Record<string, string> {
+function initParamValues(params: Array<ParsedParameter>): Record<string, string> {
   const values: Record<string, string> = {}
   for (const p of params) {
     if (p.in === 'path' || p.in === 'query') {

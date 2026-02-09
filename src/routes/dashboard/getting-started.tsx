@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { Link, createFileRoute, useNavigate } from '@tanstack/react-router'
 import {
   ArrowRight,
@@ -12,7 +12,7 @@ import {
   Rocket,
   Zap,
 } from 'lucide-react'
-import { useUser, useAuth } from '@clerk/clerk-react'
+import { useAuth, useUser } from '@clerk/clerk-react'
 import { useQuery } from '@tanstack/react-query'
 import { createPageHead } from '@/lib/seo'
 import { Card, CardContent } from '@/components/ui/card'
@@ -22,7 +22,7 @@ import { CopyButton } from '@/components/docs/copy-button'
 import { CodeBlock } from '@/components/docs/code-block'
 import { OnboardingPlayground } from '@/components/onboarding/onboarding-playground'
 import { TakeoffCelebration } from '@/components/onboarding/takeoff-celebration'
-import { getUserSubscription, getSubscriptionKeys } from '@/lib/server/apim'
+import { getSubscriptionKeys, getUserSubscription } from '@/lib/server/apim'
 import { apimKeys } from '@/lib/server/apim-queries'
 import { allEndpoints } from '@/lib/docs/spec-parser'
 import { API_BASE_URL } from '@/lib/gateway-url'

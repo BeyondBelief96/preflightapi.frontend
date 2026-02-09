@@ -1,5 +1,5 @@
-import { env } from '@/env'
 import { API_BASE_PATH } from './api-metadata'
+import { env } from '@/env'
 
 export const GATEWAY_URL =
   env.VITE_APIM_GATEWAY_URL ??

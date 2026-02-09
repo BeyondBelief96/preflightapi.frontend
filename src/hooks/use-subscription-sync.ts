@@ -58,5 +58,5 @@ export function useSubscriptionSync() {
     if (activeSub.productId !== expectedPlan.apimProductId) {
       reconcileMutation.mutate()
     }
-  }, [stripeQuery.data, apimQuery.data]) // eslint-disable-line
+  }, [stripeQuery.data, apimQuery.data])  
 }

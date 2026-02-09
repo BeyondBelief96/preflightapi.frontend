@@ -186,7 +186,6 @@ function BillingPage() {
       reconcileMutation.mutate()
     }, RECONCILE_BASE_DELAY)
     return () => clearTimeout(timer)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [checkout])
 
   const now = new Date()

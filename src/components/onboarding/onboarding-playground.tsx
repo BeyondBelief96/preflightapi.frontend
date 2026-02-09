@@ -1,5 +1,7 @@
-import { useState, useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Loader2, Send } from 'lucide-react'
+import type { ProxyResult } from '@/lib/server/api-proxy'
+import type { ParsedEndpoint } from '@/lib/docs/types'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -8,8 +10,6 @@ import { CodeBlock } from '@/components/docs/code-block'
 import { MethodBadge } from '@/components/docs/method-badge'
 import { getExampleValue } from '@/lib/docs/code-examples'
 import { proxyApiRequest } from '@/lib/server/api-proxy'
-import type { ProxyResult } from '@/lib/server/api-proxy'
-import type { ParsedEndpoint } from '@/lib/docs/types'
 import { GATEWAY_URL } from '@/lib/gateway-url'
 
 interface OnboardingPlaygroundProps {

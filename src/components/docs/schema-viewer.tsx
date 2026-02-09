@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { ChevronDown, ChevronRight } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import type { ParsedSchemaField } from '@/lib/docs/types'
+import { cn } from '@/lib/utils'
 
 interface SchemaViewerProps {
   fields: Array<ParsedSchemaField>

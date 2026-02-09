@@ -1,10 +1,13 @@
 import { createError, defineEventHandler, getHeader, readRawBody } from 'h3'
 import type Stripe from 'stripe'
+import type { getStripe as GetStripeFn } from '../../../src/lib/server/stripe-client'
+import type { apimFetch as ApimFetchFn } from '../../../src/lib/server/apim-client'
+import type { PLANS as PlansConst } from '../../../src/lib/constants'
 
 export default defineEventHandler(async (event) => {
-  let getStripe: typeof import('../../../src/lib/server/stripe-client').getStripe
-  let apimFetch: typeof import('../../../src/lib/server/apim-client').apimFetch
-  let PLANS: typeof import('../../../src/lib/constants').PLANS
+  let getStripe: typeof GetStripeFn
+  let apimFetch: typeof ApimFetchFn
+  let PLANS: typeof PlansConst
 
   try {
     const stripeClientMod =
@@ -190,7 +193,7 @@ export default defineEventHandler(async (event) => {
 // Checks subscription metadata first, then falls back to Stripe customer metadata.
 
 async function resolveClerkUserId(
-  stripe: ReturnType<typeof import('../../../src/lib/server/stripe-client').getStripe>,
+  stripe: ReturnType<typeof GetStripeFn>,
   subscription: { metadata: Record<string, string>; customer: string | { id: string } },
 ): Promise<string | undefined> {
   // Fast path: subscription metadata

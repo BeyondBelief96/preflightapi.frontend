@@ -1,3 +1,4 @@
+import type { ParsedParameter } from '@/lib/docs/types'
 import {
   Table,
   TableBody,
@@ -6,7 +7,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import type { ParsedParameter } from '@/lib/docs/types'
 
 interface ParameterTableProps {
   parameters: Array<ParsedParameter>
