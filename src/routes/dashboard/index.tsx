@@ -8,7 +8,8 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { getUsageAnalytics, getUserSubscription } from '@/lib/server/apim'
-import { apimKeys } from '@/lib/server/apim-queries'
+import { getStripeSubscription } from '@/lib/server/stripe'
+import { apimKeys, stripeKeys } from '@/lib/server/apim-queries'
 import { usePlans } from '@/hooks/use-plans'
 
 export const Route = createFileRoute('/dashboard/')({
@@ -98,18 +99,32 @@ function DashboardOverview() {
     })
   }
 
+  // Stripe is the source of truth for billing state
+  const stripeSubQuery = useQuery({
+    queryKey: stripeKeys.subscription(userId ?? ''),
+    queryFn: () => getStripeSubscription(),
+    enabled: !!userId,
+  })
+
+  // APIM query is only used for usage analytics (needs APIM subscription ID)
   const subscriptionsQuery = useQuery({
     queryKey: apimKeys.subscription(userId ?? ''),
     queryFn: () => getUserSubscription(),
     enabled: !!userId,
   })
 
+  const stripeSub = stripeSubQuery.data
+  const currentPlan =
+    plans.find((p) => p.id === stripeSub?.planId) ?? plans[0]
+  const isPaid = stripeSub != null
+  const isCanceling = Boolean(
+    stripeSub?.cancelAtPeriodEnd || stripeSub?.cancelAt,
+  )
+  const cancelDate = stripeSub?.cancelAt ?? stripeSub?.currentPeriodEnd
+
   const activeSubscription = subscriptionsQuery.data?.find(
     (s) => s.state === 'active',
   )
-
-  const currentPlan =
-    plans.find((p) => p.id === activeSubscription?.planId) ?? plans[0]
 
   const now = new Date()
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
@@ -218,9 +233,9 @@ function DashboardOverview() {
       )}
 
       {/* Current Plan banner */}
-      <Card className="border-l-4 border-l-accent">
+      <Card className={`border-l-4 ${isCanceling ? 'border-l-yellow-500' : 'border-l-accent'}`}>
         <CardContent className="flex flex-wrap items-center justify-between gap-4 p-6">
-          {subscriptionsQuery.isLoading ? (
+          {stripeSubQuery.isLoading ? (
             <>
               <div className="flex items-center gap-3">
                 <Skeleton className="h-6 w-24" />
@@ -231,18 +246,45 @@ function DashboardOverview() {
           ) : (
             <>
               <div className="flex items-center gap-3">
-                <CreditCard className="h-5 w-5 text-accent" />
+                <CreditCard className={`h-5 w-5 ${isCanceling ? 'text-yellow-500' : 'text-accent'}`} />
                 <span className="text-lg font-bold">{currentPlan.name}</span>
-                <Badge variant="secondary">
-                  {activeSubscription?.state === 'active' ? 'Active' : 'Free'}
-                </Badge>
+                {isCanceling ? (
+                  <Badge variant="outline" className="border-yellow-500 text-yellow-600 dark:text-yellow-400">
+                    Canceling
+                  </Badge>
+                ) : (
+                  <Badge variant="secondary">
+                    {isPaid ? 'Active' : 'Free'}
+                  </Badge>
+                )}
               </div>
-              <Link to="/dashboard/billing">
-                <Button size="sm" className="gap-2">
-                  Upgrade Plan
-                  <ArrowRight className="h-3 w-3" />
-                </Button>
-              </Link>
+              {isCanceling && cancelDate ? (
+                <div className="flex items-center gap-3">
+                  <span className="text-sm text-yellow-600 dark:text-yellow-400">
+                    Ends {new Date(cancelDate).toLocaleDateString()}
+                  </span>
+                  <Link to="/dashboard/billing">
+                    <Button size="sm" variant="outline" className="gap-2">
+                      Reactivate
+                      <ArrowRight className="h-3 w-3" />
+                    </Button>
+                  </Link>
+                </div>
+              ) : isPaid ? (
+                <Link to="/dashboard/billing">
+                  <Button size="sm" variant="outline" className="gap-2">
+                    Manage Plan
+                    <ArrowRight className="h-3 w-3" />
+                  </Button>
+                </Link>
+              ) : (
+                <Link to="/dashboard/billing">
+                  <Button size="sm" className="gap-2">
+                    Upgrade Plan
+                    <ArrowRight className="h-3 w-3" />
+                  </Button>
+                </Link>
+              )}
             </>
           )}
         </CardContent>
@@ -318,25 +360,27 @@ function DashboardOverview() {
             <Key className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            {subscriptionsQuery.isLoading ? (
+            {stripeSubQuery.isLoading ? (
               <>
                 <Skeleton className="h-8 w-16" />
                 <Skeleton className="mt-1 h-4 w-40" />
               </>
             ) : (
               <>
-                <div className="text-2xl font-bold">
-                  {activeSubscription ? 'Active' : 'None'}
+                <div className={`text-2xl font-bold ${isCanceling ? 'text-yellow-600 dark:text-yellow-400' : ''}`}>
+                  {isCanceling ? 'Canceling' : isPaid ? 'Active' : 'Free'}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {activeSubscription ? (
+                  {isCanceling && cancelDate ? (
+                    `Ends ${new Date(cancelDate).toLocaleDateString()}`
+                  ) : isPaid ? (
                     'Primary & secondary keys available'
                   ) : (
                     <Link
-                      to="/dashboard/keys"
+                      to="/dashboard/billing"
                       className="text-accent hover:underline"
                     >
-                      Set up your subscription
+                      Upgrade your plan
                     </Link>
                   )}
                 </p>
