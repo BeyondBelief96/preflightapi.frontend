@@ -2,6 +2,7 @@ import { Link } from '@tanstack/react-router'
 import { ArrowRight, Terminal } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { codeToHtml } from 'shiki'
+import { ApiStatusBadge } from '@/components/marketing/api-status-badge'
 import { Button } from '@/components/ui/button'
 import { API_BASE_PATH } from '@/lib/api-metadata'
 import { isWaitlistMode } from '@/lib/waitlist'
@@ -169,10 +170,7 @@ export function HeroSection() {
         <div className="grid items-start gap-12 lg:grid-cols-2">
           {/* Left: Copy */}
           <div>
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border bg-muted/50 px-4 py-1.5 text-sm text-muted-foreground">
-              <span className="h-2 w-2 rounded-full bg-aviation-success" />
-              All systems operational
-            </div>
+            <ApiStatusBadge />
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
               Aviation Data <span className="text-accent">for Developers</span>
             </h1>
