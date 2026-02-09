@@ -30,7 +30,8 @@
       "WebFetch(domain:tanstack.com)",
       "Bash(xargs cat:*)",
       "WebFetch(domain:clerk.com)",
-      "WebFetch(domain:docs.railway.com)"
+      "WebFetch(domain:docs.railway.com)",
+      "Bash(ls -la \"C:\\\\Users\\\\brand\\\\source\\\\repos\\\\preflightapi.frontend\\\\server\"\" 2>/dev/null || echo \"Server dir not found \")"
     ]
   }
 }
