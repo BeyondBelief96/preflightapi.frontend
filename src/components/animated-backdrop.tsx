@@ -1,6 +1,6 @@
 export function AnimatedBackdrop() {
   return (
-    <div className="absolute inset-0 overflow-hidden -z-10 pointer-events-none">
+    <div className="fixed inset-0 overflow-hidden -z-10 pointer-events-none">
       {/* Layer 1 — Gradient orbs */}
       <div className="absolute -top-64 -right-64 h-[500px] w-[500px] rounded-full bg-accent opacity-[0.07] blur-3xl motion-safe:animate-float-1" />
       <div className="absolute -bottom-64 -left-64 h-[500px] w-[500px] rounded-full bg-primary opacity-[0.07] blur-3xl motion-safe:animate-float-2" />

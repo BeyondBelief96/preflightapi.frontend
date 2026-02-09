@@ -182,7 +182,7 @@ function BillingPage() {
             <CardTitle>Current Plan</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="space-y-2">
                 <div className="flex items-center gap-3">
                   <Skeleton className="h-8 w-32" />
@@ -190,7 +190,7 @@ function BillingPage() {
                 </div>
                 <Skeleton className="h-4 w-48" />
               </div>
-              <Skeleton className="h-10 w-44" />
+              <Skeleton className="h-10 w-full sm:w-44" />
             </div>
             <div className="mt-6 space-y-2">
               <Skeleton className="h-4 w-24" />
@@ -225,9 +225,9 @@ function BillingPage() {
             <CardTitle>Billing History</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <Skeleton className="h-4 w-64" />
-              <Skeleton className="h-10 w-36" />
+              <Skeleton className="h-10 w-full sm:w-36" />
             </div>
           </CardContent>
         </Card>
@@ -263,7 +263,7 @@ function BillingPage() {
           <CardTitle>Current Plan</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <div className="flex items-center gap-3">
                 <h3 className="text-2xl font-bold">{currentPlan.name}</h3>
@@ -293,6 +293,7 @@ function BillingPage() {
             </div>
             {isPaid ? (
               <Button
+                className="w-full sm:w-auto"
                 onClick={() => portalMutation.mutate()}
                 disabled={portalMutation.isPending}
               >
@@ -304,7 +305,7 @@ function BillingPage() {
                 Manage Subscription
               </Button>
             ) : (
-              <div className="flex gap-2">
+              <div className="flex flex-col gap-2 sm:flex-row">
                 {plans.filter((p) => p.id !== 'free').map((plan) => (
                   <Button
                     key={plan.id}
@@ -374,11 +375,12 @@ function BillingPage() {
         </CardHeader>
         <CardContent>
           {isPaid ? (
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm text-muted-foreground">
                 View and download invoices from the Stripe Customer Portal.
               </p>
               <Button
+                className="w-full sm:w-auto"
                 variant="outline"
                 onClick={() => portalMutation.mutate()}
                 disabled={portalMutation.isPending}

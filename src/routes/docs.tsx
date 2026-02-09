@@ -1,5 +1,5 @@
 import { Link, Outlet, createFileRoute, useLocation } from '@tanstack/react-router'
-import { ArrowLeft, Menu, X } from 'lucide-react'
+import { ArrowLeft, FileJson, Menu, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { SignedIn, SignedOut, UserButton } from '@clerk/clerk-react'
 import { createPageHead } from '@/lib/seo'
@@ -28,21 +28,6 @@ function DocsLayout() {
 
   return (
     <div className="flex min-h-screen">
-      {/* Mobile sidebar toggle */}
-      <div className="fixed left-4 top-4 z-50 lg:hidden">
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-        >
-          {sidebarOpen ? (
-            <X className="h-4 w-4" />
-          ) : (
-            <Menu className="h-4 w-4" />
-          )}
-        </Button>
-      </div>
-
       {/* Sidebar overlay for mobile */}
       {sidebarOpen && (
         <div
@@ -97,7 +82,30 @@ function DocsLayout() {
       {/* Main content */}
       <main className="relative flex-1 overflow-y-auto">
         <AnimatedBackdrop />
-        <div className="flex items-center justify-end gap-3 border-b px-6 py-2">
+        <div className="sticky top-0 z-30 flex items-center gap-3 border-b bg-background/95 px-4 py-2 backdrop-blur-sm supports-[backdrop-filter]:bg-background/60 lg:px-6">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="lg:hidden"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+          >
+            {sidebarOpen ? (
+              <X className="h-4 w-4" />
+            ) : (
+              <Menu className="h-4 w-4" />
+            )}
+          </Button>
+          <a
+            href="/api/openapi"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mr-auto"
+          >
+            <Button variant="ghost" size="sm" className="gap-1.5 text-xs">
+              <FileJson className="h-3.5 w-3.5" />
+              OpenAPI Spec
+            </Button>
+          </a>
           <SignedOut>
             <Link to="/sign-in">
               <Button variant="ghost" size="sm">

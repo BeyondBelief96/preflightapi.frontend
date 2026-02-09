@@ -14,6 +14,7 @@ const sections = [
       { label: 'Authentication', href: '/docs/authentication' },
       { label: 'Rate Limits', href: '/docs/rate-limits' },
       { label: 'Error Handling', href: '/docs/errors' },
+      { label: 'OpenAPI Spec', href: '/docs/openapi' },
     ],
   },
   {

@@ -20,6 +20,7 @@ import { Route as MarketingIndexRouteImport } from './routes/_marketing/index'
 import { Route as DocsWindsAloftRouteImport } from './routes/docs/winds-aloft'
 import { Route as DocsRateLimitsRouteImport } from './routes/docs/rate-limits'
 import { Route as DocsPirepsRouteImport } from './routes/docs/pireps'
+import { Route as DocsOpenapiRouteImport } from './routes/docs/openapi'
 import { Route as DocsObstaclesRouteImport } from './routes/docs/obstacles'
 import { Route as DocsNotamsRouteImport } from './routes/docs/notams'
 import { Route as DocsNavLogRouteImport } from './routes/docs/nav-log'
@@ -98,6 +99,11 @@ const DocsRateLimitsRoute = DocsRateLimitsRouteImport.update({
 const DocsPirepsRoute = DocsPirepsRouteImport.update({
   id: '/pireps',
   path: '/pireps',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsOpenapiRoute = DocsOpenapiRouteImport.update({
+  id: '/openapi',
+  path: '/openapi',
   getParentRoute: () => DocsRoute,
 } as any)
 const DocsObstaclesRoute = DocsObstaclesRouteImport.update({
@@ -252,6 +258,7 @@ export interface FileRoutesByFullPath {
   '/docs/nav-log': typeof DocsNavLogRoute
   '/docs/notams': typeof DocsNotamsRoute
   '/docs/obstacles': typeof DocsObstaclesRoute
+  '/docs/openapi': typeof DocsOpenapiRoute
   '/docs/pireps': typeof DocsPirepsRoute
   '/docs/rate-limits': typeof DocsRateLimitsRoute
   '/docs/winds-aloft': typeof DocsWindsAloftRoute
@@ -286,6 +293,7 @@ export interface FileRoutesByTo {
   '/docs/nav-log': typeof DocsNavLogRoute
   '/docs/notams': typeof DocsNotamsRoute
   '/docs/obstacles': typeof DocsObstaclesRoute
+  '/docs/openapi': typeof DocsOpenapiRoute
   '/docs/pireps': typeof DocsPirepsRoute
   '/docs/rate-limits': typeof DocsRateLimitsRoute
   '/docs/winds-aloft': typeof DocsWindsAloftRoute
@@ -325,6 +333,7 @@ export interface FileRoutesById {
   '/docs/nav-log': typeof DocsNavLogRoute
   '/docs/notams': typeof DocsNotamsRoute
   '/docs/obstacles': typeof DocsObstaclesRoute
+  '/docs/openapi': typeof DocsOpenapiRoute
   '/docs/pireps': typeof DocsPirepsRoute
   '/docs/rate-limits': typeof DocsRateLimitsRoute
   '/docs/winds-aloft': typeof DocsWindsAloftRoute
@@ -365,6 +374,7 @@ export interface FileRouteTypes {
     | '/docs/nav-log'
     | '/docs/notams'
     | '/docs/obstacles'
+    | '/docs/openapi'
     | '/docs/pireps'
     | '/docs/rate-limits'
     | '/docs/winds-aloft'
@@ -399,6 +409,7 @@ export interface FileRouteTypes {
     | '/docs/nav-log'
     | '/docs/notams'
     | '/docs/obstacles'
+    | '/docs/openapi'
     | '/docs/pireps'
     | '/docs/rate-limits'
     | '/docs/winds-aloft'
@@ -437,6 +448,7 @@ export interface FileRouteTypes {
     | '/docs/nav-log'
     | '/docs/notams'
     | '/docs/obstacles'
+    | '/docs/openapi'
     | '/docs/pireps'
     | '/docs/rate-limits'
     | '/docs/winds-aloft'
@@ -535,6 +547,13 @@ declare module '@tanstack/react-router' {
       path: '/pireps'
       fullPath: '/docs/pireps'
       preLoaderRoute: typeof DocsPirepsRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/openapi': {
+      id: '/docs/openapi'
+      path: '/openapi'
+      fullPath: '/docs/openapi'
+      preLoaderRoute: typeof DocsOpenapiRouteImport
       parentRoute: typeof DocsRoute
     }
     '/docs/obstacles': {
@@ -774,6 +793,7 @@ interface DocsRouteChildren {
   DocsNavLogRoute: typeof DocsNavLogRoute
   DocsNotamsRoute: typeof DocsNotamsRoute
   DocsObstaclesRoute: typeof DocsObstaclesRoute
+  DocsOpenapiRoute: typeof DocsOpenapiRoute
   DocsPirepsRoute: typeof DocsPirepsRoute
   DocsRateLimitsRoute: typeof DocsRateLimitsRoute
   DocsWindsAloftRoute: typeof DocsWindsAloftRoute
@@ -797,6 +817,7 @@ const DocsRouteChildren: DocsRouteChildren = {
   DocsNavLogRoute: DocsNavLogRoute,
   DocsNotamsRoute: DocsNotamsRoute,
   DocsObstaclesRoute: DocsObstaclesRoute,
+  DocsOpenapiRoute: DocsOpenapiRoute,
   DocsPirepsRoute: DocsPirepsRoute,
   DocsRateLimitsRoute: DocsRateLimitsRoute,
   DocsWindsAloftRoute: DocsWindsAloftRoute,

@@ -31,7 +31,7 @@ const EXAMPLE_VALUES: Record<string, string> = {
 }
 
 export function getExampleValue(param: { name: string; type: string }): string {
-  if (EXAMPLE_VALUES[param.name]) return EXAMPLE_VALUES[param.name]
+  if (param.name in EXAMPLE_VALUES) return EXAMPLE_VALUES[param.name]
   if (param.type === 'integer') return '25'
   if (param.type === 'number') return '10.0'
   if (param.type === 'boolean') return 'true'

@@ -539,7 +539,7 @@ Server functions that wrap the APIM Management REST API:
 - [x] Build dashboard: Usage page (APIM analytics)
 - [x] Build dashboard: Billing page (Stripe Customer Portal embed)
 - [x] Build API documentation pages
-- [ ] Build webhook handlers (Clerk user events, Stripe billing events)
+- [x] Build webhook handlers (Clerk user events, Stripe billing events)
 
 ### Milestone 4: Launch Prep (Weeks 8-9)
 
@@ -549,7 +549,6 @@ Server functions that wrap the APIM Management REST API:
   - [ ] Production APIM instance (Standard tier for SLA)
   - [ ] Production PostgreSQL Flexible Server with read replica
   - [ ] Production Azure Blob Storage
-  - [ ] Production Key Vault
 - [ ] Configure database read/write split
   - [ ] Cron jobs (Azure Functions) write to the primary database
   - [ ] API (App Service behind APIM) reads from read replica(s)

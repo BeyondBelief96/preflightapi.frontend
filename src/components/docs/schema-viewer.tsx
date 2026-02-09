@@ -92,10 +92,12 @@ export function SchemaViewer({ fields, depth = 0, className }: SchemaViewerProps
   if (fields.length === 0) return null
 
   return (
-    <div className={cn('overflow-hidden rounded-lg border text-sm', className)}>
-      {fields.map((field) => (
-        <FieldRow key={field.name} field={field} depth={depth} />
-      ))}
+    <div className={cn('overflow-x-auto rounded-lg border text-sm', className)}>
+      <div className="min-w-[480px]">
+        {fields.map((field) => (
+          <FieldRow key={field.name} field={field} depth={depth} />
+        ))}
+      </div>
     </div>
   )
 }

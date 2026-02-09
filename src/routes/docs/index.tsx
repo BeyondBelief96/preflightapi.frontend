@@ -1,5 +1,6 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 import {
+  AlertTriangle,
   BookOpen,
   Cloud,
   Code2,
@@ -12,11 +13,11 @@ import {
   Radio,
   Route as RouteIcon,
   TriangleAlert,
-  AlertTriangle,
   Wind,
   Zap,
 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
+import { CodeBlock } from '@/components/docs/code-block'
 import { GATEWAY_URL } from '@/lib/gateway-url'
 
 export const Route = createFileRoute('/docs/')({
@@ -92,12 +93,44 @@ const categoryGroups: Array<CategoryGroup> = [
   },
 ]
 
+const endpointAccessRows = [
+  { category: 'METARs', free: true, starter: true, professional: true },
+  { category: 'TAFs', free: true, starter: true, professional: true },
+  { category: 'Airports (search, details & runways)', free: true, starter: true, professional: true },
+  { category: 'Communication Frequencies', free: true, starter: true, professional: true },
+  { category: 'PIREPs', free: false, starter: true, professional: true },
+  { category: 'AIRMETs, SIGMETs & G-AIRMETs', free: false, starter: true, professional: true },
+  { category: 'NOTAMs', free: false, starter: true, professional: true },
+  { category: 'Airspace & Special-Use Airspace', free: false, starter: true, professional: true },
+  { category: 'Obstacles', free: false, starter: true, professional: true },
+  { category: 'Bearing & Distance', free: false, starter: true, professional: true },
+  { category: 'Winds Aloft', free: false, starter: true, professional: true },
+  { category: 'Airport Diagrams & Chart Supplements', free: false, starter: false, professional: true },
+  { category: 'Performance (Crosswind, Density Altitude)', free: false, starter: false, professional: true },
+  { category: 'Nav Log', free: false, starter: false, professional: true },
+]
+
+const cacheDurations = [
+  { category: 'Real-time weather (METARs, PIREPs)', duration: '2 minutes' },
+  { category: 'Performance calculations (live METAR mode)', duration: '2 minutes' },
+  { category: 'Forecasts & advisories (TAFs, AIRMETs, SIGMETs, G-AIRMETs)', duration: '5 minutes' },
+  { category: 'NOTAMs', duration: '5 minutes' },
+  { category: 'Winds aloft', duration: '5 minutes' },
+  { category: 'Documents (airport diagrams, chart supplements)', duration: '10 minutes' },
+  { category: 'Static data (airports, frequencies, airspace, obstacles)', duration: '15 minutes' },
+  { category: 'POST endpoints', duration: 'Not cached' },
+]
+
 function DocsIndex() {
   return (
     <div>
       <h1 className="text-3xl font-bold">PreflightAPI Documentation</h1>
       <p className="mt-4 text-lg text-muted-foreground">
-        Everything you need to integrate aviation data into your application.
+        PreflightAPI is a REST API for aviation data. It provides real-time
+        weather, forecasts, airport information, airspace boundaries, NOTAMs,
+        and flight planning tools — sourced from NOAA, FAA NASR Subscriptions,
+        the NOTAM Management System, and more. One API key, one consistent JSON
+        format, no XML parsing required.
       </p>
 
       {/* Quick links */}
@@ -126,17 +159,145 @@ function DocsIndex() {
       </div>
 
       {/* Base URL info */}
-      <div className="mt-8 rounded-lg border bg-muted/30 p-4">
-        <h3 className="text-sm font-semibold">Base URL</h3>
-        <code className="mt-1 block text-sm text-accent">
-          {GATEWAY_URL}/api/v1
-        </code>
-        <p className="mt-2 text-sm text-muted-foreground">
-          All API endpoints are relative to this base URL. Requests must include
-          an <code className="text-foreground">Ocp-Apim-Subscription-Key</code>{' '}
-          header.
+      <section className="mt-10 space-y-4">
+        <h2 className="text-2xl font-semibold">Base URL</h2>
+        <div className="rounded-lg border bg-muted/30 p-4">
+          <code className="block text-sm text-accent">
+            {GATEWAY_URL}/api/v1
+          </code>
+          <p className="mt-2 text-sm text-muted-foreground">
+            All API endpoints are relative to this base URL. Every request must
+            include an{' '}
+            <code className="text-foreground">Ocp-Apim-Subscription-Key</code>{' '}
+            header. See the{' '}
+            <Link
+              to="/docs/authentication"
+              className="text-accent hover:underline"
+            >
+              authentication guide
+            </Link>{' '}
+            for details.
+          </p>
+        </div>
+      </section>
+
+      {/* API Conventions */}
+      <section className="mt-10 space-y-4">
+        <h2 className="text-2xl font-semibold">API Conventions</h2>
+        <ul className="list-inside list-disc space-y-3 text-muted-foreground">
+          <li>
+            <strong className="text-foreground">REST + JSON</strong> — All
+            endpoints accept and return JSON. Content type is always{' '}
+            <code>application/json</code>.
+          </li>
+          <li>
+            <strong className="text-foreground">Versioned</strong> — The current
+            API version is <code>v1</code>, included in every URL path (
+            <code>/api/v1/...</code>).
+          </li>
+          <li>
+            <strong className="text-foreground">Cursor-based pagination</strong>{' '}
+            — Collection endpoints return a paginated wrapper. Use the{' '}
+            <code>cursor</code> query parameter to fetch subsequent pages. The{' '}
+            <code>limit</code> parameter controls page size (1–500, default
+            100).
+          </li>
+          <li>
+            <strong className="text-foreground">Structured errors</strong> —
+            Backend errors return a{' '}
+            <Link to="/docs/errors" className="text-accent hover:underline">
+              structured response
+            </Link>{' '}
+            with a machine-readable <code>code</code>, human-readable{' '}
+            <code>message</code>, and a <code>traceId</code> for support.
+            Gateway errors (auth, rate limit, quota) use a simpler format.
+          </li>
+        </ul>
+
+        <p className="text-sm text-muted-foreground">
+          Paginated responses follow this shape:
         </p>
-      </div>
+        <CodeBlock
+          language="json"
+          code={`{
+  "data": [ ... ],
+  "pagination": {
+    "nextCursor": "eyJpZCI6MTAwfQ==",
+    "hasMore": true,
+    "limit": 100
+  }
+}`}
+        />
+      </section>
+
+      {/* Response Caching */}
+      <section className="mt-10 space-y-4">
+        <h2 className="text-2xl font-semibold">Response Caching</h2>
+        <p className="text-muted-foreground">
+          GET requests are cached at the API gateway level to reduce latency.
+          Cache duration varies by data type to balance freshness with
+          performance. Cached responses are identical to fresh responses and
+          still count toward your rate limit and monthly quota.
+        </p>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b">
+                <th className="py-3 text-left font-semibold">Data Type</th>
+                <th className="py-3 text-left font-semibold">
+                  Cache Duration
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {cacheDurations.map((row) => (
+                <tr key={row.category} className="border-b">
+                  <td className="py-3 text-muted-foreground">
+                    {row.category}
+                  </td>
+                  <td className="py-3 font-medium">{row.duration}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      {/* Endpoint Access by Plan */}
+      <section className="mt-10 space-y-4">
+        <h2 className="text-2xl font-semibold">Endpoint Access by Plan</h2>
+        <p className="text-muted-foreground">
+          Not all endpoints are available on every plan. Requesting an endpoint
+          your plan doesn't include returns a{' '}
+          <code>403 Forbidden</code> response. See{' '}
+          <Link to="/pricing" className="text-accent hover:underline">
+            pricing
+          </Link>{' '}
+          for full plan details.
+        </p>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b">
+                <th className="py-3 text-left font-semibold">Endpoint Category</th>
+                <th className="py-3 text-center font-semibold">Student Pilot<br /><span className="font-normal text-muted-foreground">Free</span></th>
+                <th className="py-3 text-center font-semibold">Private Pilot<br /><span className="font-normal text-muted-foreground">$49/mo</span></th>
+                <th className="py-3 text-center font-semibold">Commercial Pilot<br /><span className="font-normal text-muted-foreground">$199/mo</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              {endpointAccessRows.map((row) => (
+                <tr key={row.category} className="border-b">
+                  <td className="py-3 text-muted-foreground">{row.category}</td>
+                  <td className="py-3 text-center">{row.free ? '\u2705' : '\u2014'}</td>
+                  <td className="py-3 text-center">{row.starter ? '\u2705' : '\u2014'}</td>
+                  <td className="py-3 text-center">{row.professional ? '\u2705' : '\u2014'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
 
       {/* Getting Started */}
       <div className="mt-12">

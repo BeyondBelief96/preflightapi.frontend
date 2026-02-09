@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import { Link, createFileRoute, useNavigate } from '@tanstack/react-router'
 import {
   ArrowRight,
@@ -106,6 +106,7 @@ function GettingStartedPage() {
   const { userId } = useAuth()
   const navigate = useNavigate()
 
+  const topRef = useRef<HTMLDivElement>(null)
   const [currentStep, setCurrentStep] = useState(0)
   const [completedSteps, setCompletedSteps] = useState<Set<number>>(
     new Set(),
@@ -155,6 +156,7 @@ function GettingStartedPage() {
         })
       }
       setCurrentStep(step)
+      topRef.current?.scrollIntoView({ behavior: 'smooth' })
     },
     [currentStep],
   )
@@ -173,15 +175,13 @@ function GettingStartedPage() {
 
   const handleTryItSuccess = useCallback(() => {
     setHasFirstSuccess(true)
-    setTimeout(() => {
-      goToStep(3)
-    }, 1500)
-  }, [goToStep])
+  }, [])
 
   const isDataLoading = subsQuery.isLoading || keysQuery.isLoading
 
   return (
     <div className="mx-auto max-w-2xl space-y-8">
+      <div ref={topRef} />
       {/* Step Indicator */}
       <StepIndicator
         currentStep={currentStep}
@@ -226,6 +226,7 @@ function GettingStartedPage() {
         currentStep={currentStep}
         isDataLoading={isDataLoading}
         hasKey={!!primaryKey}
+        hasFirstSuccess={hasFirstSuccess}
         onBack={() => setCurrentStep((s) => Math.max(0, s - 1))}
         onNext={() => goToStep(currentStep + 1)}
         onSkip={handleComplete}
@@ -389,9 +390,9 @@ function TryItStep({
         </div>
 
         {hasFirstSuccess && (
-          <div className="flex items-center gap-2 rounded-md border border-aviation-success/30 bg-aviation-success/10 px-4 py-3 text-sm text-aviation-success motion-safe:animate-success-pulse">
+          <div className="flex items-center gap-2 rounded-md border border-aviation-success/30 bg-aviation-success/10 px-4 py-3 text-sm text-aviation-success">
             <Check className="h-4 w-4" />
-            Request successful! Advancing...
+            Request successful! You're ready for the next step.
           </div>
         )}
 
@@ -480,6 +481,7 @@ function WizardNavigation({
   currentStep,
   isDataLoading,
   hasKey,
+  hasFirstSuccess,
   onBack,
   onNext,
   onSkip,
@@ -487,6 +489,7 @@ function WizardNavigation({
   currentStep: number
   isDataLoading: boolean
   hasKey: boolean
+  hasFirstSuccess: boolean
   onBack: () => void
   onNext: () => void
   onSkip: () => void
@@ -506,7 +509,13 @@ function WizardNavigation({
     )
   }
 
-  const nextLabel = currentStep === 2 ? 'Skip to Finish' : 'Continue'
+  const showHighlight = currentStep === 2 && hasFirstSuccess
+  const nextLabel =
+    currentStep === 2
+      ? hasFirstSuccess
+        ? 'Continue'
+        : 'Skip to Finish'
+      : 'Continue'
   const nextDisabled = currentStep === 1 && (isDataLoading || !hasKey)
 
   return (
@@ -526,7 +535,7 @@ function WizardNavigation({
       <Button
         onClick={onNext}
         disabled={nextDisabled}
-        className="gap-2"
+        className={`gap-2 ${showHighlight ? 'animate-pulse ring-2 ring-accent/50 ring-offset-2 ring-offset-background' : ''}`}
       >
         {nextLabel}
         <ArrowRight className="h-4 w-4" />

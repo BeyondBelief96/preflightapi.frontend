@@ -1,22 +1,48 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { Link, createFileRoute } from '@tanstack/react-router'
 import { usePlans } from '@/hooks/use-plans'
+import { CodeBlock } from '@/components/docs/code-block'
+import { GATEWAY_URL } from '@/lib/gateway-url'
 
 export const Route = createFileRoute('/docs/rate-limits')({
   component: RateLimitsDocs,
 })
 
+const cacheDurations = [
+  { category: 'Real-time weather (METARs, PIREPs)', duration: '2 minutes' },
+  { category: 'Performance calculations', duration: '2 minutes' },
+  {
+    category: 'Forecasts & NOTAMs (TAFs, AIRMETs, SIGMETs, G-AIRMETs, NOTAMs)',
+    duration: '5 minutes',
+  },
+  { category: 'Winds aloft', duration: '5 minutes' },
+  {
+    category: 'Presigned URLs (airport diagrams, chart supplements)',
+    duration: '10 minutes',
+  },
+  {
+    category:
+      'Static / NASR data (airports, frequencies, airspace, obstacles)',
+    duration: '15 minutes',
+  },
+]
+
 function RateLimitsDocs() {
   const { plans } = usePlans()
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       <div>
         <h1 className="text-3xl font-bold">Rate Limits</h1>
         <p className="mt-4 text-lg text-muted-foreground">
-          API rate limits depend on your subscription plan.
+          PreflightAPI enforces two types of throttling:{' '}
+          <strong className="text-foreground">rate limits</strong> (requests per
+          60-second window) and{' '}
+          <strong className="text-foreground">monthly quotas</strong> (total
+          calls per billing period). Both depend on your subscription plan.
         </p>
       </div>
 
+      {/* Limits by Plan */}
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold">Limits by Plan</h2>
         <div className="overflow-x-auto">
@@ -25,9 +51,9 @@ function RateLimitsDocs() {
               <tr className="border-b">
                 <th className="py-3 text-left font-semibold">Plan</th>
                 <th className="py-3 text-left font-semibold">
-                  Requests / Minute
+                  Rate Limit
                 </th>
-                <th className="py-3 text-left font-semibold">Calls / Month</th>
+                <th className="py-3 text-left font-semibold">Monthly Quota</th>
               </tr>
             </thead>
             <tbody>
@@ -35,60 +61,299 @@ function RateLimitsDocs() {
                 <tr key={plan.id} className="border-b">
                   <td className="py-3 font-medium">{plan.name}</td>
                   <td className="py-3 text-muted-foreground">
-                    {plan.limits.ratePerMinute ?? 'Custom'}
+                    {plan.limits.ratePerMinute
+                      ? `${plan.limits.ratePerMinute} requests / 60 sec`
+                      : 'Custom'}
                   </td>
                   <td className="py-3 text-muted-foreground">
-                    {plan.limits.callsPerMonth?.toLocaleString() ?? 'Unlimited'}
+                    {plan.limits.callsPerMonth?.toLocaleString() ?? 'Unlimited'}{' '}
+                    calls
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
+        <p className="text-sm text-muted-foreground">
+          Rate limits are enforced on a sliding 60-second window per
+          subscription key. If you exceed the limit, further requests in that
+          window are rejected with <code>429 Too Many Requests</code> until the
+          window resets.
+        </p>
       </section>
 
+      {/* Monthly Quotas */}
       <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">Rate Limit Headers</h2>
+        <h2 className="text-2xl font-semibold">Monthly Quotas</h2>
         <p className="text-muted-foreground">
-          Every API response includes rate limit information in the headers:
+          In addition to per-minute rate limits, each plan has a monthly quota
+          that caps the total number of API calls in a billing period. Quota
+          counters reset at the start of each monthly billing cycle.
         </p>
-        <pre className="overflow-x-auto rounded-lg bg-aviation-dark p-4 text-sm text-white/90">
-          {`X-RateLimit-Limit: 60
-X-RateLimit-Remaining: 58
-X-RateLimit-Reset: 1704499200`}
-        </pre>
         <ul className="list-inside list-disc space-y-2 text-muted-foreground">
           <li>
-            <code>X-RateLimit-Limit</code> - Maximum requests allowed per window
+            When you hit your monthly quota, all further requests return{' '}
+            <code>403 Forbidden</code> until the quota resets.
           </li>
           <li>
-            <code>X-RateLimit-Remaining</code> - Requests remaining in current
-            window
+            You can track your current usage on the{' '}
+            <Link to="/dashboard" className="text-accent hover:underline">
+              dashboard overview
+            </Link>{' '}
+            page.
           </li>
           <li>
-            <code>X-RateLimit-Reset</code> - Unix timestamp when the window
-            resets
+            Upgrading your plan immediately increases both your rate limit and
+            monthly quota.
           </li>
         </ul>
       </section>
 
+      {/* Rate Limit Headers */}
       <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">Exceeding Rate Limits</h2>
+        <h2 className="text-2xl font-semibold">Rate Limit Headers</h2>
         <p className="text-muted-foreground">
-          If you exceed your rate limit, the API returns{' '}
-          <code>429 Too Many Requests</code>:
+          Every API response includes headers that let you monitor your rate
+          limit usage in real time:
         </p>
-        <pre className="overflow-x-auto rounded-lg bg-aviation-dark p-4 text-sm text-white/90">
-          {`{
-  "code": "RATE_LIMIT_EXCEEDED",
-  "message": "Rate limit exceeded. Please try again later.",
-  "timestamp": "2025-01-05T18:56:00Z"
+        <CodeBlock
+          language="http"
+          code={`HTTP/1.1 200 OK
+Content-Type: application/json
+X-RateLimit-Limit: 60
+X-RateLimit-Remaining: 58`}
+        />
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b">
+                <th className="py-3 text-left font-semibold">Header</th>
+                <th className="py-3 text-left font-semibold">Description</th>
+                <th className="py-3 text-left font-semibold">Present On</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b">
+                <td className="py-3">
+                  <code className="text-sm">X-RateLimit-Limit</code>
+                </td>
+                <td className="py-3 text-muted-foreground">
+                  Maximum requests allowed in the current 60-second window
+                </td>
+                <td className="py-3 text-muted-foreground">Every response</td>
+              </tr>
+              <tr className="border-b">
+                <td className="py-3">
+                  <code className="text-sm">X-RateLimit-Remaining</code>
+                </td>
+                <td className="py-3 text-muted-foreground">
+                  Requests remaining before you hit the rate limit
+                </td>
+                <td className="py-3 text-muted-foreground">Every response</td>
+              </tr>
+              <tr className="border-b">
+                <td className="py-3">
+                  <code className="text-sm">Retry-After</code>
+                </td>
+                <td className="py-3 text-muted-foreground">
+                  Seconds to wait before retrying
+                </td>
+                <td className="py-3 text-muted-foreground">
+                  <code>429</code> responses only
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      {/* Exceeding Limits */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-semibold">Exceeding Limits</h2>
+
+        <h3 className="text-lg font-medium">Rate limit exceeded (429)</h3>
+        <p className="text-muted-foreground">
+          When you exceed your per-minute rate limit, the API gateway returns{' '}
+          <code>429 Too Many Requests</code> with a{' '}
+          <code>Retry-After</code> header indicating how many seconds to wait.
+          The response body uses the gateway error format:
+        </p>
+        <CodeBlock
+          language="json"
+          code={`{
+  "statusCode": 429,
+  "message": "Rate limit is exceeded. Try again in 52 seconds."
 }`}
-        </pre>
+        />
+
+        <h3 className="mt-6 text-lg font-medium">
+          Monthly quota exceeded (403)
+        </h3>
         <p className="text-muted-foreground">
-          We recommend implementing exponential backoff when you receive a 429
-          response.
+          When you exhaust your monthly quota, the API gateway returns{' '}
+          <code>403 Forbidden</code>. The quota resets at the start of your
+          next billing cycle. The response body uses the same gateway format:
         </p>
+        <CodeBlock
+          language="json"
+          code={`{
+  "statusCode": 403,
+  "message": "Out of call volume quota. Quota will be replenished in 06:23:15."
+}`}
+        />
+        <div className="rounded-lg border bg-muted/30 p-4">
+          <p className="text-sm text-muted-foreground">
+            Both <code>429</code> and quota-exceeded <code>403</code> responses
+            use the gateway error format (<code>statusCode</code> +{' '}
+            <code>message</code>), not the backend error format. See the{' '}
+            <Link to="/docs/errors" className="text-accent hover:underline">
+              error handling guide
+            </Link>{' '}
+            for details on distinguishing error formats.
+          </p>
+        </div>
+      </section>
+
+      {/* Caching */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-semibold">Response Caching</h2>
+        <p className="text-muted-foreground">
+          GET responses are cached at the API gateway to reduce latency. Cache
+          duration varies by data type. Cached responses are identical to fresh
+          responses and still count toward your rate limit and monthly quota.
+        </p>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b">
+                <th className="py-3 text-left font-semibold">Endpoint Category</th>
+                <th className="py-3 text-left font-semibold">Cache Duration</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cacheDurations.map((row) => (
+                <tr key={row.category} className="border-b">
+                  <td className="py-3 text-muted-foreground">
+                    {row.category}
+                  </td>
+                  <td className="py-3 font-medium">{row.duration}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="text-sm text-muted-foreground">
+          Only GET requests are cached. POST endpoints are never cached.
+        </p>
+      </section>
+
+      {/* Monitoring Usage */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-semibold">Monitoring Your Usage</h2>
+        <ul className="list-inside list-disc space-y-2 text-muted-foreground">
+          <li>
+            <strong className="text-foreground">Dashboard</strong> — The{' '}
+            <Link to="/dashboard" className="text-accent hover:underline">
+              dashboard overview
+            </Link>{' '}
+            shows your current monthly usage and remaining quota at a glance.
+          </li>
+          <li>
+            <strong className="text-foreground">Response headers</strong> —
+            Check <code>X-RateLimit-Remaining</code> after each request to
+            track your real-time rate limit usage.
+          </li>
+          <li>
+            <strong className="text-foreground">Proactive alerts</strong> — If
+            you're consistently hitting your limits, consider upgrading your plan
+            for higher throughput.
+          </li>
+        </ul>
+      </section>
+
+      {/* Best Practices */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-semibold">Best Practices</h2>
+        <ul className="list-inside list-disc space-y-2 text-muted-foreground">
+          <li>
+            <strong className="text-foreground">Cache locally</strong> — Store
+            responses on your side to avoid redundant requests. Match the cache
+            TTL to the gateway cache duration for optimal freshness.
+          </li>
+          <li>
+            <strong className="text-foreground">
+              Use exponential backoff
+            </strong>{' '}
+            — When you receive a <code>429</code>, wait for the{' '}
+            <code>Retry-After</code> duration before retrying. Use exponential
+            backoff with jitter to avoid thundering herds.
+          </li>
+          <li>
+            <strong className="text-foreground">Monitor headers</strong> — Check{' '}
+            <code>X-RateLimit-Remaining</code> to proactively slow down before
+            hitting the rate limit.
+          </li>
+          <li>
+            <strong className="text-foreground">Batch where possible</strong> —
+            Some endpoints accept multiple identifiers in a single call (e.g.,
+            fetching METARs for multiple ICAO codes). Use these to reduce the
+            number of requests.
+          </li>
+        </ul>
+      </section>
+
+      {/* Retry Example */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-semibold">
+          Retry with Exponential Backoff
+        </h2>
+        <p className="text-muted-foreground">
+          Here's a reusable fetch wrapper that automatically retries on{' '}
+          <code>429</code> responses with exponential backoff and jitter:
+        </p>
+        <CodeBlock
+          language="typescript"
+          code={`async function fetchWithRetry(
+  url: string,
+  options: RequestInit,
+  maxRetries = 3,
+): Promise<Response> {
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    const response = await fetch(url, options)
+
+    if (response.status !== 429) {
+      return response
+    }
+
+    if (attempt === maxRetries) {
+      throw new Error('Rate limit exceeded after max retries')
+    }
+
+    // Use Retry-After header if available, otherwise exponential backoff
+    const retryAfter = response.headers.get('Retry-After')
+    const baseDelay = retryAfter
+      ? parseInt(retryAfter, 10) * 1000
+      : Math.pow(2, attempt) * 1000
+
+    // Add random jitter (0-500ms) to prevent thundering herd
+    const jitter = Math.random() * 500
+    await new Promise((resolve) => setTimeout(resolve, baseDelay + jitter))
+  }
+
+  throw new Error('Unreachable')
+}
+
+// Usage
+const response = await fetchWithRetry(
+  '${GATEWAY_URL}/api/v1/metars/KJFK',
+  {
+    headers: {
+      'Ocp-Apim-Subscription-Key': process.env.PREFLIGHT_API_KEY!,
+    },
+  },
+)
+const data: Metar = await response.json()`}
+        />
       </section>
     </div>
   )
