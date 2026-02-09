@@ -26,7 +26,11 @@
       "Bash(git push:*)",
       "Bash(python3:*)",
       "Bash(npx vite build)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "WebFetch(domain:tanstack.com)",
+      "Bash(xargs cat:*)",
+      "WebFetch(domain:clerk.com)",
+      "WebFetch(domain:docs.railway.com)"
     ]
   }
 }

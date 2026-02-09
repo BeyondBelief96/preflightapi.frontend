@@ -1,26 +1,26 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
-import { SignUp } from '@clerk/clerk-react'
+import { Waitlist } from '@clerk/clerk-react'
 import { createPageHead } from '@/lib/seo'
 import { isWaitlistMode } from '@/lib/waitlist'
 
-export const Route = createFileRoute('/sign-up')({
+export const Route = createFileRoute('/waitlist')({
   beforeLoad: () => {
-    if (isWaitlistMode) {
-      throw redirect({ to: '/waitlist' })
+    if (!isWaitlistMode) {
+      throw redirect({ to: '/sign-up' })
     }
   },
   head: () =>
     createPageHead({
-      title: 'Sign Up',
+      title: 'Join the Waitlist',
       description:
-        'Create your free PreflightAPI account and start accessing aviation data in minutes.',
-      path: '/sign-up',
+        'Join the PreflightAPI waitlist to be the first to access comprehensive US aviation data.',
+      path: '/waitlist',
       noIndex: true,
     }),
-  component: SignUpPage,
+  component: WaitlistPage,
 })
 
-function SignUpPage() {
+function WaitlistPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted/30 px-4">
       <div className="w-full max-w-md">
@@ -44,12 +44,7 @@ function SignUpPage() {
             </span>
           </a>
         </div>
-        <SignUp
-          routing="path"
-          path="/sign-up"
-          signInUrl="/sign-in"
-          fallbackRedirectUrl="/dashboard/getting-started"
-        />
+        <Waitlist />
       </div>
     </div>
   )

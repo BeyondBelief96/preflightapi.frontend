@@ -3,6 +3,7 @@ import { ArrowRight, Terminal } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { codeToHtml } from 'shiki'
 import { Button } from '@/components/ui/button'
+import { isWaitlistMode } from '@/lib/waitlist'
 
 const codeExamples = [
   {
@@ -184,9 +185,9 @@ export function HeroSection() {
               software.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
-              <Link to="/sign-up">
+              <Link to={isWaitlistMode ? '/waitlist' : '/sign-up'}>
                 <Button size="lg" className="gap-2">
-                  Get Started Free
+                  {isWaitlistMode ? 'Join the Waitlist' : 'Get Started Free'}
                   <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>

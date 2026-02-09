@@ -2,6 +2,7 @@ import { Link, createFileRoute } from '@tanstack/react-router'
 import { ArrowRight } from 'lucide-react'
 import { createPageHead } from '@/lib/seo'
 import { Button } from '@/components/ui/button'
+import { isWaitlistMode } from '@/lib/waitlist'
 
 export const Route = createFileRoute('/_marketing/about')({
   head: () =>
@@ -223,9 +224,9 @@ function AboutPage() {
             month — no credit card required.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <Link to="/sign-up">
+            <Link to={isWaitlistMode ? '/waitlist' : '/sign-up'}>
               <Button size="lg" className="gap-2">
-                Get Started Free
+                {isWaitlistMode ? 'Join the Waitlist' : 'Get Started Free'}
                 <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>

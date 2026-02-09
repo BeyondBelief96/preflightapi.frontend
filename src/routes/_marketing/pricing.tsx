@@ -1,8 +1,8 @@
-import { Link, createFileRoute  } from '@tanstack/react-router'
+import { Link, createFileRoute } from '@tanstack/react-router'
 import { Check, Loader2, Minus } from 'lucide-react'
 import { useAuth } from '@clerk/clerk-react'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import type {PlanDefinition} from '@/lib/constants';
+import type { PlanDefinition } from '@/lib/constants'
 import { createPageHead } from '@/lib/seo'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -12,6 +12,7 @@ import {
   getStripeSubscription,
 } from '@/lib/server/stripe'
 import { stripeKeys } from '@/lib/server/apim-queries'
+import { isWaitlistMode } from '@/lib/waitlist'
 
 export const Route = createFileRoute('/_marketing/pricing')({
   head: () =>
@@ -371,26 +372,28 @@ function PlanCTA({ plan }: { plan: PlanDefinition }) {
     },
   })
 
-  // Free plan always links to sign-up
+  const signUpLink = isWaitlistMode ? '/waitlist' : '/sign-up'
+
+  // Free plan always links to sign-up (or waitlist)
   if (plan.id === 'free') {
     return (
-      <Link to="/sign-up">
+      <Link to={signUpLink}>
         <Button className="w-full" variant="outline">
-          {plan.cta}
+          {isWaitlistMode ? 'Join Waitlist' : plan.cta}
         </Button>
       </Link>
     )
   }
 
-  // Signed-out users go to sign-up
+  // Signed-out users go to sign-up (or waitlist)
   if (!isSignedIn) {
     return (
-      <Link to="/sign-up">
+      <Link to={signUpLink}>
         <Button
           className="w-full"
           variant={plan.highlighted ? 'default' : 'outline'}
         >
-          {plan.cta}
+          {isWaitlistMode ? 'Join Waitlist' : plan.cta}
         </Button>
       </Link>
     )

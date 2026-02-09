@@ -33,6 +33,7 @@ export const env = createEnv({
       .url()
       .optional()
       .default('https://preflightapi-apim-service-test.azure-api.net'),
+    VITE_WAITLIST_MODE: z.string().optional().default('false'),
   },
 
   /**

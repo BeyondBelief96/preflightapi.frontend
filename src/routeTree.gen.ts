@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WaitlistRouteImport } from './routes/waitlist'
 import { Route as SignUpRouteImport } from './routes/sign-up'
 import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as DocsRouteImport } from './routes/docs'
@@ -47,6 +48,11 @@ import { Route as DashboardBillingIndexRouteImport } from './routes/dashboard/bi
 import { Route as MarketingLegalTermsRouteImport } from './routes/_marketing/legal/terms'
 import { Route as MarketingLegalPrivacyRouteImport } from './routes/_marketing/legal/privacy'
 
+const WaitlistRoute = WaitlistRouteImport.update({
+  id: '/waitlist',
+  path: '/waitlist',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SignUpRoute = SignUpRouteImport.update({
   id: '/sign-up',
   path: '/sign-up',
@@ -238,6 +244,7 @@ export interface FileRoutesByFullPath {
   '/docs': typeof DocsRouteWithChildren
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/waitlist': typeof WaitlistRoute
   '/about': typeof MarketingAboutRoute
   '/contact': typeof MarketingContactRoute
   '/pricing': typeof MarketingPricingRoute
@@ -273,6 +280,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/waitlist': typeof WaitlistRoute
   '/about': typeof MarketingAboutRoute
   '/contact': typeof MarketingContactRoute
   '/pricing': typeof MarketingPricingRoute
@@ -313,6 +321,7 @@ export interface FileRoutesById {
   '/docs': typeof DocsRouteWithChildren
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/waitlist': typeof WaitlistRoute
   '/_marketing/about': typeof MarketingAboutRoute
   '/_marketing/contact': typeof MarketingContactRoute
   '/_marketing/pricing': typeof MarketingPricingRoute
@@ -354,6 +363,7 @@ export interface FileRouteTypes {
     | '/docs'
     | '/sign-in'
     | '/sign-up'
+    | '/waitlist'
     | '/about'
     | '/contact'
     | '/pricing'
@@ -389,6 +399,7 @@ export interface FileRouteTypes {
   to:
     | '/sign-in'
     | '/sign-up'
+    | '/waitlist'
     | '/about'
     | '/contact'
     | '/pricing'
@@ -428,6 +439,7 @@ export interface FileRouteTypes {
     | '/docs'
     | '/sign-in'
     | '/sign-up'
+    | '/waitlist'
     | '/_marketing/about'
     | '/_marketing/contact'
     | '/_marketing/pricing'
@@ -468,10 +480,18 @@ export interface RootRouteChildren {
   DocsRoute: typeof DocsRouteWithChildren
   SignInRoute: typeof SignInRoute
   SignUpRoute: typeof SignUpRoute
+  WaitlistRoute: typeof WaitlistRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/waitlist': {
+      id: '/waitlist'
+      path: '/waitlist'
+      fullPath: '/waitlist'
+      preLoaderRoute: typeof WaitlistRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sign-up': {
       id: '/sign-up'
       path: '/sign-up'
@@ -832,6 +852,7 @@ const rootRouteChildren: RootRouteChildren = {
   DocsRoute: DocsRouteWithChildren,
   SignInRoute: SignInRoute,
   SignUpRoute: SignUpRoute,
+  WaitlistRoute: WaitlistRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
