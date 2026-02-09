@@ -25,7 +25,8 @@ import { TakeoffCelebration } from '@/components/onboarding/takeoff-celebration'
 import { getUserSubscription, getSubscriptionKeys } from '@/lib/server/apim'
 import { apimKeys } from '@/lib/server/apim-queries'
 import { allEndpoints } from '@/lib/docs/spec-parser'
-import { GATEWAY_URL } from '@/lib/gateway-url'
+import { API_BASE_URL } from '@/lib/gateway-url'
+import { API_BASE_PATH } from '@/lib/api-metadata'
 
 export const Route = createFileRoute('/dashboard/getting-started')({
   head: () =>
@@ -142,7 +143,7 @@ function GettingStartedPage() {
   const metarEndpoint = allEndpoints.find(
     (e) =>
       e.method === 'GET' &&
-      e.path === '/api/v1/metars/{icaoCodeOrIdent}',
+      e.path === `${API_BASE_PATH}/metars/{icaoCodeOrIdent}`,
   )
 
   const goToStep = useCallback(
@@ -353,7 +354,7 @@ function ApiKeyStep({
 
             <CodeBlock
               code={`curl -H "Ocp-Apim-Subscription-Key: ${maskKey(primaryKey)}" \\
-  ${GATEWAY_URL}/api/v1/metars/KJFK`}
+  ${API_BASE_URL}/metars/KJFK`}
               language="bash"
             />
           </div>

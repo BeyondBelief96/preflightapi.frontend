@@ -1,5 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { env } from '@/env'
+import { API_BASE_PATH } from '@/lib/api-metadata'
 
 export interface ProxyResult {
   status: number
@@ -20,9 +21,9 @@ export const proxyApiRequest = createServerFn({ method: 'POST' })
     }) => input,
   )
   .handler(async ({ data }): Promise<ProxyResult> => {
-    // Security: path must start with /api/v1/
-    if (!data.path.startsWith('/api/v1/')) {
-      throw new Error('Invalid path: must start with /api/v1/')
+    // Security: path must start with the current API base path
+    if (!data.path.startsWith(`${API_BASE_PATH}/`)) {
+      throw new Error(`Invalid path: must start with ${API_BASE_PATH}/`)
     }
 
     // Security: reject traversal attempts

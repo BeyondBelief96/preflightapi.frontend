@@ -1,7 +1,7 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { usePlans } from '@/hooks/use-plans'
 import { CodeBlock } from '@/components/docs/code-block'
-import { GATEWAY_URL } from '@/lib/gateway-url'
+import { API_BASE_URL } from '@/lib/gateway-url'
 
 export const Route = createFileRoute('/docs/rate-limits')({
   component: RateLimitsDocs,
@@ -345,7 +345,7 @@ X-RateLimit-Remaining: 58`}
 
 // Usage
 const response = await fetchWithRetry(
-  '${GATEWAY_URL}/api/v1/metars/KJFK',
+  '${API_BASE_URL}/metars/KJFK',
   {
     headers: {
       'Ocp-Apim-Subscription-Key': process.env.PREFLIGHT_API_KEY!,

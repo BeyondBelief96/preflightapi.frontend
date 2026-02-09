@@ -1,7 +1,7 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { CodeBlock } from '@/components/docs/code-block'
-import { GATEWAY_URL } from '@/lib/gateway-url'
+import { API_BASE_URL } from '@/lib/gateway-url'
 
 export const Route = createFileRoute('/docs/authentication')({
   component: AuthenticationDocs,
@@ -46,14 +46,14 @@ function AuthenticationDocs() {
             <CodeBlock
               language="bash"
               code={`curl -H "Ocp-Apim-Subscription-Key: YOUR_API_KEY" \\
-  "${GATEWAY_URL}/api/v1/metars/KJFK"`}
+  "${API_BASE_URL}/metars/KJFK"`}
             />
           </TabsContent>
           <TabsContent value="typescript" className="mt-2">
             <CodeBlock
               language="typescript"
               code={`const response = await fetch(
-  '${GATEWAY_URL}/api/v1/metars/KJFK',
+  '${API_BASE_URL}/metars/KJFK',
   {
     headers: {
       'Ocp-Apim-Subscription-Key': process.env.PREFLIGHT_API_KEY!,
@@ -76,7 +76,7 @@ function AuthenticationDocs() {
         </p>
         <CodeBlock
           language="bash"
-          code={`curl "${GATEWAY_URL}/api/v1/metars/KJFK?subscription-key=YOUR_API_KEY"`}
+          code={`curl "${API_BASE_URL}/metars/KJFK?subscription-key=YOUR_API_KEY"`}
         />
       </section>
 
@@ -160,7 +160,7 @@ function AuthenticationDocs() {
 const API_KEY = process.env.PREFLIGHT_API_KEY!
 
 const response = await fetch(
-  '${GATEWAY_URL}/api/v1/metars/KJFK',
+  '${API_BASE_URL}/metars/KJFK',
   {
     headers: { 'Ocp-Apim-Subscription-Key': API_KEY },
   },

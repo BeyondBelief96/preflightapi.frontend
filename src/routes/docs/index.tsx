@@ -18,7 +18,8 @@ import {
 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { CodeBlock } from '@/components/docs/code-block'
-import { GATEWAY_URL } from '@/lib/gateway-url'
+import { API_BASE_URL } from '@/lib/gateway-url'
+import { API_BASE_PATH, API_VERSION } from '@/lib/api-metadata'
 
 export const Route = createFileRoute('/docs/')({
   component: DocsIndex,
@@ -163,7 +164,7 @@ function DocsIndex() {
         <h2 className="text-2xl font-semibold">Base URL</h2>
         <div className="rounded-lg border bg-muted/30 p-4">
           <code className="block text-sm text-accent">
-            {GATEWAY_URL}/api/v1
+            {API_BASE_URL}
           </code>
           <p className="mt-2 text-sm text-muted-foreground">
             All API endpoints are relative to this base URL. Every request must
@@ -192,8 +193,8 @@ function DocsIndex() {
           </li>
           <li>
             <strong className="text-foreground">Versioned</strong> — The current
-            API version is <code>v1</code>, included in every URL path (
-            <code>/api/v1/...</code>).
+            API version is <code>{API_VERSION}</code>, included in every URL path (
+            <code>{API_BASE_PATH}/...</code>).
           </li>
           <li>
             <strong className="text-foreground">Cursor-based pagination</strong>{' '}

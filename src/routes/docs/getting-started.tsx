@@ -1,7 +1,7 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { CodeBlock } from '@/components/docs/code-block'
-import { GATEWAY_URL } from '@/lib/gateway-url'
+import { API_BASE_URL } from '@/lib/gateway-url'
 
 export const Route = createFileRoute('/docs/getting-started')({
   component: GettingStartedDocs,
@@ -89,14 +89,14 @@ function GettingStartedDocs() {
             <CodeBlock
               language="bash"
               code={`curl -H "Ocp-Apim-Subscription-Key: YOUR_API_KEY" \\
-  "${GATEWAY_URL}/api/v1/metars/KJFK"`}
+  "${API_BASE_URL}/metars/KJFK"`}
             />
           </TabsContent>
           <TabsContent value="typescript" className="mt-2">
             <CodeBlock
               language="typescript"
               code={`const response = await fetch(
-  '${GATEWAY_URL}/api/v1/metars/KJFK',
+  '${API_BASE_URL}/metars/KJFK',
   {
     headers: {
       'Ocp-Apim-Subscription-Key': process.env.PREFLIGHT_API_KEY!,
@@ -172,7 +172,7 @@ console.log(data)`}
         <CodeBlock
           language="bash"
           code={`curl -H "Ocp-Apim-Subscription-Key: YOUR_API_KEY" \\
-  "${GATEWAY_URL}/api/v1/airports/search?state=NY&cursor=eyJpZCI6MTAwfQ==&limit=50"`}
+  "${API_BASE_URL}/airports/search?state=NY&cursor=eyJpZCI6MTAwfQ==&limit=50"`}
         />
       </section>
 

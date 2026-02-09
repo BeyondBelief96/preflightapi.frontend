@@ -16,7 +16,7 @@ import {
   regenerateKey,
 } from '@/lib/server/apim'
 import { apimKeys } from '@/lib/server/apim-queries'
-import { GATEWAY_URL } from '@/lib/gateway-url'
+import { API_BASE_URL } from '@/lib/gateway-url'
 
 export const Route = createFileRoute('/dashboard/keys/')({
   head: () =>
@@ -131,7 +131,7 @@ function ApiKeysPage() {
   }
 
   const usageExample = `curl -H "Ocp-Apim-Subscription-Key: your-api-key" \\
-  ${GATEWAY_URL}/api/v1/metars/KJFK`
+  ${API_BASE_URL}/metars/KJFK`
 
   return (
     <div className="space-y-6">

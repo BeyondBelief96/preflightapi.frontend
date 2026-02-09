@@ -1,5 +1,6 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { CodeBlock } from '@/components/docs/code-block'
+import { API_BASE_PATH } from '@/lib/api-metadata'
 
 export const Route = createFileRoute('/docs/errors')({
   component: ErrorsDocs,
@@ -321,7 +322,7 @@ function ErrorsDocs() {
   "message": "No current METAR available for station 'KXYZ'",
   "timestamp": "2026-01-15T18:56:00Z",
   "traceId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-  "path": "/api/v1/metars/KXYZ"
+  "path": "${API_BASE_PATH}/metars/KXYZ"
 }`}
         />
 
@@ -508,7 +509,7 @@ function ErrorsDocs() {
   },
   "timestamp": "2026-01-15T18:56:00Z",
   "traceId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-  "path": "/api/v1/notams/radius"
+  "path": "${API_BASE_PATH}/notams/radius"
 }`}
         />
       </section>
@@ -525,7 +526,7 @@ function ErrorsDocs() {
           language="typescript"
           code={`async function fetchMetar(icaoCode: string): Promise<Metar | null> {
   const response = await fetch(
-    \`https://api.preflightapi.com/api/v1/metars/\${icaoCode}\`,
+    \`https://api.preflightapi.com${API_BASE_PATH}/metars/\${icaoCode}\`,
     {
       headers: {
         'Ocp-Apim-Subscription-Key': process.env.PREFLIGHT_API_KEY!,

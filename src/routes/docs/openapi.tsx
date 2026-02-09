@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { ExternalLink } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { CodeBlock } from '@/components/docs/code-block'
+import { API_BASE_PATH } from '@/lib/api-metadata'
 import { Button } from '@/components/ui/button'
 
 export const Route = createFileRoute('/docs/openapi')({
@@ -98,7 +99,7 @@ type Metar = components['schemas']['Metar']
 type Airport = components['schemas']['Airport']
 
 // Extract path parameters
-type MetarParams = paths['/api/v1/metars/{icaoId}']['get']['parameters']`}
+type MetarParams = paths['${API_BASE_PATH}/metars/{icaoId}']['get']['parameters']`}
             />
           </TabsContent>
         </Tabs>
@@ -153,7 +154,7 @@ export const api = createClient<paths>({
               code={`import { api } from './lib/api-client'
 
 // Fully typed — path, params, and response are all inferred
-const { data, error } = await api.GET('/api/v1/metars/{icaoId}', {
+const { data, error } = await api.GET('${API_BASE_PATH}/metars/{icaoId}', {
   params: { path: { icaoId: 'KJFK' } },
 })
 

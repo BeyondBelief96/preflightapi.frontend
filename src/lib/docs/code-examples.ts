@@ -1,3 +1,4 @@
+import { API_BASE_PATH } from '@/lib/api-metadata'
 import type { ParsedEndpoint } from './types'
 
 const GATEWAY_URL = 'https://preflightapi-apim-service.azure-api.net'
@@ -65,7 +66,7 @@ function buildUrl(endpoint: ParsedEndpoint): string {
  */
 function getExampleBodies(): Record<string, unknown> {
   return {
-  '/api/v1/navlog/calculate': {
+  [`${API_BASE_PATH}/navlog/calculate`]: {
     waypoints: [
       {
         id: 'KCLT',
@@ -113,28 +114,28 @@ function getExampleBodies(): Record<string, unknown> {
       Date.now() + 2 * 60 * 60 * 1000,
     ).toISOString().replace(/\.\d+Z$/, 'Z'),
   },
-  '/api/v1/navlog/bearing-and-distance': {
+  [`${API_BASE_PATH}/navlog/bearing-and-distance`]: {
     startLatitude: 35.214,
     startLongitude: -80.9431,
     endLatitude: 36.1245,
     endLongitude: -86.6782,
   },
-  '/api/v1/performance/crosswind/calculate': {
+  [`${API_BASE_PATH}/performance/crosswind/calculate`]: {
     windDirectionDegrees: 230,
     windSpeedKt: 15,
     windGustKt: 22,
     runwayHeadingDegrees: 180,
   },
-  '/api/v1/performance/density-altitude/calculate': {
+  [`${API_BASE_PATH}/performance/density-altitude/calculate`]: {
     fieldElevationFt: 748,
     altimeterInHg: 29.92,
     temperatureCelsius: 30,
   },
-  '/api/v1/notams/route': {
+  [`${API_BASE_PATH}/notams/route`]: {
     airportIdentifiers: ['KCLT', 'KTYS', 'KBNA'],
     corridorRadiusNm: 25,
   },
-  '/api/v1/obstacles/by-oas-numbers': [
+  [`${API_BASE_PATH}/obstacles/by-oas-numbers`]: [
     '12-345678',
     '12-345679',
   ],

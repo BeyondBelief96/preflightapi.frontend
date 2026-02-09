@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 import { codeToHtml } from 'shiki'
+import { API_BASE_PATH } from '@/lib/api-metadata'
 
 const endpoints = [
   {
     id: 'metar',
     label: 'METAR',
     method: 'GET',
-    path: '/api/v1/metars/KJFK',
+    path: `${API_BASE_PATH}/metars/KJFK`,
     description: 'Get current weather observation for an airport',
     response: `{
   "id": 42861,
@@ -29,7 +30,7 @@ const endpoints = [
     id: 'airport',
     label: 'Airport',
     method: 'GET',
-    path: '/api/v1/airports/KLAX',
+    path: `${API_BASE_PATH}/airports/KLAX`,
     description: 'Get detailed airport information',
     response: `{
   "arptId": "LAX",
@@ -48,7 +49,7 @@ const endpoints = [
     id: 'notam',
     label: 'NOTAMs',
     method: 'GET',
-    path: '/api/v1/notams/KORD',
+    path: `${API_BASE_PATH}/notams/KORD`,
     description: 'Get active NOTAMs for an airport',
     response: `{
   "type": "FeatureCollection",
@@ -73,7 +74,7 @@ const endpoints = [
     id: 'navlog',
     label: 'Nav Log',
     method: 'POST',
-    path: '/api/v1/navlog/calculate',
+    path: `${API_BASE_PATH}/navlog/calculate`,
     description: 'Calculate a navigation log for a flight route',
     response: `{
   "totalDistanceNm": 214.5,
