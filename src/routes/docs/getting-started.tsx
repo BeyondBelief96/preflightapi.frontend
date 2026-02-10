@@ -199,10 +199,17 @@ console.log(data)`}
             <ul className="list-inside list-disc space-y-1.5 text-muted-foreground">
               <li>
                 <Link
-                  to="/docs/metars-tafs"
+                  to="/docs/metars"
                   className="text-accent hover:underline"
                 >
-                  METARs & TAFs
+                  METARs
+                </Link>{' '}
+                &{' '}
+                <Link
+                  to="/docs/tafs"
+                  className="text-accent hover:underline"
+                >
+                  TAFs
                 </Link>{' '}
                 — Start here. Surface observations and terminal forecasts for
                 any US airport.
@@ -290,49 +297,23 @@ console.log(data)`}
             <ul className="list-inside list-disc space-y-1.5 text-muted-foreground">
               <li>
                 <Link
-                  to="/docs/crosswind"
+                  to="/docs/e6b"
                   className="text-accent hover:underline"
                 >
-                  Crosswind Calculator
+                  E6B Flight Computer
                 </Link>{' '}
-                — Compute crosswind and headwind components from live METAR or
-                manual input.
-              </li>
-              <li>
-                <Link
-                  to="/docs/density-altitude"
-                  className="text-accent hover:underline"
-                >
-                  Density Altitude
-                </Link>{' '}
-                — Calculate density altitude for performance planning.
+                — Crosswind, density altitude, wind triangle, TAS, cloud base,
+                and pressure altitude calculations.
               </li>
               <li>
                 <Link
                   to="/docs/nav-log"
                   className="text-accent hover:underline"
                 >
-                  Nav Log
+                  Navigation Log
                 </Link>{' '}
-                — Full flight navigation log with wind correction and fuel burn.
-              </li>
-              <li>
-                <Link
-                  to="/docs/bearing-distance"
-                  className="text-accent hover:underline"
-                >
-                  Bearing & Distance
-                </Link>{' '}
-                — Point-to-point calculations between any two coordinates.
-              </li>
-              <li>
-                <Link
-                  to="/docs/winds-aloft"
-                  className="text-accent hover:underline"
-                >
-                  Winds Aloft
-                </Link>{' '}
-                — Forecast winds at altitude for 6, 12, and 24 hour periods.
+                — Full navigation log with wind correction, fuel burn, bearing
+                & distance, and winds aloft.
               </li>
             </ul>
           </div>

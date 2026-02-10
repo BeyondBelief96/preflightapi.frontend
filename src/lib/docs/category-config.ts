@@ -1,12 +1,12 @@
+import { tagsMeta } from './spec-parser'
 import type { ApiCategory } from './types'
 
 export const CATEGORIES: Array<ApiCategory> = [
   // ── Weather ──────────────────────────────────────────
   {
-    slug: 'metars-tafs',
-    title: 'METARs & TAFs',
-    description:
-      'Current surface weather observations (METARs) and terminal aerodrome forecasts (TAFs) for airports.',
+    slug: 'metars',
+    title: 'METARs',
+    description: tagsMeta['Weather - METARs'] ?? 'METAR surface weather observations.',
     icon: 'thermometer',
     subcategories: [
       {
@@ -14,6 +14,14 @@ export const CATEGORIES: Array<ApiCategory> = [
         label: 'METARs',
         description: 'Current surface weather observations for airports.',
       },
+    ],
+  },
+  {
+    slug: 'tafs',
+    title: 'TAFs',
+    description: tagsMeta['Weather - TAFs'] ?? 'Terminal aerodrome forecasts.',
+    icon: 'thermometer',
+    subcategories: [
       {
         tag: 'Weather - TAFs',
         label: 'TAFs',
@@ -24,7 +32,7 @@ export const CATEGORIES: Array<ApiCategory> = [
   {
     slug: 'pireps',
     title: 'PIREPs',
-    description: 'Pilot reports of in-flight weather conditions including icing, turbulence, and sky conditions.',
+    description: tagsMeta['Weather - PIREPs'] ?? 'Pilot reports of in-flight weather conditions.',
     icon: 'radio',
     subcategories: [
       {
@@ -37,8 +45,7 @@ export const CATEGORIES: Array<ApiCategory> = [
   {
     slug: 'airmets-sigmets',
     title: 'AIRMETs & SIGMETs',
-    description:
-      'Advisories for significant meteorological hazards including icing, turbulence, IFR conditions, and convective activity.',
+    description: tagsMeta['Weather - AIRMETs/SIGMETs'] ?? 'Weather advisories for significant meteorological hazards.',
     icon: 'cloud-lightning',
     subcategories: [
       {
@@ -51,8 +58,7 @@ export const CATEGORIES: Array<ApiCategory> = [
   {
     slug: 'g-airmets',
     title: 'G-AIRMETs',
-    description:
-      'Graphical AIRMETs with gridded hazard areas for icing, turbulence, IFR, mountain obscuration, freezing level, and surface winds.',
+    description: tagsMeta['Weather - G-AIRMETs'] ?? 'Graphical AIRMETs with gridded hazard areas.',
     icon: 'map',
     subcategories: [
       {
@@ -63,40 +69,37 @@ export const CATEGORIES: Array<ApiCategory> = [
     ],
   },
 
-  // ── Airports ─────────────────────────────────────────
+  // ── Airports & Airspace ────────────────────────────────
   {
     slug: 'airports',
     title: 'Airports',
-    description:
-      'Search and retrieve detailed information for 19,600+ US airports including runways and communication frequencies.',
+    description: tagsMeta['Airports'] ?? 'FAA airport data from the NASR database.',
     icon: 'plane',
     subcategories: [
       {
         tag: 'Airports',
         label: 'Airports',
         description: 'Search, list, and get detailed airport data.',
-        pathFilter: '^(?!.*runways)',
       },
-      {
-        tag: 'Airports',
-        label: 'Runways',
-        description: 'Runway details for a specific airport.',
-        pathFilter: 'runways',
-      },
+    ],
+  },
+  {
+    slug: 'communication-frequencies',
+    title: 'Communication Frequencies',
+    description: tagsMeta['Communication Frequencies'] ?? 'Airport and facility communication frequency data.',
+    icon: 'radio',
+    subcategories: [
       {
         tag: 'Communication Frequencies',
-        label: 'Frequencies',
+        label: 'Communication Frequencies',
         description: 'Communication frequencies for airport facilities.',
       },
     ],
   },
-
-  // ── Airspace & Safety ────────────────────────────────
   {
     slug: 'airspace',
     title: 'Airspace',
-    description:
-      'Controlled and special-use airspace boundaries with classification details.',
+    description: tagsMeta['Airspace'] ?? 'Controlled and special-use airspace boundaries.',
     icon: 'layers',
     subcategories: [
       {
@@ -109,8 +112,7 @@ export const CATEGORIES: Array<ApiCategory> = [
   {
     slug: 'notams',
     title: 'NOTAMs',
-    description:
-      'Notices to Air Missions by airport, radius, or route with full detail and translations.',
+    description: tagsMeta['NOTAMs'] ?? 'Notices to Air Missions.',
     icon: 'alert-triangle',
     subcategories: [
       {
@@ -123,8 +125,7 @@ export const CATEGORIES: Array<ApiCategory> = [
   {
     slug: 'obstacles',
     title: 'Obstacles',
-    description:
-      'Over 625,000 FAA-charted obstacles including towers, cranes, and other structures.',
+    description: tagsMeta['Obstacles'] ?? 'FAA-charted obstacles.',
     icon: 'triangle-alert',
     subcategories: [
       {
@@ -137,10 +138,9 @@ export const CATEGORIES: Array<ApiCategory> = [
 
   // ── Documents ────────────────────────────────────────
   {
-    slug: 'documents',
-    title: 'Charts & Diagrams',
-    description:
-      'FAA airport diagram PDFs and chart supplement (Airport/Facility Directory) PDFs.',
+    slug: 'airport-diagrams',
+    title: 'Airport Diagrams',
+    description: tagsMeta['Airport Diagrams'] ?? 'FAA airport diagram PDFs.',
     icon: 'file-text',
     subcategories: [
       {
@@ -148,6 +148,14 @@ export const CATEGORIES: Array<ApiCategory> = [
         label: 'Airport Diagrams',
         description: 'FAA airport diagram PDFs.',
       },
+    ],
+  },
+  {
+    slug: 'chart-supplements',
+    title: 'Chart Supplements',
+    description: tagsMeta['Chart Supplements'] ?? 'FAA Chart Supplement (A/FD) PDFs.',
+    icon: 'file-text',
+    subcategories: [
       {
         tag: 'Chart Supplements',
         label: 'Chart Supplements',
@@ -156,94 +164,17 @@ export const CATEGORIES: Array<ApiCategory> = [
     ],
   },
 
-  // ── Performance ──────────────────────────────────────
+  // ── E6B Flight Computer ────────────────────────────────
   {
-    slug: 'crosswind',
-    title: 'Crosswind Calculator',
-    description:
-      'Calculate crosswind components for airport runways using live METAR data or manual wind inputs.',
-    icon: 'wind',
+    slug: 'e6b',
+    title: 'E6B Flight Computer',
+    description: tagsMeta['E6B Flight Computer'] ?? 'E6B flight computer calculations.',
+    icon: 'calculator',
     subcategories: [
       {
-        tag: 'Performance Calculations',
-        label: 'Crosswind',
-        description: 'Crosswind component calculations.',
-        pathFilter: 'crosswind',
-      },
-    ],
-  },
-  {
-    slug: 'density-altitude',
-    title: 'Density Altitude',
-    description:
-      'Calculate density altitude for airports using live METAR data or manual atmospheric inputs.',
-    icon: 'mountain',
-    subcategories: [
-      {
-        tag: 'Performance Calculations',
-        label: 'Density Altitude',
-        description: 'Density altitude calculations.',
-        pathFilter: 'density-altitude',
-      },
-    ],
-  },
-  {
-    slug: 'wind-triangle',
-    title: 'Wind Triangle',
-    description:
-      'Calculate true heading and ground speed from true course, true airspeed, wind direction, and wind speed.',
-    icon: 'compass',
-    subcategories: [
-      {
-        tag: 'Performance Calculations',
-        label: 'Wind Triangle',
-        description: 'Wind correction angle, true heading, and ground speed.',
-        pathFilter: 'wind-triangle',
-      },
-    ],
-  },
-  {
-    slug: 'true-airspeed',
-    title: 'True Airspeed',
-    description:
-      'Calculate true airspeed (TAS) and Mach number from calibrated airspeed, pressure altitude, and outside air temperature.',
-    icon: 'gauge',
-    subcategories: [
-      {
-        tag: 'Performance Calculations',
-        label: 'True Airspeed',
-        description: 'TAS and Mach number calculations.',
-        pathFilter: 'true-airspeed',
-      },
-    ],
-  },
-  {
-    slug: 'cloud-base',
-    title: 'Cloud Base',
-    description:
-      'Estimate cloud base height AGL from surface temperature and dewpoint using the standard spread formula.',
-    icon: 'cloud-lightning',
-    subcategories: [
-      {
-        tag: 'Performance Calculations',
-        label: 'Cloud Base',
-        description: 'Cloud base height estimation.',
-        pathFilter: 'cloud-base',
-      },
-    ],
-  },
-  {
-    slug: 'pressure-altitude',
-    title: 'Pressure Altitude',
-    description:
-      'Calculate pressure altitude from field elevation and altimeter setting.',
-    icon: 'mountain',
-    subcategories: [
-      {
-        tag: 'Performance Calculations',
-        label: 'Pressure Altitude',
-        description: 'Pressure altitude calculations.',
-        pathFilter: 'pressure-altitude',
+        tag: 'E6B Flight Computer',
+        label: 'E6B Flight Computer',
+        description: 'E6B flight computer calculations.',
       },
     ],
   },
@@ -251,46 +182,14 @@ export const CATEGORIES: Array<ApiCategory> = [
   // ── Navigation ───────────────────────────────────────
   {
     slug: 'nav-log',
-    title: 'Nav Log',
-    description:
-      'Calculate a complete navigation log for a flight including wind correction angles, ground speeds, and fuel burn.',
+    title: 'Navigation Log',
+    description: tagsMeta['Navigation Log'] ?? 'VFR cross-country flight planning tools.',
     icon: 'route',
     subcategories: [
       {
         tag: 'Navigation Log',
-        label: 'Nav Log',
-        description: 'Complete flight navigation log calculation.',
-        pathFilter: 'navlog/calculate$',
-      },
-    ],
-  },
-  {
-    slug: 'bearing-distance',
-    title: 'Bearing & Distance',
-    description:
-      'Calculate the bearing and distance between any two geographic points.',
-    icon: 'compass',
-    subcategories: [
-      {
-        tag: 'Navigation Log',
-        label: 'Bearing & Distance',
-        description: 'Point-to-point bearing and distance calculation.',
-        pathFilter: 'bearing-and-distance',
-      },
-    ],
-  },
-  {
-    slug: 'winds-aloft',
-    title: 'Winds Aloft',
-    description:
-      'Winds aloft forecasts at multiple altitudes for 6, 12, and 24-hour periods.',
-    icon: 'wind',
-    subcategories: [
-      {
-        tag: 'Navigation Log',
-        label: 'Winds Aloft',
-        description: 'Winds aloft forecast data.',
-        pathFilter: 'winds-aloft',
+        label: 'Navigation Log',
+        description: 'Flight navigation log, bearing & distance, and winds aloft.',
       },
     ],
   },

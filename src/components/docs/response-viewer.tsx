@@ -1,4 +1,5 @@
 import { SchemaViewer } from './schema-viewer'
+import { SchemaLink } from './schema-link'
 import type { ParsedResponse } from '@/lib/docs/types'
 import { cn } from '@/lib/utils'
 
@@ -44,9 +45,7 @@ export function ResponseViewer({ responses }: ResponseViewerProps) {
               </span>
             )}
             {resp.schemaName && (
-              <span className="font-mono text-xs text-blue-400">
-                {resp.isArray ? `${resp.schemaName}[]` : resp.schemaName}
-              </span>
+              <SchemaLink name={resp.schemaName} isArray={resp.isArray} />
             )}
           </div>
           {resp.schema && resp.schema.fields.length > 0 && (

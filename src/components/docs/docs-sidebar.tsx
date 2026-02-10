@@ -20,7 +20,8 @@ const sections = [
   {
     title: 'Weather',
     items: [
-      { label: 'METARs & TAFs', href: '/docs/metars-tafs' },
+      { label: 'METARs', href: '/docs/metars' },
+      { label: 'TAFs', href: '/docs/tafs' },
       { label: 'PIREPs', href: '/docs/pireps' },
       { label: 'AIRMETs & SIGMETs', href: '/docs/airmets-sigmets' },
       { label: 'G-AIRMETs', href: '/docs/g-airmets' },
@@ -30,6 +31,7 @@ const sections = [
     title: 'Airports & Airspace',
     items: [
       { label: 'Airports', href: '/docs/airports' },
+      { label: 'Communication Frequencies', href: '/docs/communication-frequencies' },
       { label: 'Airspace', href: '/docs/airspace' },
       { label: 'NOTAMs', href: '/docs/notams' },
       { label: 'Obstacles', href: '/docs/obstacles' },
@@ -38,26 +40,35 @@ const sections = [
   {
     title: 'Documents',
     items: [
-      { label: 'Charts & Diagrams', href: '/docs/documents' },
+      { label: 'Airport Diagrams', href: '/docs/airport-diagrams' },
+      { label: 'Chart Supplements', href: '/docs/chart-supplements' },
     ],
   },
   {
-    title: 'Performance',
+    title: 'E6B Flight Computer',
     items: [
-      { label: 'Crosswind Calculator', href: '/docs/crosswind' },
-      { label: 'Density Altitude', href: '/docs/density-altitude' },
-      { label: 'Wind Triangle', href: '/docs/wind-triangle' },
-      { label: 'True Airspeed', href: '/docs/true-airspeed' },
-      { label: 'Cloud Base', href: '/docs/cloud-base' },
-      { label: 'Pressure Altitude', href: '/docs/pressure-altitude' },
+      { label: 'E6B Flight Computer', href: '/docs/e6b' },
     ],
   },
   {
     title: 'Navigation',
     items: [
-      { label: 'Nav Log', href: '/docs/nav-log' },
-      { label: 'Bearing & Distance', href: '/docs/bearing-distance' },
-      { label: 'Winds Aloft', href: '/docs/winds-aloft' },
+      { label: 'Navigation Log', href: '/docs/nav-log' },
+    ],
+  },
+  {
+    title: 'Data Models',
+    items: [
+      { label: 'Overview', href: '/docs/data-models' },
+      { label: 'Weather', href: '/docs/data-models/weather' },
+      { label: 'Airports', href: '/docs/data-models/airports' },
+      { label: 'Airspace', href: '/docs/data-models/airspace' },
+      { label: 'NOTAMs', href: '/docs/data-models/notams' },
+      { label: 'Obstacles', href: '/docs/data-models/obstacles' },
+      { label: 'Documents', href: '/docs/data-models/documents' },
+      { label: 'E6B Calculations', href: '/docs/data-models/e6b' },
+      { label: 'Navigation', href: '/docs/data-models/navigation' },
+      { label: 'Common', href: '/docs/data-models/common' },
     ],
   },
 ]

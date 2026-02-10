@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { ChevronDown, ChevronRight } from 'lucide-react'
+import { SchemaLink } from './schema-link'
 import type { ParsedSchemaField } from '@/lib/docs/types'
 import { cn } from '@/lib/utils'
 
@@ -10,9 +11,12 @@ interface SchemaViewerProps {
 }
 
 function TypeBadge({ type, refName }: { type: string; refName?: string }) {
+  if (refName) {
+    return <SchemaLink name={refName} />
+  }
   return (
     <span className="font-mono text-xs text-blue-400">
-      {refName ?? type}
+      {type}
     </span>
   )
 }

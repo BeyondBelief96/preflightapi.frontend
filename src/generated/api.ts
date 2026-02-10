@@ -72,14 +72,18 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/airports/states/{stateCodes}": {
+    "/api/v1/airports/by-states": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Gets airports across multiple states */
+        /**
+         * Gets airports across multiple states
+         * @description Pass state codes as a single comma-separated query parameter:
+         *     GET /api/v1/airports/by-states?stateCodes=TX,OK,LA
+         */
         get: operations["Airport_GetAirportsByStates"];
         put?: never;
         post?: never;
@@ -89,14 +93,19 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/airports/batch/{icaoCodesOrIdents}": {
+    "/api/v1/airports/batch": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Gets multiple airports by their ICAO codes or identifiers */
+        /**
+         * Gets multiple airports by their ICAO codes or identifiers
+         * @description Pass ICAO codes or FAA identifiers as a single comma-separated query parameter:
+         *     GET /api/v1/airports/batch?icaoCodesOrIdents=KDFW,KAUS,KHOU
+         *     Both ICAO codes (KDFW) and FAA identifiers (DFW) can be mixed in the same request.
+         */
         get: operations["Airport_GetAirportsByIcaoCodesOrIdents"];
         put?: never;
         post?: never;
@@ -452,6 +461,187 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/e6b/crosswind/{icaoCodeOrIdent}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Calculates crosswind and headwind components for all runways at an airport using the latest METAR wind data.
+         *     Returns components for each runway end and recommends the best runway (lowest crosswind with a headwind).
+         *     Requires the airport to have a current METAR with wind data and at least one runway with heading information.
+         */
+        get: operations["E6b_GetCrosswindForAirport"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/e6b/crosswind/calculate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Calculates crosswind and headwind components using manually provided wind and runway heading values.
+         *     Useful when you want to calculate components for specific conditions rather than using live METAR data.
+         */
+        post: operations["E6b_CalculateCrosswind"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/e6b/density-altitude/{icaoCodeOrIdent}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Calculates density altitude for an airport using the latest METAR temperature and altimeter data.
+         *     Optionally override the temperature or altimeter setting (e.g., for "what if" scenarios).
+         *     Returns density altitude, pressure altitude, ISA temperature, and temperature deviation.
+         * @description Density altitude is calculated using the ISA (International Standard Atmosphere) model approximation:
+         *     DA = PA + 120 × (OAT − ISA_temp). Real atmospheric density varies with humidity, local pressure
+         *     patterns, and non-standard lapse rates that this model does not account for.
+         */
+        get: operations["E6b_GetDensityAltitudeForAirport"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/e6b/density-altitude/calculate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Calculates density altitude using manually provided field elevation, altimeter setting, and temperature.
+         *     Useful for any location or for calculating with non-current weather conditions.
+         * @description Density altitude is calculated using the ISA (International Standard Atmosphere) model approximation:
+         *     DA = PA + 120 × (OAT − ISA_temp). Real atmospheric density varies with humidity, local pressure
+         *     patterns, and non-standard lapse rates that this model does not account for.
+         */
+        post: operations["E6b_CalculateDensityAltitude"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/e6b/wind-triangle/calculate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Calculates true heading and ground speed using the wind triangle.
+         *     Given true course, true airspeed, wind direction, and wind speed, returns the wind correction angle,
+         *     true heading, ground speed, and headwind/crosswind components.
+         */
+        post: operations["E6b_CalculateWindTriangle"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/e6b/true-airspeed/calculate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Calculates true airspeed (TAS) from calibrated airspeed, pressure altitude, and outside air temperature.
+         *     Uses the full compressible isentropic flow conversion (CAS → impact pressure → Mach → TAS),
+         *     accurate from sea level through FL410+ including above the tropopause (36,089 ft).
+         *     Also returns density altitude and Mach number at the given conditions.
+         *     Reference: ICAO Doc 7488 (Standard Atmosphere), isentropic flow relations.
+         * @description This calculation assumes the ISA tropopause at 36,089 ft. The real tropopause varies from
+         *     ~26,000 ft near the poles to ~55,000 ft near the equator. Pressure ratio and temperature
+         *     model transitions at this boundary affect TAS accuracy at high altitudes in non-mid-latitude regions.
+         */
+        post: operations["E6b_CalculateTrueAirspeed"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/e6b/cloud-base/calculate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Estimates cloud base height AGL from surface temperature and dewpoint.
+         *     Uses the standard spread × 400 formula (equivalent to spread / 2.5 × 1000).
+         * @description This estimation uses the average dry adiabatic lapse rate (~3°C/1000 ft) and dewpoint lapse
+         *     rate (~0.5°C/1000 ft) to approximate the lifting condensation level. Actual cloud bases vary
+         *     with humidity profiles, inversions, and local convective conditions.
+         */
+        post: operations["E6b_CalculateCloudBase"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/e6b/pressure-altitude/calculate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Calculates pressure altitude from field elevation and altimeter setting.
+         *     PA = field elevation + (29.92 − altimeter) × 1000.
+         * @description This uses the standard altimetry relationship from the ICAO Standard Atmosphere. The 1 inHg ≈ 1000 ft
+         *     approximation is most accurate near sea level and diverges slightly at higher altitudes and extreme
+         *     altimeter settings.
+         */
+        post: operations["E6b_CalculatePressureAltitude"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/g-airmets": {
         parameters: {
             query?: never;
@@ -744,14 +934,18 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/metars/states/{stateCodes}": {
+    "/api/v1/metars/by-states": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Gets METARs for all airports across multiple states */
+        /**
+         * Gets METARs for all airports across multiple states
+         * @description Pass state codes as a single comma-separated query parameter:
+         *     GET /api/v1/metars/by-states?stateCodes=TX,OK,LA
+         */
         get: operations["Metar_GetMetarsByStates"];
         put?: never;
         post?: never;
@@ -965,6 +1159,8 @@ export interface paths {
          * Gets multiple obstacles by their OAS numbers. This endpoint is designed to be used with the
          *     ObstacleOasNumbers returned by the navigation log endpoint (POST /api/v1/navlog/calculate)
          *     to retrieve full details for obstacles near a planned route.
+         * @description Send a JSON array of OAS number strings in the request body:
+         *     ["12-345678", "12-345679", "12-345680"]
          */
         post: operations["Obstacle_GetByOasNumbers"];
         delete?: never;
@@ -984,169 +1180,6 @@ export interface paths {
         get: operations["Obstacle_GetByBoundingBox"];
         put?: never;
         post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/performance/crosswind/{icaoCodeOrIdent}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Calculates crosswind and headwind components for all runways at an airport using the latest METAR wind data.
-         *     Returns components for each runway end and recommends the best runway (lowest crosswind with a headwind).
-         *     Requires the airport to have a current METAR with wind data and at least one runway with heading information.
-         */
-        get: operations["Performance_GetCrosswindForAirport"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/performance/crosswind/calculate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Calculates crosswind and headwind components using manually provided wind and runway heading values.
-         *     Useful when you want to calculate components for specific conditions rather than using live METAR data.
-         */
-        post: operations["Performance_CalculateCrosswind"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/performance/density-altitude/{icaoCodeOrIdent}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Calculates density altitude for an airport using the latest METAR temperature and altimeter data.
-         *     Optionally override the temperature or altimeter setting (e.g., for "what if" scenarios).
-         *     Returns density altitude, pressure altitude, ISA temperature, and temperature deviation.
-         */
-        get: operations["Performance_GetDensityAltitudeForAirport"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/performance/density-altitude/calculate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Calculates density altitude using manually provided field elevation, altimeter setting, and temperature.
-         *     Useful for any location or for calculating with non-current weather conditions.
-         */
-        post: operations["Performance_CalculateDensityAltitude"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/performance/wind-triangle/calculate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Calculates true heading and ground speed using the wind triangle.
-         *     Given true course, true airspeed, wind direction, and wind speed, returns the wind correction angle,
-         *     true heading, ground speed, and headwind/crosswind components.
-         */
-        post: operations["Performance_CalculateWindTriangle"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/performance/true-airspeed/calculate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Calculates true airspeed (TAS) from calibrated airspeed, pressure altitude, and outside air temperature.
-         *     Also returns density altitude and Mach number at the given conditions.
-         */
-        post: operations["Performance_CalculateTrueAirspeed"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/performance/cloud-base/calculate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Estimates cloud base height AGL from surface temperature and dewpoint.
-         *     Uses the standard spread × 400 formula (equivalent to spread / 2.5 × 1000).
-         */
-        post: operations["Performance_CalculateCloudBase"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/performance/pressure-altitude/calculate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Calculates pressure altitude from field elevation and altimeter setting.
-         *     PA = field elevation + (29.92 − altimeter) × 1000.
-         */
-        post: operations["Performance_CalculatePressureAltitude"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1566,10 +1599,17 @@ export interface components {
             /** @description Geographic areas affected by the advisory. */
             areas?: components["schemas"]["AirsigmetArea"][] | null;
         };
+        /** @description Altitude range for an AIRMET or SIGMET advisory. */
         AirsigmetAltitude: {
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description Minimum altitude in feet MSL for the advisory area.
+             */
             minFtMsl?: number | null;
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description Maximum altitude in feet MSL for the advisory area.
+             */
             maxFtMsl?: number | null;
         };
         /** @description Hazard type and severity information for an AIRMET or SIGMET advisory. */
@@ -1579,17 +1619,32 @@ export interface components {
             /** @description Hazard severity. AIRMETs use LGT (light) or MOD (moderate). SIGMETs use MOD-SEV (moderate to severe) or SEV (severe). Convective SIGMETs do not have a severity value. */
             severity?: string | null;
         };
-        /** @enum {integer} */
+        /**
+         * @description AIRSIGMET hazard types
+         * @enum {integer}
+         */
         AirsigmetHazardType: 0 | 1 | 2 | 3 | 4;
+        /** @description Geographic area affected by an AIRMET or SIGMET, defined as a polygon of lat/lon points. */
         AirsigmetArea: {
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description Number of points defining the polygon boundary.
+             */
             numPoints?: number;
+            /** @description Ordered list of lat/lon points forming the polygon boundary of the affected area. */
             points?: components["schemas"]["AirsigmetPoint"][];
         };
+        /** @description A geographic coordinate point forming part of an AIRMET/SIGMET area boundary polygon. */
         AirsigmetPoint: {
-            /** Format: float */
+            /**
+             * Format: float
+             * @description Longitude in decimal degrees.
+             */
             longitude?: number;
-            /** Format: float */
+            /**
+             * Format: float
+             * @description Latitude in decimal degrees.
+             */
             latitude?: number;
         };
         /**
@@ -1845,6 +1900,397 @@ export interface components {
             /** @description Additional remarks. */
             remark?: string | null;
         };
+        /** @description Response DTO containing crosswind components for all runways at an airport */
+        AirportCrosswindResponseDto: {
+            /** @description ICAO code or identifier of the airport */
+            airportIdentifier?: string;
+            /**
+             * Format: int32
+             * @description Wind direction in degrees from METAR (null if variable)
+             */
+            windDirectionDegrees?: number | null;
+            /**
+             * Format: int32
+             * @description Wind speed in knots from METAR
+             */
+            windSpeedKt?: number;
+            /**
+             * Format: int32
+             * @description Wind gust speed in knots from METAR (if reported)
+             */
+            windGustKt?: number | null;
+            /** @description Whether the wind was reported as variable (VRB) */
+            isVariableWind?: boolean;
+            /** @description Raw METAR text for reference */
+            rawMetar?: string | null;
+            /** @description METAR observation time */
+            observationTime?: string | null;
+            /** @description Crosswind components for each runway end at the airport */
+            runways?: components["schemas"]["RunwayCrosswindComponentDto"][];
+            /** @description Recommended runway end identifier (lowest crosswind with headwind) */
+            recommendedRunway?: string | null;
+        };
+        /** @description Crosswind component data for a single runway end */
+        RunwayCrosswindComponentDto: {
+            /** @description Runway end identifier (e.g., "09", "27L") */
+            runwayEndId?: string;
+            /**
+             * Format: int32
+             * @description Runway heading in magnetic degrees
+             */
+            magneticHeadingDegrees?: number;
+            /**
+             * Format: double
+             * @description Crosswind component in knots. Positive = from the right, Negative = from the left
+             */
+            crosswindKt?: number;
+            /**
+             * Format: double
+             * @description Headwind component in knots. Positive = headwind, Negative = tailwind
+             */
+            headwindKt?: number;
+            /**
+             * Format: double
+             * @description Crosswind component from gusts in knots (if gust data available). Positive = from the right
+             */
+            gustCrosswindKt?: number | null;
+            /**
+             * Format: double
+             * @description Headwind component from gusts in knots (if gust data available). Positive = headwind
+             */
+            gustHeadwindKt?: number | null;
+            /**
+             * Format: double
+             * @description Absolute value of crosswind component (for comparison purposes)
+             */
+            absoluteCrosswindKt?: number;
+            /** @description Whether this runway has a headwind (favorable) vs tailwind */
+            hasHeadwind?: boolean;
+        };
+        /** @description Response DTO for a single crosswind calculation */
+        CrosswindCalculationResponseDto: {
+            /**
+             * Format: double
+             * @description Crosswind component in knots. Positive = from the right, Negative = from the left
+             */
+            crosswindKt?: number;
+            /**
+             * Format: double
+             * @description Headwind component in knots. Positive = headwind, Negative = tailwind
+             */
+            headwindKt?: number;
+            /**
+             * Format: double
+             * @description Crosswind component from gusts in knots (if gust data provided). Positive = from the right
+             */
+            gustCrosswindKt?: number | null;
+            /**
+             * Format: double
+             * @description Headwind component from gusts in knots (if gust data provided). Positive = headwind
+             */
+            gustHeadwindKt?: number | null;
+            /**
+             * Format: int32
+             * @description Wind direction used in calculation (degrees)
+             */
+            windDirectionDegrees?: number | null;
+            /**
+             * Format: int32
+             * @description Wind speed used in calculation (knots)
+             */
+            windSpeedKt?: number;
+            /**
+             * Format: int32
+             * @description Wind gust speed used in calculation (knots)
+             */
+            windGustKt?: number | null;
+            /**
+             * Format: int32
+             * @description Runway heading used in calculation (degrees)
+             */
+            runwayHeadingDegrees?: number;
+            /** @description Whether the wind was reported as variable (VRB) */
+            isVariableWind?: boolean;
+        };
+        /** @description Request DTO for manual crosswind calculation with user-provided parameters */
+        CrosswindCalculationRequestDto: {
+            /**
+             * Format: int32
+             * @description Wind direction in degrees (0-360, or null for variable)
+             */
+            windDirectionDegrees?: number | null;
+            /**
+             * Format: int32
+             * @description Wind speed in knots
+             */
+            windSpeedKt?: number;
+            /**
+             * Format: int32
+             * @description Wind gust speed in knots (optional)
+             */
+            windGustKt?: number | null;
+            /**
+             * Format: int32
+             * @description Runway heading in magnetic degrees (0-360)
+             */
+            runwayHeadingDegrees?: number;
+        };
+        /** @description Response DTO for density altitude calculation */
+        DensityAltitudeResponseDto: {
+            /** @description Airport identifier (for airport-based calculations) */
+            airportIdentifier?: string | null;
+            /**
+             * Format: double
+             * @description Field elevation in feet MSL
+             */
+            fieldElevationFt?: number;
+            /**
+             * Format: double
+             * @description Pressure altitude in feet
+             */
+            pressureAltitudeFt?: number;
+            /**
+             * Format: double
+             * @description Density altitude in feet
+             */
+            densityAltitudeFt?: number;
+            /**
+             * Format: double
+             * @description Standard (ISA) temperature at this pressure altitude in Celsius
+             */
+            isaTemperatureCelsius?: number;
+            /**
+             * Format: double
+             * @description Actual temperature in Celsius
+             */
+            actualTemperatureCelsius?: number;
+            /**
+             * Format: double
+             * @description Temperature deviation from ISA in Celsius
+             */
+            temperatureDeviationCelsius?: number;
+            /**
+             * Format: double
+             * @description Altimeter setting used in calculation (inHg)
+             */
+            altimeterInHg?: number;
+            /** @description Raw METAR text for reference (for airport-based calculations) */
+            rawMetar?: string | null;
+            /** @description METAR observation time (for airport-based calculations) */
+            observationTime?: string | null;
+        };
+        /** @description Request DTO for manual density altitude calculation */
+        DensityAltitudeRequestDto: {
+            /**
+             * Format: double
+             * @description Field elevation in feet MSL
+             */
+            fieldElevationFt?: number;
+            /**
+             * Format: double
+             * @description Altimeter setting in inches of mercury (inHg)
+             */
+            altimeterInHg?: number;
+            /**
+             * Format: double
+             * @description Temperature in degrees Celsius
+             */
+            temperatureCelsius?: number;
+        };
+        /** @description Response DTO for wind triangle calculation containing heading and ground speed results. */
+        WindTriangleResponseDto: {
+            /**
+             * Format: double
+             * @description True heading in degrees (0–360), corrected for wind
+             */
+            trueHeadingDegrees?: number;
+            /**
+             * Format: double
+             * @description Ground speed in knots
+             */
+            groundSpeedKt?: number;
+            /**
+             * Format: double
+             * @description Wind correction angle in degrees (positive = right correction, negative = left)
+             */
+            windCorrectionAngleDegrees?: number;
+            /**
+             * Format: double
+             * @description Headwind component in knots (positive = headwind, negative = tailwind)
+             */
+            headwindComponentKt?: number;
+            /**
+             * Format: double
+             * @description Crosswind component in knots (positive = from the right, negative = from the left)
+             */
+            crosswindComponentKt?: number;
+            /**
+             * Format: double
+             * @description True course used in calculation (degrees)
+             */
+            trueCourseDegrees?: number;
+            /**
+             * Format: double
+             * @description True airspeed used in calculation (knots)
+             */
+            trueAirspeedKt?: number;
+            /**
+             * Format: double
+             * @description Wind direction used in calculation (degrees)
+             */
+            windDirectionDegrees?: number;
+            /**
+             * Format: double
+             * @description Wind speed used in calculation (knots)
+             */
+            windSpeedKt?: number;
+        };
+        /** @description Request DTO for wind triangle (heading and ground speed) calculation. */
+        WindTriangleRequestDto: {
+            /**
+             * Format: double
+             * @description True course in degrees (0–360)
+             */
+            trueCourseDegrees?: number;
+            /**
+             * Format: double
+             * @description True airspeed in knots (must be greater than 0)
+             */
+            trueAirspeedKt?: number;
+            /**
+             * Format: double
+             * @description Wind direction in degrees (0–360)
+             */
+            windDirectionDegrees?: number;
+            /**
+             * Format: double
+             * @description Wind speed in knots (must be ≥ 0)
+             */
+            windSpeedKt?: number;
+        };
+        /** @description Response DTO for true airspeed calculation. */
+        TrueAirspeedResponseDto: {
+            /**
+             * Format: double
+             * @description Calculated true airspeed in knots
+             */
+            trueAirspeedKt?: number;
+            /**
+             * Format: double
+             * @description Density altitude in feet at the given conditions
+             */
+            densityAltitudeFt?: number;
+            /**
+             * Format: double
+             * @description Mach number at the given conditions
+             */
+            machNumber?: number;
+            /**
+             * Format: double
+             * @description Calibrated airspeed used in calculation (knots)
+             */
+            calibratedAirspeedKt?: number;
+            /**
+             * Format: double
+             * @description Pressure altitude used in calculation (feet)
+             */
+            pressureAltitudeFt?: number;
+            /**
+             * Format: double
+             * @description Outside air temperature used in calculation (°C)
+             */
+            outsideAirTemperatureCelsius?: number;
+        };
+        /** @description Request DTO for true airspeed (TAS) calculation. */
+        TrueAirspeedRequestDto: {
+            /**
+             * Format: double
+             * @description Calibrated (indicated) airspeed in knots (must be greater than 0)
+             */
+            calibratedAirspeedKt?: number;
+            /**
+             * Format: double
+             * @description Pressure altitude in feet (can be negative, e.g. Death Valley)
+             */
+            pressureAltitudeFt?: number;
+            /**
+             * Format: double
+             * @description Outside air temperature in degrees Celsius
+             */
+            outsideAirTemperatureCelsius?: number;
+        };
+        /** @description Response DTO for cloud base estimation. */
+        CloudBaseResponseDto: {
+            /**
+             * Format: double
+             * @description Estimated cloud base in feet AGL
+             */
+            estimatedCloudBaseFtAgl?: number;
+            /**
+             * Format: double
+             * @description Temperature/dewpoint spread in degrees Celsius
+             */
+            temperatureDewpointSpreadCelsius?: number;
+            /**
+             * Format: double
+             * @description Surface temperature used in calculation (°C)
+             */
+            temperatureCelsius?: number;
+            /**
+             * Format: double
+             * @description Dewpoint used in calculation (°C)
+             */
+            dewpointCelsius?: number;
+        };
+        /** @description Request DTO for cloud base estimation. */
+        CloudBaseRequestDto: {
+            /**
+             * Format: double
+             * @description Surface temperature in degrees Celsius
+             */
+            temperatureCelsius?: number;
+            /**
+             * Format: double
+             * @description Dewpoint temperature in degrees Celsius (must be ≤ temperature)
+             */
+            dewpointCelsius?: number;
+        };
+        /** @description Response DTO for standalone pressure altitude calculation. */
+        PressureAltitudeResponseDto: {
+            /**
+             * Format: double
+             * @description Calculated pressure altitude in feet
+             */
+            pressureAltitudeFt?: number;
+            /**
+             * Format: double
+             * @description Altimeter correction — deviation from standard pressure expressed in feet
+             */
+            altimeterCorrectionFt?: number;
+            /**
+             * Format: double
+             * @description Field elevation used in calculation (feet MSL)
+             */
+            fieldElevationFt?: number;
+            /**
+             * Format: double
+             * @description Altimeter setting used in calculation (inHg)
+             */
+            altimeterInHg?: number;
+        };
+        /** @description Request DTO for standalone pressure altitude calculation. */
+        PressureAltitudeRequestDto: {
+            /**
+             * Format: double
+             * @description Field elevation in feet MSL
+             */
+            fieldElevationFt?: number;
+            /**
+             * Format: double
+             * @description Altimeter setting in inches of mercury (must be between 25.0 and 35.0 inHg)
+             */
+            altimeterInHg?: number;
+        };
         /** @description G-AIRMET (Graphical AIRMET) advisory data with hazard, altitude, and area information. */
         GAirmetDto: {
             /**
@@ -1894,29 +2340,55 @@ export interface components {
             /** @description Geographic area affected by the advisory. */
             area?: components["schemas"]["GAirmetArea"] | null;
         };
-        /** @enum {integer} */
+        /**
+         * @description G-AIRMET product types
+         * @enum {integer}
+         */
         GAirmetProduct: 0 | 1 | 2;
-        /** @enum {integer} */
+        /**
+         * @description G-AIRMET hazard types
+         * @enum {integer}
+         */
         GAirmetHazardType: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+        /** @description Represents altitude information for a G-AIRMET */
         GAirmetAltitude: {
+            /** @description Minimum altitude in feet MSL. Can be a number, "SFC" for surface, or "FZL" for freezing level */
             minFtMsl?: string | null;
+            /** @description Maximum altitude in feet MSL */
             maxFtMsl?: string | null;
+            /** @description Single level altitude in feet MSL (used for freezing level lines) */
             levelFtMsl?: string | null;
+            /** @description Freezing level altitude range (when min_ft_msl is "FZL") */
             fzlAltitude?: components["schemas"]["GAirmetFzlAltitude"] | null;
         };
+        /** @description Represents freezing level altitude range */
         GAirmetFzlAltitude: {
+            /** @description Minimum freezing level in feet MSL */
             minFtMsl?: string | null;
+            /** @description Maximum freezing level in feet MSL */
             maxFtMsl?: string | null;
         };
+        /** @description Geographic area affected by a G-AIRMET, defined as a polygon of lat/lon points. */
         GAirmetArea: {
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description Number of points defining the polygon boundary.
+             */
             numPoints?: number;
+            /** @description Ordered list of lat/lon points forming the polygon boundary of the affected area. */
             points?: components["schemas"]["GAirmetPoint"][];
         };
+        /** @description A geographic coordinate point forming part of a G-AIRMET area boundary polygon. */
         GAirmetPoint: {
-            /** Format: double */
+            /**
+             * Format: double
+             * @description Longitude in decimal degrees.
+             */
             longitude?: number;
-            /** Format: double */
+            /**
+             * Format: double
+             * @description Latitude in decimal degrees.
+             */
             latitude?: number;
         };
         /** @description METAR (Meteorological Aerodrome Report) observation data for an airport. */
@@ -2612,397 +3084,6 @@ export interface components {
         ObstacleMarking: "Unknown" | "OrangeOrOrangeWhitePaint" | "WhitePaintOnly" | "Marked" | "FlagMarker" | "SphericalMarker" | "None";
         /** @enum {string} */
         VerificationStatus: "Unknown" | "Verified" | "Unverified";
-        /** @description Response DTO containing crosswind components for all runways at an airport */
-        AirportCrosswindResponseDto: {
-            /** @description ICAO code or identifier of the airport */
-            airportIdentifier?: string;
-            /**
-             * Format: int32
-             * @description Wind direction in degrees from METAR (null if variable)
-             */
-            windDirectionDegrees?: number | null;
-            /**
-             * Format: int32
-             * @description Wind speed in knots from METAR
-             */
-            windSpeedKt?: number;
-            /**
-             * Format: int32
-             * @description Wind gust speed in knots from METAR (if reported)
-             */
-            windGustKt?: number | null;
-            /** @description Whether the wind was reported as variable (VRB) */
-            isVariableWind?: boolean;
-            /** @description Raw METAR text for reference */
-            rawMetar?: string | null;
-            /** @description METAR observation time */
-            observationTime?: string | null;
-            /** @description Crosswind components for each runway end at the airport */
-            runways?: components["schemas"]["RunwayCrosswindComponentDto"][];
-            /** @description Recommended runway end identifier (lowest crosswind with headwind) */
-            recommendedRunway?: string | null;
-        };
-        /** @description Crosswind component data for a single runway end */
-        RunwayCrosswindComponentDto: {
-            /** @description Runway end identifier (e.g., "09", "27L") */
-            runwayEndId?: string;
-            /**
-             * Format: int32
-             * @description Runway heading in magnetic degrees
-             */
-            magneticHeadingDegrees?: number;
-            /**
-             * Format: double
-             * @description Crosswind component in knots. Positive = from the right, Negative = from the left
-             */
-            crosswindKt?: number;
-            /**
-             * Format: double
-             * @description Headwind component in knots. Positive = headwind, Negative = tailwind
-             */
-            headwindKt?: number;
-            /**
-             * Format: double
-             * @description Crosswind component from gusts in knots (if gust data available). Positive = from the right
-             */
-            gustCrosswindKt?: number | null;
-            /**
-             * Format: double
-             * @description Headwind component from gusts in knots (if gust data available). Positive = headwind
-             */
-            gustHeadwindKt?: number | null;
-            /**
-             * Format: double
-             * @description Absolute value of crosswind component (for comparison purposes)
-             */
-            absoluteCrosswindKt?: number;
-            /** @description Whether this runway has a headwind (favorable) vs tailwind */
-            hasHeadwind?: boolean;
-        };
-        /** @description Response DTO for a single crosswind calculation */
-        CrosswindCalculationResponseDto: {
-            /**
-             * Format: double
-             * @description Crosswind component in knots. Positive = from the right, Negative = from the left
-             */
-            crosswindKt?: number;
-            /**
-             * Format: double
-             * @description Headwind component in knots. Positive = headwind, Negative = tailwind
-             */
-            headwindKt?: number;
-            /**
-             * Format: double
-             * @description Crosswind component from gusts in knots (if gust data provided). Positive = from the right
-             */
-            gustCrosswindKt?: number | null;
-            /**
-             * Format: double
-             * @description Headwind component from gusts in knots (if gust data provided). Positive = headwind
-             */
-            gustHeadwindKt?: number | null;
-            /**
-             * Format: int32
-             * @description Wind direction used in calculation (degrees)
-             */
-            windDirectionDegrees?: number | null;
-            /**
-             * Format: int32
-             * @description Wind speed used in calculation (knots)
-             */
-            windSpeedKt?: number;
-            /**
-             * Format: int32
-             * @description Wind gust speed used in calculation (knots)
-             */
-            windGustKt?: number | null;
-            /**
-             * Format: int32
-             * @description Runway heading used in calculation (degrees)
-             */
-            runwayHeadingDegrees?: number;
-            /** @description Whether the wind was reported as variable (VRB) */
-            isVariableWind?: boolean;
-        };
-        /** @description Request DTO for manual crosswind calculation with user-provided parameters */
-        CrosswindCalculationRequestDto: {
-            /**
-             * Format: int32
-             * @description Wind direction in degrees (0-360, or null for variable)
-             */
-            windDirectionDegrees?: number | null;
-            /**
-             * Format: int32
-             * @description Wind speed in knots
-             */
-            windSpeedKt?: number;
-            /**
-             * Format: int32
-             * @description Wind gust speed in knots (optional)
-             */
-            windGustKt?: number | null;
-            /**
-             * Format: int32
-             * @description Runway heading in magnetic degrees (0-360)
-             */
-            runwayHeadingDegrees?: number;
-        };
-        /** @description Response DTO for density altitude calculation */
-        DensityAltitudeResponseDto: {
-            /** @description Airport identifier (for airport-based calculations) */
-            airportIdentifier?: string | null;
-            /**
-             * Format: double
-             * @description Field elevation in feet MSL
-             */
-            fieldElevationFt?: number;
-            /**
-             * Format: double
-             * @description Pressure altitude in feet
-             */
-            pressureAltitudeFt?: number;
-            /**
-             * Format: double
-             * @description Density altitude in feet
-             */
-            densityAltitudeFt?: number;
-            /**
-             * Format: double
-             * @description Standard (ISA) temperature at this pressure altitude in Celsius
-             */
-            isaTemperatureCelsius?: number;
-            /**
-             * Format: double
-             * @description Actual temperature in Celsius
-             */
-            actualTemperatureCelsius?: number;
-            /**
-             * Format: double
-             * @description Temperature deviation from ISA in Celsius
-             */
-            temperatureDeviationCelsius?: number;
-            /**
-             * Format: double
-             * @description Altimeter setting used in calculation (inHg)
-             */
-            altimeterInHg?: number;
-            /** @description Raw METAR text for reference (for airport-based calculations) */
-            rawMetar?: string | null;
-            /** @description METAR observation time (for airport-based calculations) */
-            observationTime?: string | null;
-        };
-        /** @description Request DTO for manual density altitude calculation */
-        DensityAltitudeRequestDto: {
-            /**
-             * Format: double
-             * @description Field elevation in feet MSL
-             */
-            fieldElevationFt?: number;
-            /**
-             * Format: double
-             * @description Altimeter setting in inches of mercury (inHg)
-             */
-            altimeterInHg?: number;
-            /**
-             * Format: double
-             * @description Temperature in degrees Celsius
-             */
-            temperatureCelsius?: number;
-        };
-        /** @description Response DTO for wind triangle calculation containing heading and ground speed results. */
-        WindTriangleResponseDto: {
-            /**
-             * Format: double
-             * @description True heading in degrees (0–360), corrected for wind
-             */
-            trueHeadingDegrees?: number;
-            /**
-             * Format: double
-             * @description Ground speed in knots
-             */
-            groundSpeedKt?: number;
-            /**
-             * Format: double
-             * @description Wind correction angle in degrees (positive = right correction, negative = left)
-             */
-            windCorrectionAngleDegrees?: number;
-            /**
-             * Format: double
-             * @description Headwind component in knots (positive = headwind, negative = tailwind)
-             */
-            headwindComponentKt?: number;
-            /**
-             * Format: double
-             * @description Crosswind component in knots (positive = from the right, negative = from the left)
-             */
-            crosswindComponentKt?: number;
-            /**
-             * Format: double
-             * @description True course used in calculation (degrees)
-             */
-            trueCourseDegrees?: number;
-            /**
-             * Format: double
-             * @description True airspeed used in calculation (knots)
-             */
-            trueAirspeedKt?: number;
-            /**
-             * Format: double
-             * @description Wind direction used in calculation (degrees)
-             */
-            windDirectionDegrees?: number;
-            /**
-             * Format: double
-             * @description Wind speed used in calculation (knots)
-             */
-            windSpeedKt?: number;
-        };
-        /** @description Request DTO for wind triangle (heading and ground speed) calculation. */
-        WindTriangleRequestDto: {
-            /**
-             * Format: double
-             * @description True course in degrees (0–360)
-             */
-            trueCourseDegrees?: number;
-            /**
-             * Format: double
-             * @description True airspeed in knots (must be greater than 0)
-             */
-            trueAirspeedKt?: number;
-            /**
-             * Format: double
-             * @description Wind direction in degrees (0–360)
-             */
-            windDirectionDegrees?: number;
-            /**
-             * Format: double
-             * @description Wind speed in knots (must be ≥ 0)
-             */
-            windSpeedKt?: number;
-        };
-        /** @description Response DTO for true airspeed calculation. */
-        TrueAirspeedResponseDto: {
-            /**
-             * Format: double
-             * @description Calculated true airspeed in knots
-             */
-            trueAirspeedKt?: number;
-            /**
-             * Format: double
-             * @description Density altitude in feet at the given conditions
-             */
-            densityAltitudeFt?: number;
-            /**
-             * Format: double
-             * @description Mach number at the given conditions
-             */
-            machNumber?: number;
-            /**
-             * Format: double
-             * @description Calibrated airspeed used in calculation (knots)
-             */
-            calibratedAirspeedKt?: number;
-            /**
-             * Format: double
-             * @description Pressure altitude used in calculation (feet)
-             */
-            pressureAltitudeFt?: number;
-            /**
-             * Format: double
-             * @description Outside air temperature used in calculation (°C)
-             */
-            outsideAirTemperatureCelsius?: number;
-        };
-        /** @description Request DTO for true airspeed (TAS) calculation. */
-        TrueAirspeedRequestDto: {
-            /**
-             * Format: double
-             * @description Calibrated (indicated) airspeed in knots (must be greater than 0)
-             */
-            calibratedAirspeedKt?: number;
-            /**
-             * Format: double
-             * @description Pressure altitude in feet (can be negative, e.g. Death Valley)
-             */
-            pressureAltitudeFt?: number;
-            /**
-             * Format: double
-             * @description Outside air temperature in degrees Celsius
-             */
-            outsideAirTemperatureCelsius?: number;
-        };
-        /** @description Response DTO for cloud base estimation. */
-        CloudBaseResponseDto: {
-            /**
-             * Format: double
-             * @description Estimated cloud base in feet AGL
-             */
-            estimatedCloudBaseFtAgl?: number;
-            /**
-             * Format: double
-             * @description Temperature/dewpoint spread in degrees Celsius
-             */
-            temperatureDewpointSpreadCelsius?: number;
-            /**
-             * Format: double
-             * @description Surface temperature used in calculation (°C)
-             */
-            temperatureCelsius?: number;
-            /**
-             * Format: double
-             * @description Dewpoint used in calculation (°C)
-             */
-            dewpointCelsius?: number;
-        };
-        /** @description Request DTO for cloud base estimation. */
-        CloudBaseRequestDto: {
-            /**
-             * Format: double
-             * @description Surface temperature in degrees Celsius
-             */
-            temperatureCelsius?: number;
-            /**
-             * Format: double
-             * @description Dewpoint temperature in degrees Celsius (must be ≤ temperature)
-             */
-            dewpointCelsius?: number;
-        };
-        /** @description Response DTO for standalone pressure altitude calculation. */
-        PressureAltitudeResponseDto: {
-            /**
-             * Format: double
-             * @description Calculated pressure altitude in feet
-             */
-            pressureAltitudeFt?: number;
-            /**
-             * Format: double
-             * @description Altimeter correction — deviation from standard pressure expressed in feet
-             */
-            altimeterCorrectionFt?: number;
-            /**
-             * Format: double
-             * @description Field elevation used in calculation (feet MSL)
-             */
-            fieldElevationFt?: number;
-            /**
-             * Format: double
-             * @description Altimeter setting used in calculation (inHg)
-             */
-            altimeterInHg?: number;
-        };
-        /** @description Request DTO for standalone pressure altitude calculation. */
-        PressureAltitudeRequestDto: {
-            /**
-             * Format: double
-             * @description Field elevation in feet MSL
-             */
-            fieldElevationFt?: number;
-            /**
-             * Format: double
-             * @description Altimeter setting in inches of mercury (must be between 25.0 and 35.0 inHg)
-             */
-            altimeterInHg?: number;
-        };
         /** @description PIREP (Pilot Report) data including turbulence, icing, and sky conditions. */
         PirepDto: {
             /**
@@ -3071,36 +3152,70 @@ export interface components {
             /** @description Report type: UA (routine) or UUA (urgent). */
             reportType?: string | null;
         };
+        /** @description Quality control flags indicating potential data issues with a PIREP. */
         PirepQualityControlFlags: {
+            /** @description The report location was assumed to be the midpoint of the route. */
             midPointAssumed?: string | null;
+            /** @description The report had no timestamp and was assigned one by the system. */
             noTimeStamp?: string | null;
+            /** @description The flight level was reported as a range rather than a single altitude. */
             fltLvlRange?: string | null;
+            /** @description The altitude was indicated as AGL rather than the standard MSL. */
             aboveGroundLevelIndicated?: string | null;
+            /** @description No flight level was reported. */
             noFltLvl?: string | null;
+            /** @description The reported location could not be reliably decoded. */
             badLocation?: string | null;
         };
+        /** @description A sky condition layer reported by a pilot in a PIREP. */
         PirepSkyCondition: {
+            /** @description Sky cover type: SKC (sky clear), CLR (clear), FEW (few), SCT (scattered), BKN (broken), OVC (overcast), or OVX (obscured). */
             skyCover?: string;
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description Cloud base altitude in feet MSL (note: PIREP altitudes are MSL, unlike TAF/METAR which use AGL).
+             */
             cloudBaseFtMsl?: number | null;
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description Cloud top altitude in feet MSL.
+             */
             cloudTopFtMsl?: number | null;
         };
+        /** @description A turbulence condition reported by a pilot in a PIREP. */
         PirepTurbulenceCondition: {
+            /** @description Turbulence type: CAT (clear air), CHOP (chop), LLWS (low-level wind shear), or MWAVE (mountain wave). */
             turbulenceType?: string | null;
+            /** @description Turbulence intensity: NEG (none), SMTH-LGT (smooth to light), LGT (light), LGT-MOD (light to moderate), MOD (moderate), MOD-SEV (moderate to severe), SEV (severe), SEV-EXTM (severe to extreme), or EXTM (extreme). */
             turbulenceIntensity?: string | null;
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description Bottom of the turbulence layer in feet MSL.
+             */
             turbulenceBaseFtMsl?: number | null;
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description Top of the turbulence layer in feet MSL.
+             */
             turbulenceTopFtMsl?: number | null;
+            /** @description Turbulence frequency: ISOL (isolated), OCNL (occasional), or CONT (continuous). */
             turbulenceFreq?: string | null;
         };
+        /** @description An icing condition reported by a pilot in a PIREP. */
         PirepIcingCondition: {
+            /** @description Icing type: RIME (rime ice), CLEAR (clear ice), or MIXED (mixed rime and clear). */
             icingType?: string | null;
+            /** @description Icing intensity: NEG (none), NEGclr (none, clear of clouds), TRC (trace), TRC-LGT (trace to light), LGT (light), LGT-MOD (light to moderate), MOD (moderate), MOD-SEV (moderate to severe), HVY (heavy/severe), or SEV (severe). */
             icingIntensity?: string | null;
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description Bottom of the icing layer in feet MSL.
+             */
             icingBaseFtMsl?: number | null;
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description Top of the icing layer in feet MSL.
+             */
             icingTopFtMsl?: number | null;
         };
         /** @description TAF (Terminal Aerodrome Forecast) data for an airport. */
@@ -3137,58 +3252,121 @@ export interface components {
             /** @description Forecast periods within the TAF. */
             forecast?: components["schemas"]["TafForecast"][] | null;
         };
+        /**
+         * @description A single forecast period within a TAF. Each TAF contains one or more forecast periods
+         *     covering different time ranges, with optional change indicators (TEMPO, BECMG, FM, PROB).
+         */
         TafForecast: {
+            /** @description Start of this forecast period in ISO 8601 format (UTC). */
             fcstTimeFrom?: string | null;
+            /** @description End of this forecast period in ISO 8601 format (UTC). */
             fcstTimeTo?: string | null;
+            /** @description Change indicator: FM (from), BECMG (becoming), TEMPO (temporary), or PROB (probability). Null for the base forecast. */
             changeIndicator?: string | null;
+            /** @description Time at which a BECMG (becoming) change completes, in ISO 8601 format (UTC). */
             timeBecoming?: string | null;
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description Probability percentage (e.g., 30 or 40) for PROB-type forecast periods.
+             */
             probability?: number | null;
+            /** @description Forecast wind direction in degrees true, or "VRB" for variable winds. */
             windDirDegrees?: string | null;
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description Forecast wind speed in knots.
+             */
             windSpeedKt?: number | null;
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description Forecast wind gust speed in knots.
+             */
             windGustKt?: number | null;
+            /** @description Low-level wind shear height in feet AGL. */
             windShearHgtFtAgl?: number | null;
+            /** @description Low-level wind shear direction in degrees true. */
             windShearDirDegrees?: number | null;
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description Low-level wind shear speed in knots.
+             */
             windShearSpeedKt?: number | null;
+            /** @description Forecast visibility in statute miles. May contain "6+" for visibility greater than 6 miles. */
             visibilityStatuteMi?: string | null;
-            /** Format: float */
+            /**
+             * Format: float
+             * @description Forecast altimeter setting in inches of mercury.
+             */
             altimInHg?: number | null;
+            /** @description Vertical visibility in feet, reported when the sky is obscured. */
             vertVisFt?: number | null;
+            /** @description Forecast weather phenomena string (e.g., "-RA" for light rain, "+TSRA" for heavy thunderstorms with rain). */
             wxString?: string | null;
+            /** @description Portion of the TAF text that could not be decoded by the parser. */
             notDecoded?: string | null;
+            /** @description Forecast sky condition layers (cloud cover and bases) for this period. */
             skyConditions?: components["schemas"]["TafSkyCondition"][] | null;
+            /** @description Forecast turbulence conditions for this period. */
             turbulenceConditions?: components["schemas"]["TafTurbulenceCondition"][] | null;
+            /** @description Forecast icing conditions for this period. */
             icingConditions?: components["schemas"]["TafIcingCondition"][] | null;
+            /** @description Forecast temperature data for this period. */
             temperature?: components["schemas"]["TafTemperature"][] | null;
         };
+        /** @description A single sky condition layer in a TAF forecast period. */
         TafSkyCondition: {
+            /** @description Sky cover type: SKC (sky clear), CLR (clear), FEW (few), SCT (scattered), BKN (broken), or OVC (overcast). */
             skyCover?: string;
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description Cloud base height in feet AGL. Null for SKC or CLR.
+             */
             cloudBaseFtAgl?: number | null;
+            /** @description Cloud type modifier (e.g., CB for cumulonimbus, TCU for towering cumulus). */
             cloudType?: string | null;
         };
+        /** @description Forecast turbulence condition within a TAF forecast period. */
         TafTurbulenceCondition: {
+            /** @description Turbulence intensity code: 0 (none), 1 (light), 2 (moderate occasional), 3 (moderate frequent), 4 (severe), 5 (extreme), or X (mountain wave). */
             turbulenceIntensity?: string | null;
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description Bottom of the turbulence layer in feet AGL.
+             */
             turbulenceMinAltFtAgl?: number | null;
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description Top of the turbulence layer in feet AGL.
+             */
             turbulenceMaxAltFtAgl?: number | null;
         };
+        /** @description Forecast icing condition within a TAF forecast period. */
         TafIcingCondition: {
+            /** @description Icing intensity code: 0 (none), 1 (light), 2 (light in clouds), 3 (light in precipitation), 4 (moderate), 5 (moderate in clouds), 6 (moderate in precipitation), 7 (severe), 8 (severe in clouds), 9 (severe in precipitation). */
             icingIntensity?: string | null;
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description Bottom of the icing layer in feet AGL.
+             */
             icingMinAltFtAgl?: number | null;
-            /** Format: int32 */
+            /**
+             * Format: int32
+             * @description Top of the icing layer in feet AGL.
+             */
             icingMaxAltFtAgl?: number | null;
         };
+        /** @description Forecast temperature data within a TAF forecast period. */
         TafTemperature: {
+            /** @description Valid time for this temperature forecast in ISO 8601 format (UTC). */
             validTime?: string | null;
-            /** Format: float */
+            /**
+             * Format: float
+             * @description Forecast surface temperature in degrees Celsius.
+             */
             sfcTempC?: number | null;
+            /** @description Forecast maximum temperature in degrees Celsius. */
             maxTempC?: string | null;
+            /** @description Forecast minimum temperature in degrees Celsius. */
             minTempC?: string | null;
         };
     };
@@ -3230,6 +3408,20 @@ export type ChartSupplementsResponseDto = components['schemas']['ChartSupplement
 export type ChartSupplementDto = components['schemas']['ChartSupplementDto'];
 export type PaginatedResponseOfCommunicationFrequencyDto = components['schemas']['PaginatedResponseOfCommunicationFrequencyDto'];
 export type CommunicationFrequencyDto = components['schemas']['CommunicationFrequencyDto'];
+export type AirportCrosswindResponseDto = components['schemas']['AirportCrosswindResponseDto'];
+export type RunwayCrosswindComponentDto = components['schemas']['RunwayCrosswindComponentDto'];
+export type CrosswindCalculationResponseDto = components['schemas']['CrosswindCalculationResponseDto'];
+export type CrosswindCalculationRequestDto = components['schemas']['CrosswindCalculationRequestDto'];
+export type DensityAltitudeResponseDto = components['schemas']['DensityAltitudeResponseDto'];
+export type DensityAltitudeRequestDto = components['schemas']['DensityAltitudeRequestDto'];
+export type WindTriangleResponseDto = components['schemas']['WindTriangleResponseDto'];
+export type WindTriangleRequestDto = components['schemas']['WindTriangleRequestDto'];
+export type TrueAirspeedResponseDto = components['schemas']['TrueAirspeedResponseDto'];
+export type TrueAirspeedRequestDto = components['schemas']['TrueAirspeedRequestDto'];
+export type CloudBaseResponseDto = components['schemas']['CloudBaseResponseDto'];
+export type CloudBaseRequestDto = components['schemas']['CloudBaseRequestDto'];
+export type PressureAltitudeResponseDto = components['schemas']['PressureAltitudeResponseDto'];
+export type PressureAltitudeRequestDto = components['schemas']['PressureAltitudeRequestDto'];
 export type GAirmetDto = components['schemas']['GAirmetDto'];
 export type GAirmetProduct = components['schemas']['GAirmetProduct'];
 export type GAirmetHazardType = components['schemas']['GAirmetHazardType'];
@@ -3269,20 +3461,6 @@ export type HorizontalAccuracy = components['schemas']['HorizontalAccuracy'];
 export type VerticalAccuracy = components['schemas']['VerticalAccuracy'];
 export type ObstacleMarking = components['schemas']['ObstacleMarking'];
 export type VerificationStatus = components['schemas']['VerificationStatus'];
-export type AirportCrosswindResponseDto = components['schemas']['AirportCrosswindResponseDto'];
-export type RunwayCrosswindComponentDto = components['schemas']['RunwayCrosswindComponentDto'];
-export type CrosswindCalculationResponseDto = components['schemas']['CrosswindCalculationResponseDto'];
-export type CrosswindCalculationRequestDto = components['schemas']['CrosswindCalculationRequestDto'];
-export type DensityAltitudeResponseDto = components['schemas']['DensityAltitudeResponseDto'];
-export type DensityAltitudeRequestDto = components['schemas']['DensityAltitudeRequestDto'];
-export type WindTriangleResponseDto = components['schemas']['WindTriangleResponseDto'];
-export type WindTriangleRequestDto = components['schemas']['WindTriangleRequestDto'];
-export type TrueAirspeedResponseDto = components['schemas']['TrueAirspeedResponseDto'];
-export type TrueAirspeedRequestDto = components['schemas']['TrueAirspeedRequestDto'];
-export type CloudBaseResponseDto = components['schemas']['CloudBaseResponseDto'];
-export type CloudBaseRequestDto = components['schemas']['CloudBaseRequestDto'];
-export type PressureAltitudeResponseDto = components['schemas']['PressureAltitudeResponseDto'];
-export type PressureAltitudeRequestDto = components['schemas']['PressureAltitudeRequestDto'];
 export type PirepDto = components['schemas']['PirepDto'];
 export type PirepQualityControlFlags = components['schemas']['PirepQualityControlFlags'];
 export type PirepSkyCondition = components['schemas']['PirepSkyCondition'];
@@ -3418,16 +3596,15 @@ export interface operations {
     Airport_GetAirportsByStates: {
         parameters: {
             query?: {
+                /** @description Comma-separated two-letter state codes (e.g., TX,OK,LA). Must contain at least one code. */
+                stateCodes?: string;
                 /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
                 cursor?: string | null;
                 /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
                 limit?: number;
             };
             header?: never;
-            path: {
-                /** @description Comma-separated state codes (e.g., TX,OK,LA) */
-                stateCodes: string;
-            };
+            path?: never;
             cookie?: never;
         };
         requestBody?: never;
@@ -3441,16 +3618,25 @@ export interface operations {
                     "application/json": components["schemas"]["PaginatedResponseOfAirportDto"];
                 };
             };
+            /** @description If the state codes parameter is empty */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
         };
     };
     Airport_GetAirportsByIcaoCodesOrIdents: {
         parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Comma-separated ICAO codes or FAA identifiers (e.g., KDFW,KAUS,KHOU) */
-                icaoCodesOrIdents: string;
+            query?: {
+                /** @description Comma-separated ICAO codes or FAA identifiers (e.g., KDFW,KAUS,KHOU). Must contain at least one code. */
+                icaoCodesOrIdents?: string;
             };
+            header?: never;
+            path?: never;
             cookie?: never;
         };
         requestBody?: never;
@@ -3462,6 +3648,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AirportDto"][];
+                };
+            };
+            /** @description If the ICAO codes or identifiers parameter is empty */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
                 };
             };
         };
@@ -4028,6 +4223,313 @@ export interface operations {
             };
         };
     };
+    E6b_GetCrosswindForAirport: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description ICAO code or airport identifier */
+                icaoCodeOrIdent: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Returns crosswind data for all runways */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AirportCrosswindResponseDto"];
+                };
+            };
+            /** @description If METAR is missing required wind data */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+            /** @description If the airport or METAR is not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+        };
+    };
+    E6b_CalculateCrosswind: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Wind direction (degrees), wind speed (knots), optional gust speed (knots), and runway heading (magnetic degrees) */
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CrosswindCalculationRequestDto"];
+            };
+        };
+        responses: {
+            /** @description Returns calculated crosswind components */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CrosswindCalculationResponseDto"];
+                };
+            };
+            /** @description If the request parameters are invalid */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+        };
+    };
+    E6b_GetDensityAltitudeForAirport: {
+        parameters: {
+            query?: {
+                /** @description Override temperature in Celsius (uses METAR if not provided) */
+                TemperatureCelsiusOverride?: number | null;
+                /** @description Override altimeter setting in inHg (uses METAR if not provided) */
+                AltimeterInHgOverride?: number | null;
+            };
+            header?: never;
+            path: {
+                /** @description ICAO code or FAA identifier (e.g., KDFW, DFW) */
+                icaoCodeOrIdent: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Returns density altitude data */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DensityAltitudeResponseDto"];
+                };
+            };
+            /** @description If METAR is missing required data and no override provided */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+            /** @description If the airport or METAR is not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+        };
+    };
+    E6b_CalculateDensityAltitude: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Field elevation (feet MSL), altimeter setting (inches of mercury), and temperature (degrees Celsius) */
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DensityAltitudeRequestDto"];
+            };
+        };
+        responses: {
+            /** @description Returns calculated density altitude */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DensityAltitudeResponseDto"];
+                };
+            };
+            /** @description If the request parameters are invalid */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+        };
+    };
+    E6b_CalculateWindTriangle: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description True course (degrees), TAS (knots), wind direction (degrees), wind speed (knots) */
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WindTriangleRequestDto"];
+            };
+        };
+        responses: {
+            /** @description Returns wind triangle calculation results */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WindTriangleResponseDto"];
+                };
+            };
+            /** @description If the request parameters are invalid */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+        };
+    };
+    E6b_CalculateTrueAirspeed: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Calibrated airspeed (knots), pressure altitude (feet), OAT (°C) */
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TrueAirspeedRequestDto"];
+            };
+        };
+        responses: {
+            /** @description Returns TAS calculation results */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TrueAirspeedResponseDto"];
+                };
+            };
+            /** @description If the request parameters are invalid */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+        };
+    };
+    E6b_CalculateCloudBase: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Surface temperature (°C) and dewpoint (°C) */
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CloudBaseRequestDto"];
+            };
+        };
+        responses: {
+            /** @description Returns cloud base estimation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CloudBaseResponseDto"];
+                };
+            };
+            /** @description If dewpoint exceeds temperature */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+        };
+    };
+    E6b_CalculatePressureAltitude: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Field elevation (feet MSL) and altimeter setting (inHg) */
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PressureAltitudeRequestDto"];
+            };
+        };
+        responses: {
+            /** @description Returns pressure altitude calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PressureAltitudeResponseDto"];
+                };
+            };
+            /** @description If the altimeter setting is out of range */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+        };
+    };
     GAirmet_GetAllGAirmets: {
         parameters: {
             query?: never;
@@ -4415,16 +4917,15 @@ export interface operations {
     Metar_GetMetarsByStates: {
         parameters: {
             query?: {
+                /** @description Comma-separated two-letter state codes (e.g., TX,OK,LA). Must contain at least one code. */
+                stateCodes?: string;
                 /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
                 cursor?: string | null;
                 /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
                 limit?: number;
             };
             header?: never;
-            path: {
-                /** @description Comma-separated state codes (e.g., TX,OK,LA) */
-                stateCodes: string;
-            };
+            path?: never;
             cookie?: never;
         };
         requestBody?: never;
@@ -4436,6 +4937,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PaginatedResponseOfMetarDto"];
+                };
+            };
+            /** @description If the state codes parameter is empty */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
                 };
             };
         };
@@ -4821,7 +5331,7 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        /** @description JSON array of OAS number strings (maximum 1000). Example: ["12-345678","12-345679"] */
+        /** @description JSON array of OAS number strings (maximum 1000) */
         requestBody: {
             content: {
                 "application/json": string[];
@@ -4882,313 +5392,6 @@ export interface operations {
                 };
             };
             /** @description If coordinates are invalid or minLat >= maxLat */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Performance_GetCrosswindForAirport: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description ICAO code or airport identifier */
-                icaoCodeOrIdent: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns crosswind data for all runways */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AirportCrosswindResponseDto"];
-                };
-            };
-            /** @description If METAR is missing required wind data */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-            /** @description If the airport or METAR is not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Performance_CalculateCrosswind: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Wind direction (degrees), wind speed (knots), optional gust speed (knots), and runway heading (magnetic degrees) */
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CrosswindCalculationRequestDto"];
-            };
-        };
-        responses: {
-            /** @description Returns calculated crosswind components */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CrosswindCalculationResponseDto"];
-                };
-            };
-            /** @description If the request parameters are invalid */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Performance_GetDensityAltitudeForAirport: {
-        parameters: {
-            query?: {
-                /** @description Override temperature in Celsius (uses METAR if not provided) */
-                TemperatureCelsiusOverride?: number | null;
-                /** @description Override altimeter setting in inHg (uses METAR if not provided) */
-                AltimeterInHgOverride?: number | null;
-            };
-            header?: never;
-            path: {
-                /** @description ICAO code or FAA identifier (e.g., KDFW, DFW) */
-                icaoCodeOrIdent: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns density altitude data */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["DensityAltitudeResponseDto"];
-                };
-            };
-            /** @description If METAR is missing required data and no override provided */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-            /** @description If the airport or METAR is not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Performance_CalculateDensityAltitude: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Field elevation (feet MSL), altimeter setting (inches of mercury), and temperature (degrees Celsius) */
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["DensityAltitudeRequestDto"];
-            };
-        };
-        responses: {
-            /** @description Returns calculated density altitude */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["DensityAltitudeResponseDto"];
-                };
-            };
-            /** @description If the request parameters are invalid */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Performance_CalculateWindTriangle: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description True course (degrees), TAS (knots), wind direction (degrees), wind speed (knots) */
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["WindTriangleRequestDto"];
-            };
-        };
-        responses: {
-            /** @description Returns wind triangle calculation results */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["WindTriangleResponseDto"];
-                };
-            };
-            /** @description If the request parameters are invalid */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Performance_CalculateTrueAirspeed: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Calibrated airspeed (knots), pressure altitude (feet), OAT (°C) */
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["TrueAirspeedRequestDto"];
-            };
-        };
-        responses: {
-            /** @description Returns TAS calculation results */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TrueAirspeedResponseDto"];
-                };
-            };
-            /** @description If the request parameters are invalid */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Performance_CalculateCloudBase: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Surface temperature (°C) and dewpoint (°C) */
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CloudBaseRequestDto"];
-            };
-        };
-        responses: {
-            /** @description Returns cloud base estimation */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CloudBaseResponseDto"];
-                };
-            };
-            /** @description If dewpoint exceeds temperature */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Performance_CalculatePressureAltitude: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Field elevation (feet MSL) and altimeter setting (inHg) */
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["PressureAltitudeRequestDto"];
-            };
-        };
-        responses: {
-            /** @description Returns pressure altitude calculation */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PressureAltitudeResponseDto"];
-                };
-            };
-            /** @description If the altimeter setting is out of range */
             400: {
                 headers: {
                     [name: string]: unknown;
