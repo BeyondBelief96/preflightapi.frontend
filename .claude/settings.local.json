@@ -31,7 +31,13 @@
       "Bash(xargs cat:*)",
       "WebFetch(domain:clerk.com)",
       "WebFetch(domain:docs.railway.com)",
-      "Bash(ls -la \"C:\\\\Users\\\\brand\\\\source\\\\repos\\\\preflightapi.frontend\\\\server\"\" 2>/dev/null || echo \"Server dir not found \")"
+      "Bash(ls -la \"C:\\\\Users\\\\brand\\\\source\\\\repos\\\\preflightapi.frontend\\\\server\"\" 2>/dev/null || echo \"Server dir not found \")",
+      "Bash(npm --version:*)",
+      "Bash(node --version:*)",
+      "Bash(npm ci:*)",
+      "Bash(while read file)",
+      "Bash(do wc -l \"$file\")",
+      "Bash(done)"
     ]
   }
 }

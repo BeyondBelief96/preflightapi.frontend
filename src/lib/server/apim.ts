@@ -1,44 +1,10 @@
 import { createServerFn } from '@tanstack/react-start'
-import { auth } from '@clerk/tanstack-react-start/server'
 import { apimFetch } from './apim-client'
+import { getApimProductIds, planIdFromProductId } from './apim-products'
 import { getTierConfig } from './tier-config'
+import { requireAuth, requireOwnership } from './auth'
 import type { ApimUsageReport } from '@/types/plans'
-import { PLANS } from '@/lib/constants'
-
-async function requireAuth(): Promise<string> {
-  const session = await auth()
-  if (!session?.userId) {
-    throw new Error('Unauthorized')
-  }
-  return session.userId
-}
-
-function requireOwnership(userId: string, subscriptionId: string): void {
-  if (!subscriptionId.startsWith(userId)) {
-    throw new Error('Forbidden')
-  }
-}
-
-function planIdFromProductId(productId: string): string {
-  const plan = PLANS.find((p) => productId.includes(p.apimProductId))
-  return plan?.id ?? 'free'
-}
-
-// Shared type for subscription list responses
-type SubscriptionListResponse = {
-  value: Array<{
-    id: string
-    name: string
-    properties: {
-      ownerId: string
-      scope: string
-      displayName: string
-      state: string
-      createdDate: string
-      expirationDate: string | null
-    }
-  }>
-}
+import type { SubscriptionListResponse } from '@/types/apim'
 
 // --- User Management ---
 
@@ -68,6 +34,7 @@ export const getOrCreateApimUser = createServerFn({ method: 'GET' }).handler(
 export const getUserSubscription = createServerFn({ method: 'GET' }).handler(
   async () => {
     const userId = await requireAuth()
+    const productIds = getApimProductIds()
 
     // Ensure the APIM user exists before querying subscriptions
     await apimFetch(`/users/${userId}`, {
@@ -91,13 +58,13 @@ export const getUserSubscription = createServerFn({ method: 'GET' }).handler(
     // subscriptions in any state. This prevents creating a duplicate
     // free-tier sub when a paid subscription was recently cancelled/suspended.
     if (subscriptions.length === 0) {
-      const freeTierSubId = `${userId}-free-tier`
+      const freeTierSubId = `${userId}-${productIds.student}`
       await apimFetch(`/subscriptions/${freeTierSubId}`, {
         method: 'PUT',
         body: JSON.stringify({
           properties: {
             ownerId: `/users/${userId}`,
-            scope: `/products/free-tier`,
+            scope: `/products/${productIds.student}`,
             displayName: userId,
             state: 'active',
           },

@@ -1,31 +1,20 @@
-import { useState, useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Loader2, Send } from 'lucide-react'
+import type { ParsedEndpoint } from '@/lib/docs/types'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Badge } from '@/components/ui/badge'
-import { CodeBlock } from '@/components/docs/code-block'
 import { MethodBadge } from '@/components/docs/method-badge'
 import { getExampleValue } from '@/lib/docs/code-examples'
-import { proxyApiRequest } from '@/lib/server/api-proxy'
-import type { ProxyResult } from '@/lib/server/api-proxy'
-import type { ParsedEndpoint } from '@/lib/docs/types'
 import { GATEWAY_URL } from '@/lib/gateway-url'
+import { maskApiKey } from '@/lib/format'
+import { ResponseDisplay } from '@/components/docs/playground/response-display'
+import { useApiRequest } from '@/components/docs/playground/use-api-request'
 
 interface OnboardingPlaygroundProps {
   endpoint: ParsedEndpoint
   apiKey: string
   onSuccess?: () => void
-}
-
-function statusColor(status: number): string {
-  if (status >= 200 && status < 300)
-    return 'bg-green-500/15 text-green-400 border-green-500/30'
-  if (status >= 400 && status < 500)
-    return 'bg-amber-500/15 text-amber-400 border-amber-500/30'
-  if (status >= 500)
-    return 'bg-red-500/15 text-red-400 border-red-500/30'
-  return 'bg-muted text-muted-foreground'
 }
 
 export function OnboardingPlayground({
@@ -42,11 +31,10 @@ export function OnboardingPlayground({
     }
     return values
   })
-  const [isLoading, setIsLoading] = useState(false)
-  const [response, setResponse] = useState<ProxyResult | null>(null)
-  const [error, setError] = useState<string | null>(null)
 
-  const maskedKey = apiKey.slice(0, 6) + '••••••••' + apiKey.slice(-4)
+  const maskedKey = maskApiKey(apiKey)
+
+  const { isLoading, response, error, send } = useApiRequest()
 
   const urlPreview = useMemo(() => {
     let path = endpoint.path
@@ -57,51 +45,20 @@ export function OnboardingPlayground({
     return `${GATEWAY_URL}${path}`
   }, [endpoint.path, pathParams, paramValues])
 
-  const handleSend = async () => {
-    setIsLoading(true)
-    setError(null)
-    setResponse(null)
-
-    try {
-      let path = endpoint.path
-      for (const p of pathParams) {
-        const val = paramValues[p.name]
-        if (p.required && !val?.trim()) {
-          setError(`Path parameter "${p.name}" is required`)
-          setIsLoading(false)
-          return
+  const handleSend = () => {
+    send({
+      method: endpoint.method,
+      path: endpoint.path,
+      apiKey,
+      pathParams,
+      paramValues,
+      onSuccess: (result) => {
+        if (result.status >= 200 && result.status < 300) {
+          onSuccess?.()
         }
-        path = path.replace(`{${p.name}}`, encodeURIComponent(val || ''))
-      }
-
-      const result = await proxyApiRequest({
-        data: {
-          method: endpoint.method,
-          path,
-          apiKey,
-        },
-      })
-
-      setResponse(result)
-
-      if (result.status >= 200 && result.status < 300) {
-        onSuccess?.()
-      }
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'An unexpected error occurred')
-    } finally {
-      setIsLoading(false)
-    }
+      },
+    })
   }
-
-  const formattedBody = useMemo(() => {
-    if (!response) return null
-    try {
-      return JSON.stringify(JSON.parse(response.body), null, 2)
-    } catch {
-      return response.body
-    }
-  }, [response])
 
   return (
     <div className="space-y-4 rounded-lg border border-accent/30 bg-accent/5 p-4">
@@ -178,23 +135,8 @@ export function OnboardingPlayground({
       )}
 
       {/* Response */}
-      {response && formattedBody && (
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <Label className="text-xs font-medium text-muted-foreground">
-              Response
-            </Label>
-            <Badge variant="outline" className={statusColor(response.status)}>
-              {response.status} {response.statusText}
-            </Badge>
-            <span className="text-xs text-muted-foreground">
-              {response.durationMs}ms
-            </span>
-          </div>
-          <div className="max-h-64 overflow-auto rounded-md">
-            <CodeBlock code={formattedBody} language="json" />
-          </div>
-        </div>
+      {response && (
+        <ResponseDisplay result={response} />
       )}
     </div>
   )

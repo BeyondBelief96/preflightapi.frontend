@@ -1,5 +1,4 @@
 import spec from '../../../docs/preflightapi_swagger.json'
-import { ENDPOINT_ACCESS } from '@/lib/constants'
 import type { EndpointTier } from '@/lib/constants'
 import type {
   ParsedEndpoint,
@@ -8,6 +7,7 @@ import type {
   ParsedSchema,
   ParsedSchemaField,
 } from './types'
+import { ENDPOINT_ACCESS } from '@/lib/constants'
 
 // ---------- helpers ----------
 
@@ -219,10 +219,10 @@ const tierPatterns: Array<{ pattern: RegExp; key: string }> = [
 function getTierForPath(path: string): EndpointTier {
   for (const { pattern, key } of tierPatterns) {
     if (pattern.test(path)) {
-      return ENDPOINT_ACCESS[key] ?? 'free'
+      return ENDPOINT_ACCESS[key] ?? 'student'
     }
   }
-  return 'free'
+  return 'student'
 }
 
 // ---------- main parsing ----------
@@ -337,7 +337,7 @@ export const endpointsByTag = allEndpoints.reduce<Record<string, Array<ParsedEnd
 export const schemas = Object.entries(oaSpec.components.schemas).reduce<
   Record<string, ParsedSchema>
 >((acc, [name, s]) => {
-  acc[name] = parseParsedSchema(name, s as OaSchema)
+  acc[name] = parseParsedSchema(name, s)
   return acc
 }, {})
 

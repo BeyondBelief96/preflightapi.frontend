@@ -3,6 +3,7 @@ import { ArrowRight } from 'lucide-react'
 import { createPageHead } from '@/lib/seo'
 import { Button } from '@/components/ui/button'
 import { isWaitlistMode } from '@/lib/waitlist'
+import { usePlans } from '@/hooks/use-plans'
 
 export const Route = createFileRoute('/_marketing/about')({
   head: () => ({
@@ -24,6 +25,10 @@ export const Route = createFileRoute('/_marketing/about')({
 })
 
 function AboutPage() {
+  const { plans } = usePlans()
+  const studentPlan = plans.find((p) => p.id === 'student')
+  const freeCallsLabel = studentPlan?.limits.callsPerMonth?.toLocaleString() ?? '500'
+
   return (
     <div>
       {/* Hero */}
@@ -235,8 +240,8 @@ function AboutPage() {
             Ready to Build Something?
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            Get your API key in under a minute. Start with 500 free calls per
-            month — no credit card required.
+            Get your API key in under a minute. Start with {freeCallsLabel} free
+            calls per month — no credit card required.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Link to={isWaitlistMode ? '/waitlist' : '/sign-up'}>

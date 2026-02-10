@@ -2,6 +2,7 @@ import { Link, createFileRoute } from '@tanstack/react-router'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { CodeBlock } from '@/components/docs/code-block'
 import { API_BASE_URL } from '@/lib/gateway-url'
+import { usePlans } from '@/hooks/use-plans'
 
 export const Route = createFileRoute('/docs/getting-started')({
   component: GettingStartedDocs,
@@ -11,6 +12,12 @@ const tabTriggerClass =
   'rounded-none border-b-2 border-transparent px-3 py-1.5 text-xs data-[state=active]:border-accent data-[state=active]:bg-transparent'
 
 function GettingStartedDocs() {
+  const { plans } = usePlans()
+  const studentPlan = plans.find((p) => p.id === 'student')
+  const freeName = studentPlan?.name ?? 'Student Pilot'
+  const freeCalls =
+    studentPlan?.limits.callsPerMonth?.toLocaleString() ?? '500'
+
   return (
     <div className="space-y-10">
       <div>
@@ -31,9 +38,9 @@ function GettingStartedDocs() {
             preflightapi.com/sign-up
           </Link>
           . No credit card required. You'll start on the{' '}
-          <strong className="text-foreground">Student Pilot</strong> plan, which
-          is free and includes 500 API calls per month — enough to explore every
-          endpoint.
+          <strong className="text-foreground">{freeName}</strong> plan, which
+          is free and includes {freeCalls} API calls per month — enough to
+          explore every endpoint.
         </p>
       </section>
 

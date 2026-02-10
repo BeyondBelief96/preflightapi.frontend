@@ -1,19 +1,29 @@
 import { createError, defineEventHandler, getHeader, readRawBody } from 'h3'
 import type Stripe from 'stripe'
+import type { getStripe as GetStripeFn } from '../../../src/lib/server/stripe-client'
+import type { apimFetch as ApimFetchFn } from '../../../src/lib/server/apim-client'
+import type { planIdFromPriceId as PlanIdFromPriceIdFn } from '../../../src/lib/server/stripe-utils'
+import type { getApimProductIds as GetApimProductIdsFn } from '../../../src/lib/server/apim-products'
+import type { SubscriptionListResponse } from '../../../src/types/apim'
 
 export default defineEventHandler(async (event) => {
-  let getStripe: typeof import('../../../src/lib/server/stripe-client').getStripe
-  let apimFetch: typeof import('../../../src/lib/server/apim-client').apimFetch
-  let PLANS: typeof import('../../../src/lib/constants').PLANS
+  let getStripe: typeof GetStripeFn
+  let apimFetch: typeof ApimFetchFn
+  let planIdFromPriceId: typeof PlanIdFromPriceIdFn
+  let getApimProductIds: typeof GetApimProductIdsFn
 
   try {
     const stripeClientMod =
       await import('../../../src/lib/server/stripe-client')
     const apimClientMod = await import('../../../src/lib/server/apim-client')
-    const constantsMod = await import('../../../src/lib/constants')
+    const stripeUtilsMod = await import('../../../src/lib/server/stripe-utils')
+    const apimProductsMod = await import(
+      '../../../src/lib/server/apim-products'
+    )
     getStripe = stripeClientMod.getStripe
     apimFetch = apimClientMod.apimFetch
-    PLANS = constantsMod.PLANS
+    planIdFromPriceId = stripeUtilsMod.planIdFromPriceId
+    getApimProductIds = apimProductsMod.getApimProductIds
   } catch (err) {
     console.error('[Stripe Webhook] Failed to import modules:', err)
     return { received: true }
@@ -28,14 +38,14 @@ export default defineEventHandler(async (event) => {
   }
 
   // Warn about missing price env vars (makes misconfiguration visible in logs)
-  if (!process.env.STRIPE_STARTER_PRICE_ID) {
+  if (!process.env.STRIPE_PRIVATE_PRICE_ID) {
     console.warn(
-      '[Stripe Webhook] STRIPE_STARTER_PRICE_ID is not set — price-based tier mapping will fail for starter plans',
+      '[Stripe Webhook] STRIPE_PRIVATE_PRICE_ID is not set — price-based tier mapping will fail for private plans',
     )
   }
-  if (!process.env.STRIPE_PROFESSIONAL_PRICE_ID) {
+  if (!process.env.STRIPE_COMMERCIAL_PRICE_ID) {
     console.warn(
-      '[Stripe Webhook] STRIPE_PROFESSIONAL_PRICE_ID is not set — price-based tier mapping will fail for professional plans',
+      '[Stripe Webhook] STRIPE_COMMERCIAL_PRICE_ID is not set — price-based tier mapping will fail for commercial plans',
     )
   }
 
@@ -55,6 +65,17 @@ export default defineEventHandler(async (event) => {
     return { received: true }
   }
 
+  const productIds = getApimProductIds()
+  const studentProductId = productIds.student
+
+  // Maps legacy Stripe metadata plan IDs to current plan IDs
+  const LEGACY_PLAN_IDS: Record<string, string> = {
+    free: 'student',
+    starter: 'private',
+    professional: 'commercial',
+  }
+  const normalizePlanId = (id: string) => LEGACY_PLAN_IDS[id] ?? id
+
   // Event parsed successfully — now handle it.
   // APIM sync errors throw a 500 so Stripe retries the webhook.
   // Non-critical warnings (missing metadata, unknown plan) return 200.
@@ -66,11 +87,11 @@ export default defineEventHandler(async (event) => {
         const planId = session.metadata?.planId
 
         if (clerkUserId && planId) {
-          const plan = PLANS.find((p) => p.id === planId)
-          if (plan) {
-            await syncTierToApim(apimFetch, clerkUserId, plan.apimProductId)
+          const apimProductId = productIds[normalizePlanId(planId)]
+          if (apimProductId) {
+            await syncTierToApim(apimFetch, clerkUserId, apimProductId)
           } else {
-            console.warn(`[Stripe Webhook] No plan found for planId=${planId}`)
+            console.warn(`[Stripe Webhook] No APIM product found for planId=${planId}`)
           }
         } else {
           console.warn(
@@ -96,18 +117,20 @@ export default defineEventHandler(async (event) => {
           const priceId = subscription.items.data[0]?.price.id
           // Price ID is the source of truth — portal upgrades change the price
           // but don't update our custom metadata
-          const resolvedPlanId = planIdFromPriceId(priceId) || metadataPlanId
-          const plan = PLANS.find((p) => p.id === resolvedPlanId)
+          const resolvedPlanId = planIdFromPriceId(priceId) || (metadataPlanId ? normalizePlanId(metadataPlanId) : undefined)
+          const apimProductId = resolvedPlanId
+            ? productIds[resolvedPlanId]
+            : undefined
 
-          if (plan) {
-            await syncTierToApim(apimFetch, clerkUserId, plan.apimProductId)
+          if (apimProductId) {
+            await syncTierToApim(apimFetch, clerkUserId, apimProductId)
           } else {
             console.warn(
               `[Stripe Webhook] Could not resolve plan — priceId=${priceId}, metadataPlanId=${metadataPlanId}`,
             )
           }
         } else {
-          await syncTierToApim(apimFetch, clerkUserId, 'free-tier')
+          await syncTierToApim(apimFetch, clerkUserId, studentProductId)
         }
         break
       }
@@ -117,7 +140,7 @@ export default defineEventHandler(async (event) => {
         const clerkUserId = await resolveClerkUserId(stripe, subscription)
 
         if (clerkUserId) {
-          await syncTierToApim(apimFetch, clerkUserId, 'free-tier')
+          await syncTierToApim(apimFetch, clerkUserId, studentProductId)
         } else {
           console.warn(
             '[Stripe Webhook] Could not resolve clerkUserId for paused subscription',
@@ -139,11 +162,13 @@ export default defineEventHandler(async (event) => {
 
         const metadataPlanId = subscription.metadata?.planId
         const priceId = subscription.items.data[0]?.price.id
-        const resolvedPlanId = planIdFromPriceId(priceId) || metadataPlanId
-        const plan = PLANS.find((p) => p.id === resolvedPlanId)
+        const resolvedPlanId = planIdFromPriceId(priceId) || (metadataPlanId ? normalizePlanId(metadataPlanId) : undefined)
+        const apimProductId = resolvedPlanId
+          ? productIds[resolvedPlanId]
+          : undefined
 
-        if (plan) {
-          await syncTierToApim(apimFetch, clerkUserId, plan.apimProductId)
+        if (apimProductId) {
+          await syncTierToApim(apimFetch, clerkUserId, apimProductId)
         } else {
           console.warn(
             `[Stripe Webhook] Could not resolve plan for resumed sub — priceId=${priceId}, metadataPlanId=${metadataPlanId}`,
@@ -157,7 +182,7 @@ export default defineEventHandler(async (event) => {
         const clerkUserId = await resolveClerkUserId(stripe, subscription)
 
         if (clerkUserId) {
-          await syncTierToApim(apimFetch, clerkUserId, 'free-tier')
+          await syncTierToApim(apimFetch, clerkUserId, studentProductId)
         } else {
           console.warn(
             '[Stripe Webhook] Could not resolve clerkUserId for deleted subscription',
@@ -190,7 +215,7 @@ export default defineEventHandler(async (event) => {
 // Checks subscription metadata first, then falls back to Stripe customer metadata.
 
 async function resolveClerkUserId(
-  stripe: ReturnType<typeof import('../../../src/lib/server/stripe-client').getStripe>,
+  stripe: ReturnType<typeof GetStripeFn>,
   subscription: { metadata: Record<string, string>; customer: string | { id: string } },
 ): Promise<string | undefined> {
   // Fast path: subscription metadata
@@ -212,17 +237,6 @@ async function resolveClerkUserId(
   }
 }
 
-// --- Price ID → Plan ID Lookup ---
-
-function planIdFromPriceId(priceId: string | undefined): string | undefined {
-  if (!priceId) return undefined
-  const map: Record<string, string | undefined> = {
-    [process.env.STRIPE_STARTER_PRICE_ID ?? '']: 'starter',
-    [process.env.STRIPE_PROFESSIONAL_PRICE_ID ?? '']: 'professional',
-  }
-  return map[priceId]
-}
-
 // --- APIM Sync Helper ---
 
 type ApimFetchFn = <T = unknown>(
@@ -235,13 +249,6 @@ async function syncTierToApim(
   clerkUserId: string,
   apimProductId: string,
 ): Promise<void> {
-  type SubscriptionListResponse = {
-    value: Array<{
-      name: string
-      properties: { scope: string; state: string }
-    }>
-  }
-
   const result = await apimFetch<SubscriptionListResponse>(
     `/users/${clerkUserId}/subscriptions`,
   )

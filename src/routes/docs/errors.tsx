@@ -285,7 +285,7 @@ function ErrorsDocs() {
         <CodeBlock
           language="json"
           code={`{
-  "error": "This endpoint is not available on the Student Pilot tier. Please upgrade to Private Pilot or Commercial Pilot."
+  "error": "This endpoint is not available on the Free tier. Please upgrade to Starter or Professional."
 }`}
         />
         <p className="text-muted-foreground">

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import { checkApiHealth } from '@/lib/server/health'
 import type { ApiStatus } from '@/lib/server/health'
+import { checkApiHealth } from '@/lib/server/health'
 
 const statusConfig: Record<
   ApiStatus,

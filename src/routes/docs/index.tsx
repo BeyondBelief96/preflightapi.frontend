@@ -20,6 +20,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { CodeBlock } from '@/components/docs/code-block'
 import { API_BASE_URL } from '@/lib/gateway-url'
 import { API_BASE_PATH, API_VERSION } from '@/lib/api-metadata'
+import { usePlans } from '@/hooks/use-plans'
 
 export const Route = createFileRoute('/docs/')({
   component: DocsIndex,
@@ -95,20 +96,20 @@ const categoryGroups: Array<CategoryGroup> = [
 ]
 
 const endpointAccessRows = [
-  { category: 'METARs', free: true, starter: true, professional: true },
-  { category: 'TAFs', free: true, starter: true, professional: true },
-  { category: 'Airports (search, details & runways)', free: true, starter: true, professional: true },
-  { category: 'Communication Frequencies', free: true, starter: true, professional: true },
-  { category: 'PIREPs', free: false, starter: true, professional: true },
-  { category: 'AIRMETs, SIGMETs & G-AIRMETs', free: false, starter: true, professional: true },
-  { category: 'NOTAMs', free: false, starter: true, professional: true },
-  { category: 'Airspace & Special-Use Airspace', free: false, starter: true, professional: true },
-  { category: 'Obstacles', free: false, starter: true, professional: true },
-  { category: 'Bearing & Distance', free: false, starter: true, professional: true },
-  { category: 'Winds Aloft', free: false, starter: true, professional: true },
-  { category: 'Airport Diagrams & Chart Supplements', free: false, starter: false, professional: true },
-  { category: 'Performance (Crosswind, Density Altitude)', free: false, starter: false, professional: true },
-  { category: 'Nav Log', free: false, starter: false, professional: true },
+  { category: 'METARs', student: true, private: true, commercial: true },
+  { category: 'TAFs', student: true, private: true, commercial: true },
+  { category: 'Airports (search, details & runways)', student: true, private: true, commercial: true },
+  { category: 'Communication Frequencies', student: true, private: true, commercial: true },
+  { category: 'PIREPs', student: false, private: true, commercial: true },
+  { category: 'AIRMETs, SIGMETs & G-AIRMETs', student: false, private: true, commercial: true },
+  { category: 'NOTAMs', student: false, private: true, commercial: true },
+  { category: 'Airspace & Special-Use Airspace', student: false, private: true, commercial: true },
+  { category: 'Obstacles', student: false, private: true, commercial: true },
+  { category: 'Bearing & Distance', student: false, private: true, commercial: true },
+  { category: 'Winds Aloft', student: false, private: true, commercial: true },
+  { category: 'Airport Diagrams & Chart Supplements', student: false, private: false, commercial: true },
+  { category: 'Performance (Crosswind, Density Altitude)', student: false, private: false, commercial: true },
+  { category: 'Nav Log', student: false, private: false, commercial: true },
 ]
 
 const cacheDurations = [
@@ -123,6 +124,11 @@ const cacheDurations = [
 ]
 
 function DocsIndex() {
+  const { plans } = usePlans()
+  const studentPlan = plans.find((p) => p.id === 'student')
+  const privatePlan = plans.find((p) => p.id === 'private')
+  const commercialPlan = plans.find((p) => p.id === 'commercial')
+
   return (
     <div>
       <h1 className="text-3xl font-bold">PreflightAPI Documentation</h1>
@@ -281,18 +287,18 @@ function DocsIndex() {
             <thead>
               <tr className="border-b">
                 <th className="py-3 text-left font-semibold">Endpoint Category</th>
-                <th className="py-3 text-center font-semibold">Student Pilot<br /><span className="font-normal text-muted-foreground">Free</span></th>
-                <th className="py-3 text-center font-semibold">Private Pilot<br /><span className="font-normal text-muted-foreground">$49/mo</span></th>
-                <th className="py-3 text-center font-semibold">Commercial Pilot<br /><span className="font-normal text-muted-foreground">$199/mo</span></th>
+                <th className="py-3 text-center font-semibold">{studentPlan?.name ?? 'Student Pilot'}<br /><span className="font-normal text-muted-foreground">Free</span></th>
+                <th className="py-3 text-center font-semibold">{privatePlan?.name ?? 'Private Pilot'}<br /><span className="font-normal text-muted-foreground">{privatePlan?.price != null ? `$${privatePlan.price}/mo` : ''}</span></th>
+                <th className="py-3 text-center font-semibold">{commercialPlan?.name ?? 'Commercial Pilot'}<br /><span className="font-normal text-muted-foreground">{commercialPlan?.price != null ? `$${commercialPlan.price}/mo` : ''}</span></th>
               </tr>
             </thead>
             <tbody>
               {endpointAccessRows.map((row) => (
                 <tr key={row.category} className="border-b">
                   <td className="py-3 text-muted-foreground">{row.category}</td>
-                  <td className="py-3 text-center">{row.free ? '\u2705' : '\u2014'}</td>
-                  <td className="py-3 text-center">{row.starter ? '\u2705' : '\u2014'}</td>
-                  <td className="py-3 text-center">{row.professional ? '\u2705' : '\u2014'}</td>
+                  <td className="py-3 text-center">{row.student ? '\u2705' : '\u2014'}</td>
+                  <td className="py-3 text-center">{row.private ? '\u2705' : '\u2014'}</td>
+                  <td className="py-3 text-center">{row.commercial ? '\u2705' : '\u2014'}</td>
                 </tr>
               ))}
             </tbody>

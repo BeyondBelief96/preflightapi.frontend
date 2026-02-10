@@ -1,12 +1,12 @@
 import { apimFetch } from './apim-client'
 import { getStripe } from './stripe-client'
+import { PLAN_IDS, getApimProductIds, planIdFromProductId } from './apim-products'
 import type { EndpointTier } from '@/lib/constants'
 import { env } from '@/env'
 import {
   DEFAULT_ENDPOINT_ACCESS,
   DEFAULT_PLAN_LIMITS,
   DEFAULT_PLAN_PRICES,
-  PLANS,
 } from '@/lib/constants'
 
 // --- Types ---
@@ -21,9 +21,15 @@ export interface TierPrice {
   interval: 'month' | 'year'
 }
 
+export interface TierProduct {
+  apimProductId: string
+  displayName: string
+}
+
 export interface TierConfig {
   limits: Record<string, TierLimits>
   prices: Record<string, TierPrice>
+  products: Record<string, TierProduct>
   endpointAccess: Record<string, EndpointTier>
 }
 
@@ -65,7 +71,7 @@ function isApimConfigured(): boolean {
 function isStripeConfigured(): boolean {
   return !!(
     env.STRIPE_SECRET_KEY &&
-    (env.STRIPE_STARTER_PRICE_ID || env.STRIPE_PROFESSIONAL_PRICE_ID)
+    (env.STRIPE_PRIVATE_PRICE_ID || env.STRIPE_COMMERCIAL_PRICE_ID)
   )
 }
 
@@ -107,25 +113,55 @@ async function fetchProductApis(
   return result.value.map((api) => api.properties.path)
 }
 
+async function fetchProductMetadata(
+  productId: string,
+): Promise<{ displayName: string }> {
+  const result = await apimFetch<{
+    properties: { displayName: string }
+  }>(`/products/${productId}`)
+
+  return { displayName: result.properties.displayName }
+}
+
 // --- APIM tier data ---
 
 async function fetchApimLimits(): Promise<Record<string, TierLimits>> {
-  const products = PLANS.map((p) => p.apimProductId)
-  const results = await Promise.all(products.map(fetchProductPolicy))
+  // PLAN_IDS are the APIM product IDs — use them directly for fetching
+  const results = await Promise.all(
+    PLAN_IDS.map((id) => fetchProductPolicy(id)),
+  )
 
   const limits: Record<string, TierLimits> = {}
-  for (let i = 0; i < PLANS.length; i++) {
-    limits[PLANS[i].id] = results[i]
+  for (let i = 0; i < PLAN_IDS.length; i++) {
+    limits[planIdFromProductId(PLAN_IDS[i])] = results[i]
   }
   return limits
+}
+
+async function fetchApimProducts(): Promise<Record<string, TierProduct>> {
+  // PLAN_IDS are the APIM product IDs — use them directly for fetching
+  const results = await Promise.all(
+    PLAN_IDS.map((id) => fetchProductMetadata(id)),
+  )
+
+  const products: Record<string, TierProduct> = {}
+  for (let i = 0; i < PLAN_IDS.length; i++) {
+    products[planIdFromProductId(PLAN_IDS[i])] = {
+      apimProductId: PLAN_IDS[i],
+      displayName: results[i].displayName,
+    }
+  }
+  return products
 }
 
 async function fetchApimEndpointAccess(): Promise<
   Record<string, EndpointTier>
 > {
-  const tierOrder: Array<EndpointTier> = ['free', 'starter', 'professional']
-  const products = PLANS.map((p) => p.apimProductId)
-  const apiResults = await Promise.all(products.map(fetchProductApis))
+  const tierOrder: Array<EndpointTier> = ['student', 'private', 'commercial']
+  const productIds = getApimProductIds()
+  const apiResults = await Promise.all(
+    tierOrder.map((tier) => fetchProductApis(productIds[tier])),
+  )
 
   const endpointAccess: Record<string, EndpointTier> = {}
 
@@ -148,12 +184,12 @@ async function fetchApimEndpointAccess(): Promise<
 async function fetchStripePrices(): Promise<Record<string, TierPrice>> {
   const stripe = getStripe()
   const prices: Record<string, TierPrice> = {
-    free: { price: 0, interval: 'month' },
+    student: { price: 0, interval: 'month' },
   }
 
   const priceIds: Array<{ planId: string; priceId: string | undefined }> = [
-    { planId: 'starter', priceId: env.STRIPE_STARTER_PRICE_ID },
-    { planId: 'professional', priceId: env.STRIPE_PROFESSIONAL_PRICE_ID },
+    { planId: 'private', priceId: env.STRIPE_PRIVATE_PRICE_ID },
+    { planId: 'commercial', priceId: env.STRIPE_COMMERCIAL_PRICE_ID },
   ]
 
   const fetches = priceIds
@@ -175,6 +211,23 @@ async function fetchStripePrices(): Promise<Record<string, TierPrice>> {
   return prices
 }
 
+// --- Default products (fallback when APIM is unavailable) ---
+
+function getDefaultProducts(): Record<string, TierProduct> {
+  const productIds = getApimProductIds()
+  return {
+    student: { apimProductId: productIds.student, displayName: 'Student Pilot' },
+    private: {
+      apimProductId: productIds.private,
+      displayName: 'Private Pilot',
+    },
+    commercial: {
+      apimProductId: productIds.commercial,
+      displayName: 'Commercial Pilot',
+    },
+  }
+}
+
 // --- Main export ---
 
 export async function getTierConfig(): Promise<TierConfig> {
@@ -185,17 +238,20 @@ export async function getTierConfig(): Promise<TierConfig> {
   const config: TierConfig = {
     limits: { ...DEFAULT_PLAN_LIMITS },
     prices: { ...DEFAULT_PLAN_PRICES },
+    products: getDefaultProducts(),
     endpointAccess: { ...DEFAULT_ENDPOINT_ACCESS },
   }
 
-  // Fetch APIM data (limits + endpoint access) in parallel
+  // Fetch APIM data (limits + products + endpoint access) in parallel
   if (isApimConfigured()) {
     try {
-      const [limits, endpointAccess] = await Promise.all([
+      const [limits, products, endpointAccess] = await Promise.all([
         fetchApimLimits(),
+        fetchApimProducts(),
         fetchApimEndpointAccess(),
       ])
       config.limits = limits
+      config.products = products
       config.endpointAccess = endpointAccess
     } catch (error) {
       console.error('[tier-config] APIM fetch failed, using defaults:', error)
@@ -205,6 +261,7 @@ export async function getTierConfig(): Promise<TierConfig> {
         | undefined
       if (stale) {
         config.limits = stale.data.limits
+        config.products = stale.data.products
         config.endpointAccess = stale.data.endpointAccess
       }
     }

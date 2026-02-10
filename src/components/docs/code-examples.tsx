@@ -1,11 +1,11 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { CodeBlock } from './code-block'
+import type { ParsedEndpoint } from '@/lib/docs/types'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   generateCurl,
   generateJavaScript,
   generatePython,
 } from '@/lib/docs/code-examples'
-import type { ParsedEndpoint } from '@/lib/docs/types'
 
 interface CodeExamplesProps {
   endpoint: ParsedEndpoint

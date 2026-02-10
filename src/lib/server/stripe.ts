@@ -1,34 +1,13 @@
 import { createServerFn } from '@tanstack/react-start'
-import { auth, clerkClient } from '@clerk/tanstack-react-start/server'
+import { clerkClient } from '@clerk/tanstack-react-start/server'
 import { getStripe } from './stripe-client'
 import { apimFetch } from './apim-client'
+import { getApimProductIds, planIdFromProductId } from './apim-products'
+import { requireAuth } from './auth'
+import { getPriceIdForPlan, planIdFromPriceId } from './stripe-utils'
 import type { StripeSubscriptionStatus } from '@/types/plans'
-import { PLANS } from '@/lib/constants'
+import type { SubscriptionListResponse } from '@/types/apim'
 import { env } from '@/env'
-
-const PRICE_ID_MAP: Record<string, () => string | undefined> = {
-  starter: () => env.STRIPE_STARTER_PRICE_ID,
-  professional: () => env.STRIPE_PROFESSIONAL_PRICE_ID,
-}
-
-function getPriceIdForPlan(planId: string): string | undefined {
-  return PRICE_ID_MAP[planId]?.()
-}
-
-function planIdFromPriceId(priceId: string): string | undefined {
-  for (const [planId, getPriceId] of Object.entries(PRICE_ID_MAP)) {
-    if (getPriceId() === priceId) return planId
-  }
-  return undefined
-}
-
-async function requireAuth(): Promise<string> {
-  const session = await auth()
-  if (!session?.userId) {
-    throw new Error('Unauthorized')
-  }
-  return session.userId
-}
 
 async function getOrCreateStripeCustomer(clerkUserId: string): Promise<string> {
   const clerk = clerkClient()
@@ -74,9 +53,8 @@ export const createCheckoutSession = createServerFn({ method: 'POST' })
   .handler(async ({ data }) => {
     const userId = await requireAuth()
 
-    const plan = PLANS.find((p) => p.id === data.planId)
     const priceId = getPriceIdForPlan(data.planId)
-    if (!plan || !priceId) {
+    if (!priceId) {
       throw new Error(
         `Invalid plan or missing Stripe price ID for: ${data.planId}`,
       )
@@ -102,11 +80,11 @@ export const createCheckoutSession = createServerFn({ method: 'POST' })
       customer: customerId,
       mode: 'subscription',
       line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${getBaseUrl()}/dashboard/billing?checkout=success&plan=${plan.id}`,
+      success_url: `${getBaseUrl()}/dashboard/billing?checkout=success&plan=${data.planId}`,
       cancel_url: `${getBaseUrl()}/dashboard/billing?checkout=canceled`,
-      metadata: { clerkUserId: userId, planId: plan.id },
+      metadata: { clerkUserId: userId, planId: data.planId },
       subscription_data: {
-        metadata: { clerkUserId: userId, planId: plan.id },
+        metadata: { clerkUserId: userId, planId: data.planId },
       },
     })
 
@@ -161,8 +139,8 @@ async function getStripeSubscriptionInternal(
   // but don't update our custom metadata
   const planId =
     planIdFromPriceId(firstItem?.price.id ?? '') ||
-    sub.metadata.planId ||
-    'free'
+    normalizePlanId(sub.metadata.planId) ||
+    'student'
 
   return {
     status: sub.status,
@@ -186,13 +164,6 @@ export const getStripeSubscription = createServerFn({ method: 'GET' }).handler(
 
 // --- Reconciliation ---
 
-type SubscriptionListResponse = {
-  value: Array<{
-    name: string
-    properties: { scope: string; state: string }
-  }>
-}
-
 export type ReconcileResult =
   | { status: 'synced'; stripePlanId: string; apimPlanId: string }
   | { status: 'already_in_sync'; stripePlanId: string; apimPlanId: string }
@@ -202,6 +173,7 @@ export const reconcileSubscription = createServerFn({
   method: 'POST',
 }).handler(async (): Promise<ReconcileResult> => {
   const userId = await requireAuth()
+  const productIds = getApimProductIds()
 
   // 1. Get Stripe subscription state
   const stripeSub = await getStripeSubscriptionInternal(userId)
@@ -220,8 +192,8 @@ export const reconcileSubscription = createServerFn({
     return { status: 'no_stripe_sub' }
   }
 
-  const expectedPlan = PLANS.find((p) => p.id === stripeSub.planId)
-  if (!expectedPlan) {
+  const expectedProductId = productIds[stripeSub.planId] ?? productIds.student
+  if (!expectedProductId) {
     return {
       status: 'already_in_sync',
       stripePlanId: stripeSub.planId,
@@ -231,8 +203,7 @@ export const reconcileSubscription = createServerFn({
 
   // Check if any active sub is mismatched
   const mismatched = activeSubs.filter(
-    (s) =>
-      s.properties.scope.split('/').pop() !== expectedPlan.apimProductId,
+    (s) => s.properties.scope.split('/').pop() !== expectedProductId,
   )
 
   if (mismatched.length === 0) {
@@ -246,16 +217,14 @@ export const reconcileSubscription = createServerFn({
   // 3. Mismatch detected — sync ALL active APIM subs to match Stripe
   const previousProductId =
     mismatched[0].properties.scope.split('/').pop() ?? ''
-  const previousPlanId =
-    PLANS.find((p) => previousProductId.includes(p.apimProductId))?.id ??
-    'free'
+  const previousPlanId = planIdFromProductId(previousProductId)
 
   await Promise.all(
     mismatched.map((sub) =>
       apimFetch(`/subscriptions/${sub.name}`, {
         method: 'PATCH',
         body: JSON.stringify({
-          properties: { scope: `/products/${expectedPlan.apimProductId}` },
+          properties: { scope: `/products/${expectedProductId}` },
         }),
       }),
     ),
@@ -269,6 +238,19 @@ export const reconcileSubscription = createServerFn({
 })
 
 // --- Helpers ---
+
+// Maps legacy Stripe metadata plan IDs to current plan IDs.
+// Existing Stripe subscriptions may still carry old metadata values.
+const LEGACY_PLAN_IDS: Record<string, string> = {
+  free: 'student',
+  starter: 'private',
+  professional: 'commercial',
+}
+
+function normalizePlanId(planId: string | undefined): string | undefined {
+  if (!planId) return undefined
+  return LEGACY_PLAN_IDS[planId] ?? planId
+}
 
 function getBaseUrl(): string {
   if (env.SERVER_URL) {
