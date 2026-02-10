@@ -17,6 +17,7 @@ import {
 } from '@/lib/server/apim'
 import { apimKeys } from '@/lib/server/apim-queries'
 import { API_BASE_URL } from '@/lib/gateway-url'
+import { maskApiKey } from '@/lib/format'
 
 export const Route = createFileRoute('/dashboard/keys/')({
   head: () =>
@@ -68,9 +69,7 @@ function ApiKeysPage() {
     setRevealedKeys((prev) => ({ ...prev, [keyId]: !prev[keyId] }))
   }
 
-  const maskKey = (key: string) => {
-    return key.slice(0, 6) + '••••••••••••••••••••••••••' + key.slice(-4)
-  }
+  const maskKey = maskApiKey
 
   if (subscriptionsQuery.isLoading) {
     return (

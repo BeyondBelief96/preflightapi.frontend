@@ -1,43 +1,14 @@
 import { createServerFn } from '@tanstack/react-start'
-import { auth } from '@clerk/tanstack-react-start/server'
 import { apimFetch } from './apim-client'
 import { getTierConfig } from './tier-config'
+import { requireAuth, requireOwnership } from './auth'
 import type { ApimUsageReport } from '@/types/plans'
+import type { SubscriptionListResponse } from '@/types/apim'
 import { PLANS } from '@/lib/constants'
-
-async function requireAuth(): Promise<string> {
-  const session = await auth()
-  if (!session?.userId) {
-    throw new Error('Unauthorized')
-  }
-  return session.userId
-}
-
-function requireOwnership(userId: string, subscriptionId: string): void {
-  if (!subscriptionId.startsWith(userId)) {
-    throw new Error('Forbidden')
-  }
-}
 
 function planIdFromProductId(productId: string): string {
   const plan = PLANS.find((p) => productId.includes(p.apimProductId))
   return plan?.id ?? 'free'
-}
-
-// Shared type for subscription list responses
-type SubscriptionListResponse = {
-  value: Array<{
-    id: string
-    name: string
-    properties: {
-      ownerId: string
-      scope: string
-      displayName: string
-      state: string
-      createdDate: string
-      expirationDate: string | null
-    }
-  }>
 }
 
 // --- User Management ---

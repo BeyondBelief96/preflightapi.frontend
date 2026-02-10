@@ -3,20 +3,25 @@ import type Stripe from 'stripe'
 import type { getStripe as GetStripeFn } from '../../../src/lib/server/stripe-client'
 import type { apimFetch as ApimFetchFn } from '../../../src/lib/server/apim-client'
 import type { PLANS as PlansConst } from '../../../src/lib/constants'
+import type { planIdFromPriceId as PlanIdFromPriceIdFn } from '../../../src/lib/server/stripe-utils'
+import type { SubscriptionListResponse } from '../../../src/types/apim'
 
 export default defineEventHandler(async (event) => {
   let getStripe: typeof GetStripeFn
   let apimFetch: typeof ApimFetchFn
   let PLANS: typeof PlansConst
+  let planIdFromPriceId: typeof PlanIdFromPriceIdFn
 
   try {
     const stripeClientMod =
       await import('../../../src/lib/server/stripe-client')
     const apimClientMod = await import('../../../src/lib/server/apim-client')
     const constantsMod = await import('../../../src/lib/constants')
+    const stripeUtilsMod = await import('../../../src/lib/server/stripe-utils')
     getStripe = stripeClientMod.getStripe
     apimFetch = apimClientMod.apimFetch
     PLANS = constantsMod.PLANS
+    planIdFromPriceId = stripeUtilsMod.planIdFromPriceId
   } catch (err) {
     console.error('[Stripe Webhook] Failed to import modules:', err)
     return { received: true }
@@ -215,17 +220,6 @@ async function resolveClerkUserId(
   }
 }
 
-// --- Price ID → Plan ID Lookup ---
-
-function planIdFromPriceId(priceId: string | undefined): string | undefined {
-  if (!priceId) return undefined
-  const map: Record<string, string | undefined> = {
-    [process.env.STRIPE_STARTER_PRICE_ID ?? '']: 'starter',
-    [process.env.STRIPE_PROFESSIONAL_PRICE_ID ?? '']: 'professional',
-  }
-  return map[priceId]
-}
-
 // --- APIM Sync Helper ---
 
 type ApimFetchFn = <T = unknown>(
@@ -238,13 +232,6 @@ async function syncTierToApim(
   clerkUserId: string,
   apimProductId: string,
 ): Promise<void> {
-  type SubscriptionListResponse = {
-    value: Array<{
-      name: string
-      properties: { scope: string; state: string }
-    }>
-  }
-
   const result = await apimFetch<SubscriptionListResponse>(
     `/users/${clerkUserId}/subscriptions`,
   )

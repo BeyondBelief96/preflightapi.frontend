@@ -1,34 +1,13 @@
 import { createServerFn } from '@tanstack/react-start'
-import { auth, clerkClient } from '@clerk/tanstack-react-start/server'
+import { clerkClient } from '@clerk/tanstack-react-start/server'
 import { getStripe } from './stripe-client'
 import { apimFetch } from './apim-client'
+import { requireAuth } from './auth'
+import { getPriceIdForPlan, planIdFromPriceId } from './stripe-utils'
 import type { StripeSubscriptionStatus } from '@/types/plans'
+import type { SubscriptionListResponse } from '@/types/apim'
 import { PLANS } from '@/lib/constants'
 import { env } from '@/env'
-
-const PRICE_ID_MAP: Record<string, () => string | undefined> = {
-  starter: () => env.STRIPE_STARTER_PRICE_ID,
-  professional: () => env.STRIPE_PROFESSIONAL_PRICE_ID,
-}
-
-function getPriceIdForPlan(planId: string): string | undefined {
-  return PRICE_ID_MAP[planId]?.()
-}
-
-function planIdFromPriceId(priceId: string): string | undefined {
-  for (const [planId, getPriceId] of Object.entries(PRICE_ID_MAP)) {
-    if (getPriceId() === priceId) return planId
-  }
-  return undefined
-}
-
-async function requireAuth(): Promise<string> {
-  const session = await auth()
-  if (!session?.userId) {
-    throw new Error('Unauthorized')
-  }
-  return session.userId
-}
 
 async function getOrCreateStripeCustomer(clerkUserId: string): Promise<string> {
   const clerk = clerkClient()
@@ -185,13 +164,6 @@ export const getStripeSubscription = createServerFn({ method: 'GET' }).handler(
 )
 
 // --- Reconciliation ---
-
-type SubscriptionListResponse = {
-  value: Array<{
-    name: string
-    properties: { scope: string; state: string }
-  }>
-}
 
 export type ReconcileResult =
   | { status: 'synced'; stripePlanId: string; apimPlanId: string }

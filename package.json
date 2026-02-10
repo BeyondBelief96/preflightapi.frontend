@@ -8,7 +8,7 @@
     "prebuild": "npm run sync-api || echo [sync-api] Skipped, using existing spec",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "vitest run",
+    "test": "vitest run --passWithNoTests",
     "lint": "eslint",
     "format": "prettier",
     "check": "prettier --write . && eslint --fix",

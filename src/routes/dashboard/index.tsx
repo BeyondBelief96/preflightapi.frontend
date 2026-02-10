@@ -1,16 +1,17 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { useAuth, useUser } from '@clerk/clerk-react'
-import { Activity, ArrowRight, BookOpen, CreditCard, Key, Rocket } from 'lucide-react'
+import { ArrowRight, Rocket } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { createPageHead } from '@/lib/seo'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
+import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Skeleton } from '@/components/ui/skeleton'
 import { getUsageAnalytics, getUserSubscription } from '@/lib/server/apim'
 import { getStripeSubscription } from '@/lib/server/stripe'
 import { apimKeys, stripeKeys } from '@/lib/server/apim-queries'
 import { usePlans } from '@/hooks/use-plans'
+import { PlanOverviewCard } from '@/components/dashboard/plan-overview-card'
+import { UsageStatsCards } from '@/components/dashboard/usage-stats-card'
+import { QuickActions } from '@/components/dashboard/quick-actions'
 
 export const Route = createFileRoute('/dashboard/')({
   head: () =>
@@ -21,65 +22,6 @@ export const Route = createFileRoute('/dashboard/')({
     }),
   component: DashboardOverview,
 })
-
-function getUsageColor(percent: number): string {
-  if (percent > 85) return 'text-destructive'
-  if (percent >= 60) return 'text-aviation-warning'
-  return 'text-foreground'
-}
-
-function UsageRing({ percent }: { percent: number }) {
-  const radius = 16
-  const strokeWidth = 3
-  const circumference = 2 * Math.PI * radius
-  const offset = circumference - (Math.min(percent, 100) / 100) * circumference
-  const color =
-    percent > 85
-      ? 'var(--destructive)'
-      : percent >= 60
-        ? 'var(--aviation-warning)'
-        : 'var(--accent)'
-
-  return (
-    <svg
-      width="40"
-      height="40"
-      viewBox="0 0 40 40"
-      className="shrink-0"
-    >
-      <circle
-        cx="20"
-        cy="20"
-        r={radius}
-        fill="none"
-        stroke="var(--muted)"
-        strokeWidth={strokeWidth}
-      />
-      <circle
-        cx="20"
-        cy="20"
-        r={radius}
-        fill="none"
-        stroke={color}
-        strokeWidth={strokeWidth}
-        strokeLinecap="round"
-        strokeDasharray={circumference}
-        strokeDashoffset={offset}
-        transform="rotate(-90 20 20)"
-        className="transition-[stroke-dashoffset] duration-700 ease-out"
-      />
-      <text
-        x="20"
-        y="20"
-        textAnchor="middle"
-        dominantBaseline="central"
-        className="fill-foreground text-[8px] font-medium"
-      >
-        {Math.round(percent)}%
-      </text>
-    </svg>
-  )
-}
 
 function DashboardOverview() {
   const { user } = useUser()
@@ -232,209 +174,32 @@ function DashboardOverview() {
         </Card>
       )}
 
-      {/* Current Plan banner */}
-      <Card className={`border-l-4 ${isCanceling ? 'border-l-yellow-500' : 'border-l-accent'}`}>
-        <CardContent className="flex flex-wrap items-center justify-between gap-4 p-6">
-          {stripeSubQuery.isLoading ? (
-            <>
-              <div className="flex items-center gap-3">
-                <Skeleton className="h-6 w-24" />
-                <Skeleton className="h-5 w-14 rounded-full" />
-              </div>
-              <Skeleton className="h-4 w-24" />
-            </>
-          ) : (
-            <>
-              <div className="flex items-center gap-3">
-                <CreditCard className={`h-5 w-5 ${isCanceling ? 'text-yellow-500' : 'text-accent'}`} />
-                <span className="text-lg font-bold">{currentPlan.name}</span>
-                {isCanceling ? (
-                  <Badge variant="outline" className="border-yellow-500 text-yellow-600 dark:text-yellow-400">
-                    Canceling
-                  </Badge>
-                ) : (
-                  <Badge variant="secondary">
-                    {isPaid ? 'Active' : 'Free'}
-                  </Badge>
-                )}
-              </div>
-              {isCanceling && cancelDate ? (
-                <div className="flex items-center gap-3">
-                  <span className="text-sm text-yellow-600 dark:text-yellow-400">
-                    Ends {new Date(cancelDate).toLocaleDateString()}
-                  </span>
-                  <Link to="/dashboard/billing">
-                    <Button size="sm" variant="outline" className="gap-2">
-                      Reactivate
-                      <ArrowRight className="h-3 w-3" />
-                    </Button>
-                  </Link>
-                </div>
-              ) : isPaid ? (
-                <Link to="/dashboard/billing">
-                  <Button size="sm" variant="outline" className="gap-2">
-                    Manage Plan
-                    <ArrowRight className="h-3 w-3" />
-                  </Button>
-                </Link>
-              ) : (
-                <Link to="/dashboard/billing">
-                  <Button size="sm" className="gap-2">
-                    Upgrade Plan
-                    <ArrowRight className="h-3 w-3" />
-                  </Button>
-                </Link>
-              )}
-            </>
-          )}
-        </CardContent>
-      </Card>
+      <PlanOverviewCard
+        isLoading={stripeSubQuery.isLoading}
+        currentPlan={currentPlan}
+        stripeSub={stripeSub}
+        isPaid={isPaid}
+        isCanceling={isCanceling}
+        cancelDate={cancelDate}
+      />
 
-      {/* Stats cards */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              API Calls Today
-            </CardTitle>
-            <Activity className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className={`text-2xl font-bold ${callsLimit && !dailyUsageQuery.isLoading ? getUsageColor(dailyPercent) : ''}`}>
-              {dailyUsageQuery.isLoading ? (
-                <Skeleton className="h-8 w-16" />
-              ) : (
-                callsToday.toLocaleString()
-              )}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              {dailyUsageQuery.isError
-                ? 'Unable to load usage data'
-                : dailyBudget
-                  ? `of ~${Math.round(dailyBudget).toLocaleString()} daily budget`
-                  : 'Requests today'}
-            </p>
-            {callsLimit && !dailyUsageQuery.isLoading && (
-              <div className="mt-2 flex items-center gap-3 text-[10px]">
-                <span className="flex items-center gap-1">
-                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-foreground" />
-                  Normal
-                </span>
-                <span className="flex items-center gap-1">
-                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-aviation-warning" />
-                  {'≥60%'}
-                </span>
-                <span className="flex items-center gap-1">
-                  <span className="inline-block h-1.5 w-1.5 rounded-full bg-destructive" />
-                  {'>85%'}
-                </span>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Calls This Month
-            </CardTitle>
-            <UsageRing percent={monthlyUsageQuery.isLoading ? 0 : usagePercent} />
-          </CardHeader>
-          <CardContent>
-            <div className={`text-2xl font-bold ${callsLimit && !monthlyUsageQuery.isLoading ? getUsageColor(usagePercent) : ''}`}>
-              {monthlyUsageQuery.isLoading ? (
-                <Skeleton className="h-8 w-20" />
-              ) : (
-                callsThisMonth.toLocaleString()
-              )}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              of {callsLimit?.toLocaleString() ?? 'unlimited'} limit
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Subscription Status
-            </CardTitle>
-            <Key className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            {stripeSubQuery.isLoading ? (
-              <>
-                <Skeleton className="h-8 w-16" />
-                <Skeleton className="mt-1 h-4 w-40" />
-              </>
-            ) : (
-              <>
-                <div className={`text-2xl font-bold ${isCanceling ? 'text-yellow-600 dark:text-yellow-400' : ''}`}>
-                  {isCanceling ? 'Canceling' : isPaid ? 'Active' : 'Free'}
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  {isCanceling && cancelDate ? (
-                    `Ends ${new Date(cancelDate).toLocaleDateString()}`
-                  ) : isPaid ? (
-                    'Primary & secondary keys available'
-                  ) : (
-                    <Link
-                      to="/dashboard/billing"
-                      className="text-accent hover:underline"
-                    >
-                      Upgrade your plan
-                    </Link>
-                  )}
-                </p>
-              </>
-            )}
-          </CardContent>
-        </Card>
-      </div>
+      <UsageStatsCards
+        callsToday={callsToday}
+        callsThisMonth={callsThisMonth}
+        callsLimit={callsLimit}
+        usagePercent={usagePercent}
+        dailyPercent={dailyPercent}
+        dailyBudget={dailyBudget}
+        isDailyLoading={dailyUsageQuery.isLoading}
+        isDailyError={dailyUsageQuery.isError}
+        isMonthlyLoading={monthlyUsageQuery.isLoading}
+        isStripeLoading={stripeSubQuery.isLoading}
+        isPaid={isPaid}
+        isCanceling={isCanceling}
+        cancelDate={cancelDate}
+      />
 
-      {/* Quick actions */}
-      <div>
-        <h3 className="text-lg font-semibold">Quick Actions</h3>
-        <div className="mt-4 grid gap-4 sm:grid-cols-3">
-          <Link to="/dashboard/keys">
-            <Card className="cursor-pointer border transition-all hover:border-accent/30 hover:shadow-[0_0_20px_-4px] hover:shadow-accent/20">
-              <CardContent className="flex items-center gap-4 p-6">
-                <Key className="h-8 w-8 text-accent" />
-                <div>
-                  <p className="font-medium">Manage API Keys</p>
-                  <p className="text-sm text-muted-foreground">
-                    View and regenerate your API keys
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-          <Link to="/docs">
-            <Card className="cursor-pointer border transition-all hover:border-accent/30 hover:shadow-[0_0_20px_-4px] hover:shadow-accent/20">
-              <CardContent className="flex items-center gap-4 p-6">
-                <BookOpen className="h-8 w-8 text-accent" />
-                <div>
-                  <p className="font-medium">API Documentation</p>
-                  <p className="text-sm text-muted-foreground">
-                    Explore endpoints and examples
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-          <Link to="/dashboard/billing">
-            <Card className="cursor-pointer border transition-all hover:border-accent/30 hover:shadow-[0_0_20px_-4px] hover:shadow-accent/20">
-              <CardContent className="flex items-center gap-4 p-6">
-                <CreditCard className="h-8 w-8 text-accent" />
-                <div>
-                  <p className="font-medium">Billing & Plans</p>
-                  <p className="text-sm text-muted-foreground">
-                    Manage your subscription
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-        </div>
-      </div>
+      <QuickActions />
     </div>
   )
 }
