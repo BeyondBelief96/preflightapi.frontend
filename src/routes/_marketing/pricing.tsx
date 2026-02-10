@@ -1,9 +1,11 @@
+import { useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { Check, Minus } from 'lucide-react'
 import type { PlanDefinition } from '@/lib/constants'
 import { createPageHead } from '@/lib/seo'
 import { usePlans } from '@/hooks/use-plans'
 import { PricingCard } from '@/components/marketing/pricing-card'
+import { cn } from '@/lib/utils'
 
 export const Route = createFileRoute('/_marketing/pricing')({
   head: () =>
@@ -287,8 +289,10 @@ function PricingPage() {
       <section className="border-t bg-muted/30 py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-center text-2xl font-bold">Feature Comparison</h2>
-          <div className="mt-12 overflow-x-auto">
-            <table className="w-full min-w-[600px]">
+
+          {/* Desktop table */}
+          <div className="mt-12 hidden overflow-x-auto md:block">
+            <table className="w-full">
               <thead>
                 <tr className="border-b">
                   <th className="pb-4 text-left text-sm font-medium text-muted-foreground">
@@ -311,6 +315,12 @@ function PricingPage() {
               </tbody>
             </table>
           </div>
+
+          {/* Mobile: tabbed plan view */}
+          <MobileComparison
+            plans={plans}
+            comparisonFeatures={comparisonFeatures}
+          />
         </div>
       </section>
     </div>
@@ -354,5 +364,76 @@ function ComparisonSection({
         </tr>
       ))}
     </>
+  )
+}
+
+const PLAN_IDS = ['student', 'private', 'commercial'] as const
+
+function MobileComparison({
+  plans,
+  comparisonFeatures,
+}: {
+  plans: Array<PlanDefinition>
+  comparisonFeatures: ReturnType<typeof buildComparisonFeatures>
+}) {
+  const [activePlan, setActivePlan] = useState(0)
+  const activePlanId = PLAN_IDS[activePlan]
+
+  return (
+    <div className="mt-8 md:hidden">
+      {/* Plan tabs */}
+      <div className="flex rounded-lg border bg-muted/50 p-1">
+        {plans.map((plan, index) => (
+          <button
+            key={plan.id}
+            type="button"
+            onClick={() => setActivePlan(index)}
+            className={cn(
+              'flex-1 rounded-md px-3 py-2 text-sm font-medium transition-colors',
+              activePlan === index
+                ? 'bg-background text-foreground shadow-sm'
+                : 'text-muted-foreground',
+            )}
+          >
+            {plan.name}
+          </button>
+        ))}
+      </div>
+
+      {/* Feature list for selected plan */}
+      <div className="mt-6 space-y-6">
+        {comparisonFeatures.map((section) => (
+          <div key={section.category}>
+            <h3 className="text-sm font-semibold">{section.category}</h3>
+            <ul className="mt-2 divide-y">
+              {section.features.map((feature) => {
+                const value = feature[activePlanId]
+                return (
+                  <li
+                    key={feature.name}
+                    className="flex items-center justify-between gap-4 py-2.5"
+                  >
+                    <span className="text-sm text-muted-foreground">
+                      {feature.name}
+                    </span>
+                    {typeof value === 'boolean' ? (
+                      value ? (
+                        <Check className="h-4 w-4 shrink-0 text-accent" />
+                      ) : (
+                        <Minus className="h-4 w-4 shrink-0 text-muted-foreground/40" />
+                      )
+                    ) : (
+                      <span className="shrink-0 text-sm font-medium">
+                        {value}
+                      </span>
+                    )}
+                  </li>
+                )
+              })}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
   )
 }
