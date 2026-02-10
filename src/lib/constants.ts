@@ -80,12 +80,31 @@ export function buildLimitFeatures(limits: {
   return features
 }
 
+function formatCostPerRequest(
+  price: number | null | undefined,
+  callsPerMonth: number | null,
+): string | null {
+  if (price == null || callsPerMonth == null || callsPerMonth === 0) return null
+  if (price === 0) return 'Free — $0/request'
+  const cost = price / callsPerMonth
+  // Show enough decimals to be meaningful
+  const formatted = cost < 0.001 ? cost.toFixed(4) : cost.toFixed(4)
+  return `~$${formatted}/request at full usage`
+}
+
 export function buildPlanFeatures(
   planId: string,
   limits: { callsPerMonth: number | null; ratePerMinute: number | null },
+  price?: number | null,
 ): Array<string> {
   const staticFeatures = TIER_FEATURES[planId] ?? []
-  return [...staticFeatures, ...buildLimitFeatures(limits)]
+  const limitFeatures = buildLimitFeatures(limits)
+  const costFeature = formatCostPerRequest(price, limits.callsPerMonth)
+  return [
+    ...staticFeatures,
+    ...limitFeatures,
+    ...(costFeature ? [costFeature] : []),
+  ]
 }
 
 // --- Default plan definitions (fallback when APIM/Stripe are unavailable) ---
@@ -98,10 +117,11 @@ export const PLANS: Array<PlanDefinition> = [
     interval: 'month',
     apimProductId: 'student-pilot',
     limits: { callsPerMonth: 500, ratePerMinute: 10 },
-    features: buildPlanFeatures('student', {
-      callsPerMonth: 500,
-      ratePerMinute: 10,
-    }),
+    features: buildPlanFeatures(
+      'student',
+      { callsPerMonth: 500, ratePerMinute: 10 },
+      0,
+    ),
     cta: 'Get Started Free',
   },
   {
@@ -112,10 +132,11 @@ export const PLANS: Array<PlanDefinition> = [
     apimProductId: 'private-pilot',
     limits: { callsPerMonth: 25_000, ratePerMinute: 60 },
     highlighted: true,
-    features: buildPlanFeatures('private', {
-      callsPerMonth: 25_000,
-      ratePerMinute: 60,
-    }),
+    features: buildPlanFeatures(
+      'private',
+      { callsPerMonth: 25_000, ratePerMinute: 60 },
+      29.99,
+    ),
     cta: 'Go Private',
   },
   {
@@ -125,10 +146,11 @@ export const PLANS: Array<PlanDefinition> = [
     interval: 'month',
     apimProductId: 'commercial-pilot',
     limits: { callsPerMonth: 250_000, ratePerMinute: 300 },
-    features: buildPlanFeatures('commercial', {
-      callsPerMonth: 250_000,
-      ratePerMinute: 300,
-    }),
+    features: buildPlanFeatures(
+      'commercial',
+      { callsPerMonth: 250_000, ratePerMinute: 300 },
+      79.99,
+    ),
     cta: 'Go Commercial',
   },
 ] as const

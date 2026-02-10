@@ -11,14 +11,12 @@ export function TierBadge({ tier }: { tier: EndpointTier }) {
   const { plans } = usePlans()
   const plan = plans.find((p) => p.id === tier)
   const label = plan?.name ?? tier
-  // Append "+" for non-top tiers to indicate "this tier and above"
-  const suffix = tier !== 'commercial' && tier !== 'student' ? '+' : ''
 
   return (
     <span
       className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${tierStyles[tier]}`}
     >
-      {label}{suffix}
+      {label}
     </span>
   )
 }

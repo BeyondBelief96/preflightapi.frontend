@@ -12,35 +12,35 @@ const features = [
     icon: Cloud,
     title: 'Real-Time Weather',
     description:
-      'METARs every 10 min, TAFs every 30 min, PIREPs every 5 min, plus AIRMETs, SIGMETs, and G-AIRMETs. Sourced from aviationweather.gov.',
+      'Real-time METARs, Tafs, Pireps, Airmets/Sigmets/G-Airmets and Winds Aloft. Sourced from aviationweather.gov.',
   },
   {
     icon: Plane,
-    title: 'Airport Database',
+    title: '~19,600 US Airports',
     description:
-      '19,600+ US airports from the FAA NASR subscription, updated every 28 days. Includes runways, frequencies, diagrams, and chart supplements.',
+      'US airport data sources straight from the FAA, updated every 28 days. Includes runways, frequencies, airport diagrams, and chart supplements.',
   },
   {
     icon: Map,
     title: 'Airspace Data',
     description:
-      'Controlled and special use airspace boundaries from FAA/ArcGIS, updated every 56 days. Includes polygons, altitude limits, and classifications.',
+      'Controlled and special use airspace data and geospatial boundaries from FAA/ArcGIS, updated every 56 days. Includes polygons, altitude limits, and classifications.',
   },
   {
     icon: AlertTriangle,
     title: 'NOTAMs',
     description:
-      'Notices to Air Missions sourced from the FAA NMS (NOTAM Management System). Query by airport, geographic radius, or flight route corridor.',
+      'Notices to Air Missions sourced from the FAA NMS (NOTAM Management System). Query by airport, geographic radius, or waypoints.',
   },
   {
     icon: Navigation,
-    title: 'Flight Planning',
+    title: 'Flight Planning Tools',
     description:
-      'Navigation log generation with waypoints, winds aloft integration, bearing/distance calculations, and magnetic corrections.',
+      'Navigation log generation with waypoints, winds aloft integration, bearing/distance calculations, and magnetic variation corrections.',
   },
   {
     icon: Calculator,
-    title: 'Performance Tools',
+    title: 'E6B Style Performance Tools',
     description:
       'Crosswind calculator and density altitude computations using live METAR data or custom parameters.',
   },

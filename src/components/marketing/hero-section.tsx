@@ -177,10 +177,14 @@ export function HeroSection() {
           <div>
             <ApiStatusBadge />
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-              Aviation Data <span className="text-accent">for Developers</span>
+              All US Aviation Data.{' '}
+              <span className="text-accent">One API.</span>
             </h1>
-            <p className="mt-3 text-xl font-medium italic text-accent/80 sm:text-2xl">
-              Minus the turbulence.
+            <p className="mt-3 text-xl font-medium text-muted-foreground sm:text-2xl">
+              Built by a pilot,{' '}
+              <span className="font-semibold text-accent/80">
+                for developers.
+              </span>
             </p>
             <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
               Access real-time weather, airport information, NOTAMs, airspace

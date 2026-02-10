@@ -31,7 +31,7 @@ export function usePlans(): {
       price: price?.price ?? plan.price,
       interval: price?.interval ?? plan.interval,
       limits,
-      features: buildPlanFeatures(plan.id, limits),
+      features: buildPlanFeatures(plan.id, limits, price?.price ?? plan.price),
       highlighted: ui?.highlighted,
       cta: ui?.cta ?? plan.cta,
     }

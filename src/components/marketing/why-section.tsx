@@ -1,24 +1,24 @@
 import { Link } from '@tanstack/react-router'
-import { Database, Layers, RefreshCw } from 'lucide-react'
+import { Layers, RefreshCw, Zap } from 'lucide-react'
 
 const reasons = [
   {
     icon: Layers,
-    title: 'One API, Not Six',
+    title: 'One Source of Truth',
     description:
-      'Weather, airports, airspace, NOTAMs, flight planning, and performance tools — all in one place. Stop stitching together data from NOAA, the FAA, and ArcGIS yourself.',
+      'Weather, airports, airspace, NOTAMs, obstacles, charts — all behind a single API key. No juggling multiple government sources yourself.',
   },
   {
     icon: RefreshCw,
-    title: 'Always Up to Date',
+    title: 'We Keep It Current',
     description:
-      'Weather data refreshes every few minutes, and airport information stays in sync with FAA publication cycles. You always get the latest data without lifting a finger.',
+      'Data stays in sync with FAA publication cycles and real-time weather feeds. You never have to think about polling, caching, or stale data.',
   },
   {
-    icon: Database,
-    title: 'Ready-to-Use JSON',
+    icon: Zap,
+    title: 'Start Building in Minutes',
     description:
-      'Every response is clean, consistent JSON — no decoding raw weather strings or wrangling government file formats. Just plug it into your app and go.',
+      'Sign up, grab your API key, and make your first call. No contracts, no onboarding calls, no waiting for access.',
   },
 ]
 
@@ -33,16 +33,17 @@ export function WhySection() {
               Why PreflightAPI?
             </p>
             <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
-              Skip the Data Pipeline.
+              Your Aviation Data Infrastructure,
               <br />
-              <span className="text-accent">Ship Your App.</span>
+              <span className="text-accent">Already Built.</span>
             </h2>
             <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-              FAA data is spread across dozens of files in hard-to-use formats,
-              published on overlapping cycles. Weather feeds need constant
-              polling and parsing. That&apos;s weeks of plumbing before you
-              write a single line of product code. PreflightAPI gives you all of
-              it through one clean API — so you can ship in days, not months.
+              Aviation data is scattered across the FAA, NOAA, ArcGIS, and
+              more — each with its own formats, restrictions, and update
+              schedules. Building the infrastructure to collect, parse, store,
+              and keep all of it current is a project in itself. PreflightAPI is
+              that infrastructure. Spend your time building your product, not
+              your data pipeline.
             </p>
             <Link
               to="/about"
