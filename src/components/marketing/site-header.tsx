@@ -7,6 +7,7 @@ import { Logo } from '@/components/logo'
 import { isWaitlistMode } from '@/lib/waitlist'
 
 const navLinks = [
+  { label: 'Home', href: '/' },
   { label: 'Pricing', href: '/pricing' },
   { label: 'Docs', href: '/docs' },
   { label: 'About PreflightAPI', href: '/about' },
