@@ -1,6 +1,6 @@
 import { apimFetch } from './apim-client'
 import { getStripe } from './stripe-client'
-import { getApimProductIds, PLAN_IDS } from './apim-products'
+import { PLAN_IDS, getApimProductIds, planIdFromProductId } from './apim-products'
 import type { EndpointTier } from '@/lib/constants'
 import { env } from '@/env'
 import {
@@ -126,30 +126,28 @@ async function fetchProductMetadata(
 // --- APIM tier data ---
 
 async function fetchApimLimits(): Promise<Record<string, TierLimits>> {
-  const productIds = getApimProductIds()
-  const planIds = PLAN_IDS
+  // PLAN_IDS are the APIM product IDs — use them directly for fetching
   const results = await Promise.all(
-    planIds.map((id) => fetchProductPolicy(productIds[id])),
+    PLAN_IDS.map((id) => fetchProductPolicy(id)),
   )
 
   const limits: Record<string, TierLimits> = {}
-  for (let i = 0; i < planIds.length; i++) {
-    limits[planIds[i]] = results[i]
+  for (let i = 0; i < PLAN_IDS.length; i++) {
+    limits[planIdFromProductId(PLAN_IDS[i])] = results[i]
   }
   return limits
 }
 
 async function fetchApimProducts(): Promise<Record<string, TierProduct>> {
-  const productIds = getApimProductIds()
-  const planIds = PLAN_IDS
+  // PLAN_IDS are the APIM product IDs — use them directly for fetching
   const results = await Promise.all(
-    planIds.map((id) => fetchProductMetadata(productIds[id])),
+    PLAN_IDS.map((id) => fetchProductMetadata(id)),
   )
 
   const products: Record<string, TierProduct> = {}
-  for (let i = 0; i < planIds.length; i++) {
-    products[planIds[i]] = {
-      apimProductId: productIds[planIds[i]],
+  for (let i = 0; i < PLAN_IDS.length; i++) {
+    products[planIdFromProductId(PLAN_IDS[i])] = {
+      apimProductId: PLAN_IDS[i],
       displayName: results[i].displayName,
     }
   }

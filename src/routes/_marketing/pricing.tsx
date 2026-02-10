@@ -10,7 +10,7 @@ export const Route = createFileRoute('/_marketing/pricing')({
     createPageHead({
       title: 'Pricing',
       description:
-        'Simple, transparent pricing for PreflightAPI. Start free with 500 API calls per month and scale as your application grows.',
+        'Simple, transparent pricing for PreflightAPI. Start free and scale as your application grows.',
       path: '/pricing',
     }),
   component: PricingPage,
@@ -140,13 +140,13 @@ const staticComparisonFeatures = [
       {
         name: 'Bearing & distance between any two points',
         free: false,
-        starter: false,
+        starter: true,
         professional: true,
       },
       {
         name: 'Winds aloft forecasts (6/12/24 hr)',
         free: false,
-        starter: false,
+        starter: true,
         professional: true,
       },
     ],
@@ -221,7 +221,7 @@ function buildComparisonFeatures(plans: Array<PlanDefinition>) {
       },
       {
         name: 'Support',
-        free: 'Docs only',
+        free: 'Email',
         starter: 'Email',
         professional: 'Priority',
       },

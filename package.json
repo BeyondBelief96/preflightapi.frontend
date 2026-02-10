@@ -5,11 +5,11 @@
   "scripts": {
     "predev": "npm run sync-api || echo [sync-api] Skipped, using existing spec",
     "dev": "vite dev --port 3000",
-    "prebuild": "npm run sync-api || echo [sync-api] Skipped, using existing spec",
+    "prebuild": "npm run lint && npm run sync-api || echo [sync-api] Skipped, using existing spec",
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run --passWithNoTests",
-    "lint": "eslint",
+    "lint": "eslint --fix",
     "format": "prettier",
     "check": "prettier --write . && eslint --fix",
     "start": "node .output/server/index.mjs",

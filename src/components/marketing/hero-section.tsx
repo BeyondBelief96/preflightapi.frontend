@@ -6,6 +6,7 @@ import { ApiStatusBadge } from '@/components/marketing/api-status-badge'
 import { Button } from '@/components/ui/button'
 import { API_BASE_PATH } from '@/lib/api-metadata'
 import { isWaitlistMode } from '@/lib/waitlist'
+import { usePlans } from '@/hooks/use-plans'
 
 const codeExamples = [
   {
@@ -164,6 +165,10 @@ function CodeTabs() {
 }
 
 export function HeroSection() {
+  const { plans } = usePlans()
+  const freePlan = plans.find((p) => p.id === 'free')
+  const freeCallsLabel = freePlan?.limits.callsPerMonth?.toLocaleString() ?? '500'
+
   return (
     <section className="relative overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
@@ -198,8 +203,8 @@ export function HeroSection() {
               </Link>
             </div>
             <p className="mt-4 text-sm text-muted-foreground">
-              Student Pilot plan is free forever — 500 API calls/month, no
-              credit card required.
+              {freePlan?.name ?? 'Student Pilot'} plan is free forever —{' '}
+              {freeCallsLabel} API calls/month, no credit card required.
             </p>
           </div>
 

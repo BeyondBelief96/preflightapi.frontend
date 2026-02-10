@@ -107,7 +107,7 @@ export const PLANS: Array<PlanDefinition> = [
   {
     id: 'starter',
     name: 'Private Pilot',
-    price: 49,
+    price: 29.99,
     interval: 'month',
     apimProductId: 'private-pilot',
     limits: { callsPerMonth: 25_000, ratePerMinute: 60 },
@@ -121,7 +121,7 @@ export const PLANS: Array<PlanDefinition> = [
   {
     id: 'professional',
     name: 'Commercial Pilot',
-    price: 199,
+    price: 79.99,
     interval: 'month',
     apimProductId: 'commercial-pilot',
     limits: { callsPerMonth: 250_000, ratePerMinute: 300 },

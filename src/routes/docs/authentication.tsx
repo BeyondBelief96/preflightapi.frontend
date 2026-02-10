@@ -100,8 +100,7 @@ function AuthenticationDocs() {
           </li>
           <li>
             Keys are scoped to your subscription and carry the permissions of
-            your current plan (Student Pilot, Private Pilot, or Commercial
-            Pilot).
+            your current plan tier.
           </li>
           <li>
             When you upgrade or downgrade your plan, your existing keys remain
@@ -222,7 +221,7 @@ PREFLIGHT_API_KEY=your-subscription-key-here`}
         <CodeBlock
           language="json"
           code={`{
-  "error": "This endpoint is not available on the Student Pilot tier. Please upgrade to Private Pilot or Commercial Pilot."
+  "error": "This endpoint is not available on the Free tier. Please upgrade to Starter or Professional."
 }`}
         />
         <p className="text-muted-foreground">

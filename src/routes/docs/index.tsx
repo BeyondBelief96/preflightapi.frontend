@@ -20,6 +20,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { CodeBlock } from '@/components/docs/code-block'
 import { API_BASE_URL } from '@/lib/gateway-url'
 import { API_BASE_PATH, API_VERSION } from '@/lib/api-metadata'
+import { usePlans } from '@/hooks/use-plans'
 
 export const Route = createFileRoute('/docs/')({
   component: DocsIndex,
@@ -123,6 +124,11 @@ const cacheDurations = [
 ]
 
 function DocsIndex() {
+  const { plans } = usePlans()
+  const freePlan = plans.find((p) => p.id === 'free')
+  const starterPlan = plans.find((p) => p.id === 'starter')
+  const proPlan = plans.find((p) => p.id === 'professional')
+
   return (
     <div>
       <h1 className="text-3xl font-bold">PreflightAPI Documentation</h1>
@@ -281,9 +287,9 @@ function DocsIndex() {
             <thead>
               <tr className="border-b">
                 <th className="py-3 text-left font-semibold">Endpoint Category</th>
-                <th className="py-3 text-center font-semibold">Student Pilot<br /><span className="font-normal text-muted-foreground">Free</span></th>
-                <th className="py-3 text-center font-semibold">Private Pilot<br /><span className="font-normal text-muted-foreground">$49/mo</span></th>
-                <th className="py-3 text-center font-semibold">Commercial Pilot<br /><span className="font-normal text-muted-foreground">$199/mo</span></th>
+                <th className="py-3 text-center font-semibold">{freePlan?.name ?? 'Student Pilot'}<br /><span className="font-normal text-muted-foreground">Free</span></th>
+                <th className="py-3 text-center font-semibold">{starterPlan?.name ?? 'Private Pilot'}<br /><span className="font-normal text-muted-foreground">{starterPlan?.price != null ? `$${starterPlan.price}/mo` : ''}</span></th>
+                <th className="py-3 text-center font-semibold">{proPlan?.name ?? 'Commercial Pilot'}<br /><span className="font-normal text-muted-foreground">{proPlan?.price != null ? `$${proPlan.price}/mo` : ''}</span></th>
               </tr>
             </thead>
             <tbody>

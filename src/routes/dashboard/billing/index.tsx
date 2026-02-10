@@ -211,9 +211,10 @@ function BillingPage() {
                     { year: 'numeric', month: 'long', day: 'numeric' },
                   )}
                 </span>
-                . After that, you'll be downgraded to the Student Pilot (Free)
-                plan. Your API keys will remain the same, but access to
-                paid-tier endpoints will be restricted.
+                . After that, you'll be downgraded to the{' '}
+                {plans.find((p) => p.id === 'free')?.name ?? 'Free'} plan. Your
+                API keys will remain the same, but access to paid-tier endpoints
+                will be restricted.
               </p>
               <div className="mt-3 flex flex-col gap-2 sm:flex-row">
                 <Button
