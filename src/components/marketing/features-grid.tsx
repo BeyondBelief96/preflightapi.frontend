@@ -40,9 +40,9 @@ const features = [
   },
   {
     icon: Calculator,
-    title: 'E6B Style Performance Tools',
+    title: 'Performance Calculators',
     description:
-      'Crosswind calculator and density altitude computations using live METAR data or custom parameters.',
+      'Crosswind, density altitude, wind triangle, true airspeed, cloud base, and pressure altitude — like an E6B in API form.',
   },
 ]
 

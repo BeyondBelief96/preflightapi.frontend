@@ -75,6 +75,13 @@ export const CATEGORIES: Array<ApiCategory> = [
         tag: 'Airports',
         label: 'Airports',
         description: 'Search, list, and get detailed airport data.',
+        pathFilter: '^(?!.*runways)',
+      },
+      {
+        tag: 'Airports',
+        label: 'Runways',
+        description: 'Runway details for a specific airport.',
+        pathFilter: 'runways',
       },
       {
         tag: 'Communication Frequencies',
@@ -177,6 +184,66 @@ export const CATEGORIES: Array<ApiCategory> = [
         label: 'Density Altitude',
         description: 'Density altitude calculations.',
         pathFilter: 'density-altitude',
+      },
+    ],
+  },
+  {
+    slug: 'wind-triangle',
+    title: 'Wind Triangle',
+    description:
+      'Calculate true heading and ground speed from true course, true airspeed, wind direction, and wind speed.',
+    icon: 'compass',
+    subcategories: [
+      {
+        tag: 'Performance Calculations',
+        label: 'Wind Triangle',
+        description: 'Wind correction angle, true heading, and ground speed.',
+        pathFilter: 'wind-triangle',
+      },
+    ],
+  },
+  {
+    slug: 'true-airspeed',
+    title: 'True Airspeed',
+    description:
+      'Calculate true airspeed (TAS) and Mach number from calibrated airspeed, pressure altitude, and outside air temperature.',
+    icon: 'gauge',
+    subcategories: [
+      {
+        tag: 'Performance Calculations',
+        label: 'True Airspeed',
+        description: 'TAS and Mach number calculations.',
+        pathFilter: 'true-airspeed',
+      },
+    ],
+  },
+  {
+    slug: 'cloud-base',
+    title: 'Cloud Base',
+    description:
+      'Estimate cloud base height AGL from surface temperature and dewpoint using the standard spread formula.',
+    icon: 'cloud-lightning',
+    subcategories: [
+      {
+        tag: 'Performance Calculations',
+        label: 'Cloud Base',
+        description: 'Cloud base height estimation.',
+        pathFilter: 'cloud-base',
+      },
+    ],
+  },
+  {
+    slug: 'pressure-altitude',
+    title: 'Pressure Altitude',
+    description:
+      'Calculate pressure altitude from field elevation and altimeter setting.',
+    icon: 'mountain',
+    subcategories: [
+      {
+        tag: 'Performance Calculations',
+        label: 'Pressure Altitude',
+        description: 'Pressure altitude calculations.',
+        pathFilter: 'pressure-altitude',
       },
     ],
   },

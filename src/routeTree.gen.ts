@@ -19,7 +19,10 @@ import { Route as DocsIndexRouteImport } from './routes/docs/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as MarketingIndexRouteImport } from './routes/_marketing/index'
 import { Route as DocsWindsAloftRouteImport } from './routes/docs/winds-aloft'
+import { Route as DocsWindTriangleRouteImport } from './routes/docs/wind-triangle'
+import { Route as DocsTrueAirspeedRouteImport } from './routes/docs/true-airspeed'
 import { Route as DocsRateLimitsRouteImport } from './routes/docs/rate-limits'
+import { Route as DocsPressureAltitudeRouteImport } from './routes/docs/pressure-altitude'
 import { Route as DocsPirepsRouteImport } from './routes/docs/pireps'
 import { Route as DocsOpenapiRouteImport } from './routes/docs/openapi'
 import { Route as DocsObstaclesRouteImport } from './routes/docs/obstacles'
@@ -32,6 +35,7 @@ import { Route as DocsErrorsRouteImport } from './routes/docs/errors'
 import { Route as DocsDocumentsRouteImport } from './routes/docs/documents'
 import { Route as DocsDensityAltitudeRouteImport } from './routes/docs/density-altitude'
 import { Route as DocsCrosswindRouteImport } from './routes/docs/crosswind'
+import { Route as DocsCloudBaseRouteImport } from './routes/docs/cloud-base'
 import { Route as DocsBearingDistanceRouteImport } from './routes/docs/bearing-distance'
 import { Route as DocsAuthenticationRouteImport } from './routes/docs/authentication'
 import { Route as DocsApiReferenceRouteImport } from './routes/docs/api-reference'
@@ -97,9 +101,24 @@ const DocsWindsAloftRoute = DocsWindsAloftRouteImport.update({
   path: '/winds-aloft',
   getParentRoute: () => DocsRoute,
 } as any)
+const DocsWindTriangleRoute = DocsWindTriangleRouteImport.update({
+  id: '/wind-triangle',
+  path: '/wind-triangle',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsTrueAirspeedRoute = DocsTrueAirspeedRouteImport.update({
+  id: '/true-airspeed',
+  path: '/true-airspeed',
+  getParentRoute: () => DocsRoute,
+} as any)
 const DocsRateLimitsRoute = DocsRateLimitsRouteImport.update({
   id: '/rate-limits',
   path: '/rate-limits',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsPressureAltitudeRoute = DocsPressureAltitudeRouteImport.update({
+  id: '/pressure-altitude',
+  path: '/pressure-altitude',
   getParentRoute: () => DocsRoute,
 } as any)
 const DocsPirepsRoute = DocsPirepsRouteImport.update({
@@ -160,6 +179,11 @@ const DocsDensityAltitudeRoute = DocsDensityAltitudeRouteImport.update({
 const DocsCrosswindRoute = DocsCrosswindRouteImport.update({
   id: '/crosswind',
   path: '/crosswind',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsCloudBaseRoute = DocsCloudBaseRouteImport.update({
+  id: '/cloud-base',
+  path: '/cloud-base',
   getParentRoute: () => DocsRoute,
 } as any)
 const DocsBearingDistanceRoute = DocsBearingDistanceRouteImport.update({
@@ -255,6 +279,7 @@ export interface FileRoutesByFullPath {
   '/docs/api-reference': typeof DocsApiReferenceRoute
   '/docs/authentication': typeof DocsAuthenticationRoute
   '/docs/bearing-distance': typeof DocsBearingDistanceRoute
+  '/docs/cloud-base': typeof DocsCloudBaseRoute
   '/docs/crosswind': typeof DocsCrosswindRoute
   '/docs/density-altitude': typeof DocsDensityAltitudeRoute
   '/docs/documents': typeof DocsDocumentsRoute
@@ -267,7 +292,10 @@ export interface FileRoutesByFullPath {
   '/docs/obstacles': typeof DocsObstaclesRoute
   '/docs/openapi': typeof DocsOpenapiRoute
   '/docs/pireps': typeof DocsPirepsRoute
+  '/docs/pressure-altitude': typeof DocsPressureAltitudeRoute
   '/docs/rate-limits': typeof DocsRateLimitsRoute
+  '/docs/true-airspeed': typeof DocsTrueAirspeedRoute
+  '/docs/wind-triangle': typeof DocsWindTriangleRoute
   '/docs/winds-aloft': typeof DocsWindsAloftRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/docs/': typeof DocsIndexRoute
@@ -291,6 +319,7 @@ export interface FileRoutesByTo {
   '/docs/api-reference': typeof DocsApiReferenceRoute
   '/docs/authentication': typeof DocsAuthenticationRoute
   '/docs/bearing-distance': typeof DocsBearingDistanceRoute
+  '/docs/cloud-base': typeof DocsCloudBaseRoute
   '/docs/crosswind': typeof DocsCrosswindRoute
   '/docs/density-altitude': typeof DocsDensityAltitudeRoute
   '/docs/documents': typeof DocsDocumentsRoute
@@ -303,7 +332,10 @@ export interface FileRoutesByTo {
   '/docs/obstacles': typeof DocsObstaclesRoute
   '/docs/openapi': typeof DocsOpenapiRoute
   '/docs/pireps': typeof DocsPirepsRoute
+  '/docs/pressure-altitude': typeof DocsPressureAltitudeRoute
   '/docs/rate-limits': typeof DocsRateLimitsRoute
+  '/docs/true-airspeed': typeof DocsTrueAirspeedRoute
+  '/docs/wind-triangle': typeof DocsWindTriangleRoute
   '/docs/winds-aloft': typeof DocsWindsAloftRoute
   '/': typeof MarketingIndexRoute
   '/dashboard': typeof DashboardIndexRoute
@@ -332,6 +364,7 @@ export interface FileRoutesById {
   '/docs/api-reference': typeof DocsApiReferenceRoute
   '/docs/authentication': typeof DocsAuthenticationRoute
   '/docs/bearing-distance': typeof DocsBearingDistanceRoute
+  '/docs/cloud-base': typeof DocsCloudBaseRoute
   '/docs/crosswind': typeof DocsCrosswindRoute
   '/docs/density-altitude': typeof DocsDensityAltitudeRoute
   '/docs/documents': typeof DocsDocumentsRoute
@@ -344,7 +377,10 @@ export interface FileRoutesById {
   '/docs/obstacles': typeof DocsObstaclesRoute
   '/docs/openapi': typeof DocsOpenapiRoute
   '/docs/pireps': typeof DocsPirepsRoute
+  '/docs/pressure-altitude': typeof DocsPressureAltitudeRoute
   '/docs/rate-limits': typeof DocsRateLimitsRoute
+  '/docs/true-airspeed': typeof DocsTrueAirspeedRoute
+  '/docs/wind-triangle': typeof DocsWindTriangleRoute
   '/docs/winds-aloft': typeof DocsWindsAloftRoute
   '/_marketing/': typeof MarketingIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
@@ -374,6 +410,7 @@ export interface FileRouteTypes {
     | '/docs/api-reference'
     | '/docs/authentication'
     | '/docs/bearing-distance'
+    | '/docs/cloud-base'
     | '/docs/crosswind'
     | '/docs/density-altitude'
     | '/docs/documents'
@@ -386,7 +423,10 @@ export interface FileRouteTypes {
     | '/docs/obstacles'
     | '/docs/openapi'
     | '/docs/pireps'
+    | '/docs/pressure-altitude'
     | '/docs/rate-limits'
+    | '/docs/true-airspeed'
+    | '/docs/wind-triangle'
     | '/docs/winds-aloft'
     | '/dashboard/'
     | '/docs/'
@@ -410,6 +450,7 @@ export interface FileRouteTypes {
     | '/docs/api-reference'
     | '/docs/authentication'
     | '/docs/bearing-distance'
+    | '/docs/cloud-base'
     | '/docs/crosswind'
     | '/docs/density-altitude'
     | '/docs/documents'
@@ -422,7 +463,10 @@ export interface FileRouteTypes {
     | '/docs/obstacles'
     | '/docs/openapi'
     | '/docs/pireps'
+    | '/docs/pressure-altitude'
     | '/docs/rate-limits'
+    | '/docs/true-airspeed'
+    | '/docs/wind-triangle'
     | '/docs/winds-aloft'
     | '/'
     | '/dashboard'
@@ -450,6 +494,7 @@ export interface FileRouteTypes {
     | '/docs/api-reference'
     | '/docs/authentication'
     | '/docs/bearing-distance'
+    | '/docs/cloud-base'
     | '/docs/crosswind'
     | '/docs/density-altitude'
     | '/docs/documents'
@@ -462,7 +507,10 @@ export interface FileRouteTypes {
     | '/docs/obstacles'
     | '/docs/openapi'
     | '/docs/pireps'
+    | '/docs/pressure-altitude'
     | '/docs/rate-limits'
+    | '/docs/true-airspeed'
+    | '/docs/wind-triangle'
     | '/docs/winds-aloft'
     | '/_marketing/'
     | '/dashboard/'
@@ -555,11 +603,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DocsWindsAloftRouteImport
       parentRoute: typeof DocsRoute
     }
+    '/docs/wind-triangle': {
+      id: '/docs/wind-triangle'
+      path: '/wind-triangle'
+      fullPath: '/docs/wind-triangle'
+      preLoaderRoute: typeof DocsWindTriangleRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/true-airspeed': {
+      id: '/docs/true-airspeed'
+      path: '/true-airspeed'
+      fullPath: '/docs/true-airspeed'
+      preLoaderRoute: typeof DocsTrueAirspeedRouteImport
+      parentRoute: typeof DocsRoute
+    }
     '/docs/rate-limits': {
       id: '/docs/rate-limits'
       path: '/rate-limits'
       fullPath: '/docs/rate-limits'
       preLoaderRoute: typeof DocsRateLimitsRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/pressure-altitude': {
+      id: '/docs/pressure-altitude'
+      path: '/pressure-altitude'
+      fullPath: '/docs/pressure-altitude'
+      preLoaderRoute: typeof DocsPressureAltitudeRouteImport
       parentRoute: typeof DocsRoute
     }
     '/docs/pireps': {
@@ -644,6 +713,13 @@ declare module '@tanstack/react-router' {
       path: '/crosswind'
       fullPath: '/docs/crosswind'
       preLoaderRoute: typeof DocsCrosswindRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/cloud-base': {
+      id: '/docs/cloud-base'
+      path: '/cloud-base'
+      fullPath: '/docs/cloud-base'
+      preLoaderRoute: typeof DocsCloudBaseRouteImport
       parentRoute: typeof DocsRoute
     }
     '/docs/bearing-distance': {
@@ -803,6 +879,7 @@ interface DocsRouteChildren {
   DocsApiReferenceRoute: typeof DocsApiReferenceRoute
   DocsAuthenticationRoute: typeof DocsAuthenticationRoute
   DocsBearingDistanceRoute: typeof DocsBearingDistanceRoute
+  DocsCloudBaseRoute: typeof DocsCloudBaseRoute
   DocsCrosswindRoute: typeof DocsCrosswindRoute
   DocsDensityAltitudeRoute: typeof DocsDensityAltitudeRoute
   DocsDocumentsRoute: typeof DocsDocumentsRoute
@@ -815,7 +892,10 @@ interface DocsRouteChildren {
   DocsObstaclesRoute: typeof DocsObstaclesRoute
   DocsOpenapiRoute: typeof DocsOpenapiRoute
   DocsPirepsRoute: typeof DocsPirepsRoute
+  DocsPressureAltitudeRoute: typeof DocsPressureAltitudeRoute
   DocsRateLimitsRoute: typeof DocsRateLimitsRoute
+  DocsTrueAirspeedRoute: typeof DocsTrueAirspeedRoute
+  DocsWindTriangleRoute: typeof DocsWindTriangleRoute
   DocsWindsAloftRoute: typeof DocsWindsAloftRoute
   DocsIndexRoute: typeof DocsIndexRoute
 }
@@ -827,6 +907,7 @@ const DocsRouteChildren: DocsRouteChildren = {
   DocsApiReferenceRoute: DocsApiReferenceRoute,
   DocsAuthenticationRoute: DocsAuthenticationRoute,
   DocsBearingDistanceRoute: DocsBearingDistanceRoute,
+  DocsCloudBaseRoute: DocsCloudBaseRoute,
   DocsCrosswindRoute: DocsCrosswindRoute,
   DocsDensityAltitudeRoute: DocsDensityAltitudeRoute,
   DocsDocumentsRoute: DocsDocumentsRoute,
@@ -839,7 +920,10 @@ const DocsRouteChildren: DocsRouteChildren = {
   DocsObstaclesRoute: DocsObstaclesRoute,
   DocsOpenapiRoute: DocsOpenapiRoute,
   DocsPirepsRoute: DocsPirepsRoute,
+  DocsPressureAltitudeRoute: DocsPressureAltitudeRoute,
   DocsRateLimitsRoute: DocsRateLimitsRoute,
+  DocsTrueAirspeedRoute: DocsTrueAirspeedRoute,
+  DocsWindTriangleRoute: DocsWindTriangleRoute,
   DocsWindsAloftRoute: DocsWindsAloftRoute,
   DocsIndexRoute: DocsIndexRoute,
 }

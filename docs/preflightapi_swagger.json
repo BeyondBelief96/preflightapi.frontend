@@ -33,7 +33,7 @@
           {
             "name": "cursor",
             "in": "query",
-            "description": "Cursor from a previous response to fetch the next page.",
+            "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
             "schema": {
               "type": "string",
               "nullable": true
@@ -43,7 +43,7 @@
           {
             "name": "limit",
             "in": "query",
-            "description": "Maximum number of items to return (default 100, max 500).",
+            "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -174,7 +174,7 @@
           {
             "name": "cursor",
             "in": "query",
-            "description": "Cursor from a previous response to fetch the next page.",
+            "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
             "schema": {
               "type": "string",
               "nullable": true
@@ -184,7 +184,7 @@
           {
             "name": "limit",
             "in": "query",
-            "description": "Maximum number of items to return (default 100, max 500).",
+            "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -227,7 +227,7 @@
           {
             "name": "cursor",
             "in": "query",
-            "description": "Cursor from a previous response to fetch the next page.",
+            "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
             "schema": {
               "type": "string",
               "nullable": true
@@ -237,7 +237,7 @@
           {
             "name": "limit",
             "in": "query",
-            "description": "Maximum number of items to return (default 100, max 500).",
+            "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -316,7 +316,7 @@
           {
             "name": "cursor",
             "in": "query",
-            "description": "Cursor from a previous response to fetch the next page.",
+            "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
             "schema": {
               "type": "string",
               "nullable": true
@@ -326,7 +326,7 @@
           {
             "name": "limit",
             "in": "query",
-            "description": "Maximum number of items to return (default 100, max 500).",
+            "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -353,7 +353,7 @@
         "tags": [
           "Airports"
         ],
-        "summary": "Gets runways for a specific airport",
+        "summary": "Gets runways for a specific airport, including dimensions, surface type, lighting,\nand detailed runway end information (approach types, markings, obstacles).\nRunway heading data can be used with the Performance crosswind calculator endpoint.",
         "operationId": "Airport_GetRunwaysByAirport",
         "parameters": [
           {
@@ -399,14 +399,14 @@
         "tags": [
           "Airport Diagrams"
         ],
-        "summary": "Gets pre-signed URLs for all airport diagrams by ICAO code or identifier",
+        "summary": "Gets time-limited pre-signed URLs for all available airport diagram PDFs.\nThe URLs expire after a limited period; request new URLs if they have expired.",
         "operationId": "AirportDiagram_GetAirportDiagrams",
         "parameters": [
           {
             "name": "icaoCodeOrIdent",
             "in": "path",
             "required": true,
-            "description": "ICAO code or airport identifier",
+            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW)",
             "schema": {
               "type": "string"
             },
@@ -647,7 +647,7 @@
           {
             "name": "cursor",
             "in": "query",
-            "description": "Cursor from a previous response to fetch the next page.",
+            "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
             "schema": {
               "type": "string",
               "nullable": true
@@ -657,7 +657,7 @@
           {
             "name": "limit",
             "in": "query",
-            "description": "Maximum number of items to return (default 100, max 500).",
+            "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -709,7 +709,7 @@
           {
             "name": "cursor",
             "in": "query",
-            "description": "Cursor from a previous response to fetch the next page.",
+            "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
             "schema": {
               "type": "string",
               "nullable": true
@@ -719,7 +719,7 @@
           {
             "name": "limit",
             "in": "query",
-            "description": "Maximum number of items to return (default 100, max 500).",
+            "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -771,7 +771,7 @@
           {
             "name": "cursor",
             "in": "query",
-            "description": "Cursor from a previous response to fetch the next page.",
+            "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
             "schema": {
               "type": "string",
               "nullable": true
@@ -781,7 +781,7 @@
           {
             "name": "limit",
             "in": "query",
-            "description": "Maximum number of items to return (default 100, max 500).",
+            "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -833,7 +833,7 @@
           {
             "name": "cursor",
             "in": "query",
-            "description": "Cursor from a previous response to fetch the next page.",
+            "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
             "schema": {
               "type": "string",
               "nullable": true
@@ -843,7 +843,7 @@
           {
             "name": "limit",
             "in": "query",
-            "description": "Maximum number of items to return (default 100, max 500).",
+            "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -925,13 +925,13 @@
         "tags": [
           "Airspace"
         ],
-        "summary": "Gets airspaces by their global IDs",
+        "summary": "Gets controlled airspaces by their global IDs. This endpoint is designed to be used with the\nAirspaceGlobalIds returned by the navigation log endpoint (POST /api/v1/navlog/calculate)\nto retrieve full details for airspaces along a planned route.",
         "operationId": "Airspace_GetByGlobalIds",
         "parameters": [
           {
             "name": "globalIds",
             "in": "query",
-            "description": "Comma-separated global IDs",
+            "description": "Comma-separated global IDs (e.g., from the navlog response's AirspaceGlobalIds)",
             "schema": {
               "type": "string"
             },
@@ -970,13 +970,13 @@
         "tags": [
           "Airspace"
         ],
-        "summary": "Gets special use airspaces by their global IDs",
+        "summary": "Gets special use airspaces by their global IDs. This endpoint is designed to be used with the\nSpecialUseAirspaceGlobalIds returned by the navigation log endpoint (POST /api/v1/navlog/calculate)\nto retrieve full details for special use airspaces along a planned route.",
         "operationId": "Airspace_GetSpecialUseByGlobalIds",
         "parameters": [
           {
             "name": "globalIds",
             "in": "query",
-            "description": "Comma-separated global IDs",
+            "description": "Comma-separated global IDs (e.g., from the navlog response's SpecialUseAirspaceGlobalIds)",
             "schema": {
               "type": "string"
             },
@@ -1015,14 +1015,14 @@
         "tags": [
           "Chart Supplements"
         ],
-        "summary": "Gets pre-signed URLs for chart supplements by ICAO code or identifier",
+        "summary": "Gets time-limited pre-signed URLs for all chart supplement pages for an airport.\nMulti-page supplements will have one URL per page. The URLs expire after a limited period;\nrequest new URLs if they have expired.",
         "operationId": "ChartSupplement_GetChartSupplements",
         "parameters": [
           {
             "name": "icaoCodeOrIdent",
             "in": "path",
             "required": true,
-            "description": "ICAO code or airport identifier",
+            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW)",
             "schema": {
               "type": "string"
             },
@@ -1058,14 +1058,14 @@
         "tags": [
           "Communication Frequencies"
         ],
-        "summary": "Gets communication frequencies for a serviced facility",
+        "summary": "Gets all communication frequencies for a serviced facility (airport or ATC facility).\nReturns frequencies including their intended use (e.g., TWR, GND, ATIS, APP, DEP),\ncall signs, operating hours, and sectorization details.",
         "operationId": "CommunicationFrequency_GetFrequenciesByServicedFacility",
         "parameters": [
           {
             "name": "servicedFacility",
             "in": "path",
             "required": true,
-            "description": "FAA facility identifier (e.g., DFW, AUS)",
+            "description": "FAA facility identifier — typically the FAA airport code without the \"K\" prefix (e.g., DFW, AUS). Use the airport's ArptId field from the Airports endpoint.",
             "schema": {
               "type": "string"
             },
@@ -1074,7 +1074,7 @@
           {
             "name": "cursor",
             "in": "query",
-            "description": "Cursor from a previous response to fetch the next page.",
+            "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
             "schema": {
               "type": "string",
               "nullable": true
@@ -1084,7 +1084,7 @@
           {
             "name": "limit",
             "in": "query",
-            "description": "Maximum number of items to return (default 100, max 500).",
+            "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -1535,7 +1535,7 @@
         "tags": [
           "Weather - METARs"
         ],
-        "summary": "Gets the latest METAR for a specific airport",
+        "summary": "Gets the most recent METAR observation for a specific airport.\nReturns decoded weather data including wind, visibility, sky conditions, temperature, and flight category.",
         "operationId": "Metar_GetMetarForAirport",
         "parameters": [
           {
@@ -1594,7 +1594,7 @@
           {
             "name": "cursor",
             "in": "query",
-            "description": "Cursor from a previous response to fetch the next page.",
+            "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
             "schema": {
               "type": "string",
               "nullable": true
@@ -1604,7 +1604,7 @@
           {
             "name": "limit",
             "in": "query",
-            "description": "Maximum number of items to return (default 100, max 500).",
+            "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -1647,7 +1647,7 @@
           {
             "name": "cursor",
             "in": "query",
-            "description": "Cursor from a previous response to fetch the next page.",
+            "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
             "schema": {
               "type": "string",
               "nullable": true
@@ -1657,7 +1657,7 @@
           {
             "name": "limit",
             "in": "query",
-            "description": "Maximum number of items to return (default 100, max 500).",
+            "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -1684,11 +1684,11 @@
         "tags": [
           "Navigation Log"
         ],
-        "summary": "Calculates a complete navigation log for a flight",
+        "summary": "Calculates a complete VFR navigation log for a cross-country flight. Provide an ordered list of\nwaypoints and aircraft performance data (airspeeds, climb/descent rates, fuel burn rates).\nThe response includes per-leg calculations (true/magnetic course, heading, ground speed, distance,\ntime, fuel burn, wind data) and identifiers for airspaces and obstacles along the route.\nUse the returned AirspaceGlobalIds with GET /api/v1/airspaces/by-global-ids,\nSpecialUseAirspaceGlobalIds with GET /api/v1/airspaces/special-use/by-global-ids,\nand ObstacleOasNumbers with POST /api/v1/obstacles/by-oas-numbers to get full details.",
         "operationId": "Navlog_CalculateNavlog",
         "requestBody": {
           "x-name": "request",
-          "description": "Navigation log request including waypoints and aircraft performance settings",
+          "description": "Navigation log request including ordered waypoints, aircraft performance data, cruising altitude, and departure time",
           "content": {
             "application/json": {
               "schema": {
@@ -1711,7 +1711,7 @@
             }
           },
           "400": {
-            "description": "If the request data is invalid",
+            "description": "If the request data is invalid (e.g., fewer than 2 waypoints)",
             "content": {
               "application/json": {
                 "schema": {
@@ -1721,7 +1721,7 @@
             }
           },
           "404": {
-            "description": "If the aircraft performance profile is not found",
+            "description": "",
             "content": {
               "application/json": {
                 "schema": {
@@ -1731,7 +1731,7 @@
             }
           },
           "503": {
-            "description": "",
+            "description": "If an external service (magnetic variation or winds aloft) is unavailable",
             "content": {
               "application/json": {
                 "schema": {
@@ -1748,11 +1748,11 @@
         "tags": [
           "Navigation Log"
         ],
-        "summary": "Calculates bearing and distance between two points",
+        "summary": "Calculates the great-circle bearing and distance between two geographic points.\nReturns true course, magnetic course (adjusted for local magnetic variation), and\ndistance in nautical miles. Useful for quick point-to-point calculations without\na full navigation log.",
         "operationId": "Navlog_CalculateBearingAndDistance",
         "requestBody": {
           "x-name": "request",
-          "description": "Start and end points for the calculation",
+          "description": "Start and end point coordinates (latitude/longitude in decimal degrees)",
           "content": {
             "application/json": {
               "schema": {
@@ -1775,7 +1775,7 @@
             }
           },
           "400": {
-            "description": "If the request data is invalid",
+            "description": "If the coordinates are invalid",
             "content": {
               "application/json": {
                 "schema": {
@@ -1785,7 +1785,7 @@
             }
           },
           "503": {
-            "description": "",
+            "description": "If the magnetic variation service is unavailable",
             "content": {
               "application/json": {
                 "schema": {
@@ -1802,14 +1802,14 @@
         "tags": [
           "Navigation Log"
         ],
-        "summary": "Gets winds aloft data for a specific forecast period",
+        "summary": "Gets winds aloft (FB) forecast data for all reporting sites across the US.\nReturns wind direction, speed, and temperature at standard altitude levels (3000, 6000, 9000, 12000,\n18000, 24000, 30000, 34000, 39000 ft MSL) for each reporting site. This is the raw forecast data\nthat the navlog calculator uses internally to compute wind-corrected headings and ground speeds.",
         "operationId": "Navlog_GetWindsAloftData",
         "parameters": [
           {
             "name": "forecast",
             "in": "path",
             "required": true,
-            "description": "Forecast period (6, 12, or 24 hours)",
+            "description": "Forecast period in hours: 6, 12, or 24",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -1829,7 +1829,7 @@
             }
           },
           "400": {
-            "description": "If the forecast period is invalid",
+            "description": "If the forecast period is not 6, 12, or 24",
             "content": {
               "application/json": {
                 "schema": {
@@ -1839,7 +1839,7 @@
             }
           },
           "503": {
-            "description": "",
+            "description": "If the winds aloft data source is unavailable",
             "content": {
               "application/json": {
                 "schema": {
@@ -2085,7 +2085,7 @@
           {
             "name": "cursor",
             "in": "query",
-            "description": "Cursor from a previous response to fetch the next page.",
+            "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
             "schema": {
               "type": "string",
               "nullable": true
@@ -2095,7 +2095,7 @@
           {
             "name": "limit",
             "in": "query",
-            "description": "Maximum number of items to return (default 100, max 500).",
+            "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -2159,7 +2159,7 @@
           {
             "name": "cursor",
             "in": "query",
-            "description": "Cursor from a previous response to fetch the next page.",
+            "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
             "schema": {
               "type": "string",
               "nullable": true
@@ -2169,7 +2169,7 @@
           {
             "name": "limit",
             "in": "query",
-            "description": "Maximum number of items to return (default 100, max 500).",
+            "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -2249,11 +2249,11 @@
         "tags": [
           "Obstacles"
         ],
-        "summary": "Gets multiple obstacles by their OAS numbers",
+        "summary": "Gets multiple obstacles by their OAS numbers. This endpoint is designed to be used with the\nObstacleOasNumbers returned by the navigation log endpoint (POST /api/v1/navlog/calculate)\nto retrieve full details for obstacles near a planned route.",
         "operationId": "Obstacle_GetByOasNumbers",
         "requestBody": {
           "x-name": "oasNumbers",
-          "description": "List of OAS numbers (maximum 1000)",
+          "description": "JSON array of OAS number strings (maximum 1000). Example: [\"12-345678\",\"12-345679\"]",
           "content": {
             "application/json": {
               "schema": {
@@ -2356,7 +2356,7 @@
           {
             "name": "cursor",
             "in": "query",
-            "description": "Cursor from a previous response to fetch the next page.",
+            "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
             "schema": {
               "type": "string",
               "nullable": true
@@ -2366,7 +2366,7 @@
           {
             "name": "limit",
             "in": "query",
-            "description": "Maximum number of items to return (default 100, max 500).",
+            "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -2403,7 +2403,7 @@
         "tags": [
           "Performance Calculations"
         ],
-        "summary": "Calculates crosswind components for all runways at an airport using current METAR data",
+        "summary": "Calculates crosswind and headwind components for all runways at an airport using the latest METAR wind data.\nReturns components for each runway end and recommends the best runway (lowest crosswind with a headwind).\nRequires the airport to have a current METAR with wind data and at least one runway with heading information.",
         "operationId": "Performance_GetCrosswindForAirport",
         "parameters": [
           {
@@ -2466,11 +2466,11 @@
         "tags": [
           "Performance Calculations"
         ],
-        "summary": "Calculates crosswind components using manual parameters",
+        "summary": "Calculates crosswind and headwind components using manually provided wind and runway heading values.\nUseful when you want to calculate components for specific conditions rather than using live METAR data.",
         "operationId": "Performance_CalculateCrosswind",
         "requestBody": {
           "x-name": "request",
-          "description": "Wind and runway heading parameters",
+          "description": "Wind direction (degrees), wind speed (knots), optional gust speed (knots), and runway heading (magnetic degrees)",
           "content": {
             "application/json": {
               "schema": {
@@ -2510,14 +2510,14 @@
         "tags": [
           "Performance Calculations"
         ],
-        "summary": "Calculates density altitude for an airport using current METAR data",
+        "summary": "Calculates density altitude for an airport using the latest METAR temperature and altimeter data.\nOptionally override the temperature or altimeter setting (e.g., for \"what if\" scenarios).\nReturns density altitude, pressure altitude, ISA temperature, and temperature deviation.",
         "operationId": "Performance_GetDensityAltitudeForAirport",
         "parameters": [
           {
             "name": "icaoCodeOrIdent",
             "in": "path",
             "required": true,
-            "description": "ICAO code or airport identifier",
+            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW)",
             "schema": {
               "type": "string"
             },
@@ -2595,11 +2595,11 @@
         "tags": [
           "Performance Calculations"
         ],
-        "summary": "Calculates density altitude using manual parameters",
+        "summary": "Calculates density altitude using manually provided field elevation, altimeter setting, and temperature.\nUseful for any location or for calculating with non-current weather conditions.",
         "operationId": "Performance_CalculateDensityAltitude",
         "requestBody": {
           "x-name": "request",
-          "description": "Field elevation, altimeter, and temperature",
+          "description": "Field elevation (feet MSL), altimeter setting (inches of mercury), and temperature (degrees Celsius)",
           "content": {
             "application/json": {
               "schema": {
@@ -2634,12 +2634,188 @@
         }
       }
     },
+    "/api/v1/performance/wind-triangle/calculate": {
+      "post": {
+        "tags": [
+          "Performance Calculations"
+        ],
+        "summary": "Calculates true heading and ground speed using the wind triangle.\nGiven true course, true airspeed, wind direction, and wind speed, returns the wind correction angle,\ntrue heading, ground speed, and headwind/crosswind components.",
+        "operationId": "Performance_CalculateWindTriangle",
+        "requestBody": {
+          "x-name": "request",
+          "description": "True course (degrees), TAS (knots), wind direction (degrees), wind speed (knots)",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WindTriangleRequestDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "Returns wind triangle calculation results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WindTriangleResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "If the request parameters are invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/performance/true-airspeed/calculate": {
+      "post": {
+        "tags": [
+          "Performance Calculations"
+        ],
+        "summary": "Calculates true airspeed (TAS) from calibrated airspeed, pressure altitude, and outside air temperature.\nAlso returns density altitude and Mach number at the given conditions.",
+        "operationId": "Performance_CalculateTrueAirspeed",
+        "requestBody": {
+          "x-name": "request",
+          "description": "Calibrated airspeed (knots), pressure altitude (feet), OAT (°C)",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrueAirspeedRequestDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "Returns TAS calculation results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrueAirspeedResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "If the request parameters are invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/performance/cloud-base/calculate": {
+      "post": {
+        "tags": [
+          "Performance Calculations"
+        ],
+        "summary": "Estimates cloud base height AGL from surface temperature and dewpoint.\nUses the standard spread × 400 formula (equivalent to spread / 2.5 × 1000).",
+        "operationId": "Performance_CalculateCloudBase",
+        "requestBody": {
+          "x-name": "request",
+          "description": "Surface temperature (°C) and dewpoint (°C)",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CloudBaseRequestDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "Returns cloud base estimation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CloudBaseResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "If dewpoint exceeds temperature",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/performance/pressure-altitude/calculate": {
+      "post": {
+        "tags": [
+          "Performance Calculations"
+        ],
+        "summary": "Calculates pressure altitude from field elevation and altimeter setting.\nPA = field elevation + (29.92 − altimeter) × 1000.",
+        "operationId": "Performance_CalculatePressureAltitude",
+        "requestBody": {
+          "x-name": "request",
+          "description": "Field elevation (feet MSL) and altimeter setting (inHg)",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PressureAltitudeRequestDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "Returns pressure altitude calculation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PressureAltitudeResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "If the altimeter setting is out of range",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/pireps": {
       "get": {
         "tags": [
           "Weather - PIREPs"
         ],
-        "summary": "Gets all current PIREPs (Pilot Reports)",
+        "summary": "Gets all current PIREPs. Returns all active pilot reports with reported conditions\nincluding turbulence (type, intensity, altitude), icing (type, intensity, altitude),\nand sky conditions. Each report includes the geographic coordinates and altitude where\nthe observation was made.",
         "operationId": "Pirep_GetAllPireps",
         "responses": {
           "200": {
@@ -2663,14 +2839,14 @@
         "tags": [
           "Weather - TAFs"
         ],
-        "summary": "Gets TAF information for a specific airport",
+        "summary": "Gets the current TAF for a specific airport, including all forecast periods with expected\nweather conditions (wind, visibility, sky cover, precipitation, turbulence, and icing).",
         "operationId": "Taf_GetTafByIcaoCodeOrIdent",
         "parameters": [
           {
             "name": "icaoCodeOrIdent",
             "in": "path",
             "required": true,
-            "description": "ICAO code or airport identifier",
+            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW)",
             "schema": {
               "type": "string"
             },
@@ -2679,7 +2855,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Returns the TAF information",
+            "description": "Returns the TAF with all forecast periods",
             "content": {
               "application/json": {
                 "schema": {
@@ -2689,7 +2865,7 @@
             }
           },
           "404": {
-            "description": "If the TAF or airport is not found",
+            "description": "If no TAF is found for the airport",
             "content": {
               "application/json": {
                 "schema": {
@@ -2706,18 +2882,18 @@
     "schemas": {
       "PaginatedResponseOfAirportDto": {
         "type": "object",
-        "description": "Cursor-based paginated response wrapper.",
+        "description": "Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the\npagination.nextCursor value as the cursor query parameter in your next request.\nContinue until pagination.hasMore is false.",
         "additionalProperties": false,
         "properties": {
           "data": {
             "type": "array",
-            "description": "The page of results.",
+            "description": "The current page of results.",
             "items": {
               "$ref": "#/components/schemas/AirportDto"
             }
           },
           "pagination": {
-            "description": "Pagination metadata including cursor for next page.",
+            "description": "Pagination metadata including the cursor to fetch the next page.",
             "oneOf": [
               {
                 "$ref": "#/components/schemas/PaginationMetadata"
@@ -2728,7 +2904,7 @@
       },
       "AirportDto": {
         "type": "object",
-        "description": "Airport data from the FAA NASR database.",
+        "description": "Airport data from the FAA National Airspace System Resources (NASR) database.\nUse the airport's IcaoId or ArptId to query related endpoints such as runways\n(GET /api/v1/airports/{icaoCodeOrIdent}/runways), communication frequencies\n(GET /api/v1/communication-frequencies/{servicedFacility}), METARs\n(GET /api/v1/metars/{icaoCodeOrIdent}), TAFs (GET /api/v1/tafs/{icaoCodeOrIdent}),\nairport diagrams (GET /api/v1/airport-diagrams/{icaoCodeOrIdent}), and\nchart supplements (GET /api/v1/chart-supplements/{icaoCodeOrIdent}).",
         "additionalProperties": false,
         "properties": {
           "siteNo": {
@@ -2795,13 +2971,13 @@
           },
           "magVarn": {
             "type": "number",
-            "description": "Magnetic variation in degrees.",
+            "description": "Magnetic variation in degrees. Combine with MagHemis to determine east/west deviation (e.g., 5E means add 5 degrees to true heading for magnetic heading).",
             "format": "decimal",
             "nullable": true
           },
           "magHemis": {
             "type": "string",
-            "description": "Magnetic variation hemisphere (E or W).",
+            "description": "Magnetic variation hemisphere: E (east/add to true heading) or W (west/subtract from true heading).",
             "nullable": true
           },
           "chartName": {
@@ -2811,12 +2987,12 @@
           },
           "arptStatus": {
             "type": "string",
-            "description": "Airport operational status.",
+            "description": "Airport operational status: O (operational), CI (closed indefinitely), or CP (closed permanently).",
             "nullable": true
           },
           "fuelTypes": {
             "type": "string",
-            "description": "Available fuel types.",
+            "description": "Available fuel types (e.g., \"100LL\", \"JET-A\", \"MOGAS\"). Comma-separated if multiple types available.",
             "nullable": true
           },
           "lastInspection": {
@@ -2900,21 +3076,21 @@
       },
       "PaginationMetadata": {
         "type": "object",
-        "description": "Metadata for cursor-based pagination.",
+        "description": "Metadata for cursor-based pagination. Use nextCursor as the cursor query parameter\nto fetch the next page of results. When hasMore is false, there are no more pages.",
         "additionalProperties": false,
         "properties": {
           "nextCursor": {
             "type": "string",
-            "description": "Cursor value to pass for the next page of results (null if no more pages).",
+            "description": "Opaque cursor value to pass as the cursor query parameter to fetch the next page. Null when there are no more results.",
             "nullable": true
           },
           "hasMore": {
             "type": "boolean",
-            "description": "Whether more results are available beyond this page."
+            "description": "True if more results are available beyond this page; false if this is the last page."
           },
           "limit": {
             "type": "integer",
-            "description": "Maximum number of items per page.",
+            "description": "Maximum number of items returned per page (1-500, default 100).",
             "format": "int32"
           }
         }
@@ -3545,7 +3721,7 @@
       },
       "AirportDiagramsResponseDto": {
         "type": "object",
-        "description": "Airport information with all available airport diagrams.",
+        "description": "Airport information with all available airport diagrams. Diagrams are FAA-published PDF charts\nshowing taxiways, runways, and other ground features. The PDF URLs are time-limited pre-signed URLs.",
         "additionalProperties": false,
         "properties": {
           "airportName": {
@@ -3554,17 +3730,17 @@
           },
           "icaoIdent": {
             "type": "string",
-            "description": "ICAO identifier (e.g., KDFW).",
+            "description": "ICAO identifier (e.g., KDFW). Use this to cross-reference with other endpoints such as METARs and TAFs.",
             "nullable": true
           },
           "airportIdent": {
             "type": "string",
-            "description": "FAA airport identifier (e.g., DFW).",
+            "description": "FAA airport identifier (e.g., DFW). Use this to cross-reference with the Airports endpoint.",
             "nullable": true
           },
           "diagrams": {
             "type": "array",
-            "description": "List of available airport diagrams with download URLs.",
+            "description": "List of available airport diagram PDFs with time-limited download URLs.",
             "items": {
               "$ref": "#/components/schemas/AirportDiagramDto"
             }
@@ -3573,16 +3749,16 @@
       },
       "AirportDiagramDto": {
         "type": "object",
-        "description": "An airport diagram with a pre-signed URL for PDF access.",
+        "description": "An airport diagram (e.g., Airport Diagram, Hot Spot, taxi chart) with a time-limited pre-signed URL for PDF download.",
         "additionalProperties": false,
         "properties": {
           "chartName": {
             "type": "string",
-            "description": "Name of the chart/diagram."
+            "description": "Name of the chart/diagram (e.g., \"AIRPORT DIAGRAM\", \"HOT SPOT\")."
           },
           "pdfUrl": {
             "type": "string",
-            "description": "Pre-signed URL to download the diagram PDF."
+            "description": "Pre-signed URL to download the diagram PDF. This URL expires after a limited time period; request a new URL if it has expired."
           }
         }
       },
@@ -3674,11 +3850,11 @@
       },
       "AirsigmetHazardDto": {
         "type": "object",
-        "description": "DTO for AIRSIGMET hazard with typed hazard type",
+        "description": "Hazard type and severity information for an AIRMET or SIGMET advisory.",
         "additionalProperties": false,
         "properties": {
           "type": {
-            "description": "The hazard type",
+            "description": "The weather hazard type: CONVECTIVE (thunderstorms/convection), ICE (icing), TURB (turbulence), IFR (instrument flight rules conditions), or MTN_OBSCN (mountain obscuration).",
             "nullable": true,
             "oneOf": [
               {
@@ -3688,7 +3864,7 @@
           },
           "severity": {
             "type": "string",
-            "description": "The severity: LGT, LT-MOD, MOD (AIRMET), MOD-SEV, SEV (SIGMET)",
+            "description": "Hazard severity. AIRMETs use LGT (light) or MOD (moderate). SIGMETs use MOD-SEV (moderate to severe) or SEV (severe). Convective SIGMETs do not have a severity value.",
             "nullable": true
           }
         }
@@ -3743,18 +3919,18 @@
       },
       "PaginatedResponseOfAirspaceDto": {
         "type": "object",
-        "description": "Cursor-based paginated response wrapper.",
+        "description": "Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the\npagination.nextCursor value as the cursor query parameter in your next request.\nContinue until pagination.hasMore is false.",
         "additionalProperties": false,
         "properties": {
           "data": {
             "type": "array",
-            "description": "The page of results.",
+            "description": "The current page of results.",
             "items": {
               "$ref": "#/components/schemas/AirspaceDto"
             }
           },
           "pagination": {
-            "description": "Pagination metadata including cursor for next page.",
+            "description": "Pagination metadata including the cursor to fetch the next page.",
             "oneOf": [
               {
                 "$ref": "#/components/schemas/PaginationMetadata"
@@ -3765,12 +3941,12 @@
       },
       "AirspaceDto": {
         "type": "object",
-        "description": "Controlled airspace data (Class B, C, D, E) from ArcGIS.",
+        "description": "Controlled airspace data (Class B, C, D, E) sourced from FAA ArcGIS.\nUse the GlobalId to cross-reference with navigation log results — the navlog response's\nAirspaceGlobalIds field contains GlobalIds from this endpoint for airspaces along a planned route.",
         "additionalProperties": false,
         "properties": {
           "globalId": {
             "type": "string",
-            "description": "ArcGIS global unique identifier.",
+            "description": "ArcGIS global unique identifier. This is the key used to look up airspaces returned by the navigation log endpoint's AirspaceGlobalIds field.",
             "nullable": true
           },
           "ident": {
@@ -3958,18 +4134,18 @@
       },
       "PaginatedResponseOfSpecialUseAirspaceDto": {
         "type": "object",
-        "description": "Cursor-based paginated response wrapper.",
+        "description": "Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the\npagination.nextCursor value as the cursor query parameter in your next request.\nContinue until pagination.hasMore is false.",
         "additionalProperties": false,
         "properties": {
           "data": {
             "type": "array",
-            "description": "The page of results.",
+            "description": "The current page of results.",
             "items": {
               "$ref": "#/components/schemas/SpecialUseAirspaceDto"
             }
           },
           "pagination": {
-            "description": "Pagination metadata including cursor for next page.",
+            "description": "Pagination metadata including the cursor to fetch the next page.",
             "oneOf": [
               {
                 "$ref": "#/components/schemas/PaginationMetadata"
@@ -3980,12 +4156,12 @@
       },
       "SpecialUseAirspaceDto": {
         "type": "object",
-        "description": "Special use airspace data (restricted, prohibited, warning, MOA, alert) from ArcGIS.",
+        "description": "Special use airspace data (restricted, prohibited, warning, MOA, alert) sourced from FAA ArcGIS.\nUse the GlobalId to cross-reference with navigation log results — the navlog response's\nSpecialUseAirspaceGlobalIds field contains GlobalIds from this endpoint for special use airspaces along a planned route.",
         "additionalProperties": false,
         "properties": {
           "globalId": {
             "type": "string",
-            "description": "ArcGIS global unique identifier.",
+            "description": "ArcGIS global unique identifier. This is the key used to look up special use airspaces returned by the navigation log endpoint's SpecialUseAirspaceGlobalIds field.",
             "nullable": true
           },
           "name": {
@@ -4121,7 +4297,7 @@
       },
       "ChartSupplementsResponseDto": {
         "type": "object",
-        "description": "Airport information with all available chart supplement pages.",
+        "description": "Airport information with all available chart supplement (formerly Airport/Facility Directory) pages.\nChart supplements contain detailed airport information including runway data, lighting, services,\nNOTAMs, and other operational details published by the FAA. The PDF URLs are time-limited pre-signed URLs.",
         "additionalProperties": false,
         "properties": {
           "airportName": {
@@ -4136,12 +4312,12 @@
           },
           "airportCode": {
             "type": "string",
-            "description": "Airport ICAO code or FAA identifier.",
+            "description": "Airport ICAO code or FAA identifier used to query this data.",
             "nullable": true
           },
           "supplements": {
             "type": "array",
-            "description": "List of chart supplement pages with download URLs.",
+            "description": "List of chart supplement PDF pages with time-limited download URLs. Multi-page supplements will have one entry per page.",
             "items": {
               "$ref": "#/components/schemas/ChartSupplementDto"
             }
@@ -4150,29 +4326,29 @@
       },
       "ChartSupplementDto": {
         "type": "object",
-        "description": "A chart supplement page with a pre-signed URL for PDF access.",
+        "description": "A single chart supplement page with a time-limited pre-signed URL for PDF download.",
         "additionalProperties": false,
         "properties": {
           "pdfUrl": {
             "type": "string",
-            "description": "Pre-signed URL to download the chart supplement PDF."
+            "description": "Pre-signed URL to download the chart supplement PDF page. This URL expires after a limited time period; request a new URL if it has expired."
           }
         }
       },
       "PaginatedResponseOfCommunicationFrequencyDto": {
         "type": "object",
-        "description": "Cursor-based paginated response wrapper.",
+        "description": "Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the\npagination.nextCursor value as the cursor query parameter in your next request.\nContinue until pagination.hasMore is false.",
         "additionalProperties": false,
         "properties": {
           "data": {
             "type": "array",
-            "description": "The page of results.",
+            "description": "The current page of results.",
             "items": {
               "$ref": "#/components/schemas/CommunicationFrequencyDto"
             }
           },
           "pagination": {
-            "description": "Pagination metadata including cursor for next page.",
+            "description": "Pagination metadata including the cursor to fetch the next page.",
             "oneOf": [
               {
                 "$ref": "#/components/schemas/PaginationMetadata"
@@ -4677,18 +4853,18 @@
       },
       "PaginatedResponseOfMetarDto": {
         "type": "object",
-        "description": "Cursor-based paginated response wrapper.",
+        "description": "Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the\npagination.nextCursor value as the cursor query parameter in your next request.\nContinue until pagination.hasMore is false.",
         "additionalProperties": false,
         "properties": {
           "data": {
             "type": "array",
-            "description": "The page of results.",
+            "description": "The current page of results.",
             "items": {
               "$ref": "#/components/schemas/MetarDto"
             }
           },
           "pagination": {
-            "description": "Pagination metadata including cursor for next page.",
+            "description": "Pagination metadata including the cursor to fetch the next page.",
             "oneOf": [
               {
                 "$ref": "#/components/schemas/PaginationMetadata"
@@ -4699,53 +4875,53 @@
       },
       "NavlogResponseDto": {
         "type": "object",
-        "description": "Complete navigation log calculation result for a cross-country flight.",
+        "description": "Complete navigation log calculation result for a VFR cross-country flight.\nIncludes per-leg calculations (course, speed, fuel, wind) and references to airspace and obstacle\ndata along the route. Use the returned identifiers with the Airspace and Obstacle endpoints to\nretrieve full details about en-route hazards.",
         "additionalProperties": false,
         "properties": {
           "totalRouteDistance": {
             "type": "number",
-            "description": "Total route distance in nautical miles.",
+            "description": "Total route distance in nautical miles (sum of all leg distances).",
             "format": "double"
           },
           "totalRouteTimeHours": {
             "type": "number",
-            "description": "Total route time in hours.",
+            "description": "Total estimated en-route time in hours (including climb and descent phases).",
             "format": "double"
           },
           "totalFuelUsed": {
             "type": "number",
-            "description": "Total fuel used for the route in gallons.",
+            "description": "Total fuel consumed for the entire route in gallons (including start/taxi/takeoff fuel).",
             "format": "double"
           },
           "averageWindComponent": {
             "type": "number",
-            "description": "Average wind component across all legs (negative = headwind).",
+            "description": "Average wind component across all legs in knots. Negative values indicate a net headwind; positive values indicate a net tailwind.",
             "format": "double"
           },
           "legs": {
             "type": "array",
-            "description": "Individual navigation legs with computed data.",
+            "description": "Ordered list of navigation legs between each pair of consecutive waypoints, containing computed course, speed, fuel, and wind data.",
             "items": {
               "$ref": "#/components/schemas/NavigationLegDto"
             }
           },
           "airspaceGlobalIds": {
             "type": "array",
-            "description": "Global IDs of controlled airspaces along the route.",
+            "description": "Global IDs of controlled airspaces (Class B, C, D, E) that the route passes through.\nUse these IDs with the GET /api/v1/airspaces/by-global-ids?globalIds=... endpoint to retrieve full airspace details including boundaries and altitude limits.",
             "items": {
               "type": "string"
             }
           },
           "specialUseAirspaceGlobalIds": {
             "type": "array",
-            "description": "Global IDs of special use airspaces along the route.",
+            "description": "Global IDs of special use airspaces (restricted, prohibited, MOA, warning, alert) that the route passes through.\nUse these IDs with the GET /api/v1/airspaces/special-use/by-global-ids?globalIds=... endpoint to retrieve full airspace details including boundaries and altitude limits.",
             "items": {
               "type": "string"
             }
           },
           "obstacleOasNumbers": {
             "type": "array",
-            "description": "OAS numbers of obstacles along the route.",
+            "description": "OAS (Obstacle Assessment Surface) numbers of obstacles near the route.\nUse these numbers with the POST /api/v1/obstacles/by-oas-numbers endpoint to retrieve full obstacle details including type, height, and lighting.",
             "items": {
               "type": "string"
             }
@@ -5137,25 +5313,29 @@
       },
       "NotamResponseDto": {
         "type": "object",
-        "description": "Response wrapper for NOTAM queries",
+        "description": "Response containing NOTAMs (Notices to Air Missions) matching a query.\nNOTAMs are returned as GeoJSON Features from the FAA NOTAM Search (NMS) system.",
         "additionalProperties": false,
         "properties": {
           "notams": {
             "type": "array",
+            "description": "List of NOTAMs matching the query, each represented as a GeoJSON Feature with geometry and properties.",
             "items": {
               "$ref": "#/components/schemas/NotamDto"
             }
           },
           "totalCount": {
             "type": "integer",
+            "description": "Total number of NOTAMs returned in this response.",
             "format": "int32"
           },
           "retrievedAt": {
             "type": "string",
+            "description": "UTC timestamp when the NOTAMs were retrieved from the FAA NMS system.",
             "format": "date-time"
           },
           "queryLocation": {
             "type": "string",
+            "description": "Description of the queried location (e.g., airport identifier, coordinates, or route description).",
             "nullable": true
           }
         }
@@ -5166,13 +5346,16 @@
         "additionalProperties": false,
         "properties": {
           "type": {
-            "type": "string"
+            "type": "string",
+            "description": "GeoJSON type, always \"Feature\"."
           },
           "id": {
             "type": "string",
+            "description": "Unique NOTAM feature identifier.",
             "nullable": true
           },
           "geometry": {
+            "description": "GeoJSON geometry representing the NOTAM's geographic location or affected area (Point, Polygon, or GeometryCollection).",
             "nullable": true,
             "oneOf": [
               {
@@ -5181,6 +5364,7 @@
             ]
           },
           "properties": {
+            "description": "NOTAM properties containing the core NOTAM data, detail fields, and translations.",
             "nullable": true,
             "oneOf": [
               {
@@ -5214,9 +5398,11 @@
       },
       "NotamPropertiesDto": {
         "type": "object",
+        "description": "Properties of a NOTAM GeoJSON Feature containing the core NOTAM data.",
         "additionalProperties": false,
         "properties": {
           "coreNOTAMData": {
+            "description": "Core NOTAM data including the event metadata, detail fields, and translations.",
             "nullable": true,
             "oneOf": [
               {
@@ -5228,9 +5414,11 @@
       },
       "CoreNotamDataDto": {
         "type": "object",
+        "description": "Core NOTAM data structure containing event metadata, the NOTAM detail, and any translations.",
         "additionalProperties": false,
         "properties": {
           "notamEvent": {
+            "description": "NOTAM event metadata (encoding format and scenario).",
             "nullable": true,
             "oneOf": [
               {
@@ -5239,6 +5427,7 @@
             ]
           },
           "notam": {
+            "description": "The NOTAM detail fields including identifier, text, effective dates, location, and classification.",
             "nullable": true,
             "oneOf": [
               {
@@ -5248,6 +5437,7 @@
           },
           "notamTranslation": {
             "type": "array",
+            "description": "NOTAM text translations in various formats (plain English, domestic format, ICAO format).",
             "nullable": true,
             "items": {
               "$ref": "#/components/schemas/NotamTranslationDto"
@@ -5521,18 +5711,18 @@
       },
       "PaginatedResponseOfObstacleDto": {
         "type": "object",
-        "description": "Cursor-based paginated response wrapper.",
+        "description": "Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the\npagination.nextCursor value as the cursor query parameter in your next request.\nContinue until pagination.hasMore is false.",
         "additionalProperties": false,
         "properties": {
           "data": {
             "type": "array",
-            "description": "The page of results.",
+            "description": "The current page of results.",
             "items": {
               "$ref": "#/components/schemas/ObstacleDto"
             }
           },
           "pagination": {
-            "description": "Pagination metadata including cursor for next page.",
+            "description": "Pagination metadata including the cursor to fetch the next page.",
             "oneOf": [
               {
                 "$ref": "#/components/schemas/PaginationMetadata"
@@ -5543,12 +5733,12 @@
       },
       "ObstacleDto": {
         "type": "object",
-        "description": "Obstacle data from the FAA Digital Obstacle File.",
+        "description": "Obstacle data from the FAA Digital Obstacle File (DOF).\nUse the OasNumber to cross-reference with navigation log results — the navlog response's\nObstacleOasNumbers field contains OAS numbers from this endpoint for obstacles near a planned route.",
         "additionalProperties": false,
         "properties": {
           "oasNumber": {
             "type": "string",
-            "description": "Obstacle Assessment Surface number (unique identifier)."
+            "description": "Obstacle Assessment Surface (OAS) number — the unique identifier for this obstacle. This is the key used to look up obstacles returned by the navigation log endpoint's ObstacleOasNumbers field."
           },
           "stateId": {
             "type": "string",
@@ -6015,6 +6205,232 @@
           "temperatureCelsius": {
             "type": "number",
             "description": "Temperature in degrees Celsius",
+            "format": "double"
+          }
+        }
+      },
+      "WindTriangleResponseDto": {
+        "type": "object",
+        "description": "Response DTO for wind triangle calculation containing heading and ground speed results.",
+        "additionalProperties": false,
+        "properties": {
+          "trueHeadingDegrees": {
+            "type": "number",
+            "description": "True heading in degrees (0–360), corrected for wind",
+            "format": "double"
+          },
+          "groundSpeedKt": {
+            "type": "number",
+            "description": "Ground speed in knots",
+            "format": "double"
+          },
+          "windCorrectionAngleDegrees": {
+            "type": "number",
+            "description": "Wind correction angle in degrees (positive = right correction, negative = left)",
+            "format": "double"
+          },
+          "headwindComponentKt": {
+            "type": "number",
+            "description": "Headwind component in knots (positive = headwind, negative = tailwind)",
+            "format": "double"
+          },
+          "crosswindComponentKt": {
+            "type": "number",
+            "description": "Crosswind component in knots (positive = from the right, negative = from the left)",
+            "format": "double"
+          },
+          "trueCourseDegrees": {
+            "type": "number",
+            "description": "True course used in calculation (degrees)",
+            "format": "double"
+          },
+          "trueAirspeedKt": {
+            "type": "number",
+            "description": "True airspeed used in calculation (knots)",
+            "format": "double"
+          },
+          "windDirectionDegrees": {
+            "type": "number",
+            "description": "Wind direction used in calculation (degrees)",
+            "format": "double"
+          },
+          "windSpeedKt": {
+            "type": "number",
+            "description": "Wind speed used in calculation (knots)",
+            "format": "double"
+          }
+        }
+      },
+      "WindTriangleRequestDto": {
+        "type": "object",
+        "description": "Request DTO for wind triangle (heading and ground speed) calculation.",
+        "additionalProperties": false,
+        "properties": {
+          "trueCourseDegrees": {
+            "type": "number",
+            "description": "True course in degrees (0–360)",
+            "format": "double"
+          },
+          "trueAirspeedKt": {
+            "type": "number",
+            "description": "True airspeed in knots (must be greater than 0)",
+            "format": "double"
+          },
+          "windDirectionDegrees": {
+            "type": "number",
+            "description": "Wind direction in degrees (0–360)",
+            "format": "double"
+          },
+          "windSpeedKt": {
+            "type": "number",
+            "description": "Wind speed in knots (must be ≥ 0)",
+            "format": "double"
+          }
+        }
+      },
+      "TrueAirspeedResponseDto": {
+        "type": "object",
+        "description": "Response DTO for true airspeed calculation.",
+        "additionalProperties": false,
+        "properties": {
+          "trueAirspeedKt": {
+            "type": "number",
+            "description": "Calculated true airspeed in knots",
+            "format": "double"
+          },
+          "densityAltitudeFt": {
+            "type": "number",
+            "description": "Density altitude in feet at the given conditions",
+            "format": "double"
+          },
+          "machNumber": {
+            "type": "number",
+            "description": "Mach number at the given conditions",
+            "format": "double"
+          },
+          "calibratedAirspeedKt": {
+            "type": "number",
+            "description": "Calibrated airspeed used in calculation (knots)",
+            "format": "double"
+          },
+          "pressureAltitudeFt": {
+            "type": "number",
+            "description": "Pressure altitude used in calculation (feet)",
+            "format": "double"
+          },
+          "outsideAirTemperatureCelsius": {
+            "type": "number",
+            "description": "Outside air temperature used in calculation (°C)",
+            "format": "double"
+          }
+        }
+      },
+      "TrueAirspeedRequestDto": {
+        "type": "object",
+        "description": "Request DTO for true airspeed (TAS) calculation.",
+        "additionalProperties": false,
+        "properties": {
+          "calibratedAirspeedKt": {
+            "type": "number",
+            "description": "Calibrated (indicated) airspeed in knots (must be greater than 0)",
+            "format": "double"
+          },
+          "pressureAltitudeFt": {
+            "type": "number",
+            "description": "Pressure altitude in feet (can be negative, e.g. Death Valley)",
+            "format": "double"
+          },
+          "outsideAirTemperatureCelsius": {
+            "type": "number",
+            "description": "Outside air temperature in degrees Celsius",
+            "format": "double"
+          }
+        }
+      },
+      "CloudBaseResponseDto": {
+        "type": "object",
+        "description": "Response DTO for cloud base estimation.",
+        "additionalProperties": false,
+        "properties": {
+          "estimatedCloudBaseFtAgl": {
+            "type": "number",
+            "description": "Estimated cloud base in feet AGL",
+            "format": "double"
+          },
+          "temperatureDewpointSpreadCelsius": {
+            "type": "number",
+            "description": "Temperature/dewpoint spread in degrees Celsius",
+            "format": "double"
+          },
+          "temperatureCelsius": {
+            "type": "number",
+            "description": "Surface temperature used in calculation (°C)",
+            "format": "double"
+          },
+          "dewpointCelsius": {
+            "type": "number",
+            "description": "Dewpoint used in calculation (°C)",
+            "format": "double"
+          }
+        }
+      },
+      "CloudBaseRequestDto": {
+        "type": "object",
+        "description": "Request DTO for cloud base estimation.",
+        "additionalProperties": false,
+        "properties": {
+          "temperatureCelsius": {
+            "type": "number",
+            "description": "Surface temperature in degrees Celsius",
+            "format": "double"
+          },
+          "dewpointCelsius": {
+            "type": "number",
+            "description": "Dewpoint temperature in degrees Celsius (must be ≤ temperature)",
+            "format": "double"
+          }
+        }
+      },
+      "PressureAltitudeResponseDto": {
+        "type": "object",
+        "description": "Response DTO for standalone pressure altitude calculation.",
+        "additionalProperties": false,
+        "properties": {
+          "pressureAltitudeFt": {
+            "type": "number",
+            "description": "Calculated pressure altitude in feet",
+            "format": "double"
+          },
+          "altimeterCorrectionFt": {
+            "type": "number",
+            "description": "Altimeter correction — deviation from standard pressure expressed in feet",
+            "format": "double"
+          },
+          "fieldElevationFt": {
+            "type": "number",
+            "description": "Field elevation used in calculation (feet MSL)",
+            "format": "double"
+          },
+          "altimeterInHg": {
+            "type": "number",
+            "description": "Altimeter setting used in calculation (inHg)",
+            "format": "double"
+          }
+        }
+      },
+      "PressureAltitudeRequestDto": {
+        "type": "object",
+        "description": "Request DTO for standalone pressure altitude calculation.",
+        "additionalProperties": false,
+        "properties": {
+          "fieldElevationFt": {
+            "type": "number",
+            "description": "Field elevation in feet MSL",
+            "format": "double"
+          },
+          "altimeterInHg": {
+            "type": "number",
+            "description": "Altimeter setting in inches of mercury (must be between 25.0 and 35.0 inHg)",
             "format": "double"
           }
         }

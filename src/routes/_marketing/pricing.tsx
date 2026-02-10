@@ -140,13 +140,13 @@ const staticComparisonFeatures = [
       {
         name: 'Bearing & distance between any two points',
         student: false,
-        private: true,
+        private: false,
         commercial: true,
       },
       {
         name: 'Winds aloft forecasts (6/12/24 hr)',
         student: false,
-        private: true,
+        private: false,
         commercial: true,
       },
     ],
@@ -174,6 +174,30 @@ const staticComparisonFeatures = [
       },
       {
         name: 'Density altitude (manual input)',
+        student: false,
+        private: false,
+        commercial: true,
+      },
+      {
+        name: 'Wind triangle (heading & ground speed)',
+        student: false,
+        private: false,
+        commercial: true,
+      },
+      {
+        name: 'True airspeed & Mach number',
+        student: false,
+        private: false,
+        commercial: true,
+      },
+      {
+        name: 'Cloud base estimator',
+        student: false,
+        private: false,
+        commercial: true,
+      },
+      {
+        name: 'Pressure altitude',
         student: false,
         private: false,
         commercial: true,

@@ -177,7 +177,7 @@ export function HeroSection() {
           <div>
             <ApiStatusBadge />
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-              All US Aviation Data.{' '}
+              US Aviation Data.{' '}
               <span className="text-accent">One API.</span>
             </h1>
             <p className="mt-3 text-xl font-medium text-muted-foreground sm:text-2xl">
