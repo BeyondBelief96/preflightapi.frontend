@@ -102,7 +102,7 @@ const endpointAccessRows = [
   { category: 'Communication Frequencies', student: true, private: true, commercial: true },
   { category: 'PIREPs', student: false, private: true, commercial: true },
   { category: 'AIRMETs, SIGMETs & G-AIRMETs', student: false, private: true, commercial: true },
-  { category: 'NOTAMs', student: false, private: true, commercial: true },
+  { category: 'NOTAMs', student: false, private: false, commercial: true },
   { category: 'Airspace & Special-Use Airspace', student: false, private: true, commercial: true },
   { category: 'Obstacles', student: false, private: true, commercial: true },
   { category: 'Bearing & Distance', student: false, private: true, commercial: true },
