@@ -37,17 +37,21 @@ export const TIER_FEATURES: Record<string, Array<string>> = {
     'AIRMETs, SIGMETs & G-AIRMETs',
     'Controlled & special-use airspace boundaries',
     '625,000+ obstacles (towers, cranes, etc.)',
-    'Bearing & distance between any two points',
-    'Winds aloft forecasts (6/12/24 hr)',
     'Email support',
   ],
   commercial: [
     'All Private Pilot endpoints',
     'NOTAMs by airport, radius, or route',
+    'Bearing & distance between any two points',
+    'Winds aloft forecasts (6/12/24 hr)',
     'Airport diagram PDFs from the FAA',
     'Chart supplement (A/FD) PDFs',
     'Crosswind calculator (live METAR or manual)',
     'Density altitude calculator (live METAR or manual)',
+    'Wind triangle (heading & ground speed)',
+    'True airspeed & Mach number calculator',
+    'Cloud base estimator',
+    'Pressure altitude calculator',
     'Nav log with wind correction & fuel burn',
     'Priority email support',
   ],
@@ -80,12 +84,31 @@ export function buildLimitFeatures(limits: {
   return features
 }
 
+function formatCostPerRequest(
+  price: number | null | undefined,
+  callsPerMonth: number | null,
+): string | null {
+  if (price == null || callsPerMonth == null || callsPerMonth === 0) return null
+  if (price === 0) return 'Free — $0/request'
+  const cost = price / callsPerMonth
+  // Show enough decimals to be meaningful
+  const formatted = cost < 0.001 ? cost.toFixed(4) : cost.toFixed(4)
+  return `~$${formatted}/request at full usage`
+}
+
 export function buildPlanFeatures(
   planId: string,
   limits: { callsPerMonth: number | null; ratePerMinute: number | null },
+  price?: number | null,
 ): Array<string> {
   const staticFeatures = TIER_FEATURES[planId] ?? []
-  return [...staticFeatures, ...buildLimitFeatures(limits)]
+  const limitFeatures = buildLimitFeatures(limits)
+  const costFeature = formatCostPerRequest(price, limits.callsPerMonth)
+  return [
+    ...staticFeatures,
+    ...limitFeatures,
+    ...(costFeature ? [costFeature] : []),
+  ]
 }
 
 // --- Default plan definitions (fallback when APIM/Stripe are unavailable) ---
@@ -98,10 +121,11 @@ export const PLANS: Array<PlanDefinition> = [
     interval: 'month',
     apimProductId: 'student-pilot',
     limits: { callsPerMonth: 500, ratePerMinute: 10 },
-    features: buildPlanFeatures('student', {
-      callsPerMonth: 500,
-      ratePerMinute: 10,
-    }),
+    features: buildPlanFeatures(
+      'student',
+      { callsPerMonth: 500, ratePerMinute: 10 },
+      0,
+    ),
     cta: 'Get Started Free',
   },
   {
@@ -112,10 +136,11 @@ export const PLANS: Array<PlanDefinition> = [
     apimProductId: 'private-pilot',
     limits: { callsPerMonth: 25_000, ratePerMinute: 60 },
     highlighted: true,
-    features: buildPlanFeatures('private', {
-      callsPerMonth: 25_000,
-      ratePerMinute: 60,
-    }),
+    features: buildPlanFeatures(
+      'private',
+      { callsPerMonth: 25_000, ratePerMinute: 60 },
+      29.99,
+    ),
     cta: 'Go Private',
   },
   {
@@ -125,10 +150,11 @@ export const PLANS: Array<PlanDefinition> = [
     interval: 'month',
     apimProductId: 'commercial-pilot',
     limits: { callsPerMonth: 250_000, ratePerMinute: 300 },
-    features: buildPlanFeatures('commercial', {
-      callsPerMonth: 250_000,
-      ratePerMinute: 300,
-    }),
+    features: buildPlanFeatures(
+      'commercial',
+      { callsPerMonth: 250_000, ratePerMinute: 300 },
+      79.99,
+    ),
     cta: 'Go Commercial',
   },
 ] as const
@@ -149,11 +175,16 @@ export const ENDPOINT_ACCESS: Record<string, EndpointTier> = {
   'airspace/special-use': 'private',
   'navigation/obstacles': 'private',
   notams: 'commercial',
-  'navigation/bearing-distance': 'private',
-  'navigation/winds-aloft': 'private',
+  'navigation/bearing-distance': 'commercial',
+  'navigation/winds-aloft': 'commercial',
   'airports/diagrams': 'commercial',
   'charts/supplements': 'commercial',
-  'performance/calculator': 'commercial',
+  'performance/crosswind': 'commercial',
+  'performance/density-altitude': 'commercial',
+  'performance/wind-triangle': 'commercial',
+  'performance/true-airspeed': 'commercial',
+  'performance/cloud-base': 'commercial',
+  'performance/pressure-altitude': 'commercial',
   'navigation/nav-log': 'commercial',
 } as const
 

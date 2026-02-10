@@ -16,9 +16,9 @@ const endpoints = [
   "observationTime": "2025-01-05T18:56:00Z",
   "tempC": 18.0,
   "dewpointC": 6.0,
-  "windDirDegrees": 220,
+  "windDirDegrees": "220",
   "windSpeedKt": 12,
-  "visibilityStatuteMi": 10.0,
+  "visibilityStatuteMi": "10",
   "altimInHg": 30.12,
   "flightCategory": "VFR",
   "skyCondition": [
@@ -33,16 +33,18 @@ const endpoints = [
     path: `${API_BASE_PATH}/airports/KLAX`,
     description: 'Get detailed airport information',
     response: `{
+  "siteNo": "02164.*A",
+  "icaoId": "KLAX",
   "arptId": "LAX",
   "arptName": "LOS ANGELES INTL",
-  "icaoId": "KLAX",
+  "siteTypeCode": "A",
+  "city": "LOS ANGELES",
   "stateCode": "CA",
   "latDecimal": 33.9425,
   "longDecimal": -118.4081,
   "elev": 128,
   "fuelTypes": "100LL,JET-A",
-  "ctrlTowerCode": "Y",
-  "arptTypeCode": "A"
+  "chartName": "LOS ANGELES"
 }`,
   },
   {
@@ -52,22 +54,26 @@ const endpoints = [
     path: `${API_BASE_PATH}/notams/KORD`,
     description: 'Get active NOTAMs for an airport',
     response: `{
-  "type": "FeatureCollection",
-  "features": [
+  "notams": [
     {
       "type": "Feature",
       "properties": {
         "coreNOTAMData": {
-          "notamNumber": "A0012/25",
-          "facilityDesignator": "KORD",
-          "text": "RWY 10L/28R CLSD FOR MAINT",
-          "effectiveStart": "2025-01-05T06:00:00Z",
-          "effectiveEnd": "2025-01-12T06:00:00Z",
-          "classification": "AERODROME"
+          "notam": {
+            "number": "A0012/25",
+            "icaoLocation": "KORD",
+            "text": "RWY 10L/28R CLSD FOR MAINT",
+            "effectiveStart": "2025-01-05T06:00:00Z",
+            "effectiveEnd": "2025-01-12T06:00:00Z",
+            "classification": "DOMESTIC"
+          }
         }
       }
     }
-  ]
+  ],
+  "totalCount": 47,
+  "retrievedAt": "2025-01-05T19:00:00Z",
+  "queryLocation": "KORD"
 }`,
   },
   {
@@ -77,18 +83,20 @@ const endpoints = [
     path: `${API_BASE_PATH}/navlog/calculate`,
     description: 'Calculate a navigation log for a flight route',
     response: `{
-  "totalDistanceNm": 214.5,
-  "totalTimeEnRoute": "1:42",
-  "fuelRequired": 18.6,
+  "totalRouteDistance": 214.5,
+  "totalRouteTimeHours": 1.7,
+  "totalFuelUsed": 18.6,
+  "averageWindComponent": -8.3,
   "legs": [
     {
-      "from": "KJFK",
-      "to": "BDR",
-      "trueCourse": 45,
-      "magneticCourse": 58,
-      "distanceNm": 58.2,
-      "groundSpeedKt": 126,
-      "legTimeMin": 27.7
+      "legStartPoint": { "id": "KJFK", "waypointType": "Airport" },
+      "legEndPoint": { "id": "BDR", "waypointType": "Airport" },
+      "trueCourse": 45.0,
+      "magneticCourse": 58.2,
+      "magneticHeading": 55.8,
+      "groundSpeed": 126.0,
+      "legDistance": 58.2,
+      "legFuelBurnGals": 5.1
     }
   ]
 }`,

@@ -6,6 +6,7 @@ import {
   Code2,
   Compass,
   FileText,
+  Gauge,
   Key,
   Layers,
   Mountain,
@@ -40,7 +41,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   mountain: Mountain,
   route: RouteIcon,
   compass: Compass,
-  gauge: Cloud,
+  gauge: Gauge,
 }
 
 interface CategoryGroup {
@@ -83,6 +84,10 @@ const categoryGroups: Array<CategoryGroup> = [
     items: [
       { icon: 'wind', title: 'Crosswind Calculator', description: 'Crosswind components from METAR or manual.', href: '/docs/crosswind' },
       { icon: 'mountain', title: 'Density Altitude', description: 'Density altitude from METAR or manual.', href: '/docs/density-altitude' },
+      { icon: 'compass', title: 'Wind Triangle', description: 'Heading & ground speed from wind data.', href: '/docs/wind-triangle' },
+      { icon: 'gauge', title: 'True Airspeed', description: 'TAS & Mach from CAS, altitude, and OAT.', href: '/docs/true-airspeed' },
+      { icon: 'cloud-lightning', title: 'Cloud Base', description: 'Cloud base height from temp & dewpoint.', href: '/docs/cloud-base' },
+      { icon: 'mountain', title: 'Pressure Altitude', description: 'Pressure altitude from elevation & altimeter.', href: '/docs/pressure-altitude' },
     ],
   },
   {
@@ -98,17 +103,24 @@ const categoryGroups: Array<CategoryGroup> = [
 const endpointAccessRows = [
   { category: 'METARs', student: true, private: true, commercial: true },
   { category: 'TAFs', student: true, private: true, commercial: true },
-  { category: 'Airports (search, details & runways)', student: true, private: true, commercial: true },
+  { category: 'Airports (search & details)', student: true, private: true, commercial: true },
+  { category: 'Runways', student: true, private: true, commercial: true },
   { category: 'Communication Frequencies', student: true, private: true, commercial: true },
   { category: 'PIREPs', student: false, private: true, commercial: true },
-  { category: 'AIRMETs, SIGMETs & G-AIRMETs', student: false, private: true, commercial: true },
-  { category: 'NOTAMs', student: false, private: false, commercial: true },
+  { category: 'AIRMETs & SIGMETs', student: false, private: true, commercial: true },
+  { category: 'G-AIRMETs', student: false, private: true, commercial: true },
   { category: 'Airspace & Special-Use Airspace', student: false, private: true, commercial: true },
   { category: 'Obstacles', student: false, private: true, commercial: true },
-  { category: 'Bearing & Distance', student: false, private: true, commercial: true },
-  { category: 'Winds Aloft', student: false, private: true, commercial: true },
+  { category: 'Bearing & Distance', student: false, private: false, commercial: true },
+  { category: 'Winds Aloft', student: false, private: false, commercial: true },
+  { category: 'NOTAMs', student: false, private: false, commercial: true },
   { category: 'Airport Diagrams & Chart Supplements', student: false, private: false, commercial: true },
-  { category: 'Performance (Crosswind, Density Altitude)', student: false, private: false, commercial: true },
+  { category: 'Crosswind Calculator', student: false, private: false, commercial: true },
+  { category: 'Density Altitude', student: false, private: false, commercial: true },
+  { category: 'Wind Triangle', student: false, private: false, commercial: true },
+  { category: 'True Airspeed', student: false, private: false, commercial: true },
+  { category: 'Cloud Base', student: false, private: false, commercial: true },
+  { category: 'Pressure Altitude', student: false, private: false, commercial: true },
   { category: 'Nav Log', student: false, private: false, commercial: true },
 ]
 
@@ -133,11 +145,10 @@ function DocsIndex() {
     <div>
       <h1 className="text-3xl font-bold">PreflightAPI Documentation</h1>
       <p className="mt-4 text-lg text-muted-foreground">
-        PreflightAPI is a REST API for aviation data. It provides real-time
-        weather, forecasts, airport information, airspace boundaries, NOTAMs,
-        and flight planning tools — sourced from NOAA, FAA NASR Subscriptions,
-        the NOTAM Management System, and more. One API key, one consistent JSON
-        format, no XML parsing required.
+        PreflightAPI is a REST API for aviation data and flight planning calculations. It provides real-time
+        METAR's, Terminal Area Forecasts (TAFs), airport information, geospatial airspace boundaries, NOTAMs, 
+        Chart Supplements, Airport Diagrams, and many other flight planning tools — sourced from NOAA, FAA NASR Subscriptions,
+        the NOTAM Management System, and more. Here's how to get started.
       </p>
 
       {/* Quick links */}

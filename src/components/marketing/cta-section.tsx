@@ -2,6 +2,7 @@ import { Link } from '@tanstack/react-router'
 import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { usePlans } from '@/hooks/use-plans'
+import { isWaitlistMode } from '@/lib/waitlist'
 
 export function CtaSection() {
   const { plans } = usePlans()
@@ -19,9 +20,9 @@ export function CtaSection() {
           calls per month, no credit card required.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-4">
-          <Link to="/sign-up">
+          <Link to={isWaitlistMode ? '/waitlist' : '/sign-up'}>
             <Button size="lg" className="gap-2">
-              Create Free Account
+              {isWaitlistMode ? 'Join the Waitlist' : 'Create Free Account'}
               <ArrowRight className="h-4 w-4" />
             </Button>
           </Link>

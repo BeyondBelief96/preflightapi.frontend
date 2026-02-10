@@ -46,6 +46,10 @@ const sections = [
     items: [
       { label: 'Crosswind Calculator', href: '/docs/crosswind' },
       { label: 'Density Altitude', href: '/docs/density-altitude' },
+      { label: 'Wind Triangle', href: '/docs/wind-triangle' },
+      { label: 'True Airspeed', href: '/docs/true-airspeed' },
+      { label: 'Cloud Base', href: '/docs/cloud-base' },
+      { label: 'Pressure Altitude', href: '/docs/pressure-altitude' },
     ],
   },
   {

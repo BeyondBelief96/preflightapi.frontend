@@ -16,10 +16,6 @@ export function PricingPreview() {
           <p className="mt-4 text-lg text-muted-foreground">
             Start free and scale as your application grows. No hidden fees.
           </p>
-          <p className="mt-2 text-sm text-muted-foreground/70">
-            Plans named after pilot certificates — pick the one that matches
-            your project's ambition.
-          </p>
         </div>
         <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {plans.map((plan) => (

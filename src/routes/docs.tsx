@@ -6,6 +6,7 @@ import { createPageHead } from '@/lib/seo'
 import { DocsSidebar } from '@/components/docs/docs-sidebar'
 import { Button } from '@/components/ui/button'
 import { Logo } from '@/components/logo'
+import { isWaitlistMode } from '@/lib/waitlist'
 
 export const Route = createFileRoute('/docs')({
   head: () =>
@@ -91,9 +92,9 @@ function DocsLayout() {
             </Button>
           </a>
           <SignedOut>
-            <Link to="/sign-in">
+            <Link to={isWaitlistMode ? '/waitlist' : '/sign-in'}>
               <Button variant="ghost" size="sm">
-                Sign In
+                {isWaitlistMode ? 'Join Waitlist' : 'Sign In'}
               </Button>
             </Link>
           </SignedOut>

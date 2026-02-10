@@ -1,5 +1,5 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, Layers, RefreshCw, Zap } from 'lucide-react'
 import { createPageHead } from '@/lib/seo'
 import { Button } from '@/components/ui/button'
 import { isWaitlistMode } from '@/lib/waitlist'
@@ -76,14 +76,14 @@ function AboutPage() {
                 Chapter 1
               </p>
               <h2 className="mt-2 text-3xl font-bold tracking-tight">
-                The Aviation Bug
+                Pilot First, Developer Second
               </h2>
               <p className="mt-6 text-muted-foreground">
-                My name is Brandon Berisford. I am a software engineer of about
-                six years and a private pilot. In 2022 I started flight training
-                while working full-time in the defense aviation industry, and in
-                2023 I earned my PPL. That mix of writing code during the week
-                and flying on weekends is what eventually led to PreflightAPI.
+                I&apos;m Brandon Berisford — a software engineer and private
+                pilot. I started flight training in 2022 while working full-time
+                in the defense aviation industry, and earned my PPL in 2023.
+                Writing code during the week and flying on weekends is what
+                eventually led to PreflightAPI.
               </p>
             </div>
             <div className="space-y-4">
@@ -109,12 +109,12 @@ function AboutPage() {
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <div className="grid items-center gap-12 lg:grid-cols-2">
             <div className="order-2 space-y-4 lg:order-1">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-4">
                 <div className="overflow-hidden rounded-xl">
                   <img
                     src="/private_pilot.jpg"
                     alt="Brandon standing in front of a Cessna after passing the private pilot checkride"
-                    className="h-[220px] w-full object-cover"
+                    className="h-[280px] w-full object-cover"
                     loading="lazy"
                     decoding="async"
                   />
@@ -123,7 +123,7 @@ function AboutPage() {
                   <img
                     src="/private_pilot_2.jpg"
                     alt="Brandon receiving his temporary certificate from his examiner"
-                    className="h-[220px] w-full object-cover"
+                    className="h-[280px] w-full object-cover"
                     loading="lazy"
                     decoding="async"
                   />
@@ -154,28 +154,61 @@ function AboutPage() {
 
       {/* Chapter 3: Why PreflightAPI */}
       <section className="py-20">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <p className="text-sm font-medium uppercase tracking-widest text-accent">
-              Chapter 3
-            </p>
-            <h2 className="mt-2 text-3xl font-bold tracking-tight">
-              Why PreflightAPI Exists
-            </h2>
-          </div>
-          <div className="mt-10 space-y-4 text-lg leading-relaxed text-muted-foreground">
-            <p>
-              If I needed this, other developers probably do too. There are
-              other APIs that offer pieces of aviation data — but none that
-              consolidate{' '}
-              <span className="font-medium text-foreground">everything</span>{' '}
-              into a single, well-documented REST API.
-            </p>
-            <p>
-              That is the mission: the most comprehensive, accurate, and
-              up-to-date US aviation dataset available from one source. You
-              should be building your app, not reinventing the data pipeline.
-            </p>
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <div className="grid items-center gap-12 lg:grid-cols-2">
+            <div>
+              <p className="text-sm font-medium uppercase tracking-widest text-accent">
+                Chapter 3
+              </p>
+              <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
+                Why PreflightAPI{' '}
+                <span className="text-accent">Exists</span>
+              </h2>
+              <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
+                If I needed this, other developers probably do too. Aviation
+                data is scattered across the FAA, NOAA, ArcGIS, and more —
+                each with its own formats, restrictions, and update schedules.
+                PreflightAPI is the infrastructure that pulls it all together,
+                so you can focus on building your product.
+              </p>
+            </div>
+            <div className="space-y-5">
+              {[
+                {
+                  icon: Layers,
+                  title: 'One Source of Truth',
+                  description:
+                    'Weather, airports, airspace, NOTAMs, obstacles, charts — all behind a single API key.',
+                },
+                {
+                  icon: RefreshCw,
+                  title: 'We Keep It Current',
+                  description:
+                    'Data stays in sync with FAA publication cycles and real-time weather feeds automatically.',
+                },
+                {
+                  icon: Zap,
+                  title: 'Start Building in Minutes',
+                  description:
+                    'Sign up, grab your API key, and make your first call. No contracts, no waiting.',
+                },
+              ].map((reason) => (
+                <div
+                  key={reason.title}
+                  className="flex gap-4 rounded-xl border bg-background/50 p-5"
+                >
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-accent/10 text-accent">
+                    <reason.icon className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">{reason.title}</h3>
+                    <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                      {reason.description}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>

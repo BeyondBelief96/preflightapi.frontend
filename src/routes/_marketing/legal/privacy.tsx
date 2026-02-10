@@ -1,8 +1,12 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 import { createPageHead } from '@/lib/seo'
 import { SITE_CONFIG } from '@/lib/constants'
 
 export const Route = createFileRoute('/_marketing/legal/privacy')({
+  beforeLoad: () => {
+    // Legal pages hidden during pre-launch — redirect to home
+    throw redirect({ to: '/' })
+  },
   head: () =>
     createPageHead({
       title: 'Privacy Policy',

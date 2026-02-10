@@ -12,10 +12,6 @@ const footerLinks = {
     { label: 'About', href: '/about' },
     { label: 'Contact', href: '/contact' },
   ],
-  Legal: [
-    { label: 'Terms of Service', href: '/legal/terms' },
-    { label: 'Privacy Policy', href: '/legal/privacy' },
-  ],
   Developers: [
     { label: 'Authentication', href: '/docs/authentication' },
     { label: 'API Reference', href: '/docs' },
@@ -27,7 +23,7 @@ export function SiteFooter() {
   return (
     <footer className="border-t bg-muted/30">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
+        <div className="flex flex-wrap justify-center gap-16">
           {Object.entries(footerLinks).map(([category, links]) => (
             <div key={category}>
               <h3 className="text-sm font-semibold">{category}</h3>
