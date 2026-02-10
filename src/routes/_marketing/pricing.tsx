@@ -111,19 +111,19 @@ const staticComparisonFeatures = [
       {
         name: 'NOTAMs by airport',
         student: false,
-        private: true,
+        private: false,
         commercial: true,
       },
       {
         name: 'NOTAMs by geographic radius',
         student: false,
-        private: true,
+        private: false,
         commercial: true,
       },
       {
         name: 'NOTAMs by flight route',
         student: false,
-        private: true,
+        private: false,
         commercial: true,
       },
     ],
