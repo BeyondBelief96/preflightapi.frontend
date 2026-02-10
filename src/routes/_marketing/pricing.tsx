@@ -248,10 +248,6 @@ function PricingPage() {
               Start free, upgrade when you need more. All plans include access
               to our full documentation.
             </p>
-            <p className="mt-2 text-sm text-muted-foreground/70">
-              Plans are named after pilot certificates — pick the one that
-              matches your project's ambition.
-            </p>
           </div>
 
           {/* Plan cards */}

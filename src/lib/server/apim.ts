@@ -1,15 +1,10 @@
 import { createServerFn } from '@tanstack/react-start'
 import { apimFetch } from './apim-client'
+import { getApimProductIds, planIdFromProductId } from './apim-products'
 import { getTierConfig } from './tier-config'
 import { requireAuth, requireOwnership } from './auth'
 import type { ApimUsageReport } from '@/types/plans'
 import type { SubscriptionListResponse } from '@/types/apim'
-import { PLANS } from '@/lib/constants'
-
-function planIdFromProductId(productId: string): string {
-  const plan = PLANS.find((p) => productId.includes(p.apimProductId))
-  return plan?.id ?? 'free'
-}
 
 // --- User Management ---
 
@@ -39,6 +34,7 @@ export const getOrCreateApimUser = createServerFn({ method: 'GET' }).handler(
 export const getUserSubscription = createServerFn({ method: 'GET' }).handler(
   async () => {
     const userId = await requireAuth()
+    const productIds = getApimProductIds()
 
     // Ensure the APIM user exists before querying subscriptions
     await apimFetch(`/users/${userId}`, {
@@ -62,13 +58,13 @@ export const getUserSubscription = createServerFn({ method: 'GET' }).handler(
     // subscriptions in any state. This prevents creating a duplicate
     // free-tier sub when a paid subscription was recently cancelled/suspended.
     if (subscriptions.length === 0) {
-      const freeTierSubId = `${userId}-free-tier`
+      const freeTierSubId = `${userId}-${productIds.free}`
       await apimFetch(`/subscriptions/${freeTierSubId}`, {
         method: 'PUT',
         body: JSON.stringify({
           properties: {
             ownerId: `/users/${userId}`,
-            scope: `/products/free-tier`,
+            scope: `/products/${productIds.free}`,
             displayName: userId,
             state: 'active',
           },

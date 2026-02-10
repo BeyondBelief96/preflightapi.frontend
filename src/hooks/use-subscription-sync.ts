@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '@clerk/clerk-react'
-import { PLANS } from '@/lib/constants'
+import { usePlans } from '@/hooks/use-plans'
 import { getUserSubscription } from '@/lib/server/apim'
 import {
   getStripeSubscription,
@@ -15,6 +15,7 @@ let synced = false
 export function useSubscriptionSync() {
   const { userId } = useAuth()
   const queryClient = useQueryClient()
+  const { plans } = usePlans()
 
   const apimQuery = useQuery({
     queryKey: apimKeys.subscription(userId ?? ''),
@@ -50,7 +51,7 @@ export function useSubscriptionSync() {
     const activeSub = apimQuery.data.find((s) => s.state === 'active')
     if (!activeSub) return
 
-    const expectedPlan = PLANS.find((p) => p.id === stripeSub.planId)
+    const expectedPlan = plans.find((p) => p.id === stripeSub.planId)
     if (!expectedPlan) return
 
     synced = true
@@ -58,5 +59,5 @@ export function useSubscriptionSync() {
     if (activeSub.productId !== expectedPlan.apimProductId) {
       reconcileMutation.mutate()
     }
-  }, [stripeQuery.data, apimQuery.data])  
+  }, [stripeQuery.data, apimQuery.data, plans])
 }

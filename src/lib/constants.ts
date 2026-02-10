@@ -22,22 +22,86 @@ export interface PlanDefinition {
   cta: string
 }
 
+// --- Static feature definitions (marketing copy per tier) ---
+
+export const TIER_FEATURES: Record<string, Array<string>> = {
+  free: [
+    'METAR & TAF weather data',
+    'Airport search, details, runways & frequencies',
+    '19,600+ US airports from FAA NASR',
+    'Email support',
+  ],
+  starter: [
+    'All Student Pilot endpoints',
+    'PIREPs — pilot weather reports',
+    'AIRMETs, SIGMETs & G-AIRMETs',
+    'Controlled & special-use airspace boundaries',
+    '625,000+ obstacles (towers, cranes, etc.)',
+    'NOTAMs by airport, radius, or route',
+    'Bearing & distance between any two points',
+    'Winds aloft forecasts (6/12/24 hr)',
+    'Email support',
+  ],
+  professional: [
+    'All Private Pilot endpoints',
+    'Airport diagram PDFs from the FAA',
+    'Chart supplement (A/FD) PDFs',
+    'Crosswind calculator (live METAR or manual)',
+    'Density altitude calculator (live METAR or manual)',
+    'Nav log with wind correction & fuel burn',
+    'Priority email support',
+  ],
+}
+
+export const TIER_UI: Record<
+  string,
+  { highlighted?: boolean; cta: string }
+> = {
+  free: { cta: 'Get Started Free' },
+  starter: { highlighted: true, cta: 'Go Private' },
+  professional: { cta: 'Go Commercial' },
+}
+
+// --- Helpers ---
+
+export function buildLimitFeatures(limits: {
+  callsPerMonth: number | null
+  ratePerMinute: number | null
+}): Array<string> {
+  const features: Array<string> = []
+  if (limits.callsPerMonth != null) {
+    features.push(
+      `Up to ${limits.callsPerMonth.toLocaleString()} API calls/month`,
+    )
+  }
+  if (limits.ratePerMinute != null) {
+    features.push(`${limits.ratePerMinute.toLocaleString()} requests/minute`)
+  }
+  return features
+}
+
+export function buildPlanFeatures(
+  planId: string,
+  limits: { callsPerMonth: number | null; ratePerMinute: number | null },
+): Array<string> {
+  const staticFeatures = TIER_FEATURES[planId] ?? []
+  return [...staticFeatures, ...buildLimitFeatures(limits)]
+}
+
+// --- Default plan definitions (fallback when APIM/Stripe are unavailable) ---
+
 export const PLANS: Array<PlanDefinition> = [
   {
     id: 'free',
     name: 'Student Pilot',
     price: 0,
     interval: 'month',
-    apimProductId: 'free-tier',
+    apimProductId: 'student-pilot',
     limits: { callsPerMonth: 500, ratePerMinute: 10 },
-    features: [
-      'METAR & TAF weather data',
-      'Airport search, details, runways & frequencies',
-      '19,600+ US airports from FAA NASR',
-      'Up to 500 API calls/month',
-      '10 requests/minute',
-      'Documentation support',
-    ],
+    features: buildPlanFeatures('free', {
+      callsPerMonth: 500,
+      ratePerMinute: 10,
+    }),
     cta: 'Get Started Free',
   },
   {
@@ -45,22 +109,13 @@ export const PLANS: Array<PlanDefinition> = [
     name: 'Private Pilot',
     price: 49,
     interval: 'month',
-    apimProductId: 'starter-tier',
+    apimProductId: 'private-pilot',
     limits: { callsPerMonth: 25_000, ratePerMinute: 60 },
     highlighted: true,
-    features: [
-      'All Student Pilot endpoints',
-      'PIREPs — pilot weather reports',
-      'AIRMETs, SIGMETs & G-AIRMETs',
-      'Controlled & special-use airspace boundaries',
-      '625,000+ obstacles (towers, cranes, etc.)',
-      'NOTAMs by airport, radius, or route',
-      'Bearing & distance between any two points',
-      'Winds aloft forecasts (6/12/24 hr)',
-      'Up to 25,000 API calls/month',
-      '60 requests/minute',
-      'Email support',
-    ],
+    features: buildPlanFeatures('starter', {
+      callsPerMonth: 25_000,
+      ratePerMinute: 60,
+    }),
     cta: 'Go Private',
   },
   {
@@ -68,19 +123,12 @@ export const PLANS: Array<PlanDefinition> = [
     name: 'Commercial Pilot',
     price: 199,
     interval: 'month',
-    apimProductId: 'professional-tier',
+    apimProductId: 'commercial-pilot',
     limits: { callsPerMonth: 250_000, ratePerMinute: 300 },
-    features: [
-      'All Private Pilot endpoints',
-      'Airport diagram PDFs from the FAA',
-      'Chart supplement (A/FD) PDFs',
-      'Crosswind calculator (live METAR or manual)',
-      'Density altitude calculator (live METAR or manual)',
-      'Nav log with wind correction & fuel burn',
-      'Up to 250,000 API calls/month',
-      '300 requests/minute',
-      'Priority email support',
-    ],
+    features: buildPlanFeatures('professional', {
+      callsPerMonth: 250_000,
+      ratePerMinute: 300,
+    }),
     cta: 'Go Commercial',
   },
 ] as const

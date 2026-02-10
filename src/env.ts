@@ -12,6 +12,12 @@ export const env = createEnv({
     APIM_RESOURCE_GROUP: z.string().optional(),
     APIM_SERVICE_NAME: z.string().optional(),
     APIM_API_VERSION: z.string().optional(),
+    APIM_FREE_PRODUCT_ID: z.string().optional().default('student-pilot'),
+    APIM_STARTER_PRODUCT_ID: z.string().optional().default('private-pilot'),
+    APIM_PROFESSIONAL_PRODUCT_ID: z
+      .string()
+      .optional()
+      .default('commercial-pilot'),
     STRIPE_SECRET_KEY: z.string().optional(),
     STRIPE_WEBHOOK_SECRET: z.string().optional(),
     STRIPE_STARTER_PRICE_ID: z.string().optional(),

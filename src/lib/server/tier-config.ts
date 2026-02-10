@@ -1,12 +1,12 @@
 import { apimFetch } from './apim-client'
 import { getStripe } from './stripe-client'
+import { getApimProductIds, PLAN_IDS } from './apim-products'
 import type { EndpointTier } from '@/lib/constants'
 import { env } from '@/env'
 import {
   DEFAULT_ENDPOINT_ACCESS,
   DEFAULT_PLAN_LIMITS,
   DEFAULT_PLAN_PRICES,
-  PLANS,
 } from '@/lib/constants'
 
 // --- Types ---
@@ -21,9 +21,15 @@ export interface TierPrice {
   interval: 'month' | 'year'
 }
 
+export interface TierProduct {
+  apimProductId: string
+  displayName: string
+}
+
 export interface TierConfig {
   limits: Record<string, TierLimits>
   prices: Record<string, TierPrice>
+  products: Record<string, TierProduct>
   endpointAccess: Record<string, EndpointTier>
 }
 
@@ -107,25 +113,57 @@ async function fetchProductApis(
   return result.value.map((api) => api.properties.path)
 }
 
+async function fetchProductMetadata(
+  productId: string,
+): Promise<{ displayName: string }> {
+  const result = await apimFetch<{
+    properties: { displayName: string }
+  }>(`/products/${productId}`)
+
+  return { displayName: result.properties.displayName }
+}
+
 // --- APIM tier data ---
 
 async function fetchApimLimits(): Promise<Record<string, TierLimits>> {
-  const products = PLANS.map((p) => p.apimProductId)
-  const results = await Promise.all(products.map(fetchProductPolicy))
+  const productIds = getApimProductIds()
+  const planIds = PLAN_IDS
+  const results = await Promise.all(
+    planIds.map((id) => fetchProductPolicy(productIds[id])),
+  )
 
   const limits: Record<string, TierLimits> = {}
-  for (let i = 0; i < PLANS.length; i++) {
-    limits[PLANS[i].id] = results[i]
+  for (let i = 0; i < planIds.length; i++) {
+    limits[planIds[i]] = results[i]
   }
   return limits
+}
+
+async function fetchApimProducts(): Promise<Record<string, TierProduct>> {
+  const productIds = getApimProductIds()
+  const planIds = PLAN_IDS
+  const results = await Promise.all(
+    planIds.map((id) => fetchProductMetadata(productIds[id])),
+  )
+
+  const products: Record<string, TierProduct> = {}
+  for (let i = 0; i < planIds.length; i++) {
+    products[planIds[i]] = {
+      apimProductId: productIds[planIds[i]],
+      displayName: results[i].displayName,
+    }
+  }
+  return products
 }
 
 async function fetchApimEndpointAccess(): Promise<
   Record<string, EndpointTier>
 > {
   const tierOrder: Array<EndpointTier> = ['free', 'starter', 'professional']
-  const products = PLANS.map((p) => p.apimProductId)
-  const apiResults = await Promise.all(products.map(fetchProductApis))
+  const productIds = getApimProductIds()
+  const apiResults = await Promise.all(
+    tierOrder.map((tier) => fetchProductApis(productIds[tier])),
+  )
 
   const endpointAccess: Record<string, EndpointTier> = {}
 
@@ -175,6 +213,23 @@ async function fetchStripePrices(): Promise<Record<string, TierPrice>> {
   return prices
 }
 
+// --- Default products (fallback when APIM is unavailable) ---
+
+function getDefaultProducts(): Record<string, TierProduct> {
+  const productIds = getApimProductIds()
+  return {
+    free: { apimProductId: productIds.free, displayName: 'Student Pilot' },
+    starter: {
+      apimProductId: productIds.starter,
+      displayName: 'Private Pilot',
+    },
+    professional: {
+      apimProductId: productIds.professional,
+      displayName: 'Commercial Pilot',
+    },
+  }
+}
+
 // --- Main export ---
 
 export async function getTierConfig(): Promise<TierConfig> {
@@ -185,17 +240,20 @@ export async function getTierConfig(): Promise<TierConfig> {
   const config: TierConfig = {
     limits: { ...DEFAULT_PLAN_LIMITS },
     prices: { ...DEFAULT_PLAN_PRICES },
+    products: getDefaultProducts(),
     endpointAccess: { ...DEFAULT_ENDPOINT_ACCESS },
   }
 
-  // Fetch APIM data (limits + endpoint access) in parallel
+  // Fetch APIM data (limits + products + endpoint access) in parallel
   if (isApimConfigured()) {
     try {
-      const [limits, endpointAccess] = await Promise.all([
+      const [limits, products, endpointAccess] = await Promise.all([
         fetchApimLimits(),
+        fetchApimProducts(),
         fetchApimEndpointAccess(),
       ])
       config.limits = limits
+      config.products = products
       config.endpointAccess = endpointAccess
     } catch (error) {
       console.error('[tier-config] APIM fetch failed, using defaults:', error)
@@ -205,6 +263,7 @@ export async function getTierConfig(): Promise<TierConfig> {
         | undefined
       if (stale) {
         config.limits = stale.data.limits
+        config.products = stale.data.products
         config.endpointAccess = stale.data.endpointAccess
       }
     }
