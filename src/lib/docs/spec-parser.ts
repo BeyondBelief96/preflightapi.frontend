@@ -219,10 +219,10 @@ const tierPatterns: Array<{ pattern: RegExp; key: string }> = [
 function getTierForPath(path: string): EndpointTier {
   for (const { pattern, key } of tierPatterns) {
     if (pattern.test(path)) {
-      return ENDPOINT_ACCESS[key] ?? 'free'
+      return ENDPOINT_ACCESS[key] ?? 'student'
     }
   }
-  return 'free'
+  return 'student'
 }
 
 // ---------- main parsing ----------

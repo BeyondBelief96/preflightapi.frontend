@@ -90,7 +90,7 @@ function PlanCTA({ plan }: { plan: PlanDefinition }) {
   const signUpLink = isWaitlistMode ? '/waitlist' : '/sign-up'
 
   // Free plan always links to sign-up (or waitlist)
-  if (plan.id === 'free') {
+  if (plan.id === 'student') {
     return (
       <Link to={signUpLink}>
         <Button className="w-full" variant="outline">

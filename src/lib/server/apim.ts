@@ -58,13 +58,13 @@ export const getUserSubscription = createServerFn({ method: 'GET' }).handler(
     // subscriptions in any state. This prevents creating a duplicate
     // free-tier sub when a paid subscription was recently cancelled/suspended.
     if (subscriptions.length === 0) {
-      const freeTierSubId = `${userId}-${productIds.free}`
+      const freeTierSubId = `${userId}-${productIds.student}`
       await apimFetch(`/subscriptions/${freeTierSubId}`, {
         method: 'PUT',
         body: JSON.stringify({
           properties: {
             ownerId: `/users/${userId}`,
-            scope: `/products/${productIds.free}`,
+            scope: `/products/${productIds.student}`,
             displayName: userId,
             state: 'active',
           },

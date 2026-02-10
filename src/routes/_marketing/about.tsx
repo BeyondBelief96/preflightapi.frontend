@@ -26,8 +26,8 @@ export const Route = createFileRoute('/_marketing/about')({
 
 function AboutPage() {
   const { plans } = usePlans()
-  const freePlan = plans.find((p) => p.id === 'free')
-  const freeCallsLabel = freePlan?.limits.callsPerMonth?.toLocaleString() ?? '500'
+  const studentPlan = plans.find((p) => p.id === 'student')
+  const freeCallsLabel = studentPlan?.limits.callsPerMonth?.toLocaleString() ?? '500'
 
   return (
     <div>

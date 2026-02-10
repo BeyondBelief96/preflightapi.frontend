@@ -139,8 +139,8 @@ async function getStripeSubscriptionInternal(
   // but don't update our custom metadata
   const planId =
     planIdFromPriceId(firstItem?.price.id ?? '') ||
-    sub.metadata.planId ||
-    'free'
+    normalizePlanId(sub.metadata.planId) ||
+    'student'
 
   return {
     status: sub.status,
@@ -192,7 +192,7 @@ export const reconcileSubscription = createServerFn({
     return { status: 'no_stripe_sub' }
   }
 
-  const expectedProductId = productIds[stripeSub.planId] ?? productIds.free
+  const expectedProductId = productIds[stripeSub.planId] ?? productIds.student
   if (!expectedProductId) {
     return {
       status: 'already_in_sync',
@@ -238,6 +238,19 @@ export const reconcileSubscription = createServerFn({
 })
 
 // --- Helpers ---
+
+// Maps legacy Stripe metadata plan IDs to current plan IDs.
+// Existing Stripe subscriptions may still carry old metadata values.
+const LEGACY_PLAN_IDS: Record<string, string> = {
+  free: 'student',
+  starter: 'private',
+  professional: 'commercial',
+}
+
+function normalizePlanId(planId: string | undefined): string | undefined {
+  if (!planId) return undefined
+  return LEGACY_PLAN_IDS[planId] ?? planId
+}
 
 function getBaseUrl(): string {
   if (env.SERVER_URL) {

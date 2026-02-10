@@ -166,8 +166,8 @@ function CodeTabs() {
 
 export function HeroSection() {
   const { plans } = usePlans()
-  const freePlan = plans.find((p) => p.id === 'free')
-  const freeCallsLabel = freePlan?.limits.callsPerMonth?.toLocaleString() ?? '500'
+  const studentPlan = plans.find((p) => p.id === 'student')
+  const freeCallsLabel = studentPlan?.limits.callsPerMonth?.toLocaleString() ?? '500'
 
   return (
     <section className="relative overflow-hidden">
@@ -203,7 +203,7 @@ export function HeroSection() {
               </Link>
             </div>
             <p className="mt-4 text-sm text-muted-foreground">
-              {freePlan?.name ?? 'Student Pilot'} plan is free forever —{' '}
+              {studentPlan?.name ?? 'Student Pilot'} plan is free forever —{' '}
               {freeCallsLabel} API calls/month, no credit card required.
             </p>
           </div>

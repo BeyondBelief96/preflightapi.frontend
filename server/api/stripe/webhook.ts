@@ -38,14 +38,14 @@ export default defineEventHandler(async (event) => {
   }
 
   // Warn about missing price env vars (makes misconfiguration visible in logs)
-  if (!process.env.STRIPE_STARTER_PRICE_ID) {
+  if (!process.env.STRIPE_PRIVATE_PRICE_ID) {
     console.warn(
-      '[Stripe Webhook] STRIPE_STARTER_PRICE_ID is not set — price-based tier mapping will fail for starter plans',
+      '[Stripe Webhook] STRIPE_PRIVATE_PRICE_ID is not set — price-based tier mapping will fail for private plans',
     )
   }
-  if (!process.env.STRIPE_PROFESSIONAL_PRICE_ID) {
+  if (!process.env.STRIPE_COMMERCIAL_PRICE_ID) {
     console.warn(
-      '[Stripe Webhook] STRIPE_PROFESSIONAL_PRICE_ID is not set — price-based tier mapping will fail for professional plans',
+      '[Stripe Webhook] STRIPE_COMMERCIAL_PRICE_ID is not set — price-based tier mapping will fail for commercial plans',
     )
   }
 
@@ -66,7 +66,15 @@ export default defineEventHandler(async (event) => {
   }
 
   const productIds = getApimProductIds()
-  const freeProductId = productIds.free
+  const studentProductId = productIds.student
+
+  // Maps legacy Stripe metadata plan IDs to current plan IDs
+  const LEGACY_PLAN_IDS: Record<string, string> = {
+    free: 'student',
+    starter: 'private',
+    professional: 'commercial',
+  }
+  const normalizePlanId = (id: string) => LEGACY_PLAN_IDS[id] ?? id
 
   // Event parsed successfully — now handle it.
   // APIM sync errors throw a 500 so Stripe retries the webhook.
@@ -79,7 +87,7 @@ export default defineEventHandler(async (event) => {
         const planId = session.metadata?.planId
 
         if (clerkUserId && planId) {
-          const apimProductId = productIds[planId]
+          const apimProductId = productIds[normalizePlanId(planId)]
           if (apimProductId) {
             await syncTierToApim(apimFetch, clerkUserId, apimProductId)
           } else {
@@ -109,7 +117,7 @@ export default defineEventHandler(async (event) => {
           const priceId = subscription.items.data[0]?.price.id
           // Price ID is the source of truth — portal upgrades change the price
           // but don't update our custom metadata
-          const resolvedPlanId = planIdFromPriceId(priceId) || metadataPlanId
+          const resolvedPlanId = planIdFromPriceId(priceId) || (metadataPlanId ? normalizePlanId(metadataPlanId) : undefined)
           const apimProductId = resolvedPlanId
             ? productIds[resolvedPlanId]
             : undefined
@@ -122,7 +130,7 @@ export default defineEventHandler(async (event) => {
             )
           }
         } else {
-          await syncTierToApim(apimFetch, clerkUserId, freeProductId)
+          await syncTierToApim(apimFetch, clerkUserId, studentProductId)
         }
         break
       }
@@ -132,7 +140,7 @@ export default defineEventHandler(async (event) => {
         const clerkUserId = await resolveClerkUserId(stripe, subscription)
 
         if (clerkUserId) {
-          await syncTierToApim(apimFetch, clerkUserId, freeProductId)
+          await syncTierToApim(apimFetch, clerkUserId, studentProductId)
         } else {
           console.warn(
             '[Stripe Webhook] Could not resolve clerkUserId for paused subscription',
@@ -154,7 +162,7 @@ export default defineEventHandler(async (event) => {
 
         const metadataPlanId = subscription.metadata?.planId
         const priceId = subscription.items.data[0]?.price.id
-        const resolvedPlanId = planIdFromPriceId(priceId) || metadataPlanId
+        const resolvedPlanId = planIdFromPriceId(priceId) || (metadataPlanId ? normalizePlanId(metadataPlanId) : undefined)
         const apimProductId = resolvedPlanId
           ? productIds[resolvedPlanId]
           : undefined
@@ -174,7 +182,7 @@ export default defineEventHandler(async (event) => {
         const clerkUserId = await resolveClerkUserId(stripe, subscription)
 
         if (clerkUserId) {
-          await syncTierToApim(apimFetch, clerkUserId, freeProductId)
+          await syncTierToApim(apimFetch, clerkUserId, studentProductId)
         } else {
           console.warn(
             '[Stripe Webhook] Could not resolve clerkUserId for deleted subscription',

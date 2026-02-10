@@ -25,13 +25,13 @@ export interface PlanDefinition {
 // --- Static feature definitions (marketing copy per tier) ---
 
 export const TIER_FEATURES: Record<string, Array<string>> = {
-  free: [
+  student: [
     'METAR & TAF weather data',
     'Airport search, details, runways & frequencies',
     '19,600+ US airports from FAA NASR',
     'Email support',
   ],
-  starter: [
+  private: [
     'All Student Pilot endpoints',
     'PIREPs — pilot weather reports',
     'AIRMETs, SIGMETs & G-AIRMETs',
@@ -42,7 +42,7 @@ export const TIER_FEATURES: Record<string, Array<string>> = {
     'Winds aloft forecasts (6/12/24 hr)',
     'Email support',
   ],
-  professional: [
+  commercial: [
     'All Private Pilot endpoints',
     'Airport diagram PDFs from the FAA',
     'Chart supplement (A/FD) PDFs',
@@ -57,9 +57,9 @@ export const TIER_UI: Record<
   string,
   { highlighted?: boolean; cta: string }
 > = {
-  free: { cta: 'Get Started Free' },
-  starter: { highlighted: true, cta: 'Go Private' },
-  professional: { cta: 'Go Commercial' },
+  student: { cta: 'Get Started Free' },
+  private: { highlighted: true, cta: 'Go Private' },
+  commercial: { cta: 'Go Commercial' },
 }
 
 // --- Helpers ---
@@ -92,40 +92,40 @@ export function buildPlanFeatures(
 
 export const PLANS: Array<PlanDefinition> = [
   {
-    id: 'free',
+    id: 'student',
     name: 'Student Pilot',
     price: 0,
     interval: 'month',
     apimProductId: 'student-pilot',
     limits: { callsPerMonth: 500, ratePerMinute: 10 },
-    features: buildPlanFeatures('free', {
+    features: buildPlanFeatures('student', {
       callsPerMonth: 500,
       ratePerMinute: 10,
     }),
     cta: 'Get Started Free',
   },
   {
-    id: 'starter',
+    id: 'private',
     name: 'Private Pilot',
     price: 29.99,
     interval: 'month',
     apimProductId: 'private-pilot',
     limits: { callsPerMonth: 25_000, ratePerMinute: 60 },
     highlighted: true,
-    features: buildPlanFeatures('starter', {
+    features: buildPlanFeatures('private', {
       callsPerMonth: 25_000,
       ratePerMinute: 60,
     }),
     cta: 'Go Private',
   },
   {
-    id: 'professional',
+    id: 'commercial',
     name: 'Commercial Pilot',
     price: 79.99,
     interval: 'month',
     apimProductId: 'commercial-pilot',
     limits: { callsPerMonth: 250_000, ratePerMinute: 300 },
-    features: buildPlanFeatures('professional', {
+    features: buildPlanFeatures('commercial', {
       callsPerMonth: 250_000,
       ratePerMinute: 300,
     }),
@@ -133,28 +133,28 @@ export const PLANS: Array<PlanDefinition> = [
   },
 ] as const
 
-export type EndpointTier = 'free' | 'starter' | 'professional'
+export type EndpointTier = 'student' | 'private' | 'commercial'
 
 export const ENDPOINT_ACCESS: Record<string, EndpointTier> = {
-  metar: 'free',
-  taf: 'free',
-  'airports/search': 'free',
-  'airports/details': 'free',
-  'airports/runways': 'free',
-  'airports/frequencies': 'free',
-  pirep: 'starter',
-  'airmet-sigmet': 'starter',
-  'g-airmet': 'starter',
-  'airspace/controlled': 'starter',
-  'airspace/special-use': 'starter',
-  'navigation/obstacles': 'starter',
-  notams: 'starter',
-  'navigation/bearing-distance': 'starter',
-  'navigation/winds-aloft': 'starter',
-  'airports/diagrams': 'professional',
-  'charts/supplements': 'professional',
-  'performance/calculator': 'professional',
-  'navigation/nav-log': 'professional',
+  metar: 'student',
+  taf: 'student',
+  'airports/search': 'student',
+  'airports/details': 'student',
+  'airports/runways': 'student',
+  'airports/frequencies': 'student',
+  pirep: 'private',
+  'airmet-sigmet': 'private',
+  'g-airmet': 'private',
+  'airspace/controlled': 'private',
+  'airspace/special-use': 'private',
+  'navigation/obstacles': 'private',
+  notams: 'private',
+  'navigation/bearing-distance': 'private',
+  'navigation/winds-aloft': 'private',
+  'airports/diagrams': 'commercial',
+  'charts/supplements': 'commercial',
+  'performance/calculator': 'commercial',
+  'navigation/nav-log': 'commercial',
 } as const
 
 export const DEFAULT_PLAN_LIMITS: Record<

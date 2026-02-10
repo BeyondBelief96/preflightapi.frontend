@@ -71,7 +71,7 @@ function isApimConfigured(): boolean {
 function isStripeConfigured(): boolean {
   return !!(
     env.STRIPE_SECRET_KEY &&
-    (env.STRIPE_STARTER_PRICE_ID || env.STRIPE_PROFESSIONAL_PRICE_ID)
+    (env.STRIPE_PRIVATE_PRICE_ID || env.STRIPE_COMMERCIAL_PRICE_ID)
   )
 }
 
@@ -157,7 +157,7 @@ async function fetchApimProducts(): Promise<Record<string, TierProduct>> {
 async function fetchApimEndpointAccess(): Promise<
   Record<string, EndpointTier>
 > {
-  const tierOrder: Array<EndpointTier> = ['free', 'starter', 'professional']
+  const tierOrder: Array<EndpointTier> = ['student', 'private', 'commercial']
   const productIds = getApimProductIds()
   const apiResults = await Promise.all(
     tierOrder.map((tier) => fetchProductApis(productIds[tier])),
@@ -184,12 +184,12 @@ async function fetchApimEndpointAccess(): Promise<
 async function fetchStripePrices(): Promise<Record<string, TierPrice>> {
   const stripe = getStripe()
   const prices: Record<string, TierPrice> = {
-    free: { price: 0, interval: 'month' },
+    student: { price: 0, interval: 'month' },
   }
 
   const priceIds: Array<{ planId: string; priceId: string | undefined }> = [
-    { planId: 'starter', priceId: env.STRIPE_STARTER_PRICE_ID },
-    { planId: 'professional', priceId: env.STRIPE_PROFESSIONAL_PRICE_ID },
+    { planId: 'private', priceId: env.STRIPE_PRIVATE_PRICE_ID },
+    { planId: 'commercial', priceId: env.STRIPE_COMMERCIAL_PRICE_ID },
   ]
 
   const fetches = priceIds
@@ -216,13 +216,13 @@ async function fetchStripePrices(): Promise<Record<string, TierPrice>> {
 function getDefaultProducts(): Record<string, TierProduct> {
   const productIds = getApimProductIds()
   return {
-    free: { apimProductId: productIds.free, displayName: 'Student Pilot' },
-    starter: {
-      apimProductId: productIds.starter,
+    student: { apimProductId: productIds.student, displayName: 'Student Pilot' },
+    private: {
+      apimProductId: productIds.private,
       displayName: 'Private Pilot',
     },
-    professional: {
-      apimProductId: productIds.professional,
+    commercial: {
+      apimProductId: productIds.commercial,
       displayName: 'Commercial Pilot',
     },
   }

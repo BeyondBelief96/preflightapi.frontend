@@ -13,10 +13,10 @@ const tabTriggerClass =
 
 function GettingStartedDocs() {
   const { plans } = usePlans()
-  const freePlan = plans.find((p) => p.id === 'free')
-  const freeName = freePlan?.name ?? 'Student Pilot'
+  const studentPlan = plans.find((p) => p.id === 'student')
+  const freeName = studentPlan?.name ?? 'Student Pilot'
   const freeCalls =
-    freePlan?.limits.callsPerMonth?.toLocaleString() ?? '500'
+    studentPlan?.limits.callsPerMonth?.toLocaleString() ?? '500'
 
   return (
     <div className="space-y-10">

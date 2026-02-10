@@ -5,8 +5,8 @@ import { usePlans } from '@/hooks/use-plans'
 
 export function CtaSection() {
   const { plans } = usePlans()
-  const freePlan = plans.find((p) => p.id === 'free')
-  const freeCallsLabel = freePlan?.limits.callsPerMonth?.toLocaleString() ?? '500'
+  const studentPlan = plans.find((p) => p.id === 'student')
+  const freeCallsLabel = studentPlan?.limits.callsPerMonth?.toLocaleString() ?? '500'
 
   return (
     <section className="border-t border-border bg-card py-20 text-card-foreground">

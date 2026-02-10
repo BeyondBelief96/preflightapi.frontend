@@ -26,7 +26,7 @@ import { useReconcile } from '@/components/dashboard/billing/use-reconcile'
 
 const billingSearchSchema = z.object({
   checkout: z.enum(['success', 'canceled']).optional(),
-  plan: z.enum(['starter', 'professional']).optional(),
+  plan: z.enum(['private', 'commercial']).optional(),
 })
 
 export const Route = createFileRoute('/dashboard/billing/')({
@@ -212,7 +212,7 @@ function BillingPage() {
                   )}
                 </span>
                 . After that, you'll be downgraded to the{' '}
-                {plans.find((p) => p.id === 'free')?.name ?? 'Free'} plan. Your
+                {plans.find((p) => p.id === 'student')?.name ?? 'Student Pilot'} plan. Your
                 API keys will remain the same, but access to paid-tier endpoints
                 will be restricted.
               </p>
