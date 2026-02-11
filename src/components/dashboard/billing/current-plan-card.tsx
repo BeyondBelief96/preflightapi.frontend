@@ -83,7 +83,7 @@ export function CurrentPlanCard({
             </Button>
           ) : (
             <div className="flex flex-col gap-2 sm:flex-row">
-              {plans.filter((p) => p.id !== 'student').map((plan) => (
+              {plans.filter((p) => p.id !== 'student' && !p.marketingOnly).map((plan) => (
                 <Button
                   key={plan.id}
                   variant={plan.highlighted ? 'default' : 'outline'}

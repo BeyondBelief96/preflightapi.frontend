@@ -20,6 +20,7 @@ export interface PlanDefinition {
   features: Array<string>
   highlighted?: boolean
   cta: string
+  marketingOnly?: boolean
 }
 
 // --- Static feature definitions (marketing copy per tier) ---
@@ -30,6 +31,7 @@ export const TIER_FEATURES: Record<string, Array<string>> = {
     'Airport search, details, runways & frequencies',
     '19,600+ US airports from FAA NASR',
     'Email support',
+    '99.95% uptime SLA',
   ],
   private: [
     'All Student Pilot endpoints',
@@ -38,6 +40,7 @@ export const TIER_FEATURES: Record<string, Array<string>> = {
     'Controlled & special-use airspace boundaries',
     '625,000+ obstacles (towers, cranes, etc.)',
     'Email support',
+    '99.95% uptime SLA',
   ],
   commercial: [
     'All Private Pilot endpoints',
@@ -54,6 +57,13 @@ export const TIER_FEATURES: Record<string, Array<string>> = {
     'Pressure altitude calculator',
     'Nav log with wind correction & fuel burn',
     'Priority email support',
+    '99.95% uptime SLA',
+  ],
+  atp: [
+    'All Commercial Pilot endpoints',
+    'Custom monthly quotas & rate limits',
+    'Dedicated priority support',
+    '99.95% uptime SLA',
   ],
 }
 
@@ -64,6 +74,7 @@ export const TIER_UI: Record<
   student: { cta: 'Get Started Free' },
   private: { highlighted: true, cta: 'Go Private' },
   commercial: { cta: 'Go Commercial' },
+  atp: { cta: 'Contact Us' },
 }
 
 // --- Helpers ---
@@ -134,11 +145,11 @@ export const PLANS: Array<PlanDefinition> = [
     price: 29.99,
     interval: 'month',
     apimProductId: 'private-pilot',
-    limits: { callsPerMonth: 25_000, ratePerMinute: 60 },
+    limits: { callsPerMonth: 150_000, ratePerMinute: 60 },
     highlighted: true,
     features: buildPlanFeatures(
       'private',
-      { callsPerMonth: 25_000, ratePerMinute: 60 },
+      { callsPerMonth: 150_000, ratePerMinute: 60 },
       29.99,
     ),
     cta: 'Go Private',
@@ -149,13 +160,27 @@ export const PLANS: Array<PlanDefinition> = [
     price: 79.99,
     interval: 'month',
     apimProductId: 'commercial-pilot',
-    limits: { callsPerMonth: 250_000, ratePerMinute: 300 },
+    limits: { callsPerMonth: 750_000, ratePerMinute: 300 },
     features: buildPlanFeatures(
       'commercial',
-      { callsPerMonth: 250_000, ratePerMinute: 300 },
+      { callsPerMonth: 750_000, ratePerMinute: 300 },
       79.99,
     ),
     cta: 'Go Commercial',
+  },
+  {
+    id: 'atp',
+    name: 'ATP',
+    price: null,
+    interval: null,
+    apimProductId: '',
+    limits: { callsPerMonth: null, ratePerMinute: null },
+    features: buildPlanFeatures(
+      'atp',
+      { callsPerMonth: null, ratePerMinute: null },
+    ),
+    cta: 'Contact Us',
+    marketingOnly: true,
   },
 ] as const
 

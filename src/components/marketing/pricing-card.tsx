@@ -73,7 +73,7 @@ function PlanCTA({ plan }: { plan: PlanDefinition }) {
   const stripeSubQuery = useQuery({
     queryKey: stripeKeys.subscription(userId ?? ''),
     queryFn: () => getStripeSubscription(),
-    enabled: !!isSignedIn && !!userId,
+    enabled: !!isSignedIn && !!userId && !plan.marketingOnly,
   })
 
   const hasActiveSubscription = !!stripeSubQuery.data
@@ -86,6 +86,17 @@ function PlanCTA({ plan }: { plan: PlanDefinition }) {
       }
     },
   })
+
+  // Marketing-only plans (e.g. ATP) link to contact
+  if (plan.marketingOnly) {
+    return (
+      <Link to="/contact">
+        <Button className="w-full" variant="outline">
+          {plan.cta}
+        </Button>
+      </Link>
+    )
+  }
 
   const signUpLink = isWaitlistMode ? '/waitlist' : '/sign-up'
 

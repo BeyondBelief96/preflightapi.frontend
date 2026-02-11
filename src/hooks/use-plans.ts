@@ -34,6 +34,7 @@ export function usePlans(): {
       features: buildPlanFeatures(plan.id, limits, price?.price ?? plan.price),
       highlighted: ui?.highlighted,
       cta: ui?.cta ?? plan.cta,
+      ...(plan.marketingOnly && { marketingOnly: true }),
     }
   })
 
