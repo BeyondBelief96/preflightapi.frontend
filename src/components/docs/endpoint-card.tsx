@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { ChevronDown, ChevronUp, Play } from 'lucide-react'
+import { FormatApiText } from './format-api-text'
 import { MethodBadge } from './method-badge'
 import { TierBadge } from './tier-badge'
 import { ParameterTable } from './parameter-table'
 import { SchemaViewer } from './schema-viewer'
+import { SchemaLink } from './schema-link'
 import { ResponseViewer } from './response-viewer'
 import { CodeExamples } from './code-examples'
 import { TryItPlayground } from './try-it-playground'
@@ -44,8 +46,11 @@ export function EndpointCard({ endpoint }: EndpointCardProps) {
             <TierBadge tier={endpoint.tier} />
           </div>
           <h3 className="text-lg font-semibold">{title}</h3>
+          {endpoint.summary && (
+            <FormatApiText text={endpoint.summary} className="text-sm text-muted-foreground" />
+          )}
           {endpoint.description && (
-            <p className="text-sm text-muted-foreground">{endpoint.description}</p>
+            <FormatApiText text={endpoint.description} className="text-sm text-muted-foreground" />
           )}
         </div>
         <ChevronDown
@@ -58,7 +63,7 @@ export function EndpointCard({ endpoint }: EndpointCardProps) {
         <div className="space-y-4 border-t px-5 pb-5 pt-4">
           {endpoint.paginatedItemType && (
             <p className="text-xs text-muted-foreground">
-              Returns paginated results of <code className="text-blue-400">{endpoint.paginatedItemType}</code>
+              Returns paginated results of <SchemaLink name={endpoint.paginatedItemType} />
             </p>
           )}
 
@@ -76,9 +81,7 @@ export function EndpointCard({ endpoint }: EndpointCardProps) {
               <h4 className="text-sm font-semibold text-muted-foreground">
                 Request Body
                 {endpoint.requestBody.schemaName && (
-                  <span className="ml-2 font-mono text-xs font-normal text-blue-400">
-                    {endpoint.requestBody.schemaName}
-                  </span>
+                  <SchemaLink name={endpoint.requestBody.schemaName} className="ml-2 font-normal" />
                 )}
               </h4>
               <SchemaViewer fields={endpoint.requestBody.schema.fields} />

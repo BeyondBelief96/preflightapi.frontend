@@ -14,6 +14,7 @@ import { ENDPOINT_ACCESS } from '@/lib/constants'
 const oaSpec = spec as {
   paths: Record<string, Record<string, OaOperation>>
   components: { schemas: Record<string, OaSchema> }
+  tags: Array<{ name: string; description: string }>
 }
 
 interface OaSchema {
@@ -194,6 +195,12 @@ function parseParsedSchema(name: string, s: OaSchema): ParsedSchema {
   }
 }
 
+// ---------- tags metadata ----------
+
+export const tagsMeta: Record<string, string> = Object.fromEntries(
+  (oaSpec.tags ?? []).map((t) => [t.name, t.description]),
+)
+
 // ---------- tier matching ----------
 
 const tierPatterns: Array<{ pattern: RegExp; key: string }> = [
@@ -212,7 +219,15 @@ const tierPatterns: Array<{ pattern: RegExp; key: string }> = [
   { pattern: /\/notams/, key: 'notams' },
   { pattern: /\/airport-diagrams/, key: 'airports/diagrams' },
   { pattern: /\/chart-supplements/, key: 'charts/supplements' },
-  { pattern: /\/performance/, key: 'performance/calculator' },
+  { pattern: /\/e6b\/crosswind/, key: 'e6b/crosswind' },
+  { pattern: /\/e6b\/density-altitude/, key: 'e6b/density-altitude' },
+  { pattern: /\/e6b\/wind-triangle/, key: 'e6b/wind-triangle' },
+  { pattern: /\/e6b\/true-airspeed/, key: 'e6b/true-airspeed' },
+  { pattern: /\/e6b\/cloud-base/, key: 'e6b/cloud-base' },
+  { pattern: /\/e6b\/pressure-altitude/, key: 'e6b/pressure-altitude' },
+  { pattern: /\/e6b\//, key: 'e6b/calculator' },
+  { pattern: /\/navlog\/bearing-and-distance/, key: 'navigation/bearing-distance' },
+  { pattern: /\/navlog\/winds-aloft/, key: 'navigation/winds-aloft' },
   { pattern: /\/navlog/, key: 'navigation/nav-log' },
 ]
 

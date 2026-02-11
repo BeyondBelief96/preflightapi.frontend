@@ -120,13 +120,13 @@ function getExampleBodies(): Record<string, unknown> {
     endLatitude: 36.1245,
     endLongitude: -86.6782,
   },
-  [`${API_BASE_PATH}/performance/crosswind/calculate`]: {
+  [`${API_BASE_PATH}/e6b/crosswind/calculate`]: {
     windDirectionDegrees: 230,
     windSpeedKt: 15,
     windGustKt: 22,
     runwayHeadingDegrees: 180,
   },
-  [`${API_BASE_PATH}/performance/density-altitude/calculate`]: {
+  [`${API_BASE_PATH}/e6b/density-altitude/calculate`]: {
     fieldElevationFt: 748,
     altimeterInHg: 29.92,
     temperatureCelsius: 30,

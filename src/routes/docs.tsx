@@ -1,9 +1,10 @@
 import { Link, Outlet, createFileRoute, useLocation } from '@tanstack/react-router'
-import { ArrowLeft, FileJson, Menu, X } from 'lucide-react'
+import { ArrowLeft, FileJson, Menu, Search, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { SignedIn, SignedOut, UserButton } from '@clerk/clerk-react'
 import { createPageHead } from '@/lib/seo'
 import { DocsSidebar } from '@/components/docs/docs-sidebar'
+import { DocsSearch } from '@/components/docs/docs-search'
 import { Button } from '@/components/ui/button'
 import { Logo } from '@/components/logo'
 import { isWaitlistMode } from '@/lib/waitlist'
@@ -19,8 +20,17 @@ export const Route = createFileRoute('/docs')({
   component: DocsLayout,
 })
 
+function ModKey() {
+  const [isMac, setIsMac] = useState(false)
+  useEffect(() => {
+    setIsMac(navigator.platform.toUpperCase().includes('MAC'))
+  }, [])
+  return <>{isMac ? '\u2318' : 'Ctrl+'}</>
+}
+
 function DocsLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
   const { pathname } = useLocation()
 
   useEffect(() => {
@@ -80,6 +90,16 @@ function DocsLayout() {
               <Menu className="h-4 w-4" />
             )}
           </Button>
+          <button
+            onClick={() => setSearchOpen(true)}
+            className="flex items-center gap-2 rounded-lg border bg-muted/50 px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          >
+            <Search className="h-4 w-4" />
+            <span className="hidden sm:inline">Search docs...</span>
+            <kbd className="pointer-events-none hidden select-none rounded border bg-muted px-1.5 font-mono text-[10px] font-medium sm:inline-flex">
+              <ModKey />K
+            </kbd>
+          </button>
           <a
             href="/api/openapi"
             target="_blank"
@@ -111,6 +131,8 @@ function DocsLayout() {
           <Outlet />
         </div>
       </main>
+
+      <DocsSearch open={searchOpen} onOpenChange={setSearchOpen} />
     </div>
   )
 }

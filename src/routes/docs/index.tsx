@@ -2,19 +2,17 @@ import { Link, createFileRoute } from '@tanstack/react-router'
 import {
   AlertTriangle,
   BookOpen,
+  Calculator,
   Cloud,
   Code2,
-  Compass,
+  Database,
   FileText,
-  Gauge,
   Key,
   Layers,
-  Mountain,
   Plane,
   Radio,
   Route as RouteIcon,
   TriangleAlert,
-  Wind,
   Zap,
 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
@@ -37,11 +35,9 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   'alert-triangle': AlertTriangle,
   'triangle-alert': TriangleAlert,
   'file-text': FileText,
-  wind: Wind,
-  mountain: Mountain,
   route: RouteIcon,
-  compass: Compass,
-  gauge: Gauge,
+  calculator: Calculator,
+  database: Database,
 }
 
 interface CategoryGroup {
@@ -58,7 +54,8 @@ const categoryGroups: Array<CategoryGroup> = [
   {
     title: 'Weather',
     items: [
-      { icon: 'thermometer', title: 'METARs & TAFs', description: 'Surface observations and forecasts.', href: '/docs/metars-tafs' },
+      { icon: 'thermometer', title: 'METARs', description: 'Surface weather observations for airports.', href: '/docs/metars' },
+      { icon: 'thermometer', title: 'TAFs', description: 'Terminal aerodrome forecasts.', href: '/docs/tafs' },
       { icon: 'radio', title: 'PIREPs', description: 'Pilot reports of in-flight conditions.', href: '/docs/pireps' },
       { icon: 'cloud-lightning', title: 'AIRMETs & SIGMETs', description: 'Weather advisories and hazards.', href: '/docs/airmets-sigmets' },
       { icon: 'map', title: 'G-AIRMETs', description: 'Graphical AIRMET hazard areas.', href: '/docs/g-airmets' },
@@ -67,7 +64,8 @@ const categoryGroups: Array<CategoryGroup> = [
   {
     title: 'Airports & Airspace',
     items: [
-      { icon: 'plane', title: 'Airports', description: 'Search, details, runways, and frequencies.', href: '/docs/airports' },
+      { icon: 'plane', title: 'Airports', description: 'Search, details, and runways.', href: '/docs/airports' },
+      { icon: 'radio', title: 'Communication Frequencies', description: 'Airport and facility radio frequencies.', href: '/docs/communication-frequencies' },
       { icon: 'layers', title: 'Airspace', description: 'Controlled and special-use boundaries.', href: '/docs/airspace' },
       { icon: 'alert-triangle', title: 'NOTAMs', description: 'Notices to Air Missions.', href: '/docs/notams' },
       { icon: 'triangle-alert', title: 'Obstacles', description: '625,000+ FAA-charted obstacles.', href: '/docs/obstacles' },
@@ -76,26 +74,26 @@ const categoryGroups: Array<CategoryGroup> = [
   {
     title: 'Documents',
     items: [
-      { icon: 'file-text', title: 'Charts & Diagrams', description: 'Airport diagrams and chart supplements.', href: '/docs/documents' },
+      { icon: 'file-text', title: 'Airport Diagrams', description: 'FAA airport diagram PDFs.', href: '/docs/airport-diagrams' },
+      { icon: 'file-text', title: 'Chart Supplements', description: 'FAA Chart Supplement (A/FD) PDFs.', href: '/docs/chart-supplements' },
     ],
   },
   {
-    title: 'Performance',
+    title: 'E6B Flight Computer',
     items: [
-      { icon: 'wind', title: 'Crosswind Calculator', description: 'Crosswind components from METAR or manual.', href: '/docs/crosswind' },
-      { icon: 'mountain', title: 'Density Altitude', description: 'Density altitude from METAR or manual.', href: '/docs/density-altitude' },
-      { icon: 'compass', title: 'Wind Triangle', description: 'Heading & ground speed from wind data.', href: '/docs/wind-triangle' },
-      { icon: 'gauge', title: 'True Airspeed', description: 'TAS & Mach from CAS, altitude, and OAT.', href: '/docs/true-airspeed' },
-      { icon: 'cloud-lightning', title: 'Cloud Base', description: 'Cloud base height from temp & dewpoint.', href: '/docs/cloud-base' },
-      { icon: 'mountain', title: 'Pressure Altitude', description: 'Pressure altitude from elevation & altimeter.', href: '/docs/pressure-altitude' },
+      { icon: 'calculator', title: 'E6B Flight Computer', description: 'Crosswind, density altitude, wind triangle, TAS, cloud base, and pressure altitude.', href: '/docs/e6b' },
     ],
   },
   {
     title: 'Navigation',
     items: [
-      { icon: 'route', title: 'Nav Log', description: 'Flight navigation log calculation.', href: '/docs/nav-log' },
-      { icon: 'compass', title: 'Bearing & Distance', description: 'Point-to-point calculations.', href: '/docs/bearing-distance' },
-      { icon: 'wind', title: 'Winds Aloft', description: 'Winds aloft forecasts by period.', href: '/docs/winds-aloft' },
+      { icon: 'route', title: 'Navigation Log', description: 'Nav log, bearing & distance, and winds aloft.', href: '/docs/nav-log' },
+    ],
+  },
+  {
+    title: 'Reference',
+    items: [
+      { icon: 'database', title: 'Data Models', description: 'Complete reference for all request and response schemas.', href: '/docs/data-models' },
     ],
   },
 ]
@@ -103,30 +101,23 @@ const categoryGroups: Array<CategoryGroup> = [
 const endpointAccessRows = [
   { category: 'METARs', student: true, private: true, commercial: true },
   { category: 'TAFs', student: true, private: true, commercial: true },
-  { category: 'Airports (search & details)', student: true, private: true, commercial: true },
-  { category: 'Runways', student: true, private: true, commercial: true },
+  { category: 'Airports (search, details & runways)', student: true, private: true, commercial: true },
   { category: 'Communication Frequencies', student: true, private: true, commercial: true },
   { category: 'PIREPs', student: false, private: true, commercial: true },
   { category: 'AIRMETs & SIGMETs', student: false, private: true, commercial: true },
   { category: 'G-AIRMETs', student: false, private: true, commercial: true },
   { category: 'Airspace & Special-Use Airspace', student: false, private: true, commercial: true },
   { category: 'Obstacles', student: false, private: true, commercial: true },
-  { category: 'Bearing & Distance', student: false, private: false, commercial: true },
-  { category: 'Winds Aloft', student: false, private: false, commercial: true },
   { category: 'NOTAMs', student: false, private: false, commercial: true },
-  { category: 'Airport Diagrams & Chart Supplements', student: false, private: false, commercial: true },
-  { category: 'Crosswind Calculator', student: false, private: false, commercial: true },
-  { category: 'Density Altitude', student: false, private: false, commercial: true },
-  { category: 'Wind Triangle', student: false, private: false, commercial: true },
-  { category: 'True Airspeed', student: false, private: false, commercial: true },
-  { category: 'Cloud Base', student: false, private: false, commercial: true },
-  { category: 'Pressure Altitude', student: false, private: false, commercial: true },
-  { category: 'Nav Log', student: false, private: false, commercial: true },
+  { category: 'Airport Diagrams', student: false, private: false, commercial: true },
+  { category: 'Chart Supplements', student: false, private: false, commercial: true },
+  { category: 'E6B Flight Computer', student: false, private: false, commercial: true },
+  { category: 'Navigation Log', student: false, private: false, commercial: true },
 ]
 
 const cacheDurations = [
   { category: 'Real-time weather (METARs, PIREPs)', duration: '2 minutes' },
-  { category: 'Performance calculations (live METAR mode)', duration: '2 minutes' },
+  { category: 'E6B calculations (live METAR mode)', duration: '2 minutes' },
   { category: 'Forecasts & advisories (TAFs, AIRMETs, SIGMETs, G-AIRMETs)', duration: '5 minutes' },
   { category: 'NOTAMs', duration: '5 minutes' },
   { category: 'Winds aloft', duration: '5 minutes' },
@@ -168,11 +159,18 @@ function DocsIndex() {
           Authentication
         </Link>
         <Link
-          to="/docs/metars-tafs"
+          to="/docs/metars"
           className="inline-flex items-center gap-2 rounded-lg bg-muted px-4 py-2 text-sm font-medium transition-colors hover:bg-muted/80"
         >
           <Code2 className="h-4 w-4" />
           API Reference
+        </Link>
+        <Link
+          to="/docs/data-models"
+          className="inline-flex items-center gap-2 rounded-lg bg-muted px-4 py-2 text-sm font-medium transition-colors hover:bg-muted/80"
+        >
+          <Database className="h-4 w-4" />
+          Data Models
         </Link>
       </div>
 

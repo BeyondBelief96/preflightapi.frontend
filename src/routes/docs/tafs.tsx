@@ -3,13 +3,13 @@ import { CategoryPage } from '@/components/docs/category-page'
 import { CATEGORIES } from '@/lib/docs/category-config'
 import { getEndpointsForCategory } from '@/lib/docs/spec-parser'
 
-export const Route = createFileRoute('/docs/documents')({
-  component: DocumentsDocs,
+export const Route = createFileRoute('/docs/tafs')({
+  component: TafsDocs,
 })
 
-const category = CATEGORIES.find((c) => c.slug === 'documents')!
+const category = CATEGORIES.find((c) => c.slug === 'tafs')!
 const endpoints = getEndpointsForCategory(category)
 
-function DocumentsDocs() {
+function TafsDocs() {
   return <CategoryPage category={category} endpoints={endpoints} />
 }

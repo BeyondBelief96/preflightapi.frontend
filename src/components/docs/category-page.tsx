@@ -7,11 +7,16 @@ interface CategoryPageProps {
 }
 
 export function CategoryPage({ category, endpoints }: CategoryPageProps) {
-  // Group endpoints by tag
-  const grouped = category.subcategories.map((sub) => ({
-    ...sub,
-    endpoints: endpoints.filter((ep) => ep.tag === sub.tag),
-  }))
+  // Group endpoints by subcategory (respecting pathFilter)
+  const grouped = category.subcategories.map((sub) => {
+    const re = sub.pathFilter ? new RegExp(sub.pathFilter) : null
+    return {
+      ...sub,
+      endpoints: endpoints.filter(
+        (ep) => ep.tag === sub.tag && (!re || re.test(ep.path)),
+      ),
+    }
+  })
 
   // All operation IDs for quick-nav
   const allOps = endpoints.map((ep) => ({
@@ -59,7 +64,7 @@ export function CategoryPage({ category, endpoints }: CategoryPageProps) {
 
       {/* Subcategory sections */}
       {grouped.map((sub) => (
-        <section key={sub.tag} className="space-y-6">
+        <section key={sub.label} className="space-y-6">
           {category.subcategories.length > 1 && (
             <div>
               <h2 className="text-2xl font-semibold">{sub.label}</h2>

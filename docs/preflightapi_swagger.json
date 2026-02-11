@@ -3,7 +3,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "PreflightApi",
-    "description": "Aviation data API for VFR flight planning — weather, airports, airspace, NOTAMs, navigation, and performance calculations.",
+    "description": "Aviation data API for VFR flight planning — weather, airports, airspace, NOTAMs, navigation, and E6B flight computer calculations.",
     "version": "v1"
   },
   "servers": [
@@ -206,19 +206,19 @@
         }
       }
     },
-    "/api/v1/airports/states/{stateCodes}": {
+    "/api/v1/airports/by-states": {
       "get": {
         "tags": [
           "Airports"
         ],
         "summary": "Gets airports across multiple states",
+        "description": "Pass state codes as a single comma-separated query parameter:\nGET /api/v1/airports/by-states?stateCodes=TX,OK,LA",
         "operationId": "Airport_GetAirportsByStates",
         "parameters": [
           {
             "name": "stateCodes",
-            "in": "path",
-            "required": true,
-            "description": "Comma-separated state codes (e.g., TX,OK,LA)",
+            "in": "query",
+            "description": "Comma-separated two-letter state codes (e.g., TX,OK,LA). Must contain at least one code.",
             "schema": {
               "type": "string"
             },
@@ -255,23 +255,33 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "If the state codes parameter is empty",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
           }
         }
       }
     },
-    "/api/v1/airports/batch/{icaoCodesOrIdents}": {
+    "/api/v1/airports/batch": {
       "get": {
         "tags": [
           "Airports"
         ],
         "summary": "Gets multiple airports by their ICAO codes or identifiers",
+        "description": "Pass ICAO codes or FAA identifiers as a single comma-separated query parameter:\nGET /api/v1/airports/batch?icaoCodesOrIdents=KDFW,KAUS,KHOU\nBoth ICAO codes (KDFW) and FAA identifiers (DFW) can be mixed in the same request.",
         "operationId": "Airport_GetAirportsByIcaoCodesOrIdents",
         "parameters": [
           {
             "name": "icaoCodesOrIdents",
-            "in": "path",
-            "required": true,
-            "description": "Comma-separated ICAO codes or FAA identifiers (e.g., KDFW,KAUS,KHOU)",
+            "in": "query",
+            "description": "Comma-separated ICAO codes or FAA identifiers (e.g., KDFW,KAUS,KHOU). Must contain at least one code.",
             "schema": {
               "type": "string"
             },
@@ -288,6 +298,16 @@
                   "items": {
                     "$ref": "#/components/schemas/AirportDto"
                   }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "If the ICAO codes or identifiers parameter is empty",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
                 }
               }
             }
@@ -1126,6 +1146,423 @@
         }
       }
     },
+    "/api/v1/e6b/crosswind/{icaoCodeOrIdent}": {
+      "get": {
+        "tags": [
+          "E6B Flight Computer"
+        ],
+        "summary": "Calculates crosswind and headwind components for all runways at an airport using the latest METAR wind data.\nReturns components for each runway end and recommends the best runway (lowest crosswind with a headwind).\nRequires the airport to have a current METAR with wind data and at least one runway with heading information.",
+        "operationId": "E6b_GetCrosswindForAirport",
+        "parameters": [
+          {
+            "name": "icaoCodeOrIdent",
+            "in": "path",
+            "required": true,
+            "description": "ICAO code or airport identifier",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns crosswind data for all runways",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AirportCrosswindResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "If METAR is missing required wind data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "If the airport or METAR is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/e6b/crosswind/calculate": {
+      "post": {
+        "tags": [
+          "E6B Flight Computer"
+        ],
+        "summary": "Calculates crosswind and headwind components using manually provided wind and runway heading values.\nUseful when you want to calculate components for specific conditions rather than using live METAR data.",
+        "operationId": "E6b_CalculateCrosswind",
+        "requestBody": {
+          "x-name": "request",
+          "description": "Wind direction (degrees), wind speed (knots), optional gust speed (knots), and runway heading (magnetic degrees)",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrosswindCalculationRequestDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "Returns calculated crosswind components",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrosswindCalculationResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "If the request parameters are invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/e6b/density-altitude/{icaoCodeOrIdent}": {
+      "get": {
+        "tags": [
+          "E6B Flight Computer"
+        ],
+        "summary": "Calculates density altitude for an airport using the latest METAR temperature and altimeter data.\nOptionally override the temperature or altimeter setting (e.g., for \"what if\" scenarios).\nReturns density altitude, pressure altitude, ISA temperature, and temperature deviation.",
+        "description": "Density altitude is calculated using the ISA (International Standard Atmosphere) model approximation:\nDA = PA + 120 × (OAT − ISA_temp). Real atmospheric density varies with humidity, local pressure\npatterns, and non-standard lapse rates that this model does not account for.",
+        "operationId": "E6b_GetDensityAltitudeForAirport",
+        "parameters": [
+          {
+            "name": "icaoCodeOrIdent",
+            "in": "path",
+            "required": true,
+            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW)",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "TemperatureCelsiusOverride",
+            "in": "query",
+            "description": "Override temperature in Celsius (uses METAR if not provided)",
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "AltimeterInHgOverride",
+            "in": "query",
+            "description": "Override altimeter setting in inHg (uses METAR if not provided)",
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "nullable": true
+            },
+            "x-position": 3
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns density altitude data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DensityAltitudeResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "If METAR is missing required data and no override provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "If the airport or METAR is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/e6b/density-altitude/calculate": {
+      "post": {
+        "tags": [
+          "E6B Flight Computer"
+        ],
+        "summary": "Calculates density altitude using manually provided field elevation, altimeter setting, and temperature.\nUseful for any location or for calculating with non-current weather conditions.",
+        "description": "Density altitude is calculated using the ISA (International Standard Atmosphere) model approximation:\nDA = PA + 120 × (OAT − ISA_temp). Real atmospheric density varies with humidity, local pressure\npatterns, and non-standard lapse rates that this model does not account for.",
+        "operationId": "E6b_CalculateDensityAltitude",
+        "requestBody": {
+          "x-name": "request",
+          "description": "Field elevation (feet MSL), altimeter setting (inches of mercury), and temperature (degrees Celsius)",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DensityAltitudeRequestDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "Returns calculated density altitude",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DensityAltitudeResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "If the request parameters are invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/e6b/wind-triangle/calculate": {
+      "post": {
+        "tags": [
+          "E6B Flight Computer"
+        ],
+        "summary": "Calculates true heading and ground speed using the wind triangle.\nGiven true course, true airspeed, wind direction, and wind speed, returns the wind correction angle,\ntrue heading, ground speed, and headwind/crosswind components.",
+        "operationId": "E6b_CalculateWindTriangle",
+        "requestBody": {
+          "x-name": "request",
+          "description": "True course (degrees), TAS (knots), wind direction (degrees), wind speed (knots)",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WindTriangleRequestDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "Returns wind triangle calculation results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WindTriangleResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "If the request parameters are invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/e6b/true-airspeed/calculate": {
+      "post": {
+        "tags": [
+          "E6B Flight Computer"
+        ],
+        "summary": "Calculates true airspeed (TAS) from calibrated airspeed, pressure altitude, and outside air temperature.\nUses the full compressible isentropic flow conversion (CAS → impact pressure → Mach → TAS),\naccurate from sea level through FL410+ including above the tropopause (36,089 ft).\nAlso returns density altitude and Mach number at the given conditions.\nReference: ICAO Doc 7488 (Standard Atmosphere), isentropic flow relations.",
+        "description": "This calculation assumes the ISA tropopause at 36,089 ft. The real tropopause varies from\n~26,000 ft near the poles to ~55,000 ft near the equator. Pressure ratio and temperature\nmodel transitions at this boundary affect TAS accuracy at high altitudes in non-mid-latitude regions.",
+        "operationId": "E6b_CalculateTrueAirspeed",
+        "requestBody": {
+          "x-name": "request",
+          "description": "Calibrated airspeed (knots), pressure altitude (feet), OAT (°C)",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrueAirspeedRequestDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "Returns TAS calculation results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrueAirspeedResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "If the request parameters are invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/e6b/cloud-base/calculate": {
+      "post": {
+        "tags": [
+          "E6B Flight Computer"
+        ],
+        "summary": "Estimates cloud base height AGL from surface temperature and dewpoint.\nUses the standard spread × 400 formula (equivalent to spread / 2.5 × 1000).",
+        "description": "This estimation uses the average dry adiabatic lapse rate (~3°C/1000 ft) and dewpoint lapse\nrate (~0.5°C/1000 ft) to approximate the lifting condensation level. Actual cloud bases vary\nwith humidity profiles, inversions, and local convective conditions.",
+        "operationId": "E6b_CalculateCloudBase",
+        "requestBody": {
+          "x-name": "request",
+          "description": "Surface temperature (°C) and dewpoint (°C)",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CloudBaseRequestDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "Returns cloud base estimation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CloudBaseResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "If dewpoint exceeds temperature",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/e6b/pressure-altitude/calculate": {
+      "post": {
+        "tags": [
+          "E6B Flight Computer"
+        ],
+        "summary": "Calculates pressure altitude from field elevation and altimeter setting.\nPA = field elevation + (29.92 − altimeter) × 1000.",
+        "description": "This uses the standard altimetry relationship from the ICAO Standard Atmosphere. The 1 inHg ≈ 1000 ft\napproximation is most accurate near sea level and diverges slightly at higher altitudes and extreme\naltimeter settings.",
+        "operationId": "E6b_CalculatePressureAltitude",
+        "requestBody": {
+          "x-name": "request",
+          "description": "Field elevation (feet MSL) and altimeter setting (inHg)",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PressureAltitudeRequestDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "Returns pressure altitude calculation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PressureAltitudeResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "If the altimeter setting is out of range",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/g-airmets": {
       "get": {
         "tags": [
@@ -1626,19 +2063,19 @@
         }
       }
     },
-    "/api/v1/metars/states/{stateCodes}": {
+    "/api/v1/metars/by-states": {
       "get": {
         "tags": [
           "Weather - METARs"
         ],
         "summary": "Gets METARs for all airports across multiple states",
+        "description": "Pass state codes as a single comma-separated query parameter:\nGET /api/v1/metars/by-states?stateCodes=TX,OK,LA",
         "operationId": "Metar_GetMetarsByStates",
         "parameters": [
           {
             "name": "stateCodes",
-            "in": "path",
-            "required": true,
-            "description": "Comma-separated state codes (e.g., TX,OK,LA)",
+            "in": "query",
+            "description": "Comma-separated two-letter state codes (e.g., TX,OK,LA). Must contain at least one code.",
             "schema": {
               "type": "string"
             },
@@ -1672,6 +2109,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PaginatedResponseOfMetarDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "If the state codes parameter is empty",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
                 }
               }
             }
@@ -2250,10 +2697,11 @@
           "Obstacles"
         ],
         "summary": "Gets multiple obstacles by their OAS numbers. This endpoint is designed to be used with the\nObstacleOasNumbers returned by the navigation log endpoint (POST /api/v1/navlog/calculate)\nto retrieve full details for obstacles near a planned route.",
+        "description": "Send a JSON array of OAS number strings in the request body:\n[\"12-345678\", \"12-345679\", \"12-345680\"]",
         "operationId": "Obstacle_GetByOasNumbers",
         "requestBody": {
           "x-name": "oasNumbers",
-          "description": "JSON array of OAS number strings (maximum 1000). Example: [\"12-345678\",\"12-345679\"]",
+          "description": "JSON array of OAS number strings (maximum 1000)",
           "content": {
             "application/json": {
               "schema": {
@@ -2387,418 +2835,6 @@
           },
           "400": {
             "description": "If coordinates are invalid or minLat >= maxLat",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/performance/crosswind/{icaoCodeOrIdent}": {
-      "get": {
-        "tags": [
-          "Performance Calculations"
-        ],
-        "summary": "Calculates crosswind and headwind components for all runways at an airport using the latest METAR wind data.\nReturns components for each runway end and recommends the best runway (lowest crosswind with a headwind).\nRequires the airport to have a current METAR with wind data and at least one runway with heading information.",
-        "operationId": "Performance_GetCrosswindForAirport",
-        "parameters": [
-          {
-            "name": "icaoCodeOrIdent",
-            "in": "path",
-            "required": true,
-            "description": "ICAO code or airport identifier",
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Returns crosswind data for all runways",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AirportCrosswindResponseDto"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "If METAR is missing required wind data",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "If the airport or METAR is not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/performance/crosswind/calculate": {
-      "post": {
-        "tags": [
-          "Performance Calculations"
-        ],
-        "summary": "Calculates crosswind and headwind components using manually provided wind and runway heading values.\nUseful when you want to calculate components for specific conditions rather than using live METAR data.",
-        "operationId": "Performance_CalculateCrosswind",
-        "requestBody": {
-          "x-name": "request",
-          "description": "Wind direction (degrees), wind speed (knots), optional gust speed (knots), and runway heading (magnetic degrees)",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CrosswindCalculationRequestDto"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "Returns calculated crosswind components",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CrosswindCalculationResponseDto"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "If the request parameters are invalid",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/performance/density-altitude/{icaoCodeOrIdent}": {
-      "get": {
-        "tags": [
-          "Performance Calculations"
-        ],
-        "summary": "Calculates density altitude for an airport using the latest METAR temperature and altimeter data.\nOptionally override the temperature or altimeter setting (e.g., for \"what if\" scenarios).\nReturns density altitude, pressure altitude, ISA temperature, and temperature deviation.",
-        "operationId": "Performance_GetDensityAltitudeForAirport",
-        "parameters": [
-          {
-            "name": "icaoCodeOrIdent",
-            "in": "path",
-            "required": true,
-            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW)",
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 1
-          },
-          {
-            "name": "TemperatureCelsiusOverride",
-            "in": "query",
-            "description": "Override temperature in Celsius (uses METAR if not provided)",
-            "schema": {
-              "type": "number",
-              "format": "double",
-              "nullable": true
-            },
-            "x-position": 2
-          },
-          {
-            "name": "AltimeterInHgOverride",
-            "in": "query",
-            "description": "Override altimeter setting in inHg (uses METAR if not provided)",
-            "schema": {
-              "type": "number",
-              "format": "double",
-              "nullable": true
-            },
-            "x-position": 3
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Returns density altitude data",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DensityAltitudeResponseDto"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "If METAR is missing required data and no override provided",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "If the airport or METAR is not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/performance/density-altitude/calculate": {
-      "post": {
-        "tags": [
-          "Performance Calculations"
-        ],
-        "summary": "Calculates density altitude using manually provided field elevation, altimeter setting, and temperature.\nUseful for any location or for calculating with non-current weather conditions.",
-        "operationId": "Performance_CalculateDensityAltitude",
-        "requestBody": {
-          "x-name": "request",
-          "description": "Field elevation (feet MSL), altimeter setting (inches of mercury), and temperature (degrees Celsius)",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DensityAltitudeRequestDto"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "Returns calculated density altitude",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DensityAltitudeResponseDto"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "If the request parameters are invalid",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/performance/wind-triangle/calculate": {
-      "post": {
-        "tags": [
-          "Performance Calculations"
-        ],
-        "summary": "Calculates true heading and ground speed using the wind triangle.\nGiven true course, true airspeed, wind direction, and wind speed, returns the wind correction angle,\ntrue heading, ground speed, and headwind/crosswind components.",
-        "operationId": "Performance_CalculateWindTriangle",
-        "requestBody": {
-          "x-name": "request",
-          "description": "True course (degrees), TAS (knots), wind direction (degrees), wind speed (knots)",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/WindTriangleRequestDto"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "Returns wind triangle calculation results",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WindTriangleResponseDto"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "If the request parameters are invalid",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/performance/true-airspeed/calculate": {
-      "post": {
-        "tags": [
-          "Performance Calculations"
-        ],
-        "summary": "Calculates true airspeed (TAS) from calibrated airspeed, pressure altitude, and outside air temperature.\nAlso returns density altitude and Mach number at the given conditions.",
-        "operationId": "Performance_CalculateTrueAirspeed",
-        "requestBody": {
-          "x-name": "request",
-          "description": "Calibrated airspeed (knots), pressure altitude (feet), OAT (°C)",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TrueAirspeedRequestDto"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "Returns TAS calculation results",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TrueAirspeedResponseDto"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "If the request parameters are invalid",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/performance/cloud-base/calculate": {
-      "post": {
-        "tags": [
-          "Performance Calculations"
-        ],
-        "summary": "Estimates cloud base height AGL from surface temperature and dewpoint.\nUses the standard spread × 400 formula (equivalent to spread / 2.5 × 1000).",
-        "operationId": "Performance_CalculateCloudBase",
-        "requestBody": {
-          "x-name": "request",
-          "description": "Surface temperature (°C) and dewpoint (°C)",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CloudBaseRequestDto"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "Returns cloud base estimation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CloudBaseResponseDto"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "If dewpoint exceeds temperature",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/performance/pressure-altitude/calculate": {
-      "post": {
-        "tags": [
-          "Performance Calculations"
-        ],
-        "summary": "Calculates pressure altitude from field elevation and altimeter setting.\nPA = field elevation + (29.92 − altimeter) × 1000.",
-        "operationId": "Performance_CalculatePressureAltitude",
-        "requestBody": {
-          "x-name": "request",
-          "description": "Field elevation (feet MSL) and altimeter setting (inHg)",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PressureAltitudeRequestDto"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "Returns pressure altitude calculation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PressureAltitudeResponseDto"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "If the altimeter setting is out of range",
             "content": {
               "application/json": {
                 "schema": {
@@ -3834,15 +3870,18 @@
       },
       "AirsigmetAltitude": {
         "type": "object",
+        "description": "Altitude range for an AIRMET or SIGMET advisory.",
         "additionalProperties": false,
         "properties": {
           "minFtMsl": {
             "type": "integer",
+            "description": "Minimum altitude in feet MSL for the advisory area.",
             "format": "int32",
             "nullable": true
           },
           "maxFtMsl": {
             "type": "integer",
+            "description": "Maximum altitude in feet MSL for the advisory area.",
             "format": "int32",
             "nullable": true
           }
@@ -3871,7 +3910,7 @@
       },
       "AirsigmetHazardType": {
         "type": "integer",
-        "description": "",
+        "description": "AIRSIGMET hazard types",
         "x-enumNames": [
           "CONVECTIVE",
           "ICE",
@@ -3889,14 +3928,17 @@
       },
       "AirsigmetArea": {
         "type": "object",
+        "description": "Geographic area affected by an AIRMET or SIGMET, defined as a polygon of lat/lon points.",
         "additionalProperties": false,
         "properties": {
           "numPoints": {
             "type": "integer",
+            "description": "Number of points defining the polygon boundary.",
             "format": "int32"
           },
           "points": {
             "type": "array",
+            "description": "Ordered list of lat/lon points forming the polygon boundary of the affected area.",
             "items": {
               "$ref": "#/components/schemas/AirsigmetPoint"
             }
@@ -3905,14 +3947,17 @@
       },
       "AirsigmetPoint": {
         "type": "object",
+        "description": "A geographic coordinate point forming part of an AIRMET/SIGMET area boundary polygon.",
         "additionalProperties": false,
         "properties": {
           "longitude": {
             "type": "number",
+            "description": "Longitude in decimal degrees.",
             "format": "float"
           },
           "latitude": {
             "type": "number",
+            "description": "Latitude in decimal degrees.",
             "format": "float"
           }
         }
@@ -4474,6 +4519,496 @@
           }
         }
       },
+      "AirportCrosswindResponseDto": {
+        "type": "object",
+        "description": "Response DTO containing crosswind components for all runways at an airport",
+        "additionalProperties": false,
+        "properties": {
+          "airportIdentifier": {
+            "type": "string",
+            "description": "ICAO code or identifier of the airport"
+          },
+          "windDirectionDegrees": {
+            "type": "integer",
+            "description": "Wind direction in degrees from METAR (null if variable)",
+            "format": "int32",
+            "nullable": true
+          },
+          "windSpeedKt": {
+            "type": "integer",
+            "description": "Wind speed in knots from METAR",
+            "format": "int32"
+          },
+          "windGustKt": {
+            "type": "integer",
+            "description": "Wind gust speed in knots from METAR (if reported)",
+            "format": "int32",
+            "nullable": true
+          },
+          "isVariableWind": {
+            "type": "boolean",
+            "description": "Whether the wind was reported as variable (VRB)"
+          },
+          "rawMetar": {
+            "type": "string",
+            "description": "Raw METAR text for reference",
+            "nullable": true
+          },
+          "observationTime": {
+            "type": "string",
+            "description": "METAR observation time",
+            "nullable": true
+          },
+          "runways": {
+            "type": "array",
+            "description": "Crosswind components for each runway end at the airport",
+            "items": {
+              "$ref": "#/components/schemas/RunwayCrosswindComponentDto"
+            }
+          },
+          "recommendedRunway": {
+            "type": "string",
+            "description": "Recommended runway end identifier (lowest crosswind with headwind)",
+            "nullable": true
+          }
+        }
+      },
+      "RunwayCrosswindComponentDto": {
+        "type": "object",
+        "description": "Crosswind component data for a single runway end",
+        "additionalProperties": false,
+        "properties": {
+          "runwayEndId": {
+            "type": "string",
+            "description": "Runway end identifier (e.g., \"09\", \"27L\")"
+          },
+          "magneticHeadingDegrees": {
+            "type": "integer",
+            "description": "Runway heading in magnetic degrees",
+            "format": "int32"
+          },
+          "crosswindKt": {
+            "type": "number",
+            "description": "Crosswind component in knots. Positive = from the right, Negative = from the left",
+            "format": "double"
+          },
+          "headwindKt": {
+            "type": "number",
+            "description": "Headwind component in knots. Positive = headwind, Negative = tailwind",
+            "format": "double"
+          },
+          "gustCrosswindKt": {
+            "type": "number",
+            "description": "Crosswind component from gusts in knots (if gust data available). Positive = from the right",
+            "format": "double",
+            "nullable": true
+          },
+          "gustHeadwindKt": {
+            "type": "number",
+            "description": "Headwind component from gusts in knots (if gust data available). Positive = headwind",
+            "format": "double",
+            "nullable": true
+          },
+          "absoluteCrosswindKt": {
+            "type": "number",
+            "description": "Absolute value of crosswind component (for comparison purposes)",
+            "format": "double"
+          },
+          "hasHeadwind": {
+            "type": "boolean",
+            "description": "Whether this runway has a headwind (favorable) vs tailwind"
+          }
+        }
+      },
+      "CrosswindCalculationResponseDto": {
+        "type": "object",
+        "description": "Response DTO for a single crosswind calculation",
+        "additionalProperties": false,
+        "properties": {
+          "crosswindKt": {
+            "type": "number",
+            "description": "Crosswind component in knots. Positive = from the right, Negative = from the left",
+            "format": "double"
+          },
+          "headwindKt": {
+            "type": "number",
+            "description": "Headwind component in knots. Positive = headwind, Negative = tailwind",
+            "format": "double"
+          },
+          "gustCrosswindKt": {
+            "type": "number",
+            "description": "Crosswind component from gusts in knots (if gust data provided). Positive = from the right",
+            "format": "double",
+            "nullable": true
+          },
+          "gustHeadwindKt": {
+            "type": "number",
+            "description": "Headwind component from gusts in knots (if gust data provided). Positive = headwind",
+            "format": "double",
+            "nullable": true
+          },
+          "windDirectionDegrees": {
+            "type": "integer",
+            "description": "Wind direction used in calculation (degrees)",
+            "format": "int32",
+            "nullable": true
+          },
+          "windSpeedKt": {
+            "type": "integer",
+            "description": "Wind speed used in calculation (knots)",
+            "format": "int32"
+          },
+          "windGustKt": {
+            "type": "integer",
+            "description": "Wind gust speed used in calculation (knots)",
+            "format": "int32",
+            "nullable": true
+          },
+          "runwayHeadingDegrees": {
+            "type": "integer",
+            "description": "Runway heading used in calculation (degrees)",
+            "format": "int32"
+          },
+          "isVariableWind": {
+            "type": "boolean",
+            "description": "Whether the wind was reported as variable (VRB)"
+          }
+        }
+      },
+      "CrosswindCalculationRequestDto": {
+        "type": "object",
+        "description": "Request DTO for manual crosswind calculation with user-provided parameters",
+        "additionalProperties": false,
+        "properties": {
+          "windDirectionDegrees": {
+            "type": "integer",
+            "description": "Wind direction in degrees (0-360, or null for variable)",
+            "format": "int32",
+            "nullable": true
+          },
+          "windSpeedKt": {
+            "type": "integer",
+            "description": "Wind speed in knots",
+            "format": "int32"
+          },
+          "windGustKt": {
+            "type": "integer",
+            "description": "Wind gust speed in knots (optional)",
+            "format": "int32",
+            "nullable": true
+          },
+          "runwayHeadingDegrees": {
+            "type": "integer",
+            "description": "Runway heading in magnetic degrees (0-360)",
+            "format": "int32"
+          }
+        }
+      },
+      "DensityAltitudeResponseDto": {
+        "type": "object",
+        "description": "Response DTO for density altitude calculation",
+        "additionalProperties": false,
+        "properties": {
+          "airportIdentifier": {
+            "type": "string",
+            "description": "Airport identifier (for airport-based calculations)",
+            "nullable": true
+          },
+          "fieldElevationFt": {
+            "type": "number",
+            "description": "Field elevation in feet MSL",
+            "format": "double"
+          },
+          "pressureAltitudeFt": {
+            "type": "number",
+            "description": "Pressure altitude in feet",
+            "format": "double"
+          },
+          "densityAltitudeFt": {
+            "type": "number",
+            "description": "Density altitude in feet",
+            "format": "double"
+          },
+          "isaTemperatureCelsius": {
+            "type": "number",
+            "description": "Standard (ISA) temperature at this pressure altitude in Celsius",
+            "format": "double"
+          },
+          "actualTemperatureCelsius": {
+            "type": "number",
+            "description": "Actual temperature in Celsius",
+            "format": "double"
+          },
+          "temperatureDeviationCelsius": {
+            "type": "number",
+            "description": "Temperature deviation from ISA in Celsius",
+            "format": "double"
+          },
+          "altimeterInHg": {
+            "type": "number",
+            "description": "Altimeter setting used in calculation (inHg)",
+            "format": "double"
+          },
+          "rawMetar": {
+            "type": "string",
+            "description": "Raw METAR text for reference (for airport-based calculations)",
+            "nullable": true
+          },
+          "observationTime": {
+            "type": "string",
+            "description": "METAR observation time (for airport-based calculations)",
+            "nullable": true
+          }
+        }
+      },
+      "DensityAltitudeRequestDto": {
+        "type": "object",
+        "description": "Request DTO for manual density altitude calculation",
+        "additionalProperties": false,
+        "properties": {
+          "fieldElevationFt": {
+            "type": "number",
+            "description": "Field elevation in feet MSL",
+            "format": "double"
+          },
+          "altimeterInHg": {
+            "type": "number",
+            "description": "Altimeter setting in inches of mercury (inHg)",
+            "format": "double"
+          },
+          "temperatureCelsius": {
+            "type": "number",
+            "description": "Temperature in degrees Celsius",
+            "format": "double"
+          }
+        }
+      },
+      "WindTriangleResponseDto": {
+        "type": "object",
+        "description": "Response DTO for wind triangle calculation containing heading and ground speed results.",
+        "additionalProperties": false,
+        "properties": {
+          "trueHeadingDegrees": {
+            "type": "number",
+            "description": "True heading in degrees (0–360), corrected for wind",
+            "format": "double"
+          },
+          "groundSpeedKt": {
+            "type": "number",
+            "description": "Ground speed in knots",
+            "format": "double"
+          },
+          "windCorrectionAngleDegrees": {
+            "type": "number",
+            "description": "Wind correction angle in degrees (positive = right correction, negative = left)",
+            "format": "double"
+          },
+          "headwindComponentKt": {
+            "type": "number",
+            "description": "Headwind component in knots (positive = headwind, negative = tailwind)",
+            "format": "double"
+          },
+          "crosswindComponentKt": {
+            "type": "number",
+            "description": "Crosswind component in knots (positive = from the right, negative = from the left)",
+            "format": "double"
+          },
+          "trueCourseDegrees": {
+            "type": "number",
+            "description": "True course used in calculation (degrees)",
+            "format": "double"
+          },
+          "trueAirspeedKt": {
+            "type": "number",
+            "description": "True airspeed used in calculation (knots)",
+            "format": "double"
+          },
+          "windDirectionDegrees": {
+            "type": "number",
+            "description": "Wind direction used in calculation (degrees)",
+            "format": "double"
+          },
+          "windSpeedKt": {
+            "type": "number",
+            "description": "Wind speed used in calculation (knots)",
+            "format": "double"
+          }
+        }
+      },
+      "WindTriangleRequestDto": {
+        "type": "object",
+        "description": "Request DTO for wind triangle (heading and ground speed) calculation.",
+        "additionalProperties": false,
+        "properties": {
+          "trueCourseDegrees": {
+            "type": "number",
+            "description": "True course in degrees (0–360)",
+            "format": "double"
+          },
+          "trueAirspeedKt": {
+            "type": "number",
+            "description": "True airspeed in knots (must be greater than 0)",
+            "format": "double"
+          },
+          "windDirectionDegrees": {
+            "type": "number",
+            "description": "Wind direction in degrees (0–360)",
+            "format": "double"
+          },
+          "windSpeedKt": {
+            "type": "number",
+            "description": "Wind speed in knots (must be ≥ 0)",
+            "format": "double"
+          }
+        }
+      },
+      "TrueAirspeedResponseDto": {
+        "type": "object",
+        "description": "Response DTO for true airspeed calculation.",
+        "additionalProperties": false,
+        "properties": {
+          "trueAirspeedKt": {
+            "type": "number",
+            "description": "Calculated true airspeed in knots",
+            "format": "double"
+          },
+          "densityAltitudeFt": {
+            "type": "number",
+            "description": "Density altitude in feet at the given conditions",
+            "format": "double"
+          },
+          "machNumber": {
+            "type": "number",
+            "description": "Mach number at the given conditions",
+            "format": "double"
+          },
+          "calibratedAirspeedKt": {
+            "type": "number",
+            "description": "Calibrated airspeed used in calculation (knots)",
+            "format": "double"
+          },
+          "pressureAltitudeFt": {
+            "type": "number",
+            "description": "Pressure altitude used in calculation (feet)",
+            "format": "double"
+          },
+          "outsideAirTemperatureCelsius": {
+            "type": "number",
+            "description": "Outside air temperature used in calculation (°C)",
+            "format": "double"
+          }
+        }
+      },
+      "TrueAirspeedRequestDto": {
+        "type": "object",
+        "description": "Request DTO for true airspeed (TAS) calculation.",
+        "additionalProperties": false,
+        "properties": {
+          "calibratedAirspeedKt": {
+            "type": "number",
+            "description": "Calibrated (indicated) airspeed in knots (must be greater than 0)",
+            "format": "double"
+          },
+          "pressureAltitudeFt": {
+            "type": "number",
+            "description": "Pressure altitude in feet (can be negative, e.g. Death Valley)",
+            "format": "double"
+          },
+          "outsideAirTemperatureCelsius": {
+            "type": "number",
+            "description": "Outside air temperature in degrees Celsius",
+            "format": "double"
+          }
+        }
+      },
+      "CloudBaseResponseDto": {
+        "type": "object",
+        "description": "Response DTO for cloud base estimation.",
+        "additionalProperties": false,
+        "properties": {
+          "estimatedCloudBaseFtAgl": {
+            "type": "number",
+            "description": "Estimated cloud base in feet AGL",
+            "format": "double"
+          },
+          "temperatureDewpointSpreadCelsius": {
+            "type": "number",
+            "description": "Temperature/dewpoint spread in degrees Celsius",
+            "format": "double"
+          },
+          "temperatureCelsius": {
+            "type": "number",
+            "description": "Surface temperature used in calculation (°C)",
+            "format": "double"
+          },
+          "dewpointCelsius": {
+            "type": "number",
+            "description": "Dewpoint used in calculation (°C)",
+            "format": "double"
+          }
+        }
+      },
+      "CloudBaseRequestDto": {
+        "type": "object",
+        "description": "Request DTO for cloud base estimation.",
+        "additionalProperties": false,
+        "properties": {
+          "temperatureCelsius": {
+            "type": "number",
+            "description": "Surface temperature in degrees Celsius",
+            "format": "double"
+          },
+          "dewpointCelsius": {
+            "type": "number",
+            "description": "Dewpoint temperature in degrees Celsius (must be ≤ temperature)",
+            "format": "double"
+          }
+        }
+      },
+      "PressureAltitudeResponseDto": {
+        "type": "object",
+        "description": "Response DTO for standalone pressure altitude calculation.",
+        "additionalProperties": false,
+        "properties": {
+          "pressureAltitudeFt": {
+            "type": "number",
+            "description": "Calculated pressure altitude in feet",
+            "format": "double"
+          },
+          "altimeterCorrectionFt": {
+            "type": "number",
+            "description": "Altimeter correction — deviation from standard pressure expressed in feet",
+            "format": "double"
+          },
+          "fieldElevationFt": {
+            "type": "number",
+            "description": "Field elevation used in calculation (feet MSL)",
+            "format": "double"
+          },
+          "altimeterInHg": {
+            "type": "number",
+            "description": "Altimeter setting used in calculation (inHg)",
+            "format": "double"
+          }
+        }
+      },
+      "PressureAltitudeRequestDto": {
+        "type": "object",
+        "description": "Request DTO for standalone pressure altitude calculation.",
+        "additionalProperties": false,
+        "properties": {
+          "fieldElevationFt": {
+            "type": "number",
+            "description": "Field elevation in feet MSL",
+            "format": "double"
+          },
+          "altimeterInHg": {
+            "type": "number",
+            "description": "Altimeter setting in inches of mercury (must be between 25.0 and 35.0 inHg)",
+            "format": "double"
+          }
+        }
+      },
       "GAirmetDto": {
         "type": "object",
         "description": "G-AIRMET (Graphical AIRMET) advisory data with hazard, altitude, and area information.",
@@ -4567,7 +5102,7 @@
       },
       "GAirmetProduct": {
         "type": "integer",
-        "description": "",
+        "description": "G-AIRMET product types",
         "x-enumNames": [
           "SIERRA",
           "TANGO",
@@ -4581,7 +5116,7 @@
       },
       "GAirmetHazardType": {
         "type": "integer",
-        "description": "",
+        "description": "G-AIRMET hazard types",
         "x-enumNames": [
           "MT_OBSC",
           "IFR",
@@ -4607,21 +5142,26 @@
       },
       "GAirmetAltitude": {
         "type": "object",
+        "description": "Represents altitude information for a G-AIRMET",
         "additionalProperties": false,
         "properties": {
           "minFtMsl": {
             "type": "string",
+            "description": "Minimum altitude in feet MSL. Can be a number, \"SFC\" for surface, or \"FZL\" for freezing level",
             "nullable": true
           },
           "maxFtMsl": {
             "type": "string",
+            "description": "Maximum altitude in feet MSL",
             "nullable": true
           },
           "levelFtMsl": {
             "type": "string",
+            "description": "Single level altitude in feet MSL (used for freezing level lines)",
             "nullable": true
           },
           "fzlAltitude": {
+            "description": "Freezing level altitude range (when min_ft_msl is \"FZL\")",
             "nullable": true,
             "oneOf": [
               {
@@ -4633,28 +5173,34 @@
       },
       "GAirmetFzlAltitude": {
         "type": "object",
+        "description": "Represents freezing level altitude range",
         "additionalProperties": false,
         "properties": {
           "minFtMsl": {
             "type": "string",
+            "description": "Minimum freezing level in feet MSL",
             "nullable": true
           },
           "maxFtMsl": {
             "type": "string",
+            "description": "Maximum freezing level in feet MSL",
             "nullable": true
           }
         }
       },
       "GAirmetArea": {
         "type": "object",
+        "description": "Geographic area affected by a G-AIRMET, defined as a polygon of lat/lon points.",
         "additionalProperties": false,
         "properties": {
           "numPoints": {
             "type": "integer",
+            "description": "Number of points defining the polygon boundary.",
             "format": "int32"
           },
           "points": {
             "type": "array",
+            "description": "Ordered list of lat/lon points forming the polygon boundary of the affected area.",
             "items": {
               "$ref": "#/components/schemas/GAirmetPoint"
             }
@@ -4663,14 +5209,17 @@
       },
       "GAirmetPoint": {
         "type": "object",
+        "description": "A geographic coordinate point forming part of a G-AIRMET area boundary polygon.",
         "additionalProperties": false,
         "properties": {
           "longitude": {
             "type": "number",
+            "description": "Longitude in decimal degrees.",
             "format": "double"
           },
           "latitude": {
             "type": "number",
+            "description": "Latitude in decimal degrees.",
             "format": "double"
           }
         }
@@ -5945,496 +6494,6 @@
           "Unverified"
         ]
       },
-      "AirportCrosswindResponseDto": {
-        "type": "object",
-        "description": "Response DTO containing crosswind components for all runways at an airport",
-        "additionalProperties": false,
-        "properties": {
-          "airportIdentifier": {
-            "type": "string",
-            "description": "ICAO code or identifier of the airport"
-          },
-          "windDirectionDegrees": {
-            "type": "integer",
-            "description": "Wind direction in degrees from METAR (null if variable)",
-            "format": "int32",
-            "nullable": true
-          },
-          "windSpeedKt": {
-            "type": "integer",
-            "description": "Wind speed in knots from METAR",
-            "format": "int32"
-          },
-          "windGustKt": {
-            "type": "integer",
-            "description": "Wind gust speed in knots from METAR (if reported)",
-            "format": "int32",
-            "nullable": true
-          },
-          "isVariableWind": {
-            "type": "boolean",
-            "description": "Whether the wind was reported as variable (VRB)"
-          },
-          "rawMetar": {
-            "type": "string",
-            "description": "Raw METAR text for reference",
-            "nullable": true
-          },
-          "observationTime": {
-            "type": "string",
-            "description": "METAR observation time",
-            "nullable": true
-          },
-          "runways": {
-            "type": "array",
-            "description": "Crosswind components for each runway end at the airport",
-            "items": {
-              "$ref": "#/components/schemas/RunwayCrosswindComponentDto"
-            }
-          },
-          "recommendedRunway": {
-            "type": "string",
-            "description": "Recommended runway end identifier (lowest crosswind with headwind)",
-            "nullable": true
-          }
-        }
-      },
-      "RunwayCrosswindComponentDto": {
-        "type": "object",
-        "description": "Crosswind component data for a single runway end",
-        "additionalProperties": false,
-        "properties": {
-          "runwayEndId": {
-            "type": "string",
-            "description": "Runway end identifier (e.g., \"09\", \"27L\")"
-          },
-          "magneticHeadingDegrees": {
-            "type": "integer",
-            "description": "Runway heading in magnetic degrees",
-            "format": "int32"
-          },
-          "crosswindKt": {
-            "type": "number",
-            "description": "Crosswind component in knots. Positive = from the right, Negative = from the left",
-            "format": "double"
-          },
-          "headwindKt": {
-            "type": "number",
-            "description": "Headwind component in knots. Positive = headwind, Negative = tailwind",
-            "format": "double"
-          },
-          "gustCrosswindKt": {
-            "type": "number",
-            "description": "Crosswind component from gusts in knots (if gust data available). Positive = from the right",
-            "format": "double",
-            "nullable": true
-          },
-          "gustHeadwindKt": {
-            "type": "number",
-            "description": "Headwind component from gusts in knots (if gust data available). Positive = headwind",
-            "format": "double",
-            "nullable": true
-          },
-          "absoluteCrosswindKt": {
-            "type": "number",
-            "description": "Absolute value of crosswind component (for comparison purposes)",
-            "format": "double"
-          },
-          "hasHeadwind": {
-            "type": "boolean",
-            "description": "Whether this runway has a headwind (favorable) vs tailwind"
-          }
-        }
-      },
-      "CrosswindCalculationResponseDto": {
-        "type": "object",
-        "description": "Response DTO for a single crosswind calculation",
-        "additionalProperties": false,
-        "properties": {
-          "crosswindKt": {
-            "type": "number",
-            "description": "Crosswind component in knots. Positive = from the right, Negative = from the left",
-            "format": "double"
-          },
-          "headwindKt": {
-            "type": "number",
-            "description": "Headwind component in knots. Positive = headwind, Negative = tailwind",
-            "format": "double"
-          },
-          "gustCrosswindKt": {
-            "type": "number",
-            "description": "Crosswind component from gusts in knots (if gust data provided). Positive = from the right",
-            "format": "double",
-            "nullable": true
-          },
-          "gustHeadwindKt": {
-            "type": "number",
-            "description": "Headwind component from gusts in knots (if gust data provided). Positive = headwind",
-            "format": "double",
-            "nullable": true
-          },
-          "windDirectionDegrees": {
-            "type": "integer",
-            "description": "Wind direction used in calculation (degrees)",
-            "format": "int32",
-            "nullable": true
-          },
-          "windSpeedKt": {
-            "type": "integer",
-            "description": "Wind speed used in calculation (knots)",
-            "format": "int32"
-          },
-          "windGustKt": {
-            "type": "integer",
-            "description": "Wind gust speed used in calculation (knots)",
-            "format": "int32",
-            "nullable": true
-          },
-          "runwayHeadingDegrees": {
-            "type": "integer",
-            "description": "Runway heading used in calculation (degrees)",
-            "format": "int32"
-          },
-          "isVariableWind": {
-            "type": "boolean",
-            "description": "Whether the wind was reported as variable (VRB)"
-          }
-        }
-      },
-      "CrosswindCalculationRequestDto": {
-        "type": "object",
-        "description": "Request DTO for manual crosswind calculation with user-provided parameters",
-        "additionalProperties": false,
-        "properties": {
-          "windDirectionDegrees": {
-            "type": "integer",
-            "description": "Wind direction in degrees (0-360, or null for variable)",
-            "format": "int32",
-            "nullable": true
-          },
-          "windSpeedKt": {
-            "type": "integer",
-            "description": "Wind speed in knots",
-            "format": "int32"
-          },
-          "windGustKt": {
-            "type": "integer",
-            "description": "Wind gust speed in knots (optional)",
-            "format": "int32",
-            "nullable": true
-          },
-          "runwayHeadingDegrees": {
-            "type": "integer",
-            "description": "Runway heading in magnetic degrees (0-360)",
-            "format": "int32"
-          }
-        }
-      },
-      "DensityAltitudeResponseDto": {
-        "type": "object",
-        "description": "Response DTO for density altitude calculation",
-        "additionalProperties": false,
-        "properties": {
-          "airportIdentifier": {
-            "type": "string",
-            "description": "Airport identifier (for airport-based calculations)",
-            "nullable": true
-          },
-          "fieldElevationFt": {
-            "type": "number",
-            "description": "Field elevation in feet MSL",
-            "format": "double"
-          },
-          "pressureAltitudeFt": {
-            "type": "number",
-            "description": "Pressure altitude in feet",
-            "format": "double"
-          },
-          "densityAltitudeFt": {
-            "type": "number",
-            "description": "Density altitude in feet",
-            "format": "double"
-          },
-          "isaTemperatureCelsius": {
-            "type": "number",
-            "description": "Standard (ISA) temperature at this pressure altitude in Celsius",
-            "format": "double"
-          },
-          "actualTemperatureCelsius": {
-            "type": "number",
-            "description": "Actual temperature in Celsius",
-            "format": "double"
-          },
-          "temperatureDeviationCelsius": {
-            "type": "number",
-            "description": "Temperature deviation from ISA in Celsius",
-            "format": "double"
-          },
-          "altimeterInHg": {
-            "type": "number",
-            "description": "Altimeter setting used in calculation (inHg)",
-            "format": "double"
-          },
-          "rawMetar": {
-            "type": "string",
-            "description": "Raw METAR text for reference (for airport-based calculations)",
-            "nullable": true
-          },
-          "observationTime": {
-            "type": "string",
-            "description": "METAR observation time (for airport-based calculations)",
-            "nullable": true
-          }
-        }
-      },
-      "DensityAltitudeRequestDto": {
-        "type": "object",
-        "description": "Request DTO for manual density altitude calculation",
-        "additionalProperties": false,
-        "properties": {
-          "fieldElevationFt": {
-            "type": "number",
-            "description": "Field elevation in feet MSL",
-            "format": "double"
-          },
-          "altimeterInHg": {
-            "type": "number",
-            "description": "Altimeter setting in inches of mercury (inHg)",
-            "format": "double"
-          },
-          "temperatureCelsius": {
-            "type": "number",
-            "description": "Temperature in degrees Celsius",
-            "format": "double"
-          }
-        }
-      },
-      "WindTriangleResponseDto": {
-        "type": "object",
-        "description": "Response DTO for wind triangle calculation containing heading and ground speed results.",
-        "additionalProperties": false,
-        "properties": {
-          "trueHeadingDegrees": {
-            "type": "number",
-            "description": "True heading in degrees (0–360), corrected for wind",
-            "format": "double"
-          },
-          "groundSpeedKt": {
-            "type": "number",
-            "description": "Ground speed in knots",
-            "format": "double"
-          },
-          "windCorrectionAngleDegrees": {
-            "type": "number",
-            "description": "Wind correction angle in degrees (positive = right correction, negative = left)",
-            "format": "double"
-          },
-          "headwindComponentKt": {
-            "type": "number",
-            "description": "Headwind component in knots (positive = headwind, negative = tailwind)",
-            "format": "double"
-          },
-          "crosswindComponentKt": {
-            "type": "number",
-            "description": "Crosswind component in knots (positive = from the right, negative = from the left)",
-            "format": "double"
-          },
-          "trueCourseDegrees": {
-            "type": "number",
-            "description": "True course used in calculation (degrees)",
-            "format": "double"
-          },
-          "trueAirspeedKt": {
-            "type": "number",
-            "description": "True airspeed used in calculation (knots)",
-            "format": "double"
-          },
-          "windDirectionDegrees": {
-            "type": "number",
-            "description": "Wind direction used in calculation (degrees)",
-            "format": "double"
-          },
-          "windSpeedKt": {
-            "type": "number",
-            "description": "Wind speed used in calculation (knots)",
-            "format": "double"
-          }
-        }
-      },
-      "WindTriangleRequestDto": {
-        "type": "object",
-        "description": "Request DTO for wind triangle (heading and ground speed) calculation.",
-        "additionalProperties": false,
-        "properties": {
-          "trueCourseDegrees": {
-            "type": "number",
-            "description": "True course in degrees (0–360)",
-            "format": "double"
-          },
-          "trueAirspeedKt": {
-            "type": "number",
-            "description": "True airspeed in knots (must be greater than 0)",
-            "format": "double"
-          },
-          "windDirectionDegrees": {
-            "type": "number",
-            "description": "Wind direction in degrees (0–360)",
-            "format": "double"
-          },
-          "windSpeedKt": {
-            "type": "number",
-            "description": "Wind speed in knots (must be ≥ 0)",
-            "format": "double"
-          }
-        }
-      },
-      "TrueAirspeedResponseDto": {
-        "type": "object",
-        "description": "Response DTO for true airspeed calculation.",
-        "additionalProperties": false,
-        "properties": {
-          "trueAirspeedKt": {
-            "type": "number",
-            "description": "Calculated true airspeed in knots",
-            "format": "double"
-          },
-          "densityAltitudeFt": {
-            "type": "number",
-            "description": "Density altitude in feet at the given conditions",
-            "format": "double"
-          },
-          "machNumber": {
-            "type": "number",
-            "description": "Mach number at the given conditions",
-            "format": "double"
-          },
-          "calibratedAirspeedKt": {
-            "type": "number",
-            "description": "Calibrated airspeed used in calculation (knots)",
-            "format": "double"
-          },
-          "pressureAltitudeFt": {
-            "type": "number",
-            "description": "Pressure altitude used in calculation (feet)",
-            "format": "double"
-          },
-          "outsideAirTemperatureCelsius": {
-            "type": "number",
-            "description": "Outside air temperature used in calculation (°C)",
-            "format": "double"
-          }
-        }
-      },
-      "TrueAirspeedRequestDto": {
-        "type": "object",
-        "description": "Request DTO for true airspeed (TAS) calculation.",
-        "additionalProperties": false,
-        "properties": {
-          "calibratedAirspeedKt": {
-            "type": "number",
-            "description": "Calibrated (indicated) airspeed in knots (must be greater than 0)",
-            "format": "double"
-          },
-          "pressureAltitudeFt": {
-            "type": "number",
-            "description": "Pressure altitude in feet (can be negative, e.g. Death Valley)",
-            "format": "double"
-          },
-          "outsideAirTemperatureCelsius": {
-            "type": "number",
-            "description": "Outside air temperature in degrees Celsius",
-            "format": "double"
-          }
-        }
-      },
-      "CloudBaseResponseDto": {
-        "type": "object",
-        "description": "Response DTO for cloud base estimation.",
-        "additionalProperties": false,
-        "properties": {
-          "estimatedCloudBaseFtAgl": {
-            "type": "number",
-            "description": "Estimated cloud base in feet AGL",
-            "format": "double"
-          },
-          "temperatureDewpointSpreadCelsius": {
-            "type": "number",
-            "description": "Temperature/dewpoint spread in degrees Celsius",
-            "format": "double"
-          },
-          "temperatureCelsius": {
-            "type": "number",
-            "description": "Surface temperature used in calculation (°C)",
-            "format": "double"
-          },
-          "dewpointCelsius": {
-            "type": "number",
-            "description": "Dewpoint used in calculation (°C)",
-            "format": "double"
-          }
-        }
-      },
-      "CloudBaseRequestDto": {
-        "type": "object",
-        "description": "Request DTO for cloud base estimation.",
-        "additionalProperties": false,
-        "properties": {
-          "temperatureCelsius": {
-            "type": "number",
-            "description": "Surface temperature in degrees Celsius",
-            "format": "double"
-          },
-          "dewpointCelsius": {
-            "type": "number",
-            "description": "Dewpoint temperature in degrees Celsius (must be ≤ temperature)",
-            "format": "double"
-          }
-        }
-      },
-      "PressureAltitudeResponseDto": {
-        "type": "object",
-        "description": "Response DTO for standalone pressure altitude calculation.",
-        "additionalProperties": false,
-        "properties": {
-          "pressureAltitudeFt": {
-            "type": "number",
-            "description": "Calculated pressure altitude in feet",
-            "format": "double"
-          },
-          "altimeterCorrectionFt": {
-            "type": "number",
-            "description": "Altimeter correction — deviation from standard pressure expressed in feet",
-            "format": "double"
-          },
-          "fieldElevationFt": {
-            "type": "number",
-            "description": "Field elevation used in calculation (feet MSL)",
-            "format": "double"
-          },
-          "altimeterInHg": {
-            "type": "number",
-            "description": "Altimeter setting used in calculation (inHg)",
-            "format": "double"
-          }
-        }
-      },
-      "PressureAltitudeRequestDto": {
-        "type": "object",
-        "description": "Request DTO for standalone pressure altitude calculation.",
-        "additionalProperties": false,
-        "properties": {
-          "fieldElevationFt": {
-            "type": "number",
-            "description": "Field elevation in feet MSL",
-            "format": "double"
-          },
-          "altimeterInHg": {
-            "type": "number",
-            "description": "Altimeter setting in inches of mercury (must be between 25.0 and 35.0 inHg)",
-            "format": "double"
-          }
-        }
-      },
       "PirepDto": {
         "type": "object",
         "description": "PIREP (Pilot Report) data including turbulence, icing, and sky conditions.",
@@ -6560,48 +6619,59 @@
       },
       "PirepQualityControlFlags": {
         "type": "object",
+        "description": "Quality control flags indicating potential data issues with a PIREP.",
         "additionalProperties": false,
         "properties": {
           "midPointAssumed": {
             "type": "string",
+            "description": "The report location was assumed to be the midpoint of the route.",
             "nullable": true
           },
           "noTimeStamp": {
             "type": "string",
+            "description": "The report had no timestamp and was assigned one by the system.",
             "nullable": true
           },
           "fltLvlRange": {
             "type": "string",
+            "description": "The flight level was reported as a range rather than a single altitude.",
             "nullable": true
           },
           "aboveGroundLevelIndicated": {
             "type": "string",
+            "description": "The altitude was indicated as AGL rather than the standard MSL.",
             "nullable": true
           },
           "noFltLvl": {
             "type": "string",
+            "description": "No flight level was reported.",
             "nullable": true
           },
           "badLocation": {
             "type": "string",
+            "description": "The reported location could not be reliably decoded.",
             "nullable": true
           }
         }
       },
       "PirepSkyCondition": {
         "type": "object",
+        "description": "A sky condition layer reported by a pilot in a PIREP.",
         "additionalProperties": false,
         "properties": {
           "skyCover": {
-            "type": "string"
+            "type": "string",
+            "description": "Sky cover type: SKC (sky clear), CLR (clear), FEW (few), SCT (scattered), BKN (broken), OVC (overcast), or OVX (obscured)."
           },
           "cloudBaseFtMsl": {
             "type": "integer",
+            "description": "Cloud base altitude in feet MSL (note: PIREP altitudes are MSL, unlike TAF/METAR which use AGL).",
             "format": "int32",
             "nullable": true
           },
           "cloudTopFtMsl": {
             "type": "integer",
+            "description": "Cloud top altitude in feet MSL.",
             "format": "int32",
             "nullable": true
           }
@@ -6609,51 +6679,62 @@
       },
       "PirepTurbulenceCondition": {
         "type": "object",
+        "description": "A turbulence condition reported by a pilot in a PIREP.",
         "additionalProperties": false,
         "properties": {
           "turbulenceType": {
             "type": "string",
+            "description": "Turbulence type: CAT (clear air), CHOP (chop), LLWS (low-level wind shear), or MWAVE (mountain wave).",
             "nullable": true
           },
           "turbulenceIntensity": {
             "type": "string",
+            "description": "Turbulence intensity: NEG (none), SMTH-LGT (smooth to light), LGT (light), LGT-MOD (light to moderate), MOD (moderate), MOD-SEV (moderate to severe), SEV (severe), SEV-EXTM (severe to extreme), or EXTM (extreme).",
             "nullable": true
           },
           "turbulenceBaseFtMsl": {
             "type": "integer",
+            "description": "Bottom of the turbulence layer in feet MSL.",
             "format": "int32",
             "nullable": true
           },
           "turbulenceTopFtMsl": {
             "type": "integer",
+            "description": "Top of the turbulence layer in feet MSL.",
             "format": "int32",
             "nullable": true
           },
           "turbulenceFreq": {
             "type": "string",
+            "description": "Turbulence frequency: ISOL (isolated), OCNL (occasional), or CONT (continuous).",
             "nullable": true
           }
         }
       },
       "PirepIcingCondition": {
         "type": "object",
+        "description": "An icing condition reported by a pilot in a PIREP.",
         "additionalProperties": false,
         "properties": {
           "icingType": {
             "type": "string",
+            "description": "Icing type: RIME (rime ice), CLEAR (clear ice), or MIXED (mixed rime and clear).",
             "nullable": true
           },
           "icingIntensity": {
             "type": "string",
+            "description": "Icing intensity: NEG (none), NEGclr (none, clear of clouds), TRC (trace), TRC-LGT (trace to light), LGT (light), LGT-MOD (light to moderate), MOD (moderate), MOD-SEV (moderate to severe), HVY (heavy/severe), or SEV (severe).",
             "nullable": true
           },
           "icingBaseFtMsl": {
             "type": "integer",
+            "description": "Bottom of the icing layer in feet MSL.",
             "format": "int32",
             "nullable": true
           },
           "icingTopFtMsl": {
             "type": "integer",
+            "description": "Top of the icing layer in feet MSL.",
             "format": "int32",
             "nullable": true
           }
@@ -6729,79 +6810,97 @@
       },
       "TafForecast": {
         "type": "object",
+        "description": "A single forecast period within a TAF. Each TAF contains one or more forecast periods\ncovering different time ranges, with optional change indicators (TEMPO, BECMG, FM, PROB).",
         "additionalProperties": false,
         "properties": {
           "fcstTimeFrom": {
             "type": "string",
+            "description": "Start of this forecast period in ISO 8601 format (UTC).",
             "nullable": true
           },
           "fcstTimeTo": {
             "type": "string",
+            "description": "End of this forecast period in ISO 8601 format (UTC).",
             "nullable": true
           },
           "changeIndicator": {
             "type": "string",
+            "description": "Change indicator: FM (from), BECMG (becoming), TEMPO (temporary), or PROB (probability). Null for the base forecast.",
             "nullable": true
           },
           "timeBecoming": {
             "type": "string",
+            "description": "Time at which a BECMG (becoming) change completes, in ISO 8601 format (UTC).",
             "nullable": true
           },
           "probability": {
             "type": "integer",
+            "description": "Probability percentage (e.g., 30 or 40) for PROB-type forecast periods.",
             "format": "int32",
             "nullable": true
           },
           "windDirDegrees": {
             "type": "string",
+            "description": "Forecast wind direction in degrees true, or \"VRB\" for variable winds.",
             "nullable": true
           },
           "windSpeedKt": {
             "type": "integer",
+            "description": "Forecast wind speed in knots.",
             "format": "int32",
             "nullable": true
           },
           "windGustKt": {
             "type": "integer",
+            "description": "Forecast wind gust speed in knots.",
             "format": "int32",
             "nullable": true
           },
           "windShearHgtFtAgl": {
             "type": "integer",
+            "description": "Low-level wind shear height in feet AGL.",
             "nullable": true
           },
           "windShearDirDegrees": {
             "type": "integer",
+            "description": "Low-level wind shear direction in degrees true.",
             "nullable": true
           },
           "windShearSpeedKt": {
             "type": "integer",
+            "description": "Low-level wind shear speed in knots.",
             "format": "int32",
             "nullable": true
           },
           "visibilityStatuteMi": {
             "type": "string",
+            "description": "Forecast visibility in statute miles. May contain \"6+\" for visibility greater than 6 miles.",
             "nullable": true
           },
           "altimInHg": {
             "type": "number",
+            "description": "Forecast altimeter setting in inches of mercury.",
             "format": "float",
             "nullable": true
           },
           "vertVisFt": {
             "type": "integer",
+            "description": "Vertical visibility in feet, reported when the sky is obscured.",
             "nullable": true
           },
           "wxString": {
             "type": "string",
+            "description": "Forecast weather phenomena string (e.g., \"-RA\" for light rain, \"+TSRA\" for heavy thunderstorms with rain).",
             "nullable": true
           },
           "notDecoded": {
             "type": "string",
+            "description": "Portion of the TAF text that could not be decoded by the parser.",
             "nullable": true
           },
           "skyConditions": {
             "type": "array",
+            "description": "Forecast sky condition layers (cloud cover and bases) for this period.",
             "nullable": true,
             "items": {
               "$ref": "#/components/schemas/TafSkyCondition"
@@ -6809,6 +6908,7 @@
           },
           "turbulenceConditions": {
             "type": "array",
+            "description": "Forecast turbulence conditions for this period.",
             "nullable": true,
             "items": {
               "$ref": "#/components/schemas/TafTurbulenceCondition"
@@ -6816,6 +6916,7 @@
           },
           "icingConditions": {
             "type": "array",
+            "description": "Forecast icing conditions for this period.",
             "nullable": true,
             "items": {
               "$ref": "#/components/schemas/TafIcingCondition"
@@ -6823,6 +6924,7 @@
           },
           "temperature": {
             "type": "array",
+            "description": "Forecast temperature data for this period.",
             "nullable": true,
             "items": {
               "$ref": "#/components/schemas/TafTemperature"
@@ -6832,37 +6934,45 @@
       },
       "TafSkyCondition": {
         "type": "object",
+        "description": "A single sky condition layer in a TAF forecast period.",
         "additionalProperties": false,
         "properties": {
           "skyCover": {
-            "type": "string"
+            "type": "string",
+            "description": "Sky cover type: SKC (sky clear), CLR (clear), FEW (few), SCT (scattered), BKN (broken), or OVC (overcast)."
           },
           "cloudBaseFtAgl": {
             "type": "integer",
+            "description": "Cloud base height in feet AGL. Null for SKC or CLR.",
             "format": "int32",
             "nullable": true
           },
           "cloudType": {
             "type": "string",
+            "description": "Cloud type modifier (e.g., CB for cumulonimbus, TCU for towering cumulus).",
             "nullable": true
           }
         }
       },
       "TafTurbulenceCondition": {
         "type": "object",
+        "description": "Forecast turbulence condition within a TAF forecast period.",
         "additionalProperties": false,
         "properties": {
           "turbulenceIntensity": {
             "type": "string",
+            "description": "Turbulence intensity code: 0 (none), 1 (light), 2 (moderate occasional), 3 (moderate frequent), 4 (severe), 5 (extreme), or X (mountain wave).",
             "nullable": true
           },
           "turbulenceMinAltFtAgl": {
             "type": "integer",
+            "description": "Bottom of the turbulence layer in feet AGL.",
             "format": "int32",
             "nullable": true
           },
           "turbulenceMaxAltFtAgl": {
             "type": "integer",
+            "description": "Top of the turbulence layer in feet AGL.",
             "format": "int32",
             "nullable": true
           }
@@ -6870,19 +6980,23 @@
       },
       "TafIcingCondition": {
         "type": "object",
+        "description": "Forecast icing condition within a TAF forecast period.",
         "additionalProperties": false,
         "properties": {
           "icingIntensity": {
             "type": "string",
+            "description": "Icing intensity code: 0 (none), 1 (light), 2 (light in clouds), 3 (light in precipitation), 4 (moderate), 5 (moderate in clouds), 6 (moderate in precipitation), 7 (severe), 8 (severe in clouds), 9 (severe in precipitation).",
             "nullable": true
           },
           "icingMinAltFtAgl": {
             "type": "integer",
+            "description": "Bottom of the icing layer in feet AGL.",
             "format": "int32",
             "nullable": true
           },
           "icingMaxAltFtAgl": {
             "type": "integer",
+            "description": "Top of the icing layer in feet AGL.",
             "format": "int32",
             "nullable": true
           }
@@ -6890,27 +7004,90 @@
       },
       "TafTemperature": {
         "type": "object",
+        "description": "Forecast temperature data within a TAF forecast period.",
         "additionalProperties": false,
         "properties": {
           "validTime": {
             "type": "string",
+            "description": "Valid time for this temperature forecast in ISO 8601 format (UTC).",
             "nullable": true
           },
           "sfcTempC": {
             "type": "number",
+            "description": "Forecast surface temperature in degrees Celsius.",
             "format": "float",
             "nullable": true
           },
           "maxTempC": {
             "type": "string",
+            "description": "Forecast maximum temperature in degrees Celsius.",
             "nullable": true
           },
           "minTempC": {
             "type": "string",
+            "description": "Forecast minimum temperature in degrees Celsius.",
             "nullable": true
           }
         }
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "Airports",
+      "description": "Provides access to FAA airport data from the National Airspace System Resources (NASR) database. Airports can be queried by ICAO code, FAA identifier, state, or text search. Use an airport's ICAO code or identifier to query related data from other endpoints such as METARs, TAFs, runways, communication frequencies, airport diagrams, and chart supplements."
+    },
+    {
+      "name": "Airport Diagrams",
+      "description": "Provides access to FAA airport diagram PDFs. Airport diagrams show taxiways, runways, buildings, and other ground features. Diagrams are returned as time-limited pre-signed URLs for PDF download."
+    },
+    {
+      "name": "Weather - AIRMETs/SIGMETs",
+      "description": "Provides access to AIRMET and SIGMET advisories. AIRMETs warn of weather hazards significant to light aircraft (moderate turbulence/icing, IFR conditions, mountain obscuration). SIGMETs warn of severe weather hazards significant to all aircraft (severe turbulence/icing, convective activity). Each advisory includes the hazard type, severity, altitude range, and geographic polygon defining the affected area."
+    },
+    {
+      "name": "Airspace",
+      "description": "Provides access to controlled airspace (Class B, C, D) and special use airspace (restricted, prohibited, warning, MOA, alert) data sourced from FAA ArcGIS services. Each airspace includes boundary geometry (GeoJSON), altitude limits, and classification. Airspace GlobalIds are returned by the navigation log endpoint for airspaces along a planned route — use the by-global-ids endpoints to retrieve full details for those airspaces."
+    },
+    {
+      "name": "Chart Supplements",
+      "description": "Provides access to FAA Chart Supplement (formerly Airport/Facility Directory) PDFs. Chart supplements contain comprehensive airport information including detailed runway data, lighting, available services, airspace, and other operational details. PDFs are returned as time-limited pre-signed URLs."
+    },
+    {
+      "name": "Communication Frequencies",
+      "description": "Provides access to airport and facility communication frequency data from the FAA NASR database. Includes tower, ground, ATIS, approach/departure, clearance delivery, and other radio frequencies associated with airports and air traffic control facilities."
+    },
+    {
+      "name": "E6B Flight Computer",
+      "description": "Provides E6B flight computer calculations for VFR pilots, including crosswind components, density altitude, wind triangle, true airspeed, cloud base estimation, and pressure altitude. Airport-based calculations automatically use the latest METAR data for wind, temperature, and altimeter settings. Manual calculation endpoints allow you to provide your own parameters. DISCLAIMER: These calculations are intended for PRE-FLIGHT planning purposes only and must not be used for in-flight navigation. Results are approximations based on the ICAO Standard Atmosphere (ISA) model, which assumes mid-latitude atmospheric conditions. The actual tropopause altitude varies from ~26,000 ft at the poles to ~55,000 ft at the equator, and real atmospheric conditions differ from the ISA model. Always verify against certified instruments and official flight planning tools."
+    },
+    {
+      "name": "Weather - G-AIRMETs",
+      "description": "Provides access to G-AIRMETs (Graphical AIRMETs) — graphical weather advisories issued by the Aviation Weather Center. G-AIRMETs are organized by product type: SIERRA (IFR/mountain obscuration), TANGO (turbulence/wind shear/surface winds), and ZULU (icing/freezing level). They can also be queried by specific hazard type (e.g., ICE, TURB_LO, IFR). Each advisory includes the hazard, severity, altitude range, and geographic polygon of the affected area. G-AIRMETs are issued every 3 hours with forecasts at 0, 3, 6, 9, and 12 hour intervals."
+    },
+    {
+      "name": "Weather - METARs",
+      "description": "Provides access to METAR (Meteorological Aerodrome Report) observations. METARs are routine weather observations from airport weather stations, updated approximately every hour. METAR data is also used by the Performance endpoints to automatically calculate crosswind and density altitude for airports."
+    },
+    {
+      "name": "Navigation Log",
+      "description": "Provides VFR cross-country flight planning tools including full navigation log calculation, bearing/distance computation, and winds aloft data. The navigation log calculates course, heading, ground speed, time, and fuel for each leg while accounting for wind and magnetic variation. The navlog response also identifies airspaces and obstacles along the route — use the returned IDs with the Airspace and Obstacle endpoints to retrieve full details."
+    },
+    {
+      "name": "NOTAMs",
+      "description": "Provides access to NOTAMs (Notices to Air Missions) from the FAA NOTAM Search (NMS) system. NOTAMs contain time-critical aeronautical information about airport closures, airspace restrictions, runway conditions, navigation aid outages, and other flight safety hazards. NOTAMs are returned as GeoJSON Features with geographic geometry and detailed properties including effective dates, text content, and plain-English translations. Query by airport, geographic radius, or along a flight route."
+    },
+    {
+      "name": "Obstacles",
+      "description": "Provides access to obstacle data from the FAA Digital Obstacle File (DOF). Obstacles include towers, buildings, smokestacks, and other structures that may affect flight safety. Each obstacle has an OAS (Obstacle Assessment Surface) number as its unique identifier. OAS numbers are returned by the navigation log endpoint for obstacles near a planned route — use the by-oas-numbers endpoint to retrieve full details for those obstacles."
+    },
+    {
+      "name": "Weather - PIREPs",
+      "description": "Provides access to PIREPs (Pilot Reports) — real-time weather observations reported by pilots in flight. PIREPs contain firsthand reports of turbulence, icing, sky conditions, visibility, and other flight conditions at specific altitudes and locations. Unlike METARs (ground-based), PIREPs describe conditions aloft. Report types are UA (routine) or UUA (urgent, indicating severe conditions)."
+    },
+    {
+      "name": "Weather - TAFs",
+      "description": "Provides access to TAF (Terminal Aerodrome Forecast) data. TAFs are weather forecasts for airports, typically covering a 24-30 hour period with forecast periods describing expected wind, visibility, sky conditions, and weather phenomena. TAFs are issued approximately every 6 hours for airports with weather reporting capabilities."
+    }
+  ]
 }

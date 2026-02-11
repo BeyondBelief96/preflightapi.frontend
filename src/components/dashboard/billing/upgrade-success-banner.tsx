@@ -5,47 +5,25 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 
 const TIER_RANK: Record<EndpointTier, number> = {
-  free: 0,
-  starter: 1,
-  professional: 2,
+  student: 0,
+  private: 1,
+  commercial: 2,
 }
 
 const ENDPOINT_DOCS: Record<string, { label: string; href: string }> = {
-  pirep: { label: 'PIREPs', href: '/docs/weather/pirep' },
-  'airmet-sigmet': {
-    label: 'AIRMETs/SIGMETs',
-    href: '/docs/weather/airmet-sigmet',
-  },
-  'g-airmet': { label: 'G-AIRMETs', href: '/docs/weather/g-airmet' },
-  'airspace/controlled': {
-    label: 'Controlled Airspace',
-    href: '/docs/airspace/controlled',
-  },
-  'airspace/special-use': {
-    label: 'Special Use Airspace',
-    href: '/docs/airspace/special-use',
-  },
-  'navigation/obstacles': {
-    label: 'Obstacle Database',
-    href: '/docs/navigation/obstacles',
-  },
+  pirep: { label: 'PIREPs', href: '/docs/pireps' },
+  'airmet-sigmet': { label: 'AIRMETs/SIGMETs', href: '/docs/airmets-sigmets' },
+  'g-airmet': { label: 'G-AIRMETs', href: '/docs/g-airmets' },
+  'airspace/controlled': { label: 'Controlled Airspace', href: '/docs/airspace' },
+  'airspace/special-use': { label: 'Special Use Airspace', href: '/docs/airspace' },
+  'navigation/obstacles': { label: 'Obstacle Database', href: '/docs/obstacles' },
   notams: { label: 'NOTAMs', href: '/docs/notams' },
-  'airports/diagrams': {
-    label: 'Airport Diagrams',
-    href: '/docs/airports/diagrams',
-  },
-  'charts/supplements': {
-    label: 'Chart Supplements',
-    href: '/docs/charts/supplements',
-  },
-  'performance/calculator': {
-    label: 'Performance Calculator',
-    href: '/docs/performance/calculator',
-  },
-  'navigation/nav-log': {
-    label: 'Navigation Log',
-    href: '/docs/navigation/nav-log',
-  },
+  'airports/diagrams': { label: 'Airport Diagrams', href: '/docs/airport-diagrams' },
+  'charts/supplements': { label: 'Chart Supplements', href: '/docs/chart-supplements' },
+  'e6b/calculator': { label: 'E6B Flight Computer', href: '/docs/e6b' },
+  'navigation/bearing-distance': { label: 'Bearing & Distance', href: '/docs/nav-log' },
+  'navigation/winds-aloft': { label: 'Winds Aloft', href: '/docs/nav-log' },
+  'navigation/nav-log': { label: 'Navigation Log', href: '/docs/nav-log' },
 }
 
 function getNewEndpoints(
