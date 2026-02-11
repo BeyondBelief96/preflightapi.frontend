@@ -1095,6 +1095,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/obstacles/airport/{icaoCodeOrIdent}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Searches for obstacles near an airport */
+        get: operations["Obstacle_SearchNearAirport"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/obstacles/search": {
         parameters: {
             query?: never;
@@ -5202,6 +5219,56 @@ export interface operations {
                 };
             };
             503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+        };
+    };
+    Obstacle_SearchNearAirport: {
+        parameters: {
+            query?: {
+                /** @description Search radius in nautical miles (default 10) */
+                radiusNm?: number;
+                /** @description Optional minimum height AGL in feet to filter results */
+                minHeightAgl?: number | null;
+                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+                cursor?: string | null;
+                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+                limit?: number;
+            };
+            header?: never;
+            path: {
+                /** @description ICAO code (e.g., KDFW) or FAA identifier (e.g., DFW) */
+                icaoCodeOrIdent: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Returns the obstacles found */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedResponseOfObstacleDto"];
+                };
+            };
+            /** @description If the radius is invalid or the airport has no coordinates on record */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+            /** @description If the airport is not found */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };
