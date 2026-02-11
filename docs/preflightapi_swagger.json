@@ -46,7 +46,10 @@
             "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1
             },
             "x-position": 3
           }
@@ -187,7 +190,10 @@
             "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1
             },
             "x-position": 3
           }
@@ -240,7 +246,10 @@
             "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1
             },
             "x-position": 3
           }
@@ -349,7 +358,10 @@
             "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1
             },
             "x-position": 3
           }
@@ -680,7 +692,10 @@
             "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1
             },
             "x-position": 3
           }
@@ -742,7 +757,10 @@
             "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1
             },
             "x-position": 3
           }
@@ -804,7 +822,10 @@
             "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1
             },
             "x-position": 3
           }
@@ -866,7 +887,10 @@
             "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1
             },
             "x-position": 3
           }
@@ -1107,7 +1131,10 @@
             "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1
             },
             "x-position": 3
           }
@@ -2044,7 +2071,10 @@
             "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1
             },
             "x-position": 3
           }
@@ -2097,7 +2127,10 @@
             "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1
             },
             "x-position": 3
           }
@@ -2535,7 +2568,10 @@
             "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1
             },
             "x-position": 5
           }
@@ -2640,7 +2676,10 @@
             "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1
             },
             "x-position": 6
           }
@@ -2714,7 +2753,10 @@
             "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1
             },
             "x-position": 4
           }
@@ -2912,7 +2954,10 @@
             "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1
             },
             "x-position": 7
           }
