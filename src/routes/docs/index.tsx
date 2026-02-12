@@ -134,7 +134,7 @@ function DocsIndex() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold">PreflightAPI Documentation</h1>
+      <h1 className="text-3xl font-bold">Overview</h1>
       <p className="mt-4 text-lg text-muted-foreground">
         PreflightAPI is a REST API for aviation data and flight planning calculations. It provides real-time
         METAR's, Terminal Area Forecasts (TAFs), airport information, geospatial airspace boundaries, NOTAMs, 

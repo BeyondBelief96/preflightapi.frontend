@@ -5,6 +5,7 @@ import { FeaturesGrid } from '@/components/marketing/features-grid'
 import { EndpointShowcase } from '@/components/marketing/endpoint-showcase'
 import { PricingPreview } from '@/components/marketing/pricing-preview'
 import { CtaSection } from '@/components/marketing/cta-section'
+import { DisclaimerBanner } from '@/components/marketing/disclaimer-banner'
 import { StatsBar } from '@/components/marketing/stats-bar'
 import { WhySection } from '@/components/marketing/why-section'
 
@@ -29,6 +30,7 @@ function LandingPage() {
       <EndpointShowcase />
       <PricingPreview />
       <CtaSection />
+      <DisclaimerBanner />
     </div>
   )
 }
