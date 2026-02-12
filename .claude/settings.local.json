@@ -40,7 +40,9 @@
       "Bash(done)",
       "Bash(git commit -m \"$\\(cat <<''EOF''\nFix package-lock.json sync for Railway deployment\n\nRegenerated lock file to resolve npm ci failure caused by missing\nresolved/integrity fields for unstorage dependency.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
       "Bash(npx tsr:*)",
-      "Bash(npx @tanstack/router-cli generate:*)"
+      "Bash(npx @tanstack/router-cli generate:*)",
+      "Bash(npm run test:*)",
+      "mcp__ide__getDiagnostics"
     ]
   }
 }

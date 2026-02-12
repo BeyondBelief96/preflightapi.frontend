@@ -10,6 +10,7 @@ interface CurrentPlanCardProps {
   plans: Array<PlanDefinition>
   stripeSub: StripeSubscriptionStatus | null | undefined
   isPaid: boolean
+  isPastDue: boolean
   isCanceling: boolean
   cancelDate: string | null | undefined
   onCheckout: (planId: string) => void
@@ -23,6 +24,7 @@ export function CurrentPlanCard({
   plans,
   stripeSub,
   isPaid,
+  isPastDue,
   isCanceling,
   cancelDate,
   onCheckout,
@@ -40,7 +42,11 @@ export function CurrentPlanCard({
           <div>
             <div className="flex items-center gap-3">
               <h3 className="text-2xl font-bold">{currentPlan.name}</h3>
-              {isCanceling ? (
+              {isPastDue ? (
+                <Badge variant="destructive">
+                  Past Due
+                </Badge>
+              ) : isCanceling ? (
                 <Badge variant="outline" className="border-yellow-500 text-yellow-600 dark:text-yellow-400">
                   Canceling
                 </Badge>

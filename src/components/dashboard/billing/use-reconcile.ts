@@ -5,8 +5,8 @@ import { SITE_CONFIG } from '@/lib/constants'
 import { reconcileSubscription } from '@/lib/server/stripe'
 import { apimKeys, stripeKeys } from '@/lib/server/apim-queries'
 
-const MAX_RECONCILE_RETRIES = 3
-const RECONCILE_BASE_DELAY = 3000
+const MAX_RECONCILE_RETRIES = 5
+const RECONCILE_BASE_DELAY = 8000
 
 export function useReconcile(
   userId: string | null | undefined,
