@@ -10,10 +10,8 @@ export const Route = createFileRoute('/docs/rate-limits')({
 const cacheDurations = [
   { category: 'Real-time weather (METARs, PIREPs)', duration: '2 minutes' },
   { category: 'E6B calculations (live METAR mode)', duration: '2 minutes' },
-  {
-    category: 'Forecasts & NOTAMs (TAFs, AIRMETs, SIGMETs, G-AIRMETs, NOTAMs)',
-    duration: '5 minutes',
-  },
+  { category: 'Forecasts (TAFs, SIGMETs, G-AIRMETs)', duration: '5 minutes' },
+  { category: 'NOTAMs', duration: '5 minutes' },
   { category: 'Winds aloft', duration: '5 minutes' },
   {
     category: 'Presigned URLs (airport diagrams, chart supplements)',

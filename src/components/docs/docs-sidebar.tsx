@@ -23,7 +23,7 @@ const sections = [
       { label: 'METARs', href: '/docs/metars' },
       { label: 'TAFs', href: '/docs/tafs' },
       { label: 'PIREPs', href: '/docs/pireps' },
-      { label: 'AIRMETs & SIGMETs', href: '/docs/airmets-sigmets' },
+      { label: 'Domestic SIGMETs', href: '/docs/sigmets' },
       { label: 'G-AIRMETs', href: '/docs/g-airmets' },
     ],
   },

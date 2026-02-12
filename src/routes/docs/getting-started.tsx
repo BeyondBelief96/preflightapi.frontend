@@ -225,10 +225,10 @@ console.log(data)`}
               </li>
               <li>
                 <Link
-                  to="/docs/airmets-sigmets"
+                  to="/docs/sigmets"
                   className="text-accent hover:underline"
                 >
-                  AIRMETs & SIGMETs
+                  Domestic SIGMETs
                 </Link>{' '}
                 — Weather advisories and significant weather hazards.
               </li>

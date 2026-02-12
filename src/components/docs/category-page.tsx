@@ -18,13 +18,6 @@ export function CategoryPage({ category, endpoints }: CategoryPageProps) {
     }
   })
 
-  // All operation IDs for quick-nav
-  const allOps = endpoints.map((ep) => ({
-    operationId: ep.operationId,
-    method: ep.method,
-    path: ep.path,
-  }))
-
   return (
     <div className="space-y-10">
       {/* Page header */}
@@ -32,35 +25,6 @@ export function CategoryPage({ category, endpoints }: CategoryPageProps) {
         <h1 className="text-3xl font-bold">{category.title}</h1>
         <p className="mt-2 text-lg text-muted-foreground">{category.description}</p>
       </div>
-
-      {/* Quick nav */}
-      {allOps.length > 1 && (
-        <div className="rounded-lg border bg-muted/30 p-4">
-          <h2 className="mb-2 text-sm font-semibold text-muted-foreground">
-            Endpoints
-          </h2>
-          <div className="flex flex-wrap gap-2">
-            {allOps.map((op) => (
-              <a
-                key={op.operationId}
-                href={`#${op.operationId}`}
-                className="inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs transition-colors hover:bg-muted"
-              >
-                <span
-                  className={
-                    op.method === 'GET'
-                      ? 'font-bold text-green-400'
-                      : 'font-bold text-blue-400'
-                  }
-                >
-                  {op.method}
-                </span>
-                <span className="font-mono text-muted-foreground">{op.path}</span>
-              </a>
-            ))}
-          </div>
-        </div>
-      )}
 
       {/* Subcategory sections */}
       {grouped.map((sub) => (

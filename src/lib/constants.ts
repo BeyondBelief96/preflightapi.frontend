@@ -36,7 +36,7 @@ export const TIER_FEATURES: Record<string, Array<string>> = {
   private: [
     'All Student Pilot endpoints',
     'PIREPs — pilot weather reports',
-    'AIRMETs, SIGMETs & G-AIRMETs',
+    'SIGMETs & G-AIRMETs',
     'Controlled & special-use airspace boundaries',
     '625,000+ obstacles (towers, cranes, etc.)',
     'Email support',
@@ -194,7 +194,7 @@ export const ENDPOINT_ACCESS: Record<string, EndpointTier> = {
   'airports/runways': 'student',
   'airports/frequencies': 'student',
   pirep: 'private',
-  'airmet-sigmet': 'private',
+  sigmet: 'private',
   'g-airmet': 'private',
   'airspace/controlled': 'private',
   'airspace/special-use': 'private',

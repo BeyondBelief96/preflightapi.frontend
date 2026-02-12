@@ -45,7 +45,7 @@ const staticComparisonFeatures = [
         atp: true,
       },
       {
-        name: 'AIRMETs & SIGMETs (weather hazards)',
+        name: 'SIGMETs & G-AIRMETs (weather hazards)',
         student: false,
         private: true,
         commercial: true,

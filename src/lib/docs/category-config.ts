@@ -43,15 +43,15 @@ export const CATEGORIES: Array<ApiCategory> = [
     ],
   },
   {
-    slug: 'airmets-sigmets',
-    title: 'AIRMETs & SIGMETs',
-    description: tagsMeta['Weather - AIRMETs/SIGMETs'] ?? 'Weather advisories for significant meteorological hazards.',
+    slug: 'sigmets',
+    title: 'Domestic SIGMETs',
+    description: tagsMeta['Weather - Domestic SIGMETs'] ?? 'Domestic SIGMET advisories for significant weather hazards.',
     icon: 'cloud-lightning',
     subcategories: [
       {
-        tag: 'Weather - AIRMETs/SIGMETs',
-        label: 'AIRMETs & SIGMETs',
-        description: 'Advisories for significant meteorological hazards.',
+        tag: 'Weather - Domestic SIGMETs',
+        label: 'Domestic SIGMETs',
+        description: 'Domestic SIGMET advisories for the contiguous United States.',
       },
     ],
   },

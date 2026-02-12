@@ -49,9 +49,6 @@ export function EndpointCard({ endpoint }: EndpointCardProps) {
           {endpoint.summary && (
             <FormatApiText text={endpoint.summary} className="text-sm text-muted-foreground" />
           )}
-          {endpoint.description && (
-            <FormatApiText text={endpoint.description} className="text-sm text-muted-foreground" />
-          )}
         </div>
         <ChevronDown
           className={`mt-1 h-5 w-5 shrink-0 text-muted-foreground transition-transform ${expanded ? 'rotate-180' : ''}`}
@@ -61,6 +58,10 @@ export function EndpointCard({ endpoint }: EndpointCardProps) {
       {/* Collapsible detail section */}
       {expanded && (
         <div className="space-y-4 border-t px-5 pb-5 pt-4">
+          {endpoint.description && (
+            <FormatApiText text={endpoint.description} className="text-sm text-muted-foreground" />
+          )}
+
           {endpoint.paginatedItemType && (
             <p className="text-xs text-muted-foreground">
               Returns paginated results of <SchemaLink name={endpoint.paginatedItemType} />
