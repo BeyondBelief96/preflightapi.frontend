@@ -1,6 +1,5 @@
 import { ClerkProvider } from '@clerk/clerk-react'
 import { dark } from '@clerk/themes'
-import { isWaitlistMode } from '@/lib/waitlist'
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 if (!PUBLISHABLE_KEY) {
@@ -21,7 +20,6 @@ export default function AppClerkProvider({
       signInFallbackRedirectUrl="/dashboard"
       signUpFallbackRedirectUrl="/dashboard/getting-started"
       appearance={{ baseTheme: dark }}
-      {...(isWaitlistMode && { waitlistUrl: '/waitlist' })}
     >
       {children}
     </ClerkProvider>
