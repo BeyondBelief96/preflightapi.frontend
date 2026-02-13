@@ -12,7 +12,7 @@ export default defineHandler((event) => {
     'Content-Security-Policy',
     [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.clerk.accounts.dev",
+      "script-src 'self' 'unsafe-inline' https://*.clerk.accounts.dev",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com",
       "img-src 'self' data: https://*.clerk.com https://img.clerk.com",
