@@ -71,7 +71,7 @@ Three tiers defined in `src/lib/constants.ts`:
 
 - Tailwind v4 with oklch color space (aviation-themed dark cockpit aesthetic)
 - CSS variables in `src/styles.css`
-- Fonts: Inter (body), JetBrains Mono (code)
+- Fonts: Geist (body), Geist Mono (code) — loaded from Google Fonts
 - `cn()` utility in `src/lib/utils.ts` for Tailwind class merging
 
 ### Environment Variables

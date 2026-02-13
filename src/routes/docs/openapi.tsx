@@ -4,8 +4,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { CodeBlock } from '@/components/docs/code-block'
 import { API_BASE_PATH } from '@/lib/api-metadata'
 import { Button } from '@/components/ui/button'
+import { createPageHead } from '@/lib/seo'
 
 export const Route = createFileRoute('/docs/openapi')({
+  head: () =>
+    createPageHead({
+      title: 'OpenAPI Specification',
+      description:
+        'Download the PreflightAPI OpenAPI 3.0 specification. Generate typed clients for TypeScript, Python, Go, and other languages.',
+      path: '/docs/openapi',
+    }),
   component: OpenApiDocs,
 })
 

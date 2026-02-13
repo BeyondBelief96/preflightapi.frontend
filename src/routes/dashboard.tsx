@@ -1,15 +1,31 @@
-import { Outlet, createFileRoute } from '@tanstack/react-router'
+import { Link, Outlet, createFileRoute, redirect } from '@tanstack/react-router'
+import type { ErrorComponentProps } from '@tanstack/react-router'
+import { createServerFn } from '@tanstack/react-start'
 import { useState } from 'react'
 import { DashboardSidebar } from '@/components/dashboard/dashboard-sidebar'
 import { DashboardHeader } from '@/components/dashboard/dashboard-header'
-import { DashboardBackdrop } from '@/components/hud-backdrop'
+import { DashboardBackdrop } from '@/components/radar-backdrop'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useSubscriptionSync } from '@/hooks/use-subscription-sync'
+import { AlertTriangle } from 'lucide-react'
+
+const getAuthState = createServerFn().handler(async () => {
+  const { auth } = await import('@clerk/tanstack-react-start/server')
+  const session = await auth()
+  return { userId: session?.userId ?? null }
+})
 
 export const Route = createFileRoute('/dashboard')({
+  beforeLoad: async () => {
+    const { userId } = await getAuthState()
+    if (!userId) {
+      throw redirect({ to: '/sign-in' })
+    }
+  },
   component: DashboardLayout,
   pendingComponent: DashboardPending,
   notFoundComponent: DashboardNotFound,
+  errorComponent: DashboardError,
 })
 
 function DashboardLayout() {
@@ -70,6 +86,39 @@ function DashboardPending() {
             </div>
           </div>
         </main>
+      </div>
+    </div>
+  )
+}
+
+function DashboardError({ error, reset }: ErrorComponentProps) {
+  return (
+    <div className="flex min-h-screen flex-col items-center justify-center p-6 text-center">
+      <div className="rounded-full bg-destructive/10 p-3">
+        <AlertTriangle className="h-6 w-6 text-destructive" />
+      </div>
+      <h2 className="mt-4 text-2xl font-semibold">Something went wrong</h2>
+      <p className="mt-2 max-w-md text-muted-foreground">
+        We ran into an issue loading the dashboard. Please try again.
+      </p>
+      {import.meta.env.DEV && error instanceof Error && (
+        <pre className="mt-4 max-w-lg overflow-auto rounded bg-muted p-4 text-left text-sm">
+          {error.message}
+        </pre>
+      )}
+      <div className="mt-6 flex gap-3">
+        <button
+          onClick={reset}
+          className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+        >
+          Try again
+        </button>
+        <Link
+          to="/dashboard"
+          className="rounded-md border border-border px-4 py-2 text-sm font-medium hover:bg-accent"
+        >
+          Back to dashboard
+        </Link>
       </div>
     </div>
   )

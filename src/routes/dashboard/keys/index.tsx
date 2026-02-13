@@ -196,6 +196,7 @@ function ApiKeysPage() {
                   size="icon"
                   onClick={() => toggleKeyVisibility('primary')}
                   title={revealedKeys['primary'] ? 'Hide key' : 'Reveal key'}
+                  aria-label={revealedKeys['primary'] ? 'Hide primary key' : 'Reveal primary key'}
                 >
                   {revealedKeys['primary'] ? (
                     <EyeOff className="h-4 w-4" />
@@ -246,6 +247,7 @@ function ApiKeysPage() {
                   title={
                     revealedKeys['secondary'] ? 'Hide key' : 'Reveal key'
                   }
+                  aria-label={revealedKeys['secondary'] ? 'Hide secondary key' : 'Reveal secondary key'}
                 >
                   {revealedKeys['secondary'] ? (
                     <EyeOff className="h-4 w-4" />

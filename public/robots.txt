@@ -4,4 +4,4 @@ Disallow: /dashboard/
 Disallow: /sign-in
 Disallow: /sign-up
 
-Sitemap: https://preflightapi.com/sitemap.xml
+Sitemap: https://preflightapi.io/sitemap.xml

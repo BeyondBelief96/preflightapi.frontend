@@ -24,7 +24,7 @@ export function StatsBar() {
         {[...stats, ...stats].map((stat, i) => (
           <div
             key={`${stat.label}-${i}`}
-            className="flex shrink-0 items-center gap-3 rounded-lg border bg-background/50 px-5 py-3"
+            className="flex shrink-0 items-center gap-3 rounded-lg border bg-card px-5 py-3"
           >
             <span className="text-lg font-bold tracking-tight text-accent sm:text-xl">
               {stat.value}

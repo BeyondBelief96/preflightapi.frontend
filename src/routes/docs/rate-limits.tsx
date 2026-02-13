@@ -2,8 +2,16 @@ import { Link, createFileRoute } from '@tanstack/react-router'
 import { usePlans } from '@/hooks/use-plans'
 import { CodeBlock } from '@/components/docs/code-block'
 import { API_BASE_URL } from '@/lib/gateway-url'
+import { createPageHead } from '@/lib/seo'
 
 export const Route = createFileRoute('/docs/rate-limits')({
+  head: () =>
+    createPageHead({
+      title: 'Rate Limits',
+      description:
+        'Understand PreflightAPI rate limits, quota headers, caching strategies, and best practices for efficient API usage across all subscription tiers.',
+      path: '/docs/rate-limits',
+    }),
   component: RateLimitsDocs,
 })
 

@@ -32,13 +32,13 @@ export function ParameterInputs({
       <div className="grid gap-2 sm:grid-cols-2">
         {params.map((p) => (
           <div key={p.name} className="space-y-1">
-            <label className="text-xs text-muted-foreground">
+            <label htmlFor={`param-${p.name}`} className="text-xs text-muted-foreground">
               {p.name}
-              {p.required && <span className="ml-0.5 text-red-400">*</span>}
+              {p.required && <span className="ml-0.5 text-red-400" aria-label="required">*</span>}
             </label>
             {p.enum?.length ? (
               <Select value={values[p.name] ?? ''} onValueChange={(v) => onChange(p.name, v)}>
-                <SelectTrigger size="sm" className="w-full font-mono text-xs">
+                <SelectTrigger size="sm" className="w-full font-mono text-xs" id={`param-${p.name}`}>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -51,6 +51,7 @@ export function ParameterInputs({
               </Select>
             ) : (
               <Input
+                id={`param-${p.name}`}
                 value={values[p.name] ?? ''}
                 onChange={(e) => onChange(p.name, e.target.value)}
                 className="font-mono text-xs"

@@ -43,7 +43,8 @@
       "Bash(npx @tanstack/router-cli generate:*)",
       "Bash(npm run test:*)",
       "mcp__ide__getDiagnostics",
-      "WebFetch(domain:docs.stripe.com)"
+      "WebFetch(domain:docs.stripe.com)",
+      "WebFetch(domain:fonts.googleapis.com)"
     ]
   }
 }

@@ -13,6 +13,25 @@ import { createLogger } from '@/lib/server/logger'
 
 const log = createLogger('stripe-webhook')
 
+// In-memory idempotency cache to prevent duplicate event processing.
+// Serverless cold starts naturally clear this, which is acceptable —
+// the worst case is a harmless re-process after a cold start.
+const PROCESSED_EVENTS = new Set<string>()
+const MAX_CACHE_SIZE = 1000
+
+function markEventProcessed(eventId: string) {
+  if (PROCESSED_EVENTS.size >= MAX_CACHE_SIZE) {
+    // Evict oldest entries (Set iterates in insertion order)
+    const iterator = PROCESSED_EVENTS.values()
+    for (let i = 0; i < MAX_CACHE_SIZE / 2; i++) {
+      const next = iterator.next()
+      if (next.done) break
+      PROCESSED_EVENTS.delete(next.value)
+    }
+  }
+  PROCESSED_EVENTS.add(eventId)
+}
+
 export default defineHandler(async (event) => {
   let getStripe: typeof GetStripeFn
   let apimFetch: typeof ApimFetchFn
@@ -42,7 +61,7 @@ export default defineHandler(async (event) => {
 
   if (!webhookSecret) {
     log.error('STRIPE_WEBHOOK_SECRET not configured')
-    return { received: true }
+    throw new HTTPError({ statusCode: 500, statusMessage: 'Webhook secret not configured' })
   }
 
   // Warn about missing price env vars (makes misconfiguration visible in logs)
@@ -58,7 +77,7 @@ export default defineHandler(async (event) => {
 
   if (!body || !sig) {
     log.error('Missing body or signature')
-    return { received: true }
+    throw new HTTPError({ statusCode: 400, statusMessage: 'Missing body or signature' })
   }
 
   let stripeEvent: Stripe.Event
@@ -67,6 +86,12 @@ export default defineHandler(async (event) => {
   } catch (err) {
     log.error({ err }, 'Signature verification failed')
     throw new HTTPError({ statusCode: 401, statusMessage: 'Invalid signature' })
+  }
+
+  // Idempotency: skip events we've already processed
+  if (PROCESSED_EVENTS.has(stripeEvent.id)) {
+    log.info({ eventId: stripeEvent.id }, 'Skipping duplicate event')
+    return { received: true }
   }
 
   const productIds = getApimProductIds()
@@ -321,11 +346,14 @@ export default defineHandler(async (event) => {
       }
     }
   } catch (err) {
-    // APIM sync failed — return 500 so Stripe retries the webhook
+    // APIM sync failed — return 500 so Stripe retries the webhook.
+    // Do NOT mark as processed so retries can succeed.
     log.error({ err }, 'APIM sync error')
     throw new HTTPError({ statusCode: 500, statusMessage: 'APIM sync failed' })
   }
 
+  // Mark as processed only on success to allow retries on failure
+  markEventProcessed(stripeEvent.id)
   return { received: true }
 })
 
@@ -397,7 +425,7 @@ async function syncTierToApim(
   }
 
   // Sync ALL active subscriptions to prevent orphaned subs with stale tiers
-  await Promise.all(
+  const results = await Promise.allSettled(
     activeSubs.map((sub) =>
       apimFetch(`/subscriptions/${sub.name}`, {
         method: 'PATCH',
@@ -409,6 +437,25 @@ async function syncTierToApim(
       }),
     ),
   )
+
+  const failures = results.filter(
+    (r): r is PromiseRejectedResult => r.status === 'rejected',
+  )
+  if (failures.length > 0) {
+    log.error(
+      {
+        userId: clerkUserId,
+        productId: apimProductId,
+        failedCount: failures.length,
+        totalCount: activeSubs.length,
+        errors: failures.map((f) => String(f.reason)),
+      },
+      'Some APIM subscription PATCHes failed',
+    )
+    throw new Error(
+      `Failed to sync ${failures.length}/${activeSubs.length} APIM subscriptions`,
+    )
+  }
 
   log.info(
     { userId: clerkUserId, productId: apimProductId, subCount: activeSubs.length },

@@ -12,8 +12,16 @@ import {
 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { SCHEMA_GROUPS } from '@/lib/docs/schema-groups'
+import { createPageHead } from '@/lib/seo'
 
 export const Route = createFileRoute('/docs/data-models/')({
+  head: () =>
+    createPageHead({
+      title: 'Data Models',
+      description:
+        'Browse all PreflightAPI data models and response schemas. Detailed type definitions for METAR, TAF, NOTAM, airport, airspace, and flight planning objects.',
+      path: '/docs/data-models',
+    }),
   component: DataModelsIndex,
 })
 

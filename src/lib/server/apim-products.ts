@@ -41,5 +41,12 @@ const TIER_ORDER: Record<string, number> = {
  * Returns true if moving from `fromPlanId` to `toPlanId` is a downgrade.
  */
 export function isDowngrade(fromPlanId: string, toPlanId: string): boolean {
-  return (TIER_ORDER[toPlanId] ?? 0) < (TIER_ORDER[fromPlanId] ?? 0)
+  const fromOrder = TIER_ORDER[fromPlanId]
+  const toOrder = TIER_ORDER[toPlanId]
+  if (fromOrder === undefined || toOrder === undefined) {
+    throw new Error(
+      `Unknown plan ID in downgrade check: from="${fromPlanId}" to="${toPlanId}"`,
+    )
+  }
+  return toOrder < fromOrder
 }

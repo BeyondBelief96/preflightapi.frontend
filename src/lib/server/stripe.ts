@@ -239,7 +239,7 @@ export const reconcileSubscription = createServerFn({
     mismatched[0].properties.scope.split('/').pop() ?? ''
   const previousPlanId = planIdFromProductId(previousProductId)
 
-  await Promise.all(
+  const results = await Promise.allSettled(
     mismatched.map((sub) =>
       apimFetch(`/subscriptions/${sub.name}`, {
         method: 'PATCH',
@@ -249,6 +249,15 @@ export const reconcileSubscription = createServerFn({
       }),
     ),
   )
+
+  const failures = results.filter(
+    (r): r is PromiseRejectedResult => r.status === 'rejected',
+  )
+  if (failures.length > 0) {
+    throw new Error(
+      `Failed to sync ${failures.length}/${mismatched.length} APIM subscriptions`,
+    )
+  }
 
   return {
     status: 'synced',
@@ -262,6 +271,11 @@ export const reconcileSubscription = createServerFn({
 function getBaseUrl(): string {
   if (env.SERVER_URL) {
     return env.SERVER_URL
+  }
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error(
+      'SERVER_URL must be set in production. Stripe checkout redirects will fail without it.',
+    )
   }
   return 'http://localhost:3000'
 }

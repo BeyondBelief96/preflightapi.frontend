@@ -280,14 +280,7 @@ function buildComparisonFeatures(plans: Array<PlanDefinition>) {
         student: 'Email',
         private: 'Email',
         commercial: 'Priority',
-        atp: 'Dedicated',
-      },
-      {
-        name: 'Uptime SLA',
-        student: '99.95%',
-        private: '99.95%',
-        commercial: '99.95%',
-        atp: '99.95%',
+        atp: 'Priority',
       },
     ],
   }
@@ -328,7 +321,7 @@ function PricingPage() {
               Need more?
             </p>
           </div>
-          <div className="mx-auto mt-4 max-w-2xl rounded-xl border border-accent/20 bg-accent/5 p-8 text-center">
+          <div className="mx-auto mt-4 max-w-2xl rounded-xl border border-accent/20 bg-card p-8 text-center">
             <h3 className="text-xl font-semibold">ATP</h3>
             <p className="mt-2 text-muted-foreground">
               Everything in Commercial Pilot, plus custom pricing, quotas, rate
@@ -344,12 +337,12 @@ function PricingPage() {
       </section>
 
       {/* Comparison table */}
-      <section className="border-t bg-muted/30 py-20">
+      <section className="border-t bg-background/95 py-20 backdrop-blur-xl">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-center text-2xl font-bold">Feature Comparison</h2>
 
           {/* Desktop table */}
-          <div className="mt-12 hidden overflow-x-auto md:block">
+          <div className="mt-12 hidden overflow-x-auto rounded-xl border border-border/50 bg-card/80 p-6 md:block">
             <table className="w-full">
               <thead>
                 <tr className="border-b">
@@ -438,9 +431,9 @@ function MobileComparison({
   const activePlanId = PLAN_IDS[activePlan]
 
   return (
-    <div className="mt-8 md:hidden">
+    <div className="mt-8 rounded-xl border border-border/50 bg-card/80 p-4 md:hidden">
       {/* Plan tabs */}
-      <div className="flex rounded-lg border bg-muted/50 p-1">
+      <div className="flex rounded-lg border bg-muted/80 p-1">
         {plans.map((plan, index) => (
           <button
             key={plan.id}

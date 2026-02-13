@@ -2,8 +2,16 @@ import { Link, createFileRoute } from '@tanstack/react-router'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { CodeBlock } from '@/components/docs/code-block'
 import { API_BASE_URL } from '@/lib/gateway-url'
+import { createPageHead } from '@/lib/seo'
 
 export const Route = createFileRoute('/docs/authentication')({
+  head: () =>
+    createPageHead({
+      title: 'Authentication',
+      description:
+        'Learn how to authenticate with the PreflightAPI using subscription keys. Includes examples for cURL, JavaScript, Python, and more.',
+      path: '/docs/authentication',
+    }),
   component: AuthenticationDocs,
 })
 

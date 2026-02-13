@@ -63,7 +63,7 @@ export function FeaturesGrid() {
           {features.map((feature) => (
             <div
               key={feature.title}
-              className="group rounded-xl border p-6 transition-colors hover:border-accent/50 hover:bg-accent/5"
+              className="group rounded-xl border bg-card p-6 transition-colors hover:border-accent/50"
             >
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-accent">
                 <feature.icon className="h-5 w-5" />

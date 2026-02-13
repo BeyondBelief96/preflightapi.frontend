@@ -11,18 +11,23 @@ const endpoints = [
     description: 'Get current weather observation for an airport',
     response: `{
   "id": 42861,
-  "rawText": "KJFK 051856Z 22012KT 10SM FEW250 18/06 A3012",
+  "rawText": "KJFK 051856Z 22012G18KT 10SM -RA FEW120 BKN250 18/06 A3012",
   "stationId": "KJFK",
   "observationTime": "2025-01-05T18:56:00Z",
+  "latitude": 40.6399,
+  "longitude": -73.7787,
   "tempC": 18.0,
   "dewpointC": 6.0,
   "windDirDegrees": "220",
   "windSpeedKt": 12,
+  "windGustKt": 18,
   "visibilityStatuteMi": "10",
   "altimInHg": 30.12,
+  "wxString": "-RA",
   "flightCategory": "VFR",
   "skyCondition": [
-    { "skyCover": "FEW", "cloudBaseFtAgl": 25000 }
+    { "skyCover": "FEW", "cloudBaseFtAgl": 12000 },
+    { "skyCover": "BKN", "cloudBaseFtAgl": 25000 }
   ]
 }`,
   },
@@ -37,12 +42,15 @@ const endpoints = [
   "icaoId": "KLAX",
   "arptId": "LAX",
   "arptName": "LOS ANGELES INTL",
-  "siteTypeCode": "A",
+  "siteType": "Airport",
+  "ownershipType": "PubliclyOwned",
   "city": "LOS ANGELES",
   "stateCode": "CA",
   "latDecimal": 33.9425,
   "longDecimal": -118.4081,
   "elev": 128,
+  "tpa": 1128,
+  "magVarn": 12.0,
   "fuelTypes": "100LL,JET-A",
   "chartName": "LOS ANGELES"
 }`,
@@ -57,14 +65,23 @@ const endpoints = [
   "notams": [
     {
       "type": "Feature",
+      "id": "1757609538792382",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-87.9048, 41.9742]
+      },
       "properties": {
         "coreNOTAMData": {
           "notam": {
             "number": "A0012/25",
+            "type": "N",
+            "issued": "2025-01-04T14:30:00Z",
             "icaoLocation": "KORD",
             "text": "RWY 10L/28R CLSD FOR MAINT",
             "effectiveStart": "2025-01-05T06:00:00Z",
             "effectiveEnd": "2025-01-12T06:00:00Z",
+            "traffic": "IV",
+            "scope": "A",
             "classification": "DOMESTIC"
           }
         }
@@ -87,16 +104,38 @@ const endpoints = [
   "totalRouteTimeHours": 1.7,
   "totalFuelUsed": 18.6,
   "averageWindComponent": -8.3,
+  "airspaceGlobalIds": ["K-B-NE-001", "K-C-NE-042"],
+  "obstacleOasNumbers": ["10-004821", "10-005133"],
   "legs": [
     {
-      "legStartPoint": { "id": "KJFK", "waypointType": "Airport" },
-      "legEndPoint": { "id": "BDR", "waypointType": "Airport" },
+      "legStartPoint": {
+        "id": "KJFK",
+        "name": "JOHN F KENNEDY INTL",
+        "latitude": 40.6399,
+        "longitude": -73.7787,
+        "altitude": 4500.0,
+        "waypointType": "Airport"
+      },
+      "legEndPoint": {
+        "id": "BDR",
+        "name": "IGOR I SIKORSKY MEM",
+        "latitude": 41.1635,
+        "longitude": -73.1262,
+        "altitude": 4500.0,
+        "waypointType": "Airport"
+      },
       "trueCourse": 45.0,
       "magneticCourse": 58.2,
       "magneticHeading": 55.8,
       "groundSpeed": 126.0,
       "legDistance": 58.2,
-      "legFuelBurnGals": 5.1
+      "distanceRemaining": 156.3,
+      "legFuelBurnGals": 5.1,
+      "remainingFuelGals": 42.9,
+      "windDir": 240,
+      "windSpeed": 15,
+      "headwindComponent": -8.3,
+      "tempC": 5.0
     }
   ]
 }`,

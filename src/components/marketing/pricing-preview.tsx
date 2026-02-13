@@ -22,9 +22,9 @@ export function PricingPreview() {
           {selfServicePlans.map((plan) => (
             <div
               key={plan.id}
-              className={`relative flex flex-col rounded-xl border p-6 ${
+              className={`relative flex flex-col rounded-xl border bg-card p-6 ${
                 plan.highlighted
-                  ? 'border-accent bg-accent/5 shadow-lg shadow-accent/10'
+                  ? 'border-accent shadow-lg shadow-accent/10'
                   : ''
               }`}
             >
@@ -76,7 +76,7 @@ export function PricingPreview() {
             Need more?
           </p>
         </div>
-        <div className="mx-auto mt-4 max-w-2xl rounded-xl border border-accent/20 bg-accent/5 p-8 text-center">
+        <div className="mx-auto mt-4 max-w-2xl rounded-xl border border-accent/20 bg-card p-8 text-center">
           <h3 className="text-lg font-semibold">ATP</h3>
           <p className="mt-2 text-sm text-muted-foreground">
             Custom pricing, quotas, dedicated support, and everything in

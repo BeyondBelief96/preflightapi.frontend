@@ -20,9 +20,9 @@ interface PricingCardProps {
 export function PricingCard({ plan }: PricingCardProps) {
   return (
     <div
-      className={`relative flex flex-col rounded-xl border p-6 ${
+      className={`relative flex flex-col rounded-xl border bg-card p-6 ${
         plan.highlighted
-          ? 'border-accent bg-accent/5 shadow-lg shadow-accent/10'
+          ? 'border-accent shadow-lg shadow-accent/10'
           : ''
       }`}
     >

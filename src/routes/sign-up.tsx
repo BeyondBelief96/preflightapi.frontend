@@ -1,5 +1,6 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
 import { SignUp } from '@clerk/clerk-react'
+import { AnimatedBackdrop } from '@/components/animated-backdrop'
 import { createPageHead } from '@/lib/seo'
 import { isWaitlistMode } from '@/lib/waitlist'
 
@@ -22,7 +23,8 @@ export const Route = createFileRoute('/sign-up')({
 
 function SignUpPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted/30 px-4">
+    <div className="flex min-h-screen items-center justify-center px-4">
+      <AnimatedBackdrop />
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
           <a href="/" className="inline-flex items-center gap-2">

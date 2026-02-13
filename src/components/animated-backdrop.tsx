@@ -1,29 +1,33 @@
+import { Suspense } from 'react'
+import { TerrainFlyover } from './terrain-flyover'
+
 export function AnimatedBackdrop({ subtle }: { subtle?: boolean }) {
   return (
     <div className="fixed inset-0 overflow-hidden -z-10 pointer-events-none">
-      {/* Layer 1 — Gradient orbs (hidden on text-heavy pages) */}
+      {/* Three.js star field (lazy-loaded, client-only) */}
+      {!subtle && (
+        <Suspense fallback={null}>
+          <TerrainFlyover />
+        </Suspense>
+      )}
+
+      {/* Gradient orbs for color wash */}
       {!subtle && (
         <>
-          <div className="absolute -top-64 -right-64 h-[500px] w-[500px] rounded-full bg-accent opacity-[0.07] blur-3xl motion-safe:animate-float-1" />
-          <div className="absolute -bottom-64 -left-64 h-[500px] w-[500px] rounded-full bg-primary opacity-[0.07] blur-3xl motion-safe:animate-float-2" />
-          <div className="absolute top-1/2 left-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-aviation-sky opacity-[0.07] blur-3xl motion-safe:animate-float-3" />
+          <div className="absolute -top-64 -right-64 h-[600px] w-[600px] rounded-full bg-accent opacity-[0.05] blur-3xl motion-safe:animate-float-1" />
+          <div className="absolute -bottom-64 -left-64 h-[600px] w-[600px] rounded-full bg-primary opacity-[0.05] blur-3xl motion-safe:animate-float-2" />
         </>
       )}
 
-      {/* Layer 2 — Dot grid pattern */}
+      {/* Edge vignette */}
       <div
-        className={`absolute inset-0 ${subtle ? 'opacity-[0.025]' : 'opacity-[0.04]'}`}
+        className="absolute inset-0"
         style={{
-          backgroundImage:
-            'radial-gradient(circle, currentColor 1px, transparent 1px)',
-          backgroundSize: '24px 24px',
+          background:
+            'radial-gradient(ellipse at 50% 50%, transparent 40%, oklch(0.14 0.025 245) 100%)',
+          opacity: 0.6,
         }}
       />
-
-      {/* Layer 3 — Top-edge gradient fade (skip on text-heavy pages) */}
-      {!subtle && (
-        <div className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-primary/5 to-transparent" />
-      )}
     </div>
   )
 }

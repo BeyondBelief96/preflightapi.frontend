@@ -3,8 +3,11 @@ import { apimFetch } from './apim-client'
 import { getApimProductIds, planIdFromProductId } from './apim-products'
 import { getTierConfig } from './tier-config'
 import { requireAuth, requireOwnership } from './auth'
+import { createLogger } from './logger'
 import type { ApimUsageReport } from '@/types/plans'
 import type { SubscriptionListResponse } from '@/types/apim'
+
+const log = createLogger('apim')
 
 // --- User Management ---
 
@@ -58,6 +61,7 @@ export const getUserSubscription = createServerFn({ method: 'GET' }).handler(
     // subscriptions in any state. This prevents creating a duplicate
     // free-tier sub when a paid subscription was recently cancelled/suspended.
     if (subscriptions.length === 0) {
+      log.info({ userId }, 'No subscriptions found — auto-provisioning free tier')
       const freeTierSubId = `${userId}-${productIds.student}`
       await apimFetch(`/subscriptions/${freeTierSubId}`, {
         method: 'PUT',
@@ -132,6 +136,11 @@ export const regenerateKey = createServerFn({ method: 'POST' })
       data.keyType === 'primary'
         ? 'regeneratePrimaryKey'
         : 'regenerateSecondaryKey'
+
+    log.info(
+      { userId, subscriptionId: data.subscriptionId, keyType: data.keyType },
+      'Regenerating API key',
+    )
 
     await apimFetch(`/subscriptions/${data.subscriptionId}/${endpoint}`, {
       method: 'POST',
