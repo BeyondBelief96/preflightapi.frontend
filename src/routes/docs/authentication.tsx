@@ -229,7 +229,7 @@ PREFLIGHT_API_KEY=your-subscription-key-here`}
         <CodeBlock
           language="json"
           code={`{
-  "error": "This endpoint is not available on the Free tier. Please upgrade to Starter or Professional."
+  "error": "This endpoint is not available on the Free tier. Please upgrade to Private or Commercial."
 }`}
         />
         <p className="text-muted-foreground">

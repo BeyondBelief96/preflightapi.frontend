@@ -1,36 +1,72 @@
-const stats = [
-  { value: '19,600+', label: 'US Airports' },
-  { value: '625,000+', label: 'Obstacles' },
-  { value: '3,000+', label: 'Airspaces' },
-  { value: '7,500+', label: 'Diagrams & Charts' },
-  { value: '60+', label: 'API Endpoints' },
-  { value: 'METARs & TAFs', label: 'All Reporting Stations' },
-  { value: 'PIREPs', label: 'Updated Every 5 Min' },
-  { value: 'NASR Data', label: '28 / 56 Day Cycle' },
-  { value: 'NOTAMs', label: 'By Airport, Radius & Route' },
-  { value: 'REST + JSON', label: 'Typed Responses' },
+import { Fragment } from 'react'
+import type { LucideIcon } from 'lucide-react'
+import {
+  AlertTriangle,
+  Bell,
+  Calculator,
+  Cloud,
+  Code,
+  FileText,
+  Layers,
+  Plane,
+  Rocket,
+  Shield,
+} from 'lucide-react'
+
+const stats: { value?: string; label: string; icon: LucideIcon }[] = [
+  { value: '19,600+', label: 'US Airports', icon: Plane },
+  { value: '625,000+', label: 'Obstacles', icon: AlertTriangle },
+  { value: '3,000+', label: 'Airspaces', icon: Layers },
+  { value: '40+', label: 'Endpoints', icon: Code },
+  { value: '7,500+', label: 'Charts & Diagrams', icon: FileText },
+  { label: 'Data Sourced from FAA', icon: Shield },
+  { label: 'Real-Time Weather', icon: Cloud },
+  { label: 'NOTAMs', icon: Bell },
+  { label: 'E6B Calculators', icon: Calculator },
+  { label: 'Free to Start', icon: Rocket },
 ]
 
 export function StatsBar() {
+  const allStats = [...stats, ...stats]
+
   return (
-    <section className="border-y bg-muted/30 py-4 overflow-hidden">
+    <section className="relative border-y bg-muted/30 py-4 overflow-hidden">
+      {/* Edge fades */}
+      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-20 bg-gradient-to-r from-background to-transparent sm:w-32" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-20 bg-gradient-to-l from-background to-transparent sm:w-32" />
+
       <div
-        className="flex animate-marquee gap-8"
-        style={{
-          width: 'max-content',
-        }}
+        className="flex animate-marquee items-center gap-4"
+        style={{ width: 'max-content' }}
       >
-        {/* Duplicate the list so the scroll loops seamlessly */}
-        {[...stats, ...stats].map((stat, i) => (
-          <div
-            key={`${stat.label}-${i}`}
-            className="flex shrink-0 items-center gap-3 rounded-lg border bg-card px-5 py-3"
-          >
-            <span className="text-lg font-bold tracking-tight text-accent sm:text-xl">
-              {stat.value}
-            </span>
-            <span className="text-sm text-muted-foreground">{stat.label}</span>
-          </div>
+        {allStats.map((stat, i) => (
+          <Fragment key={`${stat.label}-${i}`}>
+            {i > 0 && (
+              <span
+                className="text-lg text-muted-foreground/25"
+                aria-hidden="true"
+              >
+                ·
+              </span>
+            )}
+            <div className="flex shrink-0 items-center gap-3 rounded-lg border border-accent/10 bg-card px-4 py-2.5 shadow-sm shadow-accent/5">
+              <stat.icon className="h-4 w-4 shrink-0 text-accent/60" />
+              {stat.value ? (
+                <>
+                  <span className="text-base font-bold tracking-tight text-accent sm:text-lg">
+                    {stat.value}
+                  </span>
+                  <span className="text-sm text-muted-foreground">
+                    {stat.label}
+                  </span>
+                </>
+              ) : (
+                <span className="text-sm font-semibold tracking-tight text-accent sm:text-base">
+                  {stat.label}
+                </span>
+              )}
+            </div>
+          </Fragment>
         ))}
       </div>
     </section>
