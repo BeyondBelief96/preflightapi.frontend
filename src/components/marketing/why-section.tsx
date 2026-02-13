@@ -58,7 +58,7 @@ export function WhySection() {
             {reasons.map((reason) => (
               <div
                 key={reason.title}
-                className="flex gap-4 rounded-xl border bg-background/50 p-5"
+                className="flex gap-4 rounded-xl border bg-card p-5"
               >
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-accent/10 text-accent">
                   <reason.icon className="h-5 w-5" />

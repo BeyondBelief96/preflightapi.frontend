@@ -7,7 +7,7 @@
 body {
   @apply m-0;
   font-family:
-    'Inter',
+    'Geist',
     -apple-system,
     BlinkMacSystemFont,
     'Segoe UI',
@@ -25,7 +25,7 @@ body {
 
 code {
   font-family:
-    'JetBrains Mono', source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    'Geist Mono', source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
 
@@ -154,6 +154,10 @@ code {
   --color-aviation-runway: var(--aviation-runway);
   --color-aviation-warning: var(--aviation-warning);
   --color-aviation-success: var(--aviation-success);
+
+  /* Font families for Tailwind utility classes */
+  --font-sans: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  --font-mono: 'Geist Mono', source-code-pro, Menlo, Monaco, Consolas, monospace;
 }
 
 @layer base {
@@ -179,7 +183,7 @@ code {
     transform: translateX(0);
   }
   100% {
-    transform: translateX(-50%);
+    transform: translateX(calc(-50% - 1rem));
   }
 }
 
@@ -213,6 +217,7 @@ code {
 @utility animate-float-3 {
   animation: float-3 20s ease-in-out infinite;
 }
+
 
 @keyframes success-pulse {
   0% { transform: scale(0); opacity: 0; }

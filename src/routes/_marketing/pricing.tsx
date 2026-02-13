@@ -280,14 +280,7 @@ function buildComparisonFeatures(plans: Array<PlanDefinition>) {
         student: 'Email',
         private: 'Email',
         commercial: 'Priority',
-        atp: 'Dedicated',
-      },
-      {
-        name: 'Uptime SLA',
-        student: '99.95%',
-        private: '99.95%',
-        commercial: '99.95%',
-        atp: '99.95%',
+        atp: 'Priority',
       },
     ],
   }
@@ -328,7 +321,7 @@ function PricingPage() {
               Need more?
             </p>
           </div>
-          <div className="mx-auto mt-4 max-w-2xl rounded-xl border border-accent/20 bg-accent/5 p-8 text-center">
+          <div className="mx-auto mt-4 max-w-2xl rounded-xl border border-accent/20 bg-card p-8 text-center">
             <h3 className="text-xl font-semibold">ATP</h3>
             <p className="mt-2 text-muted-foreground">
               Everything in Commercial Pilot, plus custom pricing, quotas, rate
