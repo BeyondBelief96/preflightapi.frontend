@@ -1,4 +1,4 @@
-import { defineEventHandler, setResponseHeader } from 'h3'
+import { defineEventHandler } from 'h3'
 
 const isDev = process.env.NODE_ENV !== 'production'
 
@@ -8,11 +8,10 @@ const clerkOrigins = isDev
   : ['https://clerk.preflightapi.io']
 
 export default defineEventHandler((event) => {
-  setResponseHeader(event, 'X-Content-Type-Options', 'nosniff')
-  setResponseHeader(event, 'X-Frame-Options', 'DENY')
-  setResponseHeader(event, 'Referrer-Policy', 'strict-origin-when-cross-origin')
-  setResponseHeader(
-    event,
+  event.res.headers.set('X-Content-Type-Options', 'nosniff')
+  event.res.headers.set('X-Frame-Options', 'DENY')
+  event.res.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
+  event.res.headers.set(
     'Permissions-Policy',
     'camera=(), microphone=(), geolocation=()',
   )
@@ -30,8 +29,7 @@ export default defineEventHandler((event) => {
     'https://challenges.cloudflare.com',
   ].join(' ')
 
-  setResponseHeader(
-    event,
+  event.res.headers.set(
     'Content-Security-Policy',
     [
       "default-src 'self'",

@@ -61,6 +61,21 @@ function isHeadingLike(line: string, nextLine?: string): boolean {
  */
 const REFERENCE_ITEM_RE = /^[A-Z]\w+\s+[—–-]\s+/
 
+/**
+ * Splits inline code-fence content that has multiple API examples or JSON
+ * crammed onto a single line (common in swagger descriptions where newlines
+ * inside fences are lost during JSON serialization).
+ */
+function splitInlineExamples(raw: string): string {
+  // Multiple API examples on one line: split before each HTTP method
+  const hasMultipleExamples =
+    (raw.match(/\b(GET|POST|PUT|PATCH|DELETE)\s+\//g)?.length ?? 0) > 1
+  if (hasMultipleExamples) {
+    return raw.replace(/\s+(GET|POST|PUT|PATCH|DELETE)\s+\//g, '\n$1 /').trim()
+  }
+  return raw
+}
+
 function parseSegments(text: string): Array<TextSegment> {
   const segments: Array<TextSegment> = []
   const lines = text.split('\n')
@@ -74,7 +89,26 @@ function parseSegments(text: string): Array<TextSegment> {
     const fenceMatch = line.match(/^```(\w*)/)
     if (fenceMatch) {
       const language = fenceMatch[1] || 'text'
+      const afterOpener = line.slice(fenceMatch[0].length)
+
+      // Same-line fence: ``` content ``` (common in swagger descriptions)
+      const closingIdx = afterOpener.indexOf('```')
+      if (closingIdx !== -1) {
+        const raw = afterOpener.slice(0, closingIdx).trim()
+        // Split API examples that are crammed onto one line
+        const content = splitInlineExamples(raw)
+        if (content) {
+          segments.push({ type: 'code-block', content, language })
+        }
+        i++
+        continue
+      }
+
+      // Multi-line fence: content may start on the opener line
       const codeLines: Array<string> = []
+      if (afterOpener.trim()) {
+        codeLines.push(afterOpener)
+      }
       i++
       while (i < lines.length && !lines[i].startsWith('```')) {
         codeLines.push(lines[i])

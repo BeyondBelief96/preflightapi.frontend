@@ -144,9 +144,9 @@ function DashboardOverview() {
       {/* Onboarding banner */}
       {!onboardingComplete && (
         <Card className="border-l-4 border-l-aviation-sky">
-          <CardContent className="flex items-center justify-between gap-4 p-6">
+          <CardContent className="flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
-              <Rocket className="h-5 w-5 text-aviation-sky" />
+              <Rocket className="h-5 w-5 shrink-0 text-aviation-sky" />
               <div>
                 <p className="font-semibold">Complete your setup</p>
                 <p className="text-sm text-muted-foreground">
@@ -163,8 +163,8 @@ function DashboardOverview() {
               >
                 Dismiss
               </Button>
-              <Link to="/dashboard/getting-started">
-                <Button size="sm" className="gap-2">
+              <Link to="/dashboard/getting-started" className="flex-1 sm:flex-initial">
+                <Button size="sm" className="w-full gap-2 sm:w-auto">
                   Continue Setup
                   <ArrowRight className="h-3 w-3" />
                 </Button>
