@@ -36,9 +36,10 @@ export const proxyApiRequest = createServerFn({ method: 'POST' })
       throw new Error('API key is required')
     }
 
-    const gatewayUrl =
-      env.VITE_APIM_GATEWAY_URL ??
-      'https://preflightapi-apim-service-test.azure-api.net'
+    const gatewayUrl = env.VITE_APIM_GATEWAY_URL
+    if (!gatewayUrl) {
+      throw new Error('VITE_APIM_GATEWAY_URL is not configured')
+    }
 
     // Build URL with query params
     let url = `${gatewayUrl}${data.path}`

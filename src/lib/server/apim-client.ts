@@ -40,41 +40,82 @@ function getManagementBaseUrl(): string {
   return `https://management.azure.com/subscriptions/${subscriptionId}/resourceGroups/${resourceGroup}/providers/Microsoft.ApiManagement/service/${serviceName}`
 }
 
+const MAX_RETRIES = 3
+const RETRY_BASE_DELAY = 500
+
+function isRetryable(status: number): boolean {
+  return status === 429 || status >= 500
+}
+
 export async function apimFetch<T = unknown>(
   path: string,
   options: RequestInit = {},
 ): Promise<T> {
   const credential = getCredential()
-  const token = await credential.getToken(APIM_MANAGEMENT_SCOPE)
-
-  if (!token) {
-    throw new Error('Failed to acquire Azure AD token for APIM Management API.')
-  }
-
   const apiVersion = env.APIM_API_VERSION ?? '2024-05-01'
   const baseUrl = getManagementBaseUrl()
   const separator = path.includes('?') ? '&' : '?'
   const url = `${baseUrl}${path}${separator}api-version=${apiVersion}`
 
-  const response = await fetch(url, {
-    ...options,
-    headers: {
-      Authorization: `Bearer ${token.token}`,
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
-  })
+  let lastError: Error | undefined
 
-  if (!response.ok) {
-    const body = await response.text()
-    throw new Error(`APIM Management API error (${response.status}): ${body}`)
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    const token = await credential.getToken(APIM_MANAGEMENT_SCOPE)
+    if (!token) {
+      throw new Error(
+        'Failed to acquire Azure AD token for APIM Management API.',
+      )
+    }
+
+    try {
+      const response = await fetch(url, {
+        ...options,
+        headers: {
+          Authorization: `Bearer ${token.token}`,
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          ...options.headers,
+        },
+      })
+
+      if (!response.ok) {
+        const body = await response.text()
+        lastError = new Error(
+          `APIM Management API error (${response.status}): ${body}`,
+        )
+
+        if (isRetryable(response.status) && attempt < MAX_RETRIES) {
+          const delay = RETRY_BASE_DELAY * 2 ** attempt
+          await new Promise((resolve) => setTimeout(resolve, delay))
+          continue
+        }
+
+        throw lastError
+      }
+
+      // 204 No Content
+      if (response.status === 204) {
+        return undefined as T
+      }
+
+      return response.json() as Promise<T>
+    } catch (err) {
+      lastError =
+        err instanceof Error ? err : new Error('APIM request failed')
+
+      // Retry on network errors (fetch throws on network failure)
+      if (
+        attempt < MAX_RETRIES &&
+        !(lastError.message.startsWith('APIM Management API error'))
+      ) {
+        const delay = RETRY_BASE_DELAY * 2 ** attempt
+        await new Promise((resolve) => setTimeout(resolve, delay))
+        continue
+      }
+
+      throw lastError
+    }
   }
 
-  // 204 No Content
-  if (response.status === 204) {
-    return undefined as T
-  }
-
-  return response.json() as Promise<T>
+  throw lastError ?? new Error('APIM request failed after retries')
 }

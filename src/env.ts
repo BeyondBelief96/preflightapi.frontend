@@ -35,11 +35,7 @@ export const env = createEnv({
   client: {
     VITE_APP_TITLE: z.string().min(1).optional(),
     VITE_CLERK_PUBLISHABLE_KEY: z.string().min(1).optional(),
-    VITE_APIM_GATEWAY_URL: z
-      .string()
-      .url()
-      .optional()
-      .default('https://preflightapi-apim-service-test.azure-api.net'),
+    VITE_APIM_GATEWAY_URL: z.string().url().optional(),
     VITE_WAITLIST_MODE: z.string().optional().default('false'),
   },
 

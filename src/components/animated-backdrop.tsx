@@ -1,11 +1,5 @@
-import { Suspense, lazy } from 'react'
+import { Suspense } from 'react'
 import { TerrainFlyover } from './terrain-flyover'
-import { Contrails } from './contrails'
-import { CloudDeck } from './cloud-deck'
-
-const StarField = lazy(() =>
-  import('./star-field').then((m) => ({ default: m.StarField })),
-)
 
 export function AnimatedBackdrop({ subtle }: { subtle?: boolean }) {
   return (
