@@ -104,12 +104,13 @@ export function ApiKeyStep({
             <div className="space-y-2">
               <label className="text-sm font-medium">Primary Key</label>
               <div className="flex items-center gap-2">
-                <code className="flex-1 truncate rounded bg-muted px-3 py-2 font-mono text-sm">
+                <code className="min-w-0 flex-1 truncate rounded bg-muted px-3 py-2 font-mono text-sm">
                   {revealKey ? primaryKey : maskApiKey(primaryKey)}
                 </code>
                 <Button
                   variant="ghost"
                   size="icon"
+                  className="shrink-0"
                   onClick={onToggleReveal}
                   title={revealKey ? 'Hide key' : 'Reveal key'}
                 >
@@ -121,7 +122,7 @@ export function ApiKeyStep({
                 </Button>
                 <CopyButton
                   text={primaryKey}
-                  className="h-9 w-9 [&_svg]:h-4 [&_svg]:w-4"
+                  className="h-9 w-9 shrink-0 [&_svg]:h-4 [&_svg]:w-4"
                 />
               </div>
             </div>
@@ -138,6 +139,7 @@ export function ApiKeyStep({
               code={`curl -H "Ocp-Apim-Subscription-Key: ${maskApiKey(primaryKey)}" \\
   ${API_BASE_URL}/metars/KJFK`}
               language="bash"
+              className="max-w-full"
             />
           </div>
         ) : (

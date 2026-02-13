@@ -186,7 +186,7 @@ function ApiKeysPage() {
                 <Badge>Active</Badge>
               </div>
               <div className="flex items-center gap-2">
-                <code className="flex-1 truncate rounded bg-muted px-3 py-2 text-sm">
+                <code className="min-w-0 flex-1 truncate rounded bg-muted px-3 py-2 text-sm">
                   {revealedKeys['primary']
                     ? keysQuery.data.primaryKey
                     : maskKey(keysQuery.data.primaryKey)}
@@ -194,6 +194,7 @@ function ApiKeysPage() {
                 <Button
                   variant="ghost"
                   size="icon"
+                  className="shrink-0"
                   onClick={() => toggleKeyVisibility('primary')}
                   title={revealedKeys['primary'] ? 'Hide key' : 'Reveal key'}
                   aria-label={revealedKeys['primary'] ? 'Hide primary key' : 'Reveal primary key'}
@@ -206,7 +207,7 @@ function ApiKeysPage() {
                 </Button>
                 <CopyButton
                   text={keysQuery.data.primaryKey}
-                  className="h-9 w-9 [&_svg]:h-4 [&_svg]:w-4"
+                  className="h-9 w-9 shrink-0 [&_svg]:h-4 [&_svg]:w-4"
                 />
               </div>
               <Button
@@ -235,7 +236,7 @@ function ApiKeysPage() {
                 <Badge variant="secondary">Backup</Badge>
               </div>
               <div className="flex items-center gap-2">
-                <code className="flex-1 truncate rounded bg-muted px-3 py-2 text-sm">
+                <code className="min-w-0 flex-1 truncate rounded bg-muted px-3 py-2 text-sm">
                   {revealedKeys['secondary']
                     ? keysQuery.data.secondaryKey
                     : maskKey(keysQuery.data.secondaryKey)}
@@ -243,6 +244,7 @@ function ApiKeysPage() {
                 <Button
                   variant="ghost"
                   size="icon"
+                  className="shrink-0"
                   onClick={() => toggleKeyVisibility('secondary')}
                   title={
                     revealedKeys['secondary'] ? 'Hide key' : 'Reveal key'
@@ -257,7 +259,7 @@ function ApiKeysPage() {
                 </Button>
                 <CopyButton
                   text={keysQuery.data.secondaryKey}
-                  className="h-9 w-9 [&_svg]:h-4 [&_svg]:w-4"
+                  className="h-9 w-9 shrink-0 [&_svg]:h-4 [&_svg]:w-4"
                 />
               </div>
               <Button

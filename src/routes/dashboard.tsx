@@ -1,7 +1,7 @@
-import { Link, Outlet, createFileRoute, redirect } from '@tanstack/react-router'
+import { Link, Outlet, createFileRoute, redirect, useLocation } from '@tanstack/react-router'
 import type { ErrorComponentProps } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { DashboardSidebar } from '@/components/dashboard/dashboard-sidebar'
 import { DashboardHeader } from '@/components/dashboard/dashboard-header'
 import { DashboardBackdrop } from '@/components/radar-backdrop'
@@ -30,17 +30,23 @@ export const Route = createFileRoute('/dashboard')({
 
 function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const { pathname } = useLocation()
   useSubscriptionSync()
 
+  useEffect(() => {
+    scrollRef.current?.scrollTo(0, 0)
+  }, [pathname])
+
   return (
-    <div className="flex h-dvh">
+    <div className="flex h-screen w-full overflow-hidden">
       <DashboardSidebar open={sidebarOpen} onOpenChange={setSidebarOpen} />
-      <div className="flex min-h-0 flex-1 flex-col">
+      <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
         <DashboardHeader onMenuClick={() => setSidebarOpen(true)} />
-        <main className="relative min-h-0 flex-1">
+        <main className="relative min-w-0 flex-1 overflow-hidden">
           <DashboardBackdrop />
-          <div className="h-full overflow-y-auto p-6">
-            <div className="mx-auto max-w-5xl">
+          <div ref={scrollRef} className="h-full overflow-x-hidden overflow-y-auto p-6">
+            <div className="mx-auto min-w-0 max-w-5xl">
               <Outlet />
             </div>
           </div>
@@ -65,14 +71,14 @@ function DashboardPending() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div className="flex h-dvh">
+    <div className="flex h-screen w-full overflow-hidden">
       <DashboardSidebar open={sidebarOpen} onOpenChange={setSidebarOpen} />
-      <div className="flex min-h-0 flex-1 flex-col">
+      <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
         <DashboardHeader onMenuClick={() => setSidebarOpen(true)} />
-        <main className="relative min-h-0 flex-1">
+        <main className="relative min-w-0 flex-1 overflow-hidden">
           <DashboardBackdrop />
-          <div className="h-full overflow-y-auto p-6">
-            <div className="mx-auto max-w-5xl space-y-8">
+          <div className="h-full overflow-x-hidden overflow-y-auto p-6">
+            <div className="mx-auto min-w-0 max-w-5xl space-y-8">
               <div className="space-y-2">
                 <Skeleton className="h-8 w-48" />
                 <Skeleton className="h-4 w-72" />

@@ -21,15 +21,15 @@ function SettingsPage() {
           Manage your profile, email, and security settings.
         </p>
       </div>
-      <div className="overflow-x-auto rounded-xl">
+      <div className="min-w-0 overflow-x-hidden rounded-xl">
         <UserProfile
           routing="hash"
           appearance={{
             elements: {
-              rootBox: 'w-full',
-              cardBox: 'w-full shadow-none',
-              card: 'shadow-none border rounded-xl w-full',
-              scrollBox: 'overflow-visible',
+              rootBox: 'w-full max-w-full',
+              cardBox: 'w-full max-w-full shadow-none',
+              card: 'shadow-none border rounded-xl w-full max-w-full',
+              scrollBox: 'overflow-x-hidden',
             },
           }}
         />

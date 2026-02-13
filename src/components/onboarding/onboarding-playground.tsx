@@ -109,7 +109,7 @@ export function OnboardingPlayground({
         <Label className="text-xs font-medium text-muted-foreground">
           Request
         </Label>
-        <div className="flex items-center gap-2 overflow-x-auto rounded-md border bg-muted/50 px-3 py-2">
+        <div className="flex min-w-0 items-center gap-2 overflow-x-auto rounded-md border bg-muted/50 px-3 py-2">
           <MethodBadge method={endpoint.method} />
           <code className="whitespace-nowrap text-xs text-muted-foreground">
             {urlPreview}
