@@ -3,8 +3,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { CodeBlock } from '@/components/docs/code-block'
 import { API_BASE_URL } from '@/lib/gateway-url'
 import { usePlans } from '@/hooks/use-plans'
+import { createPageHead } from '@/lib/seo'
 
 export const Route = createFileRoute('/docs/getting-started')({
+  head: () =>
+    createPageHead({
+      title: 'Getting Started',
+      description:
+        'Get started with PreflightAPI in minutes. Sign up for an API key, make your first request, and integrate aviation data into your application.',
+      path: '/docs/getting-started',
+    }),
   component: GettingStartedDocs,
 })
 

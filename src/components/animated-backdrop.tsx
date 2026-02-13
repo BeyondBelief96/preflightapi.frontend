@@ -19,23 +19,6 @@ export function AnimatedBackdrop({ subtle }: { subtle?: boolean }) {
         </>
       )}
 
-      {/* Noise grain texture */}
-      <svg
-        className={`absolute inset-0 h-full w-full ${subtle ? 'opacity-[0.015]' : 'opacity-[0.03]'}`}
-        style={{ mixBlendMode: 'overlay' }}
-        aria-hidden="true"
-      >
-        <filter id="marketing-noise">
-          <feTurbulence
-            type="fractalNoise"
-            baseFrequency="0.65"
-            numOctaves="3"
-            stitchTiles="stitch"
-          />
-        </filter>
-        <rect width="100%" height="100%" filter="url(#marketing-noise)" />
-      </svg>
-
       {/* Edge vignette */}
       <div
         className="absolute inset-0"

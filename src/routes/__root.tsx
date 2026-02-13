@@ -63,11 +63,56 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
   errorComponent: RootError,
 })
 
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      name: 'PreflightAPI',
+      url: 'https://preflightapi.io',
+      logo: 'https://preflightapi.io/logo.png',
+      contactPoint: {
+        '@type': 'ContactPoint',
+        email: 'support@preflightapi.io',
+        contactType: 'customer support',
+      },
+    },
+    {
+      '@type': 'WebSite',
+      name: 'PreflightAPI',
+      url: 'https://preflightapi.io',
+      description:
+        'Access real-time aviation data including METAR, TAF, NOTAMs, airport information, airspace data, and flight planning tools through a modern REST API.',
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: 'https://preflightapi.io/docs?q={search_term_string}',
+        'query-input': 'required name=search_term_string',
+      },
+    },
+    {
+      '@type': 'SoftwareApplication',
+      name: 'PreflightAPI',
+      applicationCategory: 'DeveloperApplication',
+      operatingSystem: 'Any',
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD',
+        description: 'Free tier with 500 API calls per month',
+      },
+    },
+  ],
+})
+
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
         <HeadContent />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: jsonLd }}
+        />
       </head>
       <body>
         <ClerkProvider>

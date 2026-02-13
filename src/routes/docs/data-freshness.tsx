@@ -10,8 +10,16 @@ import {
   formatUtcHourAsLocal,
   getNextSyncDate,
 } from '@/lib/faa-cycles'
+import { createPageHead } from '@/lib/seo'
 
 export const Route = createFileRoute('/docs/data-freshness')({
+  head: () =>
+    createPageHead({
+      title: 'Data Freshness',
+      description:
+        'Learn how often PreflightAPI data is updated. See sync schedules for METAR, TAF, NOTAM, airport, airspace, and obstacle data from FAA sources.',
+      path: '/docs/data-freshness',
+    }),
   component: DataFreshnessDocs,
 })
 

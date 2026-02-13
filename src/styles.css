@@ -48,7 +48,7 @@ code {
   --destructive: oklch(0.55 0.2 25);
   --destructive-foreground: oklch(0.93 0.01 240);
   --border: oklch(0.26 0.03 245);
-  --input: oklch(0.22 0.03 245);
+  --input: oklch(0.45 0.04 245);
   --ring: oklch(0.65 0.15 235);
   --chart-1: oklch(0.65 0.15 235);
   --chart-2: oklch(0.68 0.14 185);
@@ -92,7 +92,7 @@ code {
   --destructive: oklch(0.55 0.2 25);
   --destructive-foreground: oklch(0.93 0.01 240);
   --border: oklch(0.26 0.03 245);
-  --input: oklch(0.22 0.03 245);
+  --input: oklch(0.45 0.04 245);
   --ring: oklch(0.65 0.15 235);
   --chart-1: oklch(0.65 0.15 235);
   --chart-2: oklch(0.68 0.14 185);

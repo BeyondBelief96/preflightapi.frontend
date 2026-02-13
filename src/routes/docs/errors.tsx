@@ -1,8 +1,16 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { CodeBlock } from '@/components/docs/code-block'
 import { API_BASE_PATH } from '@/lib/api-metadata'
+import { createPageHead } from '@/lib/seo'
 
 export const Route = createFileRoute('/docs/errors')({
+  head: () =>
+    createPageHead({
+      title: 'Error Handling',
+      description:
+        'Complete guide to PreflightAPI error codes, HTTP status codes, error response formats, and best practices for handling errors in your application.',
+      path: '/docs/errors',
+    }),
   component: ErrorsDocs,
 })
 

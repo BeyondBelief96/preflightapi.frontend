@@ -20,8 +20,16 @@ import { CodeBlock } from '@/components/docs/code-block'
 import { API_BASE_URL } from '@/lib/gateway-url'
 import { API_BASE_PATH, API_VERSION } from '@/lib/api-metadata'
 import { usePlans } from '@/hooks/use-plans'
+import { createPageHead } from '@/lib/seo'
 
 export const Route = createFileRoute('/docs/')({
+  head: () =>
+    createPageHead({
+      title: 'Documentation',
+      description:
+        'Complete API documentation for PreflightAPI. Learn how to access real-time METAR, TAF, NOTAM, airport, airspace, and flight planning data.',
+      path: '/docs',
+    }),
   component: DocsIndex,
 })
 
