@@ -1,14 +1,16 @@
-import { defineHandler } from 'h3'
+import { defineEventHandler, setResponseHeader } from 'h3'
 
-export default defineHandler((event) => {
-  event.res.setHeader('X-Content-Type-Options', 'nosniff')
-  event.res.setHeader('X-Frame-Options', 'DENY')
-  event.res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin')
-  event.res.setHeader(
+export default defineEventHandler((event) => {
+  setResponseHeader(event, 'X-Content-Type-Options', 'nosniff')
+  setResponseHeader(event, 'X-Frame-Options', 'DENY')
+  setResponseHeader(event, 'Referrer-Policy', 'strict-origin-when-cross-origin')
+  setResponseHeader(
+    event,
     'Permissions-Policy',
     'camera=(), microphone=(), geolocation=()',
   )
-  event.res.setHeader(
+  setResponseHeader(
+    event,
     'Content-Security-Policy',
     [
       "default-src 'self'",
