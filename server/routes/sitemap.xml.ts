@@ -1,4 +1,6 @@
 import { defineEventHandler, setResponseHeader } from 'h3'
+import { CATEGORIES } from '@/lib/docs/category-config'
+import { SCHEMA_GROUPS } from '@/lib/docs/schema-groups'
 
 const SITE_URL = 'https://preflightapi.io'
 
@@ -22,36 +24,8 @@ const DOC_PAGES = [
   '/docs/data-models',
 ]
 
-// Dynamic doc category pages (from category-config.ts)
-const CATEGORY_SLUGS = [
-  'metars',
-  'tafs',
-  'pireps',
-  'sigmets',
-  'g-airmets',
-  'airports',
-  'communication-frequencies',
-  'airspace',
-  'notams',
-  'obstacles',
-  'airport-diagrams',
-  'chart-supplements',
-  'e6b',
-  'nav-log',
-]
-
-// Dynamic data model group pages (from schema-groups.ts)
-const DATA_MODEL_SLUGS = [
-  'weather',
-  'airports',
-  'airspace',
-  'notams',
-  'obstacles',
-  'documents',
-  'e6b',
-  'navigation',
-  'common',
-]
+const CATEGORY_SLUGS = CATEGORIES.map((c) => c.slug)
+const DATA_MODEL_SLUGS = SCHEMA_GROUPS.map((g) => g.slug)
 
 export default defineEventHandler((event) => {
   setResponseHeader(event, 'Content-Type', 'application/xml; charset=utf-8')
