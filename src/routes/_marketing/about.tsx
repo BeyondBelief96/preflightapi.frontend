@@ -227,7 +227,7 @@ function AboutPage() {
             {[
               {
                 source: 'aviationweather.gov',
-                data: 'METARs, TAFs, PIREPs, AIRMETs, SIGMETs, G-AIRMETs, winds aloft',
+                data: 'METARs, TAFs, PIREPs, SIGMETs, G-AIRMETs, winds aloft',
               },
               {
                 source: 'FAA NASR Subscription',

@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { createFileRoute } from '@tanstack/react-router'
+import { Link, createFileRoute } from '@tanstack/react-router'
 import { Check, Minus } from 'lucide-react'
 import type { PlanDefinition } from '@/lib/constants'
 import { createPageHead } from '@/lib/seo'
 import { usePlans } from '@/hooks/use-plans'
 import { PricingCard } from '@/components/marketing/pricing-card'
+import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 export const Route = createFileRoute('/_marketing/pricing')({
@@ -27,30 +28,35 @@ const staticComparisonFeatures = [
         student: true,
         private: true,
         commercial: true,
+        atp: true,
       },
       {
         name: 'TAFs (terminal forecasts)',
         student: true,
         private: true,
         commercial: true,
+        atp: true,
       },
       {
         name: 'PIREPs (pilot weather reports)',
         student: false,
         private: true,
         commercial: true,
+        atp: true,
       },
       {
-        name: 'AIRMETs & SIGMETs (weather hazards)',
+        name: 'SIGMETs & G-AIRMETs (weather hazards)',
         student: false,
         private: true,
         commercial: true,
+        atp: true,
       },
       {
         name: 'G-AIRMETs (graphical weather areas)',
         student: false,
         private: true,
         commercial: true,
+        atp: true,
       },
     ],
   },
@@ -62,48 +68,56 @@ const staticComparisonFeatures = [
         student: true,
         private: true,
         commercial: true,
+        atp: true,
       },
       {
         name: 'Runways',
         student: true,
         private: true,
         commercial: true,
+        atp: true,
       },
       {
         name: 'Communication frequencies',
         student: true,
         private: true,
         commercial: true,
+        atp: true,
       },
       {
         name: 'Airport diagram PDFs',
         student: false,
         private: false,
         commercial: true,
+        atp: true,
       },
       {
         name: 'Chart supplement (A/FD) PDFs',
         student: false,
         private: false,
         commercial: true,
+        atp: true,
       },
       {
         name: 'Controlled airspace (Class A\u2013E)',
         student: false,
         private: true,
         commercial: true,
+        atp: true,
       },
       {
         name: 'Special use airspace (MOAs, restricted, etc.)',
         student: false,
         private: true,
         commercial: true,
+        atp: true,
       },
       {
         name: 'Obstacle database (625,000+ obstacles)',
         student: false,
         private: true,
         commercial: true,
+        atp: true,
       },
     ],
   },
@@ -115,18 +129,21 @@ const staticComparisonFeatures = [
         student: false,
         private: false,
         commercial: true,
+        atp: true,
       },
       {
         name: 'NOTAMs by geographic radius',
         student: false,
         private: false,
         commercial: true,
+        atp: true,
       },
       {
         name: 'NOTAMs by flight route',
         student: false,
         private: false,
         commercial: true,
+        atp: true,
       },
     ],
   },
@@ -138,18 +155,21 @@ const staticComparisonFeatures = [
         student: false,
         private: false,
         commercial: true,
+        atp: true,
       },
       {
         name: 'Bearing & distance between any two points',
         student: false,
         private: false,
         commercial: true,
+        atp: true,
       },
       {
         name: 'Winds aloft forecasts (6/12/24 hr)',
         student: false,
         private: false,
         commercial: true,
+        atp: true,
       },
     ],
   },
@@ -161,48 +181,56 @@ const staticComparisonFeatures = [
         student: false,
         private: false,
         commercial: true,
+        atp: true,
       },
       {
         name: 'Crosswind calculator (manual input)',
         student: false,
         private: false,
         commercial: true,
+        atp: true,
       },
       {
         name: 'Density altitude (from live METAR)',
         student: false,
         private: false,
         commercial: true,
+        atp: true,
       },
       {
         name: 'Density altitude (manual input)',
         student: false,
         private: false,
         commercial: true,
+        atp: true,
       },
       {
         name: 'Wind triangle (heading & ground speed)',
         student: false,
         private: false,
         commercial: true,
+        atp: true,
       },
       {
         name: 'True airspeed & Mach number',
         student: false,
         private: false,
         commercial: true,
+        atp: true,
       },
       {
         name: 'Cloud base estimator',
         student: false,
         private: false,
         commercial: true,
+        atp: true,
       },
       {
         name: 'Pressure altitude',
         student: false,
         private: false,
         commercial: true,
+        atp: true,
       },
     ],
   },
@@ -233,6 +261,7 @@ function buildComparisonFeatures(plans: Array<PlanDefinition>) {
           'callsPerMonth',
           'Unlimited',
         ),
+        atp: 'Custom',
       },
       {
         name: 'Rate Limit (req/min)',
@@ -244,12 +273,21 @@ function buildComparisonFeatures(plans: Array<PlanDefinition>) {
           'ratePerMinute',
           'Custom',
         ),
+        atp: 'Custom',
       },
       {
         name: 'Support',
         student: 'Email',
         private: 'Email',
         commercial: 'Priority',
+        atp: 'Dedicated',
+      },
+      {
+        name: 'Uptime SLA',
+        student: '99.95%',
+        private: '99.95%',
+        commercial: '99.95%',
+        atp: '99.95%',
       },
     ],
   }
@@ -259,6 +297,7 @@ function buildComparisonFeatures(plans: Array<PlanDefinition>) {
 
 function PricingPage() {
   const { plans } = usePlans()
+  const selfServicePlans = plans.filter((p) => !p.marketingOnly)
   const comparisonFeatures = buildComparisonFeatures(plans)
 
   return (
@@ -278,9 +317,28 @@ function PricingPage() {
 
           {/* Plan cards */}
           <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {plans.map((plan) => (
+            {selfServicePlans.map((plan) => (
               <PricingCard key={plan.id} plan={plan} />
             ))}
+          </div>
+
+          {/* Enterprise / ATP section */}
+          <div className="mt-12 text-center">
+            <p className="text-sm font-medium text-muted-foreground">
+              Need more?
+            </p>
+          </div>
+          <div className="mx-auto mt-4 max-w-2xl rounded-xl border border-accent/20 bg-accent/5 p-8 text-center">
+            <h3 className="text-xl font-semibold">ATP</h3>
+            <p className="mt-2 text-muted-foreground">
+              Everything in Commercial Pilot, plus custom pricing, quotas, rate
+              limits, and dedicated priority support tailored to your needs.
+            </p>
+            <Link to="/contact">
+              <Button variant="outline" className="mt-6">
+                Contact Us
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
@@ -336,7 +394,7 @@ function ComparisonSection({
     <>
       <tr>
         <td
-          colSpan={4}
+          colSpan={5}
           className="pb-2 pt-6 text-sm font-semibold text-foreground"
         >
           {section.category}
@@ -345,7 +403,7 @@ function ComparisonSection({
       {section.features.map((feature) => (
         <tr key={feature.name} className="border-b">
           <td className="py-3 text-sm text-muted-foreground">{feature.name}</td>
-          {(['student', 'private', 'commercial'] as const).map((planId) => {
+          {PLAN_IDS.map((planId) => {
             const value = feature[planId]
             return (
               <td key={planId} className="py-3 text-center">
@@ -367,7 +425,7 @@ function ComparisonSection({
   )
 }
 
-const PLAN_IDS = ['student', 'private', 'commercial'] as const
+const PLAN_IDS = ['student', 'private', 'commercial', 'atp'] as const
 
 function MobileComparison({
   plans,

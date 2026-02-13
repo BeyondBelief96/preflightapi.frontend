@@ -12,7 +12,7 @@ const TIER_RANK: Record<EndpointTier, number> = {
 
 const ENDPOINT_DOCS: Record<string, { label: string; href: string }> = {
   pirep: { label: 'PIREPs', href: '/docs/pireps' },
-  'airmet-sigmet': { label: 'AIRMETs/SIGMETs', href: '/docs/airmets-sigmets' },
+  sigmet: { label: 'Domestic SIGMETs', href: '/docs/sigmets' },
   'g-airmet': { label: 'G-AIRMETs', href: '/docs/g-airmets' },
   'airspace/controlled': { label: 'Controlled Airspace', href: '/docs/airspace' },
   'airspace/special-use': { label: 'Special Use Airspace', href: '/docs/airspace' },

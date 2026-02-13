@@ -12,7 +12,7 @@ const features = [
     icon: Cloud,
     title: 'Real-Time Weather',
     description:
-      'Real-time METARs, Tafs, Pireps, Airmets/Sigmets/G-Airmets and Winds Aloft. Sourced from aviationweather.gov.',
+      'Real-time METARs, TAFs, PIREPs, SIGMETs, G-AIRMETs, and Winds Aloft. Sourced from aviationweather.gov.',
   },
   {
     icon: Plane,

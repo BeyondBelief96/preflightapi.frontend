@@ -207,8 +207,8 @@ export function HeroSection() {
               </Link>
             </div>
             <p className="mt-4 text-sm text-muted-foreground">
-              {studentPlan?.name ?? 'Student Pilot'} plan is free forever —{' '}
-              {freeCallsLabel} API calls/month, no credit card required.
+              Try with the {studentPlan?.name ?? 'Student Pilot'} plan today with{' '}
+              {freeCallsLabel} API calls/month — no credit card required.
             </p>
           </div>
 

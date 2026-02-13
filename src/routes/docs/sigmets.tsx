@@ -3,13 +3,13 @@ import { CategoryPage } from '@/components/docs/category-page'
 import { CATEGORIES } from '@/lib/docs/category-config'
 import { getEndpointsForCategory } from '@/lib/docs/spec-parser'
 
-export const Route = createFileRoute('/docs/airmets-sigmets')({
-  component: AirsigmetsDocs,
+export const Route = createFileRoute('/docs/sigmets')({
+  component: SigmetsDocs,
 })
 
-const category = CATEGORIES.find((c) => c.slug === 'airmets-sigmets')!
+const category = CATEGORIES.find((c) => c.slug === 'sigmets')!
 const endpoints = getEndpointsForCategory(category)
 
-function AirsigmetsDocs() {
+function SigmetsDocs() {
   return <CategoryPage category={category} endpoints={endpoints} />
 }

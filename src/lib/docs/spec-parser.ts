@@ -211,7 +211,7 @@ const tierPatterns: Array<{ pattern: RegExp; key: string }> = [
   { pattern: /\/communication-frequencies\//, key: 'airports/frequencies' },
   { pattern: /\/airports/, key: 'airports/details' },
   { pattern: /\/pireps/, key: 'pirep' },
-  { pattern: /\/airsigmets/, key: 'airmet-sigmet' },
+  { pattern: /\/sigmets/, key: 'sigmet' },
   { pattern: /\/g-airmets/, key: 'g-airmet' },
   { pattern: /\/airspaces\/special-use/, key: 'airspace/special-use' },
   { pattern: /\/airspaces/, key: 'airspace/controlled' },

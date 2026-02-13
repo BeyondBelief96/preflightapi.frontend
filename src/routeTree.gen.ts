@@ -19,6 +19,7 @@ import { Route as DocsIndexRouteImport } from './routes/docs/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as MarketingIndexRouteImport } from './routes/_marketing/index'
 import { Route as DocsTafsRouteImport } from './routes/docs/tafs'
+import { Route as DocsSigmetsRouteImport } from './routes/docs/sigmets'
 import { Route as DocsRateLimitsRouteImport } from './routes/docs/rate-limits'
 import { Route as DocsPirepsRouteImport } from './routes/docs/pireps'
 import { Route as DocsOpenapiRouteImport } from './routes/docs/openapi'
@@ -37,7 +38,6 @@ import { Route as DocsApiReferenceRouteImport } from './routes/docs/api-referenc
 import { Route as DocsAirspaceRouteImport } from './routes/docs/airspace'
 import { Route as DocsAirportsRouteImport } from './routes/docs/airports'
 import { Route as DocsAirportDiagramsRouteImport } from './routes/docs/airport-diagrams'
-import { Route as DocsAirmetsSigmetsRouteImport } from './routes/docs/airmets-sigmets'
 import { Route as DashboardGettingStartedRouteImport } from './routes/dashboard/getting-started'
 import { Route as MarketingPricingRouteImport } from './routes/_marketing/pricing'
 import { Route as MarketingContactRouteImport } from './routes/_marketing/contact'
@@ -97,6 +97,11 @@ const MarketingIndexRoute = MarketingIndexRouteImport.update({
 const DocsTafsRoute = DocsTafsRouteImport.update({
   id: '/tafs',
   path: '/tafs',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsSigmetsRoute = DocsSigmetsRouteImport.update({
+  id: '/sigmets',
+  path: '/sigmets',
   getParentRoute: () => DocsRoute,
 } as any)
 const DocsRateLimitsRoute = DocsRateLimitsRouteImport.update({
@@ -190,11 +195,6 @@ const DocsAirportDiagramsRoute = DocsAirportDiagramsRouteImport.update({
   path: '/airport-diagrams',
   getParentRoute: () => DocsRoute,
 } as any)
-const DocsAirmetsSigmetsRoute = DocsAirmetsSigmetsRouteImport.update({
-  id: '/airmets-sigmets',
-  path: '/airmets-sigmets',
-  getParentRoute: () => DocsRoute,
-} as any)
 const DashboardGettingStartedRoute = DashboardGettingStartedRouteImport.update({
   id: '/getting-started',
   path: '/getting-started',
@@ -262,7 +262,6 @@ export interface FileRoutesByFullPath {
   '/contact': typeof MarketingContactRoute
   '/pricing': typeof MarketingPricingRoute
   '/dashboard/getting-started': typeof DashboardGettingStartedRoute
-  '/docs/airmets-sigmets': typeof DocsAirmetsSigmetsRoute
   '/docs/airport-diagrams': typeof DocsAirportDiagramsRoute
   '/docs/airports': typeof DocsAirportsRoute
   '/docs/airspace': typeof DocsAirspaceRoute
@@ -281,6 +280,7 @@ export interface FileRoutesByFullPath {
   '/docs/openapi': typeof DocsOpenapiRoute
   '/docs/pireps': typeof DocsPirepsRoute
   '/docs/rate-limits': typeof DocsRateLimitsRoute
+  '/docs/sigmets': typeof DocsSigmetsRoute
   '/docs/tafs': typeof DocsTafsRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/docs/': typeof DocsIndexRoute
@@ -300,7 +300,6 @@ export interface FileRoutesByTo {
   '/contact': typeof MarketingContactRoute
   '/pricing': typeof MarketingPricingRoute
   '/dashboard/getting-started': typeof DashboardGettingStartedRoute
-  '/docs/airmets-sigmets': typeof DocsAirmetsSigmetsRoute
   '/docs/airport-diagrams': typeof DocsAirportDiagramsRoute
   '/docs/airports': typeof DocsAirportsRoute
   '/docs/airspace': typeof DocsAirspaceRoute
@@ -319,6 +318,7 @@ export interface FileRoutesByTo {
   '/docs/openapi': typeof DocsOpenapiRoute
   '/docs/pireps': typeof DocsPirepsRoute
   '/docs/rate-limits': typeof DocsRateLimitsRoute
+  '/docs/sigmets': typeof DocsSigmetsRoute
   '/docs/tafs': typeof DocsTafsRoute
   '/': typeof MarketingIndexRoute
   '/dashboard': typeof DashboardIndexRoute
@@ -343,7 +343,6 @@ export interface FileRoutesById {
   '/_marketing/contact': typeof MarketingContactRoute
   '/_marketing/pricing': typeof MarketingPricingRoute
   '/dashboard/getting-started': typeof DashboardGettingStartedRoute
-  '/docs/airmets-sigmets': typeof DocsAirmetsSigmetsRoute
   '/docs/airport-diagrams': typeof DocsAirportDiagramsRoute
   '/docs/airports': typeof DocsAirportsRoute
   '/docs/airspace': typeof DocsAirspaceRoute
@@ -362,6 +361,7 @@ export interface FileRoutesById {
   '/docs/openapi': typeof DocsOpenapiRoute
   '/docs/pireps': typeof DocsPirepsRoute
   '/docs/rate-limits': typeof DocsRateLimitsRoute
+  '/docs/sigmets': typeof DocsSigmetsRoute
   '/docs/tafs': typeof DocsTafsRoute
   '/_marketing/': typeof MarketingIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
@@ -387,7 +387,6 @@ export interface FileRouteTypes {
     | '/contact'
     | '/pricing'
     | '/dashboard/getting-started'
-    | '/docs/airmets-sigmets'
     | '/docs/airport-diagrams'
     | '/docs/airports'
     | '/docs/airspace'
@@ -406,6 +405,7 @@ export interface FileRouteTypes {
     | '/docs/openapi'
     | '/docs/pireps'
     | '/docs/rate-limits'
+    | '/docs/sigmets'
     | '/docs/tafs'
     | '/dashboard/'
     | '/docs/'
@@ -425,7 +425,6 @@ export interface FileRouteTypes {
     | '/contact'
     | '/pricing'
     | '/dashboard/getting-started'
-    | '/docs/airmets-sigmets'
     | '/docs/airport-diagrams'
     | '/docs/airports'
     | '/docs/airspace'
@@ -444,6 +443,7 @@ export interface FileRouteTypes {
     | '/docs/openapi'
     | '/docs/pireps'
     | '/docs/rate-limits'
+    | '/docs/sigmets'
     | '/docs/tafs'
     | '/'
     | '/dashboard'
@@ -467,7 +467,6 @@ export interface FileRouteTypes {
     | '/_marketing/contact'
     | '/_marketing/pricing'
     | '/dashboard/getting-started'
-    | '/docs/airmets-sigmets'
     | '/docs/airport-diagrams'
     | '/docs/airports'
     | '/docs/airspace'
@@ -486,6 +485,7 @@ export interface FileRouteTypes {
     | '/docs/openapi'
     | '/docs/pireps'
     | '/docs/rate-limits'
+    | '/docs/sigmets'
     | '/docs/tafs'
     | '/_marketing/'
     | '/dashboard/'
@@ -578,6 +578,13 @@ declare module '@tanstack/react-router' {
       path: '/tafs'
       fullPath: '/docs/tafs'
       preLoaderRoute: typeof DocsTafsRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/sigmets': {
+      id: '/docs/sigmets'
+      path: '/sigmets'
+      fullPath: '/docs/sigmets'
+      preLoaderRoute: typeof DocsSigmetsRouteImport
       parentRoute: typeof DocsRoute
     }
     '/docs/rate-limits': {
@@ -706,13 +713,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DocsAirportDiagramsRouteImport
       parentRoute: typeof DocsRoute
     }
-    '/docs/airmets-sigmets': {
-      id: '/docs/airmets-sigmets'
-      path: '/airmets-sigmets'
-      fullPath: '/docs/airmets-sigmets'
-      preLoaderRoute: typeof DocsAirmetsSigmetsRouteImport
-      parentRoute: typeof DocsRoute
-    }
     '/dashboard/getting-started': {
       id: '/dashboard/getting-started'
       path: '/getting-started'
@@ -836,7 +836,6 @@ const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
 )
 
 interface DocsRouteChildren {
-  DocsAirmetsSigmetsRoute: typeof DocsAirmetsSigmetsRoute
   DocsAirportDiagramsRoute: typeof DocsAirportDiagramsRoute
   DocsAirportsRoute: typeof DocsAirportsRoute
   DocsAirspaceRoute: typeof DocsAirspaceRoute
@@ -855,6 +854,7 @@ interface DocsRouteChildren {
   DocsOpenapiRoute: typeof DocsOpenapiRoute
   DocsPirepsRoute: typeof DocsPirepsRoute
   DocsRateLimitsRoute: typeof DocsRateLimitsRoute
+  DocsSigmetsRoute: typeof DocsSigmetsRoute
   DocsTafsRoute: typeof DocsTafsRoute
   DocsIndexRoute: typeof DocsIndexRoute
   DocsDataModelsGroupRoute: typeof DocsDataModelsGroupRoute
@@ -862,7 +862,6 @@ interface DocsRouteChildren {
 }
 
 const DocsRouteChildren: DocsRouteChildren = {
-  DocsAirmetsSigmetsRoute: DocsAirmetsSigmetsRoute,
   DocsAirportDiagramsRoute: DocsAirportDiagramsRoute,
   DocsAirportsRoute: DocsAirportsRoute,
   DocsAirspaceRoute: DocsAirspaceRoute,
@@ -881,6 +880,7 @@ const DocsRouteChildren: DocsRouteChildren = {
   DocsOpenapiRoute: DocsOpenapiRoute,
   DocsPirepsRoute: DocsPirepsRoute,
   DocsRateLimitsRoute: DocsRateLimitsRoute,
+  DocsSigmetsRoute: DocsSigmetsRoute,
   DocsTafsRoute: DocsTafsRoute,
   DocsIndexRoute: DocsIndexRoute,
   DocsDataModelsGroupRoute: DocsDataModelsGroupRoute,

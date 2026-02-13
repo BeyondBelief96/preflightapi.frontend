@@ -1,5 +1,5 @@
 import { Link, Outlet, createFileRoute, useLocation } from '@tanstack/react-router'
-import { ArrowLeft, FileJson, Menu, Search, X } from 'lucide-react'
+import { ArrowLeft, FileJson, FileQuestion, Menu, Search, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { SignedIn, SignedOut, UserButton } from '@clerk/clerk-react'
 import { createPageHead } from '@/lib/seo'
@@ -18,6 +18,7 @@ export const Route = createFileRoute('/docs')({
       path: '/docs',
     }),
   component: DocsLayout,
+  notFoundComponent: DocsNotFound,
 })
 
 function ModKey() {
@@ -133,6 +134,27 @@ function DocsLayout() {
       </main>
 
       <DocsSearch open={searchOpen} onOpenChange={setSearchOpen} />
+    </div>
+  )
+}
+
+function DocsNotFound() {
+  return (
+    <div className="flex flex-col items-center justify-center py-24 text-center">
+      <div className="rounded-full bg-muted p-4">
+        <FileQuestion className="h-10 w-10 text-muted-foreground" />
+      </div>
+      <h2 className="mt-6 text-2xl font-bold">Page not found</h2>
+      <p className="mt-2 max-w-md text-muted-foreground">
+        The documentation page you're looking for doesn't exist or may have been
+        moved.
+      </p>
+      <Link
+        to="/docs"
+        className="mt-6 inline-flex items-center gap-2 rounded-lg bg-accent/10 px-4 py-2 text-sm font-medium text-accent transition-colors hover:bg-accent/20"
+      >
+        Back to Documentation Overview
+      </Link>
     </div>
   )
 }

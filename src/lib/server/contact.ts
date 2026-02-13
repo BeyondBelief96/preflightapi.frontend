@@ -9,6 +9,7 @@ const subjectLabels: Record<string, string> = {
   technical: 'Technical Support',
   billing: 'Billing',
   partnership: 'Partnership',
+  atp: 'Enterprise / ATP Plan',
 }
 
 export const sendContactEmail = createServerFn({ method: 'POST' })

@@ -63,14 +63,18 @@ export const createCheckoutSession = createServerFn({ method: 'POST' })
     const customerId = await getOrCreateStripeCustomer(userId)
     const stripe = getStripe()
 
-    // Check for existing active subscription — prevent duplicate subscriptions
+    // Check for existing subscription — prevent duplicates.
+    // Include past_due so users with a failing payment can't start a second sub.
     const existing = await stripe.subscriptions.list({
       customer: customerId,
-      status: 'active',
-      limit: 1,
+      status: 'all',
+      limit: 5,
     })
+    const blocking = existing.data.find(
+      (s) => s.status === 'active' || s.status === 'past_due',
+    )
 
-    if (existing.data.length > 0) {
+    if (blocking) {
       throw new Error(
         'You already have an active subscription. Please manage it from the billing page.',
       )
@@ -79,6 +83,7 @@ export const createCheckoutSession = createServerFn({ method: 'POST' })
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       mode: 'subscription',
+      automatic_tax: { enabled: true },
       line_items: [{ price: priceId, quantity: 1 }],
       success_url: `${getBaseUrl()}/dashboard/billing?checkout=success&plan=${data.planId}`,
       cancel_url: `${getBaseUrl()}/dashboard/billing?checkout=canceled`,
@@ -101,7 +106,7 @@ export const createPortalSession = createServerFn({ method: 'POST' }).handler(
 
     const session = await stripe.billingPortal.sessions.create({
       customer: customerId,
-      return_url: `${getBaseUrl()}/dashboard/billing`,
+      return_url: `${getBaseUrl()}/dashboard/billing?portal=return`,
     })
 
     return { url: session.url }
@@ -125,11 +130,15 @@ async function getStripeSubscriptionInternal(
   const stripe = getStripe()
   const subscriptions = await stripe.subscriptions.list({
     customer: customerId,
-    status: 'active',
-    limit: 1,
+    status: 'all',
+    limit: 5,
   })
 
-  const sub = subscriptions.data[0]
+  // Prefer active, fall back to past_due — so the billing page can show
+  // the subscription even when payment has failed and Stripe is retrying.
+  const sub =
+    subscriptions.data.find((s) => s.status === 'active') ??
+    subscriptions.data.find((s) => s.status === 'past_due')
   if (!sub) {
     return null
   }
@@ -139,7 +148,7 @@ async function getStripeSubscriptionInternal(
   // but don't update our custom metadata
   const planId =
     planIdFromPriceId(firstItem?.price.id ?? '') ||
-    normalizePlanId(sub.metadata.planId) ||
+    sub.metadata.planId ||
     'student'
 
   return {
@@ -168,6 +177,7 @@ export type ReconcileResult =
   | { status: 'synced'; stripePlanId: string; apimPlanId: string }
   | { status: 'already_in_sync'; stripePlanId: string; apimPlanId: string }
   | { status: 'no_stripe_sub' }
+  | { status: 'no_apim_sub' }
 
 export const reconcileSubscription = createServerFn({
   method: 'POST',
@@ -189,7 +199,7 @@ export const reconcileSubscription = createServerFn({
     (s) => s.properties.state === 'active',
   )
   if (activeSubs.length === 0) {
-    return { status: 'no_stripe_sub' }
+    return { status: 'no_apim_sub' }
   }
 
   const expectedProductId = productIds[stripeSub.planId] ?? productIds.student
@@ -238,19 +248,6 @@ export const reconcileSubscription = createServerFn({
 })
 
 // --- Helpers ---
-
-// Maps legacy Stripe metadata plan IDs to current plan IDs.
-// Existing Stripe subscriptions may still carry old metadata values.
-const LEGACY_PLAN_IDS: Record<string, string> = {
-  free: 'student',
-  starter: 'private',
-  professional: 'commercial',
-}
-
-function normalizePlanId(planId: string | undefined): string | undefined {
-  if (!planId) return undefined
-  return LEGACY_PLAN_IDS[planId] ?? planId
-}
 
 function getBaseUrl(): string {
   if (env.SERVER_URL) {

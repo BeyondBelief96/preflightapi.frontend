@@ -6,6 +6,7 @@ import { usePlans } from '@/hooks/use-plans'
 
 export function PricingPreview() {
   const { plans } = usePlans()
+  const selfServicePlans = plans.filter((p) => !p.marketingOnly)
   return (
     <section className="py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -18,7 +19,7 @@ export function PricingPreview() {
           </p>
         </div>
         <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {plans.map((plan) => (
+          {selfServicePlans.map((plan) => (
             <div
               key={plan.id}
               className={`relative flex flex-col rounded-xl border p-6 ${
@@ -69,6 +70,23 @@ export function PricingPreview() {
               </div>
             </div>
           ))}
+        </div>
+        <div className="mt-12 text-center">
+          <p className="text-sm font-medium text-muted-foreground">
+            Need more?
+          </p>
+        </div>
+        <div className="mx-auto mt-4 max-w-2xl rounded-xl border border-accent/20 bg-accent/5 p-8 text-center">
+          <h3 className="text-lg font-semibold">ATP</h3>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Custom pricing, quotas, dedicated support, and everything in
+            Commercial tailored to your needs.
+          </p>
+          <Link to="/contact">
+            <Button variant="outline" className="mt-4">
+              Contact Us
+            </Button>
+          </Link>
         </div>
         <div className="mt-8 text-center">
           <Link

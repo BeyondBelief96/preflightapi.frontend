@@ -1,11 +1,12 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import {
+  AlertCircle,
   AlertTriangle,
   ExternalLink,
   Loader2,
 } from 'lucide-react'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '@clerk/clerk-react'
 import { z } from 'zod'
 import { createPageHead } from '@/lib/seo'
@@ -27,6 +28,7 @@ import { useReconcile } from '@/components/dashboard/billing/use-reconcile'
 const billingSearchSchema = z.object({
   checkout: z.enum(['success', 'canceled']).optional(),
   plan: z.enum(['private', 'commercial']).optional(),
+  portal: z.enum(['return']).optional(),
 })
 
 export const Route = createFileRoute('/dashboard/billing/')({
@@ -42,7 +44,7 @@ export const Route = createFileRoute('/dashboard/billing/')({
 
 function BillingPage() {
   const { userId } = useAuth()
-  const { checkout, plan: upgradedPlanId } = Route.useSearch()
+  const { checkout, plan: upgradedPlanId, portal } = Route.useSearch()
   const { plans, endpointAccess } = usePlans()
 
   // Stripe is the source of truth for all billing state
@@ -63,6 +65,7 @@ function BillingPage() {
   const currentPlan =
     plans.find((p) => p.id === stripeSub?.planId) ?? plans[0]
   const isPaid = stripeSub !== null && stripeSub !== undefined
+  const isPastDue = stripeSub?.status === 'past_due'
   const isCanceling = Boolean(
     stripeSub?.cancelAtPeriodEnd || stripeSub?.cancelAt,
   )
@@ -81,6 +84,20 @@ function BillingPage() {
     checkout === 'success',
   )
   useReconcile(userId, checkout)
+
+  // Refresh data after returning from Stripe portal (user may have changed plan)
+  const queryClient = useQueryClient()
+  const portalRefreshedRef = useRef(false)
+  useEffect(() => {
+    if (portal !== 'return' || portalRefreshedRef.current) return
+    portalRefreshedRef.current = true
+    queryClient.invalidateQueries({
+      queryKey: stripeKeys.subscription(userId ?? ''),
+    })
+    queryClient.invalidateQueries({
+      queryKey: apimKeys.subscription(userId ?? ''),
+    })
+  }, [portal, queryClient, userId])
 
   const now = new Date()
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
@@ -128,6 +145,31 @@ function BillingPage() {
   const usagePercent = callsLimit
     ? Math.min((callsUsed / callsLimit) * 100, 100)
     : 0
+
+  if (stripeSubQuery.isError) {
+    return (
+      <Card>
+        <CardContent className="flex items-start gap-4 p-6">
+          <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-destructive" />
+          <div>
+            <p className="font-medium">Unable to load billing information</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Please try refreshing the page. If the problem persists, contact
+              support.
+            </p>
+            <Button
+              variant="outline"
+              size="sm"
+              className="mt-3"
+              onClick={() => stripeSubQuery.refetch()}
+            >
+              Try Again
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
 
   if (stripeSubQuery.isLoading) {
     return (
@@ -196,6 +238,39 @@ function BillingPage() {
         </Card>
       )}
 
+      {/* Payment failed — past due */}
+      {isPastDue && (
+        <Card className="border-l-4 border-l-destructive">
+          <CardContent className="flex items-start gap-4 p-4">
+            <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-destructive" />
+            <div className="flex-1">
+              <p className="font-medium">Payment failed</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Your last payment could not be processed. Your API access has
+                been temporarily downgraded to the{' '}
+                {plans.find((p) => p.id === 'student')?.name ?? 'Student Pilot'}{' '}
+                plan. Please update your payment method to restore full access.
+              </p>
+              <div className="mt-3">
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => portalMutation.mutate()}
+                  disabled={portalMutation.isPending}
+                >
+                  {portalMutation.isPending ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <ExternalLink className="mr-2 h-4 w-4" />
+                  )}
+                  Update Payment Method
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Cancellation notice */}
       {isCanceling && stripeSub && cancelDate && (
         <Card className="border-l-4 border-l-yellow-500">
@@ -241,6 +316,7 @@ function BillingPage() {
         plans={plans}
         stripeSub={stripeSub}
         isPaid={isPaid}
+        isPastDue={isPastDue}
         isCanceling={isCanceling}
         cancelDate={cancelDate}
         onCheckout={(planId) => checkoutMutation.mutate(planId)}
