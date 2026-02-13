@@ -1,4 +1,7 @@
 import { Suspense, lazy } from 'react'
+import { TerrainFlyover } from './terrain-flyover'
+import { Contrails } from './contrails'
+import { CloudDeck } from './cloud-deck'
 
 const StarField = lazy(() =>
   import('./star-field').then((m) => ({ default: m.StarField })),
@@ -10,7 +13,7 @@ export function AnimatedBackdrop({ subtle }: { subtle?: boolean }) {
       {/* Three.js star field (lazy-loaded, client-only) */}
       {!subtle && (
         <Suspense fallback={null}>
-          <StarField />
+          <TerrainFlyover />
         </Suspense>
       )}
 
