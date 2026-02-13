@@ -36,7 +36,7 @@ export const TIER_FEATURES: Record<string, Array<string>> = {
     'PIREPs — pilot weather reports',
     'SIGMETs & G-AIRMETs',
     'Controlled & special-use airspace information and geospatial boundaries',
-    'Access to ~625,000 avation obstacles (towers, cranes, etc.)',
+    'Access to ~625,000 aviation obstacles (towers, cranes, etc.)',
     'Email support',
   ],
   commercial: [
