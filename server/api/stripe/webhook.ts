@@ -2,7 +2,11 @@ import { HTTPError, defineHandler } from 'h3'
 import type Stripe from 'stripe'
 import type { getStripe as GetStripeFn } from '@/lib/server/stripe-client'
 import type { apimFetch as ApimFetchFn } from '@/lib/server/apim-client'
-import type { getApimProductIds as GetApimProductIdsFn } from '@/lib/server/apim-products'
+import type {
+  getApimProductIds as GetApimProductIdsFn,
+  isDowngrade as IsDowngradeFn,
+  planIdFromProductId as PlanIdFromProductIdFn,
+} from '@/lib/server/apim-products'
 import type { resolveApimProductId as ResolveApimProductIdFn } from '@/lib/server/stripe-tier-resolver'
 import type { SubscriptionListResponse } from '@/types/apim'
 import { createLogger } from '@/lib/server/logger'
@@ -14,6 +18,8 @@ export default defineHandler(async (event) => {
   let apimFetch: typeof ApimFetchFn
   let getApimProductIds: typeof GetApimProductIdsFn
   let resolveApimProductId: typeof ResolveApimProductIdFn
+  let isDowngrade: typeof IsDowngradeFn
+  let planIdFromProductId: typeof PlanIdFromProductIdFn
 
   try {
     const stripeClientMod = await import('@/lib/server/stripe-client')
@@ -23,6 +29,8 @@ export default defineHandler(async (event) => {
     getStripe = stripeClientMod.getStripe
     apimFetch = apimClientMod.apimFetch
     getApimProductIds = apimProductsMod.getApimProductIds
+    isDowngrade = apimProductsMod.isDowngrade
+    planIdFromProductId = apimProductsMod.planIdFromProductId
     resolveApimProductId = tierResolverMod.resolveApimProductId
   } catch (err) {
     log.error({ err }, 'Failed to import modules')
@@ -102,6 +110,35 @@ export default defineHandler(async (event) => {
             subscription.metadata?.planId,
             productIds,
           )
+
+          // Defensive guard: if a subscription schedule is managing this
+          // subscription (e.g. portal-initiated deferred downgrade), don't
+          // sync a downgrade immediately. The schedule will apply the change
+          // at the end of the billing period, firing subscription.updated
+          // again with schedule=null once the schedule is released.
+          if (subscription.schedule) {
+            const currentProductId = await getCurrentApimProductId(
+              apimFetch,
+              clerkUserId,
+            )
+            if (currentProductId) {
+              const currentPlanId = planIdFromProductId(currentProductId)
+              const newPlanId = planIdFromProductId(apimProductId)
+              if (isDowngrade(currentPlanId, newPlanId)) {
+                log.info(
+                  {
+                    userId: clerkUserId,
+                    currentTier: currentPlanId,
+                    newTier: newPlanId,
+                    schedule: subscription.schedule,
+                  },
+                  'Skipping immediate downgrade — subscription schedule will apply at period end',
+                )
+                break
+              }
+            }
+          }
+
           await syncTierToApim(apimFetch, clerkUserId, apimProductId)
         } else {
           // Any non-active status loses paid access immediately.
@@ -154,6 +191,29 @@ export default defineHandler(async (event) => {
         break
       }
 
+      case 'customer.deleted': {
+        // When a customer is deleted, Stripe cancels their subscriptions but
+        // customer.deleted fires BEFORE customer.subscription.deleted. By the
+        // time the subscription event arrives, the customer is already gone and
+        // resolveClerkUserId can't look up metadata. Handle it here instead.
+        const customer = stripeEvent.data.object as Stripe.Customer
+        const clerkUserId = customer.metadata?.clerkUserId
+
+        if (clerkUserId) {
+          await syncTierToApim(apimFetch, clerkUserId, studentProductId)
+          log.info(
+            { userId: clerkUserId, customerId: customer.id },
+            'Customer deleted — downgraded to student tier',
+          )
+        } else {
+          log.warn(
+            { customerId: customer.id },
+            'Customer deleted but no clerkUserId in metadata — cannot downgrade',
+          )
+        }
+        break
+      }
+
       case 'invoice.payment_failed': {
         const invoice = stripeEvent.data.object
         log.warn({ customerId: invoice.customer }, 'Payment failed for customer')
@@ -171,6 +231,73 @@ export default defineHandler(async (event) => {
             log.warn('Could not resolve clerkUserId for failed invoice subscription')
           }
         }
+        break
+      }
+
+      // --- Subscription Schedule Events ---
+      // Portal-initiated deferred downgrades create subscription schedules.
+      // The actual tier change happens via customer.subscription.updated when
+      // the schedule phase transitions. These handlers provide visibility.
+
+      case 'subscription_schedule.created': {
+        const schedule = stripeEvent.data.object as Stripe.SubscriptionSchedule
+        log.info(
+          {
+            scheduleId: schedule.id,
+            subscriptionId: schedule.subscription,
+            phases: schedule.phases.length,
+          },
+          'Subscription schedule created (deferred plan change)',
+        )
+        break
+      }
+
+      case 'subscription_schedule.updated': {
+        const schedule = stripeEvent.data.object as Stripe.SubscriptionSchedule
+        log.info(
+          {
+            scheduleId: schedule.id,
+            subscriptionId: schedule.subscription,
+            status: schedule.status,
+          },
+          'Subscription schedule updated',
+        )
+        break
+      }
+
+      case 'subscription_schedule.canceled': {
+        const schedule = stripeEvent.data.object as Stripe.SubscriptionSchedule
+        log.info(
+          {
+            scheduleId: schedule.id,
+            subscriptionId: schedule.subscription,
+          },
+          'Subscription schedule canceled — user keeps current tier',
+        )
+        break
+      }
+
+      case 'subscription_schedule.completed': {
+        const schedule = stripeEvent.data.object as Stripe.SubscriptionSchedule
+        log.info(
+          {
+            scheduleId: schedule.id,
+            subscriptionId: schedule.subscription,
+          },
+          'Subscription schedule completed — tier change applied',
+        )
+        break
+      }
+
+      case 'subscription_schedule.released': {
+        const schedule = stripeEvent.data.object as Stripe.SubscriptionSchedule
+        log.info(
+          {
+            scheduleId: schedule.id,
+            subscriptionId: schedule.subscription,
+          },
+          'Subscription schedule released from subscription',
+        )
         break
       }
     }
@@ -203,6 +330,26 @@ async function resolveClerkUserId(
   const customer = await stripe.customers.retrieve(customerId)
   if (customer.deleted) return undefined
   return (customer as Stripe.Customer).metadata?.clerkUserId || undefined
+}
+
+// --- Current APIM Tier Lookup ---
+
+async function getCurrentApimProductId(
+  apimFetch: ApimFetchFn,
+  clerkUserId: string,
+): Promise<string | undefined> {
+  try {
+    const result = await apimFetch<SubscriptionListResponse>(
+      `/users/${clerkUserId}/subscriptions`,
+    )
+    const activeSub = result.value.find(
+      (s) => s.properties.state === 'active',
+    )
+    if (!activeSub) return undefined
+    return activeSub.properties.scope.split('/').pop() ?? undefined
+  } catch {
+    return undefined
+  }
 }
 
 // --- APIM Sync Helper ---
