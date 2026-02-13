@@ -1,6 +1,7 @@
 import { apimFetch } from './apim-client'
 import { getStripe } from './stripe-client'
 import { PLAN_IDS, getApimProductIds, planIdFromProductId } from './apim-products'
+import { createLogger } from './logger'
 import type { EndpointTier } from '@/lib/constants'
 import { env } from '@/env'
 import {
@@ -8,6 +9,8 @@ import {
   DEFAULT_PLAN_LIMITS,
   DEFAULT_PLAN_PRICES,
 } from '@/lib/constants'
+
+const log = createLogger('tier-config')
 
 // --- Types ---
 
@@ -254,7 +257,7 @@ export async function getTierConfig(): Promise<TierConfig> {
       config.products = products
       config.endpointAccess = endpointAccess
     } catch (error) {
-      console.error('[tier-config] APIM fetch failed, using defaults:', error)
+      log.error({ err: error }, 'APIM fetch failed, using defaults')
       // If we have stale cache, use that instead of defaults
       const stale = cache.get('tier-config') as
         | CacheEntry<TierConfig>
@@ -272,10 +275,7 @@ export async function getTierConfig(): Promise<TierConfig> {
     try {
       config.prices = await fetchStripePrices()
     } catch (error) {
-      console.error(
-        '[tier-config] Stripe fetch failed, using defaults:',
-        error,
-      )
+      log.error({ err: error }, 'Stripe fetch failed, using defaults')
       const stale = cache.get('tier-config') as
         | CacheEntry<TierConfig>
         | undefined

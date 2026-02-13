@@ -5,6 +5,9 @@ import type { apimFetch as ApimFetchFn } from '@/lib/server/apim-client'
 import type { getApimProductIds as GetApimProductIdsFn } from '@/lib/server/apim-products'
 import type { resolveApimProductId as ResolveApimProductIdFn } from '@/lib/server/stripe-tier-resolver'
 import type { SubscriptionListResponse } from '@/types/apim'
+import { createLogger } from '@/lib/server/logger'
+
+const log = createLogger('stripe-webhook')
 
 export default defineHandler(async (event) => {
   let getStripe: typeof GetStripeFn
@@ -22,7 +25,7 @@ export default defineHandler(async (event) => {
     getApimProductIds = apimProductsMod.getApimProductIds
     resolveApimProductId = tierResolverMod.resolveApimProductId
   } catch (err) {
-    console.error('[Stripe Webhook] Failed to import modules:', err)
+    log.error({ err }, 'Failed to import modules')
     return { received: true }
   }
 
@@ -30,27 +33,23 @@ export default defineHandler(async (event) => {
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
 
   if (!webhookSecret) {
-    console.error('[Stripe Webhook] STRIPE_WEBHOOK_SECRET not configured')
+    log.error('STRIPE_WEBHOOK_SECRET not configured')
     return { received: true }
   }
 
   // Warn about missing price env vars (makes misconfiguration visible in logs)
   if (!process.env.STRIPE_PRIVATE_PRICE_ID) {
-    console.warn(
-      '[Stripe Webhook] STRIPE_PRIVATE_PRICE_ID is not set — price-based tier mapping will fail for private plans',
-    )
+    log.warn('STRIPE_PRIVATE_PRICE_ID is not set — price-based tier mapping will fail for private plans')
   }
   if (!process.env.STRIPE_COMMERCIAL_PRICE_ID) {
-    console.warn(
-      '[Stripe Webhook] STRIPE_COMMERCIAL_PRICE_ID is not set — price-based tier mapping will fail for commercial plans',
-    )
+    log.warn('STRIPE_COMMERCIAL_PRICE_ID is not set — price-based tier mapping will fail for commercial plans')
   }
 
   const body = await event.req.text()
   const sig = event.req.headers.get('stripe-signature')
 
   if (!body || !sig) {
-    console.error('[Stripe Webhook] Missing body or signature')
+    log.error('Missing body or signature')
     return { received: true }
   }
 
@@ -58,7 +57,7 @@ export default defineHandler(async (event) => {
   try {
     stripeEvent = stripe.webhooks.constructEvent(body, sig, webhookSecret)
   } catch (err) {
-    console.error('[Stripe Webhook] Signature verification failed:', err)
+    log.error({ err }, 'Signature verification failed')
     throw new HTTPError({ statusCode: 401, statusMessage: 'Invalid signature' })
   }
 
@@ -80,12 +79,10 @@ export default defineHandler(async (event) => {
           if (apimProductId) {
             await syncTierToApim(apimFetch, clerkUserId, apimProductId)
           } else {
-            console.warn(`[Stripe Webhook] No APIM product found for planId=${planId}`)
+            log.warn({ planId }, 'No APIM product found for planId')
           }
         } else {
-          console.warn(
-            '[Stripe Webhook] Missing clerkUserId or planId in checkout session metadata',
-          )
+          log.warn('Missing clerkUserId or planId in checkout session metadata')
         }
         break
       }
@@ -95,9 +92,7 @@ export default defineHandler(async (event) => {
         const clerkUserId = await resolveClerkUserId(stripe, subscription)
 
         if (!clerkUserId) {
-          console.warn(
-            '[Stripe Webhook] Could not resolve clerkUserId for subscription, skipping',
-          )
+          log.warn('Could not resolve clerkUserId for subscription, skipping')
           break
         }
 
@@ -124,9 +119,7 @@ export default defineHandler(async (event) => {
         if (clerkUserId) {
           await syncTierToApim(apimFetch, clerkUserId, studentProductId)
         } else {
-          console.warn(
-            '[Stripe Webhook] Could not resolve clerkUserId for paused subscription',
-          )
+          log.warn('Could not resolve clerkUserId for paused subscription')
         }
         break
       }
@@ -136,9 +129,7 @@ export default defineHandler(async (event) => {
         const clerkUserId = await resolveClerkUserId(stripe, subscription)
 
         if (!clerkUserId) {
-          console.warn(
-            '[Stripe Webhook] Could not resolve clerkUserId for resumed subscription',
-          )
+          log.warn('Could not resolve clerkUserId for resumed subscription')
           break
         }
 
@@ -158,18 +149,14 @@ export default defineHandler(async (event) => {
         if (clerkUserId) {
           await syncTierToApim(apimFetch, clerkUserId, studentProductId)
         } else {
-          console.warn(
-            '[Stripe Webhook] Could not resolve clerkUserId for deleted subscription',
-          )
+          log.warn('Could not resolve clerkUserId for deleted subscription')
         }
         break
       }
 
       case 'invoice.payment_failed': {
         const invoice = stripeEvent.data.object
-        console.warn(
-          `[Stripe Webhook] Payment failed for customer ${invoice.customer}`,
-        )
+        log.warn({ customerId: invoice.customer }, 'Payment failed for customer')
 
         // Downgrade to student tier so user doesn't keep paid access
         const subRef = invoice.parent?.subscription_details?.subscription
@@ -181,9 +168,7 @@ export default defineHandler(async (event) => {
           if (clerkUserId) {
             await syncTierToApim(apimFetch, clerkUserId, studentProductId)
           } else {
-            console.warn(
-              '[Stripe Webhook] Could not resolve clerkUserId for failed invoice subscription',
-            )
+            log.warn('Could not resolve clerkUserId for failed invoice subscription')
           }
         }
         break
@@ -191,7 +176,7 @@ export default defineHandler(async (event) => {
     }
   } catch (err) {
     // APIM sync failed — return 500 so Stripe retries the webhook
-    console.error('[Stripe Webhook] APIM sync error:', err)
+    log.error({ err }, 'APIM sync error')
     throw new HTTPError({ statusCode: 500, statusMessage: 'APIM sync failed' })
   }
 
@@ -241,9 +226,7 @@ async function syncTierToApim(
   )
 
   if (activeSubs.length === 0) {
-    console.warn(
-      `[Stripe Webhook] No active APIM subscription found for user ${clerkUserId}`,
-    )
+    log.warn({ userId: clerkUserId }, 'No active APIM subscription found for user')
     return
   }
 
@@ -261,7 +244,8 @@ async function syncTierToApim(
     ),
   )
 
-  console.info(
-    `[Stripe Webhook] Synced user ${clerkUserId} to product ${apimProductId} (${activeSubs.length} APIM sub(s))`,
+  log.info(
+    { userId: clerkUserId, productId: apimProductId, subCount: activeSubs.length },
+    'Synced user to APIM product',
   )
 }
