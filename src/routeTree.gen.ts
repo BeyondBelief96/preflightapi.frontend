@@ -31,6 +31,7 @@ import { Route as DocsGettingStartedRouteImport } from './routes/docs/getting-st
 import { Route as DocsGAirmetsRouteImport } from './routes/docs/g-airmets'
 import { Route as DocsErrorsRouteImport } from './routes/docs/errors'
 import { Route as DocsE6bRouteImport } from './routes/docs/e6b'
+import { Route as DocsDataFreshnessRouteImport } from './routes/docs/data-freshness'
 import { Route as DocsCommunicationFrequenciesRouteImport } from './routes/docs/communication-frequencies'
 import { Route as DocsChartSupplementsRouteImport } from './routes/docs/chart-supplements'
 import { Route as DocsAuthenticationRouteImport } from './routes/docs/authentication'
@@ -159,6 +160,11 @@ const DocsE6bRoute = DocsE6bRouteImport.update({
   path: '/e6b',
   getParentRoute: () => DocsRoute,
 } as any)
+const DocsDataFreshnessRoute = DocsDataFreshnessRouteImport.update({
+  id: '/data-freshness',
+  path: '/data-freshness',
+  getParentRoute: () => DocsRoute,
+} as any)
 const DocsCommunicationFrequenciesRoute =
   DocsCommunicationFrequenciesRouteImport.update({
     id: '/communication-frequencies',
@@ -269,6 +275,7 @@ export interface FileRoutesByFullPath {
   '/docs/authentication': typeof DocsAuthenticationRoute
   '/docs/chart-supplements': typeof DocsChartSupplementsRoute
   '/docs/communication-frequencies': typeof DocsCommunicationFrequenciesRoute
+  '/docs/data-freshness': typeof DocsDataFreshnessRoute
   '/docs/e6b': typeof DocsE6bRoute
   '/docs/errors': typeof DocsErrorsRoute
   '/docs/g-airmets': typeof DocsGAirmetsRoute
@@ -307,6 +314,7 @@ export interface FileRoutesByTo {
   '/docs/authentication': typeof DocsAuthenticationRoute
   '/docs/chart-supplements': typeof DocsChartSupplementsRoute
   '/docs/communication-frequencies': typeof DocsCommunicationFrequenciesRoute
+  '/docs/data-freshness': typeof DocsDataFreshnessRoute
   '/docs/e6b': typeof DocsE6bRoute
   '/docs/errors': typeof DocsErrorsRoute
   '/docs/g-airmets': typeof DocsGAirmetsRoute
@@ -350,6 +358,7 @@ export interface FileRoutesById {
   '/docs/authentication': typeof DocsAuthenticationRoute
   '/docs/chart-supplements': typeof DocsChartSupplementsRoute
   '/docs/communication-frequencies': typeof DocsCommunicationFrequenciesRoute
+  '/docs/data-freshness': typeof DocsDataFreshnessRoute
   '/docs/e6b': typeof DocsE6bRoute
   '/docs/errors': typeof DocsErrorsRoute
   '/docs/g-airmets': typeof DocsGAirmetsRoute
@@ -394,6 +403,7 @@ export interface FileRouteTypes {
     | '/docs/authentication'
     | '/docs/chart-supplements'
     | '/docs/communication-frequencies'
+    | '/docs/data-freshness'
     | '/docs/e6b'
     | '/docs/errors'
     | '/docs/g-airmets'
@@ -432,6 +442,7 @@ export interface FileRouteTypes {
     | '/docs/authentication'
     | '/docs/chart-supplements'
     | '/docs/communication-frequencies'
+    | '/docs/data-freshness'
     | '/docs/e6b'
     | '/docs/errors'
     | '/docs/g-airmets'
@@ -474,6 +485,7 @@ export interface FileRouteTypes {
     | '/docs/authentication'
     | '/docs/chart-supplements'
     | '/docs/communication-frequencies'
+    | '/docs/data-freshness'
     | '/docs/e6b'
     | '/docs/errors'
     | '/docs/g-airmets'
@@ -664,6 +676,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DocsE6bRouteImport
       parentRoute: typeof DocsRoute
     }
+    '/docs/data-freshness': {
+      id: '/docs/data-freshness'
+      path: '/data-freshness'
+      fullPath: '/docs/data-freshness'
+      preLoaderRoute: typeof DocsDataFreshnessRouteImport
+      parentRoute: typeof DocsRoute
+    }
     '/docs/communication-frequencies': {
       id: '/docs/communication-frequencies'
       path: '/communication-frequencies'
@@ -843,6 +862,7 @@ interface DocsRouteChildren {
   DocsAuthenticationRoute: typeof DocsAuthenticationRoute
   DocsChartSupplementsRoute: typeof DocsChartSupplementsRoute
   DocsCommunicationFrequenciesRoute: typeof DocsCommunicationFrequenciesRoute
+  DocsDataFreshnessRoute: typeof DocsDataFreshnessRoute
   DocsE6bRoute: typeof DocsE6bRoute
   DocsErrorsRoute: typeof DocsErrorsRoute
   DocsGAirmetsRoute: typeof DocsGAirmetsRoute
@@ -869,6 +889,7 @@ const DocsRouteChildren: DocsRouteChildren = {
   DocsAuthenticationRoute: DocsAuthenticationRoute,
   DocsChartSupplementsRoute: DocsChartSupplementsRoute,
   DocsCommunicationFrequenciesRoute: DocsCommunicationFrequenciesRoute,
+  DocsDataFreshnessRoute: DocsDataFreshnessRoute,
   DocsE6bRoute: DocsE6bRoute,
   DocsErrorsRoute: DocsErrorsRoute,
   DocsGAirmetsRoute: DocsGAirmetsRoute,

@@ -30,6 +30,7 @@ function buildIndex(): Array<SearchItem> {
     { title: 'Authentication', href: '/docs/authentication', keywords: ['api key', 'auth', 'header', 'ocp-apim'] },
     { title: 'Rate Limits', href: '/docs/rate-limits', keywords: ['throttle', 'quota', '429', 'limit'] },
     { title: 'Error Handling', href: '/docs/errors', keywords: ['error', 'status code', '400', '403', '500'] },
+    { title: 'Data Freshness', href: '/docs/data-freshness', keywords: ['sync', 'update', 'cycle', 'airac', 'faa', 'publication', 'schedule', 'freshness', '28-day', '56-day', 'notam'] },
     { title: 'OpenAPI Spec', href: '/docs/openapi', keywords: ['swagger', 'openapi', 'spec', 'json'] },
   ]
   for (const page of docPages) {
