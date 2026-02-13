@@ -22,7 +22,7 @@ function DashboardLayout() {
       <div className="flex flex-1 flex-col overflow-hidden">
         <DashboardHeader onMenuClick={() => setSidebarOpen(true)} />
         <main className="relative flex-1 overflow-hidden">
-          <DashboardBackdrop variant="radar" />
+          <DashboardBackdrop />
           <div className="h-full overflow-y-auto p-6">
             <div className="mx-auto max-w-5xl">
               <Outlet />
@@ -54,7 +54,7 @@ function DashboardPending() {
       <div className="flex flex-1 flex-col overflow-hidden">
         <DashboardHeader onMenuClick={() => setSidebarOpen(true)} />
         <main className="relative flex-1 overflow-hidden">
-          <DashboardBackdrop variant="radar" />
+          <DashboardBackdrop />
           <div className="h-full overflow-y-auto p-6">
             <div className="mx-auto max-w-5xl space-y-8">
               <div className="space-y-2">
