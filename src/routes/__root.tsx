@@ -5,11 +5,11 @@ import {
   createRootRouteWithContext,
   useRouter,
 } from '@tanstack/react-router'
-import type { ErrorComponentProps } from '@tanstack/react-router'
 import { Toaster } from '../components/ui/sonner'
 import ClerkProvider from '../integrations/clerk/provider'
 
 import appCss from '../styles.css?url'
+import type { ErrorComponentProps } from '@tanstack/react-router'
 
 import type { QueryClient } from '@tanstack/react-query'
 
@@ -25,7 +25,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       },
       {
         name: 'viewport',
-        content: 'width=device-width, initial-scale=1',
+        content: 'width=device-width, initial-scale=1, interactive-widget=resizes-content',
       },
       {
         title: 'PreflightAPI - Aviation Data API for Developers',

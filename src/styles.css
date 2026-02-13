@@ -24,6 +24,17 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Ensure html/body don't create competing scroll containers on mobile */
+html, body {
+  height: 100%;
+}
+
+@supports (height: 100dvh) {
+  html, body {
+    height: 100dvh;
+  }
+}
+
 code {
   font-family:
     'Geist Mono', source-code-pro, Menlo, Monaco, Consolas, 'Courier New',

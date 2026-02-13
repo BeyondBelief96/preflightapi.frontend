@@ -1,13 +1,13 @@
 import { Link, Outlet, createFileRoute, redirect, useLocation } from '@tanstack/react-router'
-import type { ErrorComponentProps } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
 import { useEffect, useRef, useState } from 'react'
+import { AlertTriangle } from 'lucide-react'
+import type { ErrorComponentProps } from '@tanstack/react-router'
 import { DashboardSidebar } from '@/components/dashboard/dashboard-sidebar'
 import { DashboardHeader } from '@/components/dashboard/dashboard-header'
 import { DashboardBackdrop } from '@/components/radar-backdrop'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useSubscriptionSync } from '@/hooks/use-subscription-sync'
-import { AlertTriangle } from 'lucide-react'
 
 const getAuthState = createServerFn().handler(async () => {
   const { auth } = await import('@clerk/tanstack-react-start/server')
@@ -39,13 +39,13 @@ function DashboardLayout() {
   }, [pathname])
 
   return (
-    <div className="flex h-screen w-full overflow-hidden">
+    <div className="flex h-dvh w-full">
       <DashboardSidebar open={sidebarOpen} onOpenChange={setSidebarOpen} />
       <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
         <DashboardHeader onMenuClick={() => setSidebarOpen(true)} />
         <main className="relative min-w-0 flex-1 overflow-hidden">
           <DashboardBackdrop />
-          <div ref={scrollRef} className="h-full overflow-x-hidden overflow-y-auto p-6">
+          <div ref={scrollRef} className="h-full overflow-x-hidden overflow-y-auto overscroll-contain p-6 [-webkit-overflow-scrolling:touch]">
             <div className="mx-auto min-w-0 max-w-5xl">
               <Outlet />
             </div>
@@ -71,13 +71,13 @@ function DashboardPending() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div className="flex h-screen w-full overflow-hidden">
+    <div className="flex h-dvh w-full">
       <DashboardSidebar open={sidebarOpen} onOpenChange={setSidebarOpen} />
       <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
         <DashboardHeader onMenuClick={() => setSidebarOpen(true)} />
         <main className="relative min-w-0 flex-1 overflow-hidden">
           <DashboardBackdrop />
-          <div className="h-full overflow-x-hidden overflow-y-auto p-6">
+          <div className="h-full overflow-x-hidden overflow-y-auto overscroll-contain p-6 [-webkit-overflow-scrolling:touch]">
             <div className="mx-auto min-w-0 max-w-5xl space-y-8">
               <div className="space-y-2">
                 <Skeleton className="h-8 w-48" />

@@ -1,5 +1,4 @@
 import { Fragment } from 'react'
-import type { LucideIcon } from 'lucide-react'
 import {
   AlertTriangle,
   Bell,
@@ -12,8 +11,9 @@ import {
   Rocket,
   Shield,
 } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 
-const stats: { value?: string; label: string; icon: LucideIcon }[] = [
+const stats: Array<{ value?: string; label: string; icon: LucideIcon }> = [
   { value: '19,600+', label: 'US Airports', icon: Plane },
   { value: '625,000+', label: 'Obstacles', icon: AlertTriangle },
   { value: '3,000+', label: 'Airspaces', icon: Layers },
