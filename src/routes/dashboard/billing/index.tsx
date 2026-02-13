@@ -9,6 +9,7 @@ import {
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '@clerk/clerk-react'
 import { z } from 'zod'
+import { toastError } from '@/lib/toast-error'
 import { createPageHead } from '@/lib/seo'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -129,6 +130,9 @@ function BillingPage() {
         window.location.href = data.url
       }
     },
+    onError: (err) => {
+      toastError('Failed to start checkout', err)
+    },
   })
 
   const portalMutation = useMutation({
@@ -137,6 +141,9 @@ function BillingPage() {
       if (data.url) {
         window.location.href = data.url
       }
+    },
+    onError: (err) => {
+      toastError('Failed to open billing portal', err)
     },
   })
 

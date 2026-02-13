@@ -3,6 +3,7 @@ import { Eye, EyeOff, RotateCw } from 'lucide-react'
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '@clerk/clerk-react'
+import { toastError } from '@/lib/toast-error'
 import { createPageHead } from '@/lib/seo'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -62,6 +63,9 @@ function ApiKeysPage() {
           queryKey: apimKeys.keys(activeSubscription.id),
         })
       }
+    },
+    onError: (err) => {
+      toastError('Failed to regenerate key', err)
     },
   })
 

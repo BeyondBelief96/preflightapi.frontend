@@ -3,6 +3,7 @@ import { Check, Loader2 } from 'lucide-react'
 import { useAuth } from '@clerk/clerk-react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import type { PlanDefinition } from '@/lib/constants'
+import { toastError } from '@/lib/toast-error'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import {
@@ -84,6 +85,9 @@ function PlanCTA({ plan }: { plan: PlanDefinition }) {
       if (data.url) {
         window.location.href = data.url
       }
+    },
+    onError: (err) => {
+      toastError('Failed to start checkout', err)
     },
   })
 

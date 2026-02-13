@@ -5,6 +5,7 @@ import {
   CreditCard,
   Key,
   LayoutDashboard,
+  MessageSquare,
   Rocket,
   Settings,
 } from 'lucide-react'
@@ -27,7 +28,13 @@ const sidebarLinks = [
   { label: 'Settings', href: '/dashboard/settings', icon: Settings },
 ]
 
-function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
+function SidebarContent({
+  onNavigate,
+  showUserProfile,
+}: {
+  onNavigate?: () => void
+  showUserProfile?: boolean
+}) {
   return (
     <div className="flex h-full flex-col">
       {/* Logo */}
@@ -56,8 +63,8 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
         ))}
       </nav>
 
-      {/* Docs link */}
-      <div className="border-t px-3 py-4">
+      {/* Docs & Contact links */}
+      <div className="space-y-1 border-t px-3 py-4">
         <Link
           to="/docs"
           className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
@@ -66,22 +73,32 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
           <BookOpen className="h-4 w-4" />
           API Documentation
         </Link>
+        <Link
+          to="/contact"
+          className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+          onClick={onNavigate}
+        >
+          <MessageSquare className="h-4 w-4" />
+          Contact Us
+        </Link>
       </div>
 
-      {/* User profile */}
-      <div className="border-t px-5 py-4">
-        <UserButton
-          showName
-          appearance={{
-            elements: {
-              rootBox: 'w-full',
-              userButtonTrigger: 'w-full justify-start',
-              userButtonBox: 'flex-row-reverse gap-3',
-              avatarBox: 'h-8 w-8',
-            },
-          }}
-        />
-      </div>
+      {/* User profile (mobile only) */}
+      {showUserProfile && (
+        <div className="border-t px-5 py-4">
+          <UserButton
+            showName
+            appearance={{
+              elements: {
+                rootBox: 'w-full',
+                userButtonTrigger: 'w-full justify-start',
+                userButtonBox: 'flex-row-reverse gap-3',
+                avatarBox: 'h-8 w-8',
+              },
+            }}
+          />
+        </div>
+      )}
     </div>
   )
 }
@@ -104,7 +121,10 @@ export function DashboardSidebar({
       <Sheet open={open} onOpenChange={onOpenChange}>
         <SheetContent side="left" className="w-64 bg-sidebar p-0" showCloseButton={false}>
           <SheetTitle className="sr-only">Navigation</SheetTitle>
-          <SidebarContent onNavigate={() => onOpenChange(false)} />
+          <SidebarContent
+            onNavigate={() => onOpenChange(false)}
+            showUserProfile
+          />
         </SheetContent>
       </Sheet>
     </>

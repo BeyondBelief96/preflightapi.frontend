@@ -27,3 +27,19 @@ export function planIdFromProductId(productId: string): string {
  * Ordered list of plan IDs from lowest to highest tier.
  */
 export const PLAN_IDS = ['student-pilot', 'private-pilot', 'commercial-pilot'] as const
+
+/**
+ * Numeric tier ordering for upgrade/downgrade comparisons.
+ */
+const TIER_ORDER: Record<string, number> = {
+  student: 0,
+  private: 1,
+  commercial: 2,
+}
+
+/**
+ * Returns true if moving from `fromPlanId` to `toPlanId` is a downgrade.
+ */
+export function isDowngrade(fromPlanId: string, toPlanId: string): boolean {
+  return (TIER_ORDER[toPlanId] ?? 0) < (TIER_ORDER[fromPlanId] ?? 0)
+}
