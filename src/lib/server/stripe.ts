@@ -11,15 +11,24 @@ import { env } from '@/env'
 
 async function getOrCreateStripeCustomer(clerkUserId: string): Promise<string> {
   const clerk = clerkClient()
+  const stripe = getStripe()
   const user = await clerk.users.getUser(clerkUserId)
   const existingId = (user.privateMetadata as { stripeCustomerId?: string })
     .stripeCustomerId
 
   if (existingId) {
-    return existingId
+    // Verify the customer still exists — it may have been deleted from
+    // the Stripe dashboard, leaving a stale reference in Clerk metadata.
+    const existing = await stripe.customers.retrieve(existingId)
+    if (!existing.deleted) {
+      return existingId
+    }
+    // Customer was deleted — clear the stale reference and create a new one
+    await clerk.users.updateUserMetadata(clerkUserId, {
+      privateMetadata: { stripeCustomerId: null },
+    })
   }
 
-  const stripe = getStripe()
   const customer = await stripe.customers.create({
     metadata: { clerkUserId },
     email:

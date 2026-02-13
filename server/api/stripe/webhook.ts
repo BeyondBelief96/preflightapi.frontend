@@ -201,9 +201,28 @@ export default defineHandler(async (event) => {
 
         if (clerkUserId) {
           await syncTierToApim(apimFetch, clerkUserId, studentProductId)
+
+          // Clear stale stripeCustomerId from Clerk so getOrCreateStripeCustomer
+          // will create a fresh customer on the next checkout attempt.
+          try {
+            const { clerkClient } = await import(
+              '@clerk/tanstack-react-start/server'
+            )
+            const clerk = clerkClient()
+            await clerk.users.updateUserMetadata(clerkUserId, {
+              privateMetadata: { stripeCustomerId: null },
+            })
+          } catch (err) {
+            // Non-fatal — getOrCreateStripeCustomer also handles stale IDs
+            log.warn(
+              { err, userId: clerkUserId },
+              'Failed to clear stale stripeCustomerId from Clerk',
+            )
+          }
+
           log.info(
             { userId: clerkUserId, customerId: customer.id },
-            'Customer deleted — downgraded to student tier',
+            'Customer deleted — downgraded to student tier and cleared Clerk metadata',
           )
         } else {
           log.warn(
