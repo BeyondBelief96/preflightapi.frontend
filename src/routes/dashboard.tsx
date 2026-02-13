@@ -33,11 +33,11 @@ function DashboardLayout() {
   useSubscriptionSync()
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-dvh">
       <DashboardSidebar open={sidebarOpen} onOpenChange={setSidebarOpen} />
-      <div className="flex flex-1 flex-col overflow-hidden">
+      <div className="flex min-h-0 flex-1 flex-col">
         <DashboardHeader onMenuClick={() => setSidebarOpen(true)} />
-        <main className="relative flex-1 overflow-hidden">
+        <main className="relative min-h-0 flex-1">
           <DashboardBackdrop />
           <div className="h-full overflow-y-auto p-6">
             <div className="mx-auto max-w-5xl">
@@ -65,11 +65,11 @@ function DashboardPending() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-dvh">
       <DashboardSidebar open={sidebarOpen} onOpenChange={setSidebarOpen} />
-      <div className="flex flex-1 flex-col overflow-hidden">
+      <div className="flex min-h-0 flex-1 flex-col">
         <DashboardHeader onMenuClick={() => setSidebarOpen(true)} />
-        <main className="relative flex-1 overflow-hidden">
+        <main className="relative min-h-0 flex-1">
           <DashboardBackdrop />
           <div className="h-full overflow-y-auto p-6">
             <div className="mx-auto max-w-5xl space-y-8">
