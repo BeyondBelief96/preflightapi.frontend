@@ -1,5 +1,6 @@
 import { Link, Outlet, createFileRoute, redirect } from '@tanstack/react-router'
 import type { ErrorComponentProps } from '@tanstack/react-router'
+import { createServerFn } from '@tanstack/react-start'
 import { useState } from 'react'
 import { DashboardSidebar } from '@/components/dashboard/dashboard-sidebar'
 import { DashboardHeader } from '@/components/dashboard/dashboard-header'
@@ -8,11 +9,16 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useSubscriptionSync } from '@/hooks/use-subscription-sync'
 import { AlertTriangle } from 'lucide-react'
 
+const getAuthState = createServerFn().handler(async () => {
+  const { auth } = await import('@clerk/tanstack-react-start/server')
+  const session = await auth()
+  return { userId: session?.userId ?? null }
+})
+
 export const Route = createFileRoute('/dashboard')({
   beforeLoad: async () => {
-    const { auth } = await import('@clerk/tanstack-react-start/server')
-    const session = await auth()
-    if (!session?.userId) {
+    const { userId } = await getAuthState()
+    if (!userId) {
       throw redirect({ to: '/sign-in' })
     }
   },
