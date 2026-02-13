@@ -1,6 +1,10 @@
 import { tagsMeta } from './spec-parser'
 import type { ApiCategory } from './types'
 
+export function getCategoryBySlug(slug: string): ApiCategory | undefined {
+  return CATEGORIES.find((c) => c.slug === slug)
+}
+
 export const CATEGORIES: Array<ApiCategory> = [
   // ── Weather ──────────────────────────────────────────
   {

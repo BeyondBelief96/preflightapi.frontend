@@ -7,7 +7,7 @@ interface FormatApiTextProps {
 }
 
 interface TextSegment {
-  type: 'paragraph' | 'code-block' | 'bullet-list' | 'example-calls'
+  type: 'paragraph' | 'code-block' | 'bullet-list' | 'example-calls' | 'heading'
   content: string
   language?: string
   items?: Array<string>
@@ -30,6 +30,36 @@ function isSingleLineJson(line: string): boolean {
     (trimmed.includes('"') || trimmed.includes(':'))
   )
 }
+
+/**
+ * Detects whether a line looks like a section heading or definition term.
+ * Headings are short, title-cased phrases that don't end in sentence punctuation.
+ * e.g. "Wind Correction", "Top of Climb (TOC)", "Altitude Levels", "6-hour"
+ */
+function isHeadingLike(line: string, nextLine?: string): boolean {
+  const trimmed = line.trim()
+  if (trimmed.length === 0 || trimmed.length > 60) return false
+  // Ends with sentence punctuation → not a heading
+  if (/[.,;!?:]$/.test(trimmed)) return false
+  // Starts with lowercase → continuation text, not a heading
+  if (/^[a-z]/.test(trimmed)) return false
+  // Too many words for a heading
+  const wordCount = trimmed.split(/\s+/).length
+  if (wordCount > 6) return false
+  // Must be followed by a longer line (to distinguish from short sentence fragments)
+  if (nextLine) {
+    const nextTrimmed = nextLine.trim()
+    if (nextTrimmed.length > 0 && nextTrimmed.length > trimmed.length) return true
+  }
+  // Very short (≤ 3 words) is likely a heading even without longer follow-up
+  return wordCount <= 3
+}
+
+/**
+ * Detects em-dash reference items like "AirspaceGlobalIds — use with GET /api/v1/..."
+ * These are PascalCase identifiers followed by an em/en-dash and a description.
+ */
+const REFERENCE_ITEM_RE = /^[A-Z]\w+\s+[—–-]\s+/
 
 function parseSegments(text: string): Array<TextSegment> {
   const segments: Array<TextSegment> = []
@@ -110,7 +140,19 @@ function parseSegments(text: string): Array<TextSegment> {
       continue
     }
 
-    // Regular text — collect consecutive non-blank, non-special lines into a paragraph
+    // Reference items with em-dash (e.g. "AirspaceGlobalIds — use with GET /api/v1/...")
+    if (REFERENCE_ITEM_RE.test(trimmed)) {
+      const refLines: Array<string> = []
+      while (i < lines.length && REFERENCE_ITEM_RE.test(lines[i].trim())) {
+        refLines.push(lines[i].trim())
+        i++
+      }
+      segments.push({ type: 'example-calls', content: refLines.join('\n') })
+      continue
+    }
+
+    // Regular text — collect consecutive non-blank, non-special lines,
+    // but split at heading-like lines to create proper sub-headings
     const paraLines: Array<string> = []
     while (
       i < lines.length &&
@@ -119,9 +161,25 @@ function parseSegments(text: string): Array<TextSegment> {
       !lines[i].match(/^\s*- /) &&
       !isJsonOpener(lines[i].trim()) &&
       !isSingleLineJson(lines[i].trim()) &&
-      !API_EXAMPLE_RE.test(lines[i].trim())
+      !API_EXAMPLE_RE.test(lines[i].trim()) &&
+      !REFERENCE_ITEM_RE.test(lines[i].trim())
     ) {
-      paraLines.push(lines[i])
+      const currentLine = lines[i]
+      const nextLine = i + 1 < lines.length ? lines[i + 1] : undefined
+
+      if (isHeadingLike(currentLine.trim(), nextLine)) {
+        // Flush any accumulated paragraph text first
+        if (paraLines.length > 0) {
+          segments.push({ type: 'paragraph', content: paraLines.join('\n') })
+          paraLines.length = 0
+        }
+        // Emit heading
+        segments.push({ type: 'heading', content: currentLine.trim() })
+        i++
+        continue
+      }
+
+      paraLines.push(currentLine)
       i++
     }
     if (paraLines.length > 0) {
@@ -200,7 +258,7 @@ function renderExampleCalls(content: string, segmentKey: number): React.ReactNod
               <code className="shrink-0 rounded bg-muted px-1.5 py-0.5 font-mono text-xs">
                 {methodPath}
               </code>
-              <span className="text-muted-foreground">{rest}</span>
+              <span className="text-muted-foreground">{formatInlineText(rest)}</span>
             </div>
           )
         }
@@ -233,6 +291,15 @@ export function FormatApiText({ text, className }: FormatApiTextProps) {
             )
           case 'example-calls':
             return renderExampleCalls(segment.content, i)
+          case 'heading':
+            return (
+              <h4
+                key={i}
+                className="mt-3 text-sm font-semibold text-foreground first:mt-0"
+              >
+                {formatInlineText(segment.content)}
+              </h4>
+            )
           case 'paragraph':
             return <p key={i}>{formatInlineText(segment.content)}</p>
         }

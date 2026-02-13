@@ -9,7 +9,7 @@ const sections = [
   {
     title: 'Getting Started',
     items: [
-      { label: 'Overview', href: '/docs' },
+      { label: 'Overview', href: '/docs', exact: true },
       { label: 'Quick Start', href: '/docs/getting-started' },
       { label: 'Authentication', href: '/docs/authentication' },
       { label: 'Rate Limits', href: '/docs/rate-limits' },
@@ -60,7 +60,7 @@ const sections = [
   {
     title: 'Data Models',
     items: [
-      { label: 'Overview', href: '/docs/data-models' },
+      { label: 'Overview', href: '/docs/data-models', exact: true },
       { label: 'Weather', href: '/docs/data-models/weather' },
       { label: 'Airports', href: '/docs/data-models/airports' },
       { label: 'Airspace', href: '/docs/data-models/airspace' },
@@ -93,7 +93,7 @@ export function DocsSidebar({ onNavigate }: DocsSidebarProps) {
                     activeProps={{
                       className: 'bg-muted text-foreground font-medium',
                     }}
-                    activeOptions={{ exact: true }}
+                    activeOptions={{ exact: item.exact ?? false, includeSearch: false }}
                   >
                     {item.label}
                   </Link>
