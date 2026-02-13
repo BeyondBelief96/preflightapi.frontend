@@ -1,15 +1,9 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { SignIn } from '@clerk/clerk-react'
 import { AnimatedBackdrop } from '@/components/animated-backdrop'
 import { createPageHead } from '@/lib/seo'
-import { isWaitlistMode } from '@/lib/waitlist'
 
 export const Route = createFileRoute('/sign-in')({
-  beforeLoad: () => {
-    if (isWaitlistMode) {
-      throw redirect({ to: '/waitlist' })
-    }
-  },
   head: () =>
     createPageHead({
       title: 'Sign In',

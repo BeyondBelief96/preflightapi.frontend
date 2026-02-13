@@ -30,7 +30,7 @@ function WaitlistPage() {
         <a href="/" className="mb-8">
           <Logo size="lg" />
         </a>
-        <Waitlist />
+        <Waitlist signInUrl={`${import.meta.env.VITE_BASE_URL}/sign-in`} />
       </div>
     </div>
   )
