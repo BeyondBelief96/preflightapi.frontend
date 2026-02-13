@@ -17,6 +17,13 @@ function isMobile() {
   return window.innerWidth < 768 || /Mobi|Android/i.test(navigator.userAgent)
 }
 
+function isIOS() {
+  return (
+    /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.maxTouchPoints > 1 && /Macintosh/.test(navigator.userAgent))
+  )
+}
+
 export function TerrainFlyover() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
@@ -24,22 +31,22 @@ export function TerrainFlyover() {
     const canvas = canvasRef.current
     if (!canvas) return
 
+    const mobile = isMobile()
+    const ios = isIOS()
+
     let renderer: WebGLRenderer
     try {
       renderer = new WebGLRenderer({
         canvas,
         alpha: true,
-        antialias: true,
-        powerPreference: 'low-power',
+        antialias: !mobile,
+        powerPreference: ios ? 'default' : 'low-power',
       })
     } catch {
       return
     }
 
-    const mobile = isMobile()
-    const segments = mobile ? 36 : 64
-
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+    const segments = mobile ? (ios ? 24 : 36) : 64
 
     const prefersReducedMotion = window.matchMedia(
       '(prefers-reduced-motion: reduce)',
@@ -140,8 +147,9 @@ export function TerrainFlyover() {
     const mesh = new Mesh(geometry, material)
     scene.add(mesh)
 
+    const maxDpr = mobile ? 1.5 : 2
     const onResize = () => {
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, maxDpr))
       renderer.setSize(window.innerWidth, window.innerHeight)
       camera.aspect = window.innerWidth / window.innerHeight
       camera.updateProjectionMatrix()
@@ -158,15 +166,20 @@ export function TerrainFlyover() {
 
     const clock = new Clock()
     let frameId: number
+    // Throttle to ~30fps on mobile — saves battery and prevents jank on 120Hz iOS
+    const frameBudget = mobile ? 1000 / 30 : 0
+    let lastRender = 0
 
-    const animate = () => {
+    const animate = (now: number) => {
       frameId = requestAnimationFrame(animate)
       if (paused) return
+      if (frameBudget && now - lastRender < frameBudget) return
+      lastRender = now
       const t = prefersReducedMotion ? 0 : clock.getElapsedTime()
       material.uniforms.uTime.value = t
       renderer.render(scene, camera)
     }
-    animate()
+    frameId = requestAnimationFrame(animate)
 
     return () => {
       cancelAnimationFrame(frameId)
