@@ -14,11 +14,8 @@ export interface paths {
         /**
          * Lists airports with optional search and state filtering
          * @description Supports combinable query parameters for flexible filtering:
-         *     GET /api/v1/airports                           — all airports (paginated)
-         *     GET /api/v1/airports?search=Dallas             — text search across name, city, ICAO, and FAA identifier
-         *     GET /api/v1/airports?state=TX                  — airports in Texas
-         *     GET /api/v1/airports?state=TX,OK,LA            — airports in multiple states
-         *     GET /api/v1/airports?search=Regional&state=TX  — combined search + state filter
+         *
+         *     ``` GET /api/v1/airports — all airports (paginated) GET /api/v1/airports?search=Dallas — text search across name, city, ICAO, and FAA identifier GET /api/v1/airports?state=TX — airports in Texas GET /api/v1/airports?state=TX,OK,LA — airports in multiple states GET /api/v1/airports?search=Regional&state=TX — combined search + state filter ```
          */
         get: operations["Airport_GetAirports"];
         put?: never;
@@ -56,7 +53,9 @@ export interface paths {
         /**
          * Gets multiple airports by their ICAO codes or FAA identifiers
          * @description Pass ICAO codes or FAA identifiers as a single comma-separated query parameter:
-         *     GET /api/v1/airports/batch?ids=KDFW,KAUS,KHOU
+         *
+         *     ``` GET /api/v1/airports/batch?ids=KDFW,KAUS,KHOU ```
+         *
          *     Both ICAO codes (KDFW) and FAA identifiers (DFW) can be mixed in the same request.
          */
         get: operations["Airport_GetAirportsBatch"];
@@ -186,11 +185,7 @@ export interface paths {
         };
         /**
          * Gets controlled airspaces associated with specific airports by ICAO code or FAA identifier.
-         *
-         *     Returns all controlled airspace boundaries (Class B, C, D) associated with the given airport
-         *     identifiers. Each result includes the airspace classification, altitude limits, and boundary
-         *     geometry. Pass multiple identifiers as a comma-separated list to retrieve airspaces for
-         *     several airports in a single request.
+         * @description Returns all controlled airspace boundaries (Class B, C, D) associated with the given airport identifiers. Each result includes the airspace classification, altitude limits, and boundary geometry. Pass multiple identifiers as a comma-separated list to retrieve airspaces for several airports in a single request.
          */
         get: operations["Airspace_GetByIcaoOrIdent"];
         put?: never;
@@ -294,19 +289,15 @@ export interface paths {
         };
         /**
          * Calculates crosswind and headwind components for every runway at an airport using live METAR wind data.
+         * @description Fetches the airport's latest METAR observation and computes wind components for each runway end. The response includes a `RecommendedRunway` — the runway end with the lowest crosswind that also has a headwind (not a tailwind).
          *
-         *     Fetches the airport's latest METAR observation and computes wind components for each runway end.
-         *     The response includes a RecommendedRunway — the runway end with the lowest crosswind
-         *     that also has a headwind (not a tailwind).
+         *     **Sign Conventions**
          *
-         *     Sign Conventions
-         *     CrosswindKt — positive = wind from the right, negative = wind from the left
-         *     HeadwindKt — positive = headwind (favorable), negative = tailwind (unfavorable)
+         *     - `CrosswindKt` — positive = wind from the right, negative = wind from the left
          *
-         *     If the METAR reports variable wind (VRB), IsVariableWind is true and crosswind components
-         *     are calculated using the full wind speed for all runway ends.
-         *     If gusts are reported, separate GustCrosswindKt and GustHeadwindKt fields show the
-         *     worst-case gust components.
+         *     - `HeadwindKt` — positive = headwind (favorable), negative = tailwind (unfavorable)
+         *
+         *     If the METAR reports variable wind (VRB), `IsVariableWind` is true and crosswind components are calculated using the full wind speed for all runway ends. If gusts are reported, separate `GustCrosswindKt` and `GustHeadwindKt` fields show the worst-case gust components.
          */
         get: operations["E6b_GetCrosswindForAirport"];
         put?: never;
@@ -328,13 +319,13 @@ export interface paths {
         put?: never;
         /**
          * Calculates crosswind and headwind components from manually provided wind and runway heading values.
+         * @description Provide wind direction, wind speed, and a runway heading to compute the headwind and crosswind components. Optionally include a gust speed to also compute gust components.
          *
-         *     Provide wind direction, wind speed, and a runway heading to compute the headwind and crosswind
-         *     components. Optionally include a gust speed to also compute gust components.
+         *     **Sign Conventions**
          *
-         *     Sign Conventions
-         *     CrosswindKt — positive = wind from the right, negative = wind from the left
-         *     HeadwindKt — positive = headwind (favorable), negative = tailwind (unfavorable)
+         *     - `CrosswindKt` — positive = wind from the right, negative = wind from the left
+         *
+         *     - `HeadwindKt` — positive = headwind (favorable), negative = tailwind (unfavorable)
          */
         post: operations["E6b_CalculateCrosswind"];
         delete?: never;
@@ -352,19 +343,19 @@ export interface paths {
         };
         /**
          * Calculates density altitude for an airport using live METAR data with optional overrides.
+         * @description Fetches the airport's latest METAR to obtain temperature and altimeter setting, then computes density altitude using the ISA model. You can optionally override either value via query parameters for "what if" scenarios (e.g., "what would density altitude be if the temperature reached 40°C?").
          *
-         *     Fetches the airport's latest METAR to obtain temperature and altimeter setting, then computes
-         *     density altitude using the ISA model. You can optionally override either value via query parameters
-         *     for "what if" scenarios (e.g., "what would density altitude be if the temperature reached 40°C?").
+         *     **Response Fields**
          *
-         *     Response Fields
-         *     DensityAltitudeFt — the effective altitude the aircraft "feels" based on air density
-         *     PressureAltitudeFt — field elevation corrected for non-standard pressure
-         *     IsaTemperatureCelsius — the standard (ISA) temperature expected at this pressure altitude
-         *     TemperatureDeviationCelsius — how far the actual temperature deviates from ISA (positive = hotter than standard)
+         *     - `DensityAltitudeFt` — the effective altitude the aircraft "feels" based on air density
          *
-         *     Formula: DA = PA + 120 * (OAT - ISA_temp). This does not account for humidity,
-         *     local pressure patterns, or non-standard lapse rates.
+         *     - `PressureAltitudeFt` — field elevation corrected for non-standard pressure
+         *
+         *     - `IsaTemperatureCelsius` — the standard (ISA) temperature expected at this pressure altitude
+         *
+         *     - `TemperatureDeviationCelsius` — how far the actual temperature deviates from ISA (positive = hotter than standard)
+         *
+         *     *Formula:*`DA = PA + 120 * (OAT - ISA_temp)`. This does not account for humidity, local pressure patterns, or non-standard lapse rates.
          */
         get: operations["E6b_GetDensityAltitudeForAirport"];
         put?: never;
@@ -386,18 +377,19 @@ export interface paths {
         put?: never;
         /**
          * Calculates density altitude from manually provided field elevation, altimeter setting, and temperature.
+         * @description Provide your own values instead of relying on METAR data. Useful for any location, for planning with forecast temperatures, or when METAR data is not available.
          *
-         *     Provide your own values instead of relying on METAR data. Useful for any location, for planning
-         *     with forecast temperatures, or when METAR data is not available.
+         *     **Response Fields**
          *
-         *     Response Fields
-         *     DensityAltitudeFt — the effective altitude the aircraft "feels" based on air density
-         *     PressureAltitudeFt — field elevation corrected for non-standard pressure
-         *     IsaTemperatureCelsius — the standard (ISA) temperature expected at this pressure altitude
-         *     TemperatureDeviationCelsius — how far the actual temperature deviates from ISA (positive = hotter than standard)
+         *     - `DensityAltitudeFt` — the effective altitude the aircraft "feels" based on air density
          *
-         *     Formula: DA = PA + 120 * (OAT - ISA_temp). This does not account for humidity,
-         *     local pressure patterns, or non-standard lapse rates.
+         *     - `PressureAltitudeFt` — field elevation corrected for non-standard pressure
+         *
+         *     - `IsaTemperatureCelsius` — the standard (ISA) temperature expected at this pressure altitude
+         *
+         *     - `TemperatureDeviationCelsius` — how far the actual temperature deviates from ISA (positive = hotter than standard)
+         *
+         *     *Formula:*`DA = PA + 120 * (OAT - ISA_temp)`. This does not account for humidity, local pressure patterns, or non-standard lapse rates.
          */
         post: operations["E6b_CalculateDensityAltitude"];
         delete?: never;
@@ -417,19 +409,21 @@ export interface paths {
         put?: never;
         /**
          * Solves the wind triangle to compute true heading and ground speed.
+         * @description Given your desired true course, true airspeed, and the wind conditions, this calculates the heading you need to fly to stay on course and your resulting ground speed.
          *
-         *     Given your desired true course, true airspeed, and the wind conditions, this calculates the heading
-         *     you need to fly to stay on course and your resulting ground speed.
+         *     **Response Fields**
          *
-         *     Response Fields
-         *     TrueHeadingDegrees — the heading to fly (true course + wind correction angle)
-         *     GroundSpeedKt — your speed over the ground after accounting for wind
-         *     WindCorrectionAngleDegrees — the crab angle needed to stay on course
-         *     (positive = correct to the right, negative = correct to the left)
-         *     HeadwindComponentKt — positive = headwind, negative = tailwind
-         *     CrosswindComponentKt — positive = from the right, negative = from the left
+         *     - `TrueHeadingDegrees` — the heading to fly (true course + wind correction angle)
          *
-         *     Wind direction is the direction the wind is blowing from (standard meteorological convention).
+         *     - `GroundSpeedKt` — your speed over the ground after accounting for wind
+         *
+         *     - `WindCorrectionAngleDegrees` — the crab angle needed to stay on course (positive = correct to the right, negative = correct to the left)
+         *
+         *     - `HeadwindComponentKt` — positive = headwind, negative = tailwind
+         *
+         *     - `CrosswindComponentKt` — positive = from the right, negative = from the left
+         *
+         *     Wind direction is the direction the wind is blowing *from* (standard meteorological convention).
          */
         post: operations["E6b_CalculateWindTriangle"];
         delete?: never;
@@ -449,20 +443,17 @@ export interface paths {
         put?: never;
         /**
          * Calculates true airspeed (TAS) from calibrated airspeed, pressure altitude, and outside air temperature.
+         * @description Uses the full compressible isentropic flow conversion (CAS to impact pressure to Mach to TAS), accurate from sea level through FL410+ including above the ISA tropopause at 36,089 ft. This is more accurate than the simplified `CAS / sqrt(sigma)` formula, which diverges significantly at higher altitudes.
          *
-         *     Uses the full compressible isentropic flow conversion (CAS to impact pressure to Mach to TAS),
-         *     accurate from sea level through FL410+ including above the ISA tropopause at 36,089 ft.
-         *     This is more accurate than the simplified CAS / sqrt(sigma) formula, which diverges
-         *     significantly at higher altitudes.
+         *     **Response Fields**
          *
-         *     Response Fields
-         *     TrueAirspeedKt — the aircraft's actual speed through the air mass (knots)
-         *     DensityAltitudeFt — density altitude at the given conditions (feet)
-         *     MachNumber — the aircraft's speed as a fraction of the local speed of sound
+         *     - `TrueAirspeedKt` — the aircraft's actual speed through the air mass (knots)
          *
-         *     Note: The ISA tropopause is modeled at 36,089 ft. The real tropopause varies from
-         *     ~26,000 ft near the poles to ~55,000 ft near the equator, which affects accuracy at high
-         *     altitudes in non-mid-latitude regions.
+         *     - `DensityAltitudeFt` — density altitude at the given conditions (feet)
+         *
+         *     - `MachNumber` — the aircraft's speed as a fraction of the local speed of sound
+         *
+         *     *Note:* The ISA tropopause is modeled at 36,089 ft. The real tropopause varies from ~26,000 ft near the poles to ~55,000 ft near the equator, which affects accuracy at high altitudes in non-mid-latitude regions.
          */
         post: operations["E6b_CalculateTrueAirspeed"];
         delete?: never;
@@ -482,17 +473,15 @@ export interface paths {
         put?: never;
         /**
          * Estimates cloud base height AGL from surface temperature and dewpoint spread.
+         * @description Uses the standard pilot rule of thumb: `cloud base (ft AGL) = (temperature - dewpoint) * 400`. This approximates the lifting condensation level based on the average dry adiabatic lapse rate (~3°C/1000 ft) and dewpoint lapse rate (~0.5°C/1000 ft).
          *
-         *     Uses the standard pilot rule of thumb: cloud base (ft AGL) = (temperature - dewpoint) * 400.
-         *     This approximates the lifting condensation level based on the average dry adiabatic lapse rate
-         *     (~3°C/1000 ft) and dewpoint lapse rate (~0.5°C/1000 ft).
+         *     **Response Fields**
          *
-         *     Response Fields
-         *     EstimatedCloudBaseFtAgl — estimated height of the cloud base above ground level (feet)
-         *     TemperatureDewpointSpreadCelsius — the difference between temperature and dewpoint (degrees Celsius)
+         *     - `EstimatedCloudBaseFtAgl` — estimated height of the cloud base above ground level (feet)
          *
-         *     Note: Actual cloud bases vary with humidity profiles, inversions, and local convective
-         *     conditions. A small spread (less than 3°C) generally indicates a high likelihood of low ceilings or fog.
+         *     - `TemperatureDewpointSpreadCelsius` — the difference between temperature and dewpoint (degrees Celsius)
+         *
+         *     *Note:* Actual cloud bases vary with humidity profiles, inversions, and local convective conditions. A small spread (less than 3°C) generally indicates a high likelihood of low ceilings or fog.
          */
         post: operations["E6b_CalculateCloudBase"];
         delete?: never;
@@ -512,19 +501,17 @@ export interface paths {
         put?: never;
         /**
          * Calculates pressure altitude from field elevation and altimeter setting.
+         * @description Pressure altitude is the altitude in the standard atmosphere where the pressure equals the current pressure at your location. It is the starting point for density altitude, TAS, and performance chart calculations.
          *
-         *     Pressure altitude is the altitude in the standard atmosphere where the pressure equals the
-         *     current pressure at your location. It is the starting point for density altitude, TAS,
-         *     and performance chart calculations.
+         *     *Formula:*`PA = FieldElevation + (29.92 - Altimeter) * 1000`
          *
-         *     Formula: PA = FieldElevation + (29.92 - Altimeter) * 1000
+         *     **Response Fields**
          *
-         *     Response Fields
-         *     PressureAltitudeFt — the calculated pressure altitude (feet)
-         *     AltimeterCorrectionFt — the deviation from standard pressure expressed in feet (positive = lower pressure than standard, negative = higher)
+         *     - `PressureAltitudeFt` — the calculated pressure altitude (feet)
          *
-         *     Note: The 1 inHg = 1000 ft approximation is most accurate near sea level and diverges
-         *     slightly at higher elevations and extreme altimeter settings.
+         *     - `AltimeterCorrectionFt` — the deviation from standard pressure expressed in feet (positive = lower pressure than standard, negative = higher)
+         *
+         *     *Note:* The 1 inHg = 1000 ft approximation is most accurate near sea level and diverges slightly at higher elevations and extreme altimeter settings.
          */
         post: operations["E6b_CalculatePressureAltitude"];
         delete?: never;
@@ -542,12 +529,7 @@ export interface paths {
         };
         /**
          * Gets all current G-AIRMET advisories across all product types and hazards.
-         *
-         *     Returns every active G-AIRMET regardless of product type (SIERRA, TANGO, ZULU) or hazard type.
-         *     Each advisory includes the hazard, severity, affected altitude range, forecast valid time,
-         *     and a geographic polygon defining the affected area. Use the
-         *     GET /product/{product} or GET /hazard/{hazardType} endpoints to filter
-         *     by specific product or hazard type.
+         * @description Returns every active G-AIRMET regardless of product type (SIERRA, TANGO, ZULU) or hazard type. Each advisory includes the hazard, severity, affected altitude range, forecast valid time, and a geographic polygon defining the affected area. Use the `GET /product/{product}` or `GET /hazard/{hazardType}` endpoints to filter by specific product or hazard type.
          */
         get: operations["GAirmet_GetAllGAirmets"];
         put?: never;
@@ -622,8 +604,8 @@ export interface paths {
         /**
          * Gets METARs for airports in one or more states
          * @description Pass state codes as a single comma-separated query parameter:
-         *     GET /api/v1/metars?state=TX         — METARs for Texas airports
-         *     GET /api/v1/metars?state=TX,OK,LA   — METARs for multiple states
+         *
+         *     ``` GET /api/v1/metars?state=TX — METARs for Texas airports GET /api/v1/metars?state=TX,OK,LA — METARs for multiple states ```
          */
         get: operations["Metar_GetMetarsByState"];
         put?: never;
@@ -645,53 +627,39 @@ export interface paths {
         put?: never;
         /**
          * Calculates a complete VFR navigation log for a cross-country flight.
+         * @description Provide an ordered list of waypoints (minimum 2) with aircraft performance data, a cruising altitude, and a departure time. The service calculates every leg of the route and returns detailed per-leg data including course, heading, ground speed, distance, estimated time, fuel burn, and wind information.
          *
-         *     Provide an ordered list of waypoints (minimum 2) with aircraft performance data, a cruising altitude,
-         *     and a departure time. The service calculates every leg of the route and returns detailed per-leg data
-         *     including course, heading, ground speed, distance, estimated time, fuel burn, and wind information.
+         *     **Automatic Waypoint Insertion**
          *
-         *     Automatic Waypoint Insertion
          *     The service automatically inserts calculated waypoints into the route to model climb and descent phases:
          *
-         *     Top of Climb (TOC)
-         *     Inserted after departure (or after a refueling stop) at the point where the aircraft reaches
-         *     cruising altitude. Position is calculated using the climb true airspeed and climb rate from
-         *     your performance data. Legs before the TOC use climb airspeed and climb fuel burn rate.
-         *     Top of Descent (TOD)
-         *     Inserted before the destination (or before a refueling stop) at the point where the aircraft
-         *     should begin descending. Calculated using descent airspeed, descent rate, and a 3 NM final
-         *     approach buffer. Legs after the TOD use descent airspeed and descent fuel burn rate.
-         *     Bottom of Descent (BOD)
-         *     Inserted 3 NM before the destination airport at Traffic Pattern Altitude (airport elevation + 1000 ft,
-         *     rounded to the nearest 100 ft). This marks the point where the aircraft levels off at pattern altitude
-         *     for the approach.
+         *     - **Top of Climb (TOC)** — Inserted after departure (or after a refueling stop) at the point where the aircraft reaches cruising altitude. Position is calculated using the climb true airspeed and climb rate from your performance data. Legs before the TOC use climb airspeed and climb fuel burn rate.
          *
-         *     Wind Correction
-         *     The service automatically fetches winds aloft forecast data based on your departure time and selects the
-         *     nearest reporting station to each waypoint. Wind direction, speed, and temperature are interpolated to
-         *     the leg's altitude. The magnetic heading returned for each leg is the actual heading to fly after
-         *     accounting for both magnetic variation and wind correction. If wind data is unavailable, the calculation
-         *     proceeds with zero-wind assumptions (ground speed equals true airspeed).
+         *     - **Top of Descent (TOD)** — Inserted before the destination (or before a refueling stop) at the point where the aircraft should begin descending. Calculated using descent airspeed, descent rate, and a 3 NM final approach buffer. Legs after the TOD use descent airspeed and descent fuel burn rate.
          *
-         *     Fuel Tracking
-         *     Fuel is tracked across the entire route. Start/Taxi/Takeoff (STT) fuel is deducted at departure and again
-         *     after each refueling stop. Each leg burns fuel at the rate matching its phase (climb, cruise, or descent).
-         *     The RemainingFuelGals field on each leg shows usable fuel remaining at the end of that leg.
-         *     Refueling stops can either add a specific number of gallons or refuel to full capacity.
+         *     - **Bottom of Descent (BOD)** — Inserted 3 NM before the destination airport at Traffic Pattern Altitude (airport elevation + 1000 ft, rounded to the nearest 100 ft). This marks the point where the aircraft levels off at pattern altitude for the approach.
          *
-         *     Refueling Stops
-         *     Any intermediate waypoint can be marked as a refueling stop. When a refueling stop is present, the route
-         *     is segmented so that each segment gets its own independent TOC, TOD, and BOD waypoints. This models
-         *     a real multi-leg flight where you climb out after each stop and descend into each landing.
+         *     **Wind Correction**
          *
-         *     Airspace and Obstacle Detection
-         *     After calculating the route, the service queries the database for controlled airspaces (Class B, C, D, E),
-         *     special use airspaces (Restricted, Prohibited, MOA, Warning, Alert), and obstacles along the route corridor.
-         *     The response includes identifier collections that you can use with other endpoints to retrieve full details:
+         *     The service automatically fetches winds aloft forecast data based on your departure time and selects the nearest reporting station to each waypoint. Wind direction, speed, and temperature are interpolated to the leg's altitude. The magnetic heading returned for each leg is the actual heading to fly after accounting for both magnetic variation and wind correction. If wind data is unavailable, the calculation proceeds with zero-wind assumptions (ground speed equals true airspeed).
          *
-         *     AirspaceGlobalIds — use with GET /api/v1/airspaces/by-global-ids
-         *     SpecialUseAirspaceGlobalIds — use with GET /api/v1/airspaces/special-use/by-global-ids
-         *     ObstacleOasNumbers — use with POST /api/v1/obstacles/by-oas-numbers
+         *     **Fuel Tracking**
+         *
+         *     Fuel is tracked across the entire route. Start/Taxi/Takeoff (STT) fuel is deducted at departure and again after each refueling stop. Each leg burns fuel at the rate matching its phase (climb, cruise, or descent). The `RemainingFuelGals` field on each leg shows usable fuel remaining at the end of that leg. Refueling stops can either add a specific number of gallons or refuel to full capacity.
+         *
+         *     **Refueling Stops**
+         *
+         *     Any intermediate waypoint can be marked as a refueling stop. When a refueling stop is present, the route is segmented so that each segment gets its own independent TOC, TOD, and BOD waypoints. This models a real multi-leg flight where you climb out after each stop and descend into each landing.
+         *
+         *     **Airspace and Obstacle Detection**
+         *
+         *     After calculating the route, the service queries the database for controlled airspaces (Class B, C, D, E), special use airspaces (Restricted, Prohibited, MOA, Warning, Alert), and obstacles along the route corridor. The response includes identifier collections that you can use with other endpoints to retrieve full details:
+         *
+         *     - `AirspaceGlobalIds` — use with `GET /api/v1/airspaces/by-global-ids`
+         *
+         *     - `SpecialUseAirspaceGlobalIds` — use with `GET /api/v1/airspaces/special-use/by-global-ids`
+         *
+         *     - `ObstacleOasNumbers` — use with `POST /api/v1/obstacles/by-oas-numbers`
          */
         post: operations["Navlog_CalculateNavlog"];
         delete?: never;
@@ -711,21 +679,15 @@ export interface paths {
         put?: never;
         /**
          * Calculates the great-circle bearing and distance between two geographic points.
+         * @description Provide a start and end point as latitude/longitude in decimal degrees. The service computes:
          *
-         *     Provide a start and end point as latitude/longitude in decimal degrees. The service computes:
+         *     - **True Course** — The initial bearing from start to end referenced to True North (0-360 degrees), computed using WGS84 geodesic (great-circle) geometry.
          *
-         *     True Course
-         *     The initial bearing from start to end referenced to True North (0-360 degrees),
-         *     computed using WGS84 geodesic (great-circle) geometry.
-         *     Magnetic Course
-         *     The true course adjusted for local magnetic variation at the start point.
-         *     This is the course you would read on a magnetic compass (0-360 degrees).
-         *     Distance
-         *     The great-circle distance between the two points in nautical miles.
+         *     - **Magnetic Course** — The true course adjusted for local magnetic variation at the start point. This is the course you would read on a magnetic compass (0-360 degrees).
          *
-         *     This endpoint is useful for quick point-to-point calculations without building a full navigation log.
-         *     Note that this returns course (direction of the route), not heading (direction the
-         *     aircraft nose points). For wind-corrected headings, use the full navigation log endpoint.
+         *     - **Distance** — The great-circle distance between the two points in nautical miles.
+         *
+         *     This endpoint is useful for quick point-to-point calculations without building a full navigation log. Note that this returns *course* (direction of the route), not *heading* (direction the aircraft nose points). For wind-corrected headings, use the full navigation log endpoint.
          */
         post: operations["Navlog_CalculateBearingAndDistance"];
         delete?: never;
@@ -743,31 +705,23 @@ export interface paths {
         };
         /**
          * Retrieves winds aloft (FB) forecast data for all reporting sites across the US.
+         * @description Returns wind direction, wind speed, and temperature at standard altitude levels for every winds aloft reporting station in the United States. This is the same raw forecast data that the navigation log calculator uses internally to compute wind-corrected headings and ground speeds.
          *
-         *     Returns wind direction, wind speed, and temperature at standard altitude levels for every
-         *     winds aloft reporting station in the United States. This is the same raw forecast data that
-         *     the navigation log calculator uses internally to compute wind-corrected headings and ground speeds.
+         *     **Altitude Levels**
          *
-         *     Altitude Levels
-         *     Data is provided at the following standard levels (feet MSL):
-         *     3000, 6000, 9000, 12000, 18000, 24000, 30000, 34000, and 39000.
-         *     Not all stations report temperature at every level. Wind direction and speed may be null
-         *     for calm or light/variable conditions.
+         *     Data is provided at the following standard levels (feet MSL): 3000, 6000, 9000, 12000, 18000, 24000, 30000, 34000, and 39000. Not all stations report temperature at every level. Wind direction and speed may be null for calm or light/variable conditions.
          *
-         *     Forecast Periods
-         *     6-hour
-         *     Short-range forecast, most accurate for near-term flights
-         *     12-hour
-         *     Medium-range forecast for flights departing later in the day
-         *     24-hour
-         *     Long-range forecast for next-day planning
+         *     **Forecast Periods**
          *
-         *     Response Structure
-         *     The response includes the forecast validity window (ValidTime, ForUseStartTime,
-         *     ForUseEndTime) and a list of reporting sites. Each site has an identifier, coordinates,
-         *     and a dictionary of wind/temperature data keyed by altitude level (e.g., "3000", "6000").
-         *     Wind direction is in degrees true (the direction wind is blowing from), speed is in knots,
-         *     and temperature is in degrees Celsius.
+         *     - **6-hour** — Short-range forecast, most accurate for near-term flights
+         *
+         *     - **12-hour** — Medium-range forecast for flights departing later in the day
+         *
+         *     - **24-hour** — Long-range forecast for next-day planning
+         *
+         *     **Response Structure**
+         *
+         *     The response includes the forecast validity window (`ValidTime`, `ForUseStartTime`, `ForUseEndTime`) and a list of reporting sites. Each site has an identifier, coordinates, and a dictionary of wind/temperature data keyed by altitude level (e.g., "3000", "6000"). Wind direction is in degrees true (the direction wind is blowing *from*), speed is in knots, and temperature is in degrees Celsius.
          */
         get: operations["Navlog_GetWindsAloftData"];
         put?: never;
@@ -787,14 +741,9 @@ export interface paths {
         };
         /**
          * Gets all active NOTAMs for a specific airport
-         * @description Returns NOTAMs matching the airport's FAA identifier or ICAO code. The identifier is
-         *     case-insensitive — kdfw, KDFW, and DFW all match the same airport.
-         *     Optional filters can narrow results by classification, feature type, text content, or effective date range.
-         *     GET /api/v1/notams/KDFW                                  — all active NOTAMs for DFW
-         *     GET /api/v1/notams/DFW?classification=FDC                — only FDC NOTAMs
-         *     GET /api/v1/notams/KDFW?feature=RWY                      — only runway-related NOTAMs
-         *     GET /api/v1/notams/KDFW?freeText=CLOSED                  — text search within NOTAM text
-         *     GET /api/v1/notams/KDFW?classification=DOMESTIC&feature=RWY — combined filters
+         * @description Returns NOTAMs matching the airport's FAA identifier or ICAO code. The identifier is case-insensitive — `kdfw`, `KDFW`, and `DFW` all match the same airport. Optional filters can narrow results by classification, feature type, text content, or effective date range.
+         *
+         *     ``` GET /api/v1/notams/KDFW — all active NOTAMs for DFW GET /api/v1/notams/DFW?classification=FDC — only FDC NOTAMs GET /api/v1/notams/KDFW?feature=RWY — only runway-related NOTAMs GET /api/v1/notams/KDFW?freeText=CLOSED — text search within NOTAM text GET /api/v1/notams/KDFW?classification=DOMESTIC&feature=RWY — combined filters ```
          */
         get: operations["Notam_GetNotamsForAirport"];
         put?: never;
@@ -814,10 +763,9 @@ export interface paths {
         };
         /**
          * Gets NOTAMs within a radius of a geographic point
-         * @description Performs a spatial query using PostGIS to find NOTAMs whose geometry falls within the
-         *     specified radius of the given coordinates. Only NOTAMs with stored geometry are returned.
-         *     GET /api/v1/notams/radius?latitude=32.8998&longitude=-97.0403&radiusNm=25
-         *     GET /api/v1/notams/radius?latitude=32.8998&longitude=-97.0403&radiusNm=10&classification=DOMESTIC
+         * @description Performs a spatial query using PostGIS to find NOTAMs whose geometry falls within the specified radius of the given coordinates. Only NOTAMs with stored geometry are returned.
+         *
+         *     ``` GET /api/v1/notams/radius?latitude=32.8998&longitude=-97.0403&radiusNm=25 GET /api/v1/notams/radius?latitude=32.8998&longitude=-97.0403&radiusNm=10&classification=DOMESTIC ```
          */
         get: operations["Notam_GetNotamsByRadius"];
         put?: never;
@@ -839,28 +787,15 @@ export interface paths {
         put?: never;
         /**
          * Gets NOTAMs for a flight route (airports and/or waypoints)
-         * @description Fetches NOTAMs for each point along a route, deduplicates them, and returns a single combined result.
-         *     The route can be specified in two ways:
+         * @description Fetches NOTAMs for each point along a route, deduplicates them, and returns a single combined result. The route can be specified in two ways: **Option 1 — Airport identifiers only** (simple):
          *
-         *     **Option 1 — Airport identifiers only** (simple):
-         *     { "airportIdentifiers": ["KDFW", "KAUS"] }
+         *     ``` { "airportIdentifiers": ["KDFW", "KAUS"] } ```
          *
          *     **Option 2 — Route points** (airports + waypoints with coordinates):
-         *     {
-         *       "routePoints": [
-         *         { "airportIdentifier": "KDFW" },
-         *         { "name": "Lake Travis", "latitude": 30.4082, "longitude": -97.8538 },
-         *         { "latitude": 30.1, "longitude": -97.6, "radiusNm": 15 },
-         *         { "airportIdentifier": "KAUS" }
-         *       ],
-         *       "corridorRadiusNm": 25,
-         *       "filters": { "classification": "DOMESTIC", "feature": "RWY" }
-         *     }
          *
-         *     If both routePoints and airportIdentifiers are provided, routePoints takes precedence.
-         *     Each waypoint uses its own radiusNm if specified, otherwise falls back to corridorRadiusNm,
-         *     then to the server default (25 nm). Airport points query by identifier, not radius.
-         *     Optional filters narrow results across all route points.
+         *     ``` { "routePoints": [ { "airportIdentifier": "KDFW" }, { "name": "Lake Travis", "latitude": 30.4082, "longitude": -97.8538 }, { "latitude": 30.1, "longitude": -97.6, "radiusNm": 15 }, { "airportIdentifier": "KAUS" } ], "corridorRadiusNm": 25, "filters": { "classification": "DOMESTIC", "feature": "RWY" } } ```
+         *
+         *     If both `routePoints` and `airportIdentifiers` are provided, `routePoints` takes precedence. Each waypoint uses its own `radiusNm` if specified, otherwise falls back to `corridorRadiusNm`, then to the server default (25 nm). Airport points query by identifier, not radius. Optional filters narrow results across all route points.
          */
         post: operations["Notam_GetNotamsForRoute"];
         delete?: never;
@@ -878,14 +813,9 @@ export interface paths {
         };
         /**
          * Searches NOTAMs across all locations using filter criteria
-         * @description Searches the entire active NOTAM database without requiring a specific airport or location.
-         *     At least one filter parameter is required to prevent unbounded queries.
-         *     Results are returned with cursor-based pagination — pass the pagination.nextCursor
-         *     value from a previous response as the cursor query parameter to retrieve the next page.
-         *     GET /api/v1/notams/search?classification=FDC                           — all active FDC NOTAMs
-         *     GET /api/v1/notams/search?freeText=CLOSED&limit=50                     — text search, 50 per page
-         *     GET /api/v1/notams/search?feature=RWY&classification=DOMESTIC           — combined filters
-         *     GET /api/v1/notams/search?classification=FDC&cursor=ABC123&limit=100   — next page
+         * @description Searches the entire active NOTAM database without requiring a specific airport or location. At least one filter parameter is required to prevent unbounded queries. Results are returned with cursor-based pagination — pass the `pagination.nextCursor` value from a previous response as the `cursor` query parameter to retrieve the next page.
+         *
+         *     ``` GET /api/v1/notams/search?classification=FDC — all active FDC NOTAMs GET /api/v1/notams/search?freeText=CLOSED&limit=50 — text search, 50 per page GET /api/v1/notams/search?feature=RWY&classification=DOMESTIC — combined filters GET /api/v1/notams/search?classification=FDC&cursor=ABC123&limit=100 — next page ```
          */
         get: operations["Notam_SearchNotams"];
         put?: never;
@@ -905,10 +835,9 @@ export interface paths {
         };
         /**
          * Gets a single NOTAM by its NMS ID
-         * @description Retrieves a specific NOTAM by its FAA NMS identifier. Unlike other NOTAM endpoints,
-         *     this does not filter out cancelled or expired NOTAMs — it returns the NOTAM regardless
-         *     of its current status, which is useful for looking up referenced or historical NOTAMs.
-         *     GET /api/v1/notams/id/1757609538792382
+         * @description Retrieves a specific NOTAM by its FAA NMS identifier. Unlike other NOTAM endpoints, this does not filter out cancelled or expired NOTAMs — it returns the NOTAM regardless of its current status, which is useful for looking up referenced or historical NOTAMs.
+         *
+         *     ``` GET /api/v1/notams/id/1757609538792382 ```
          */
         get: operations["Notam_GetNotamByNmsId"];
         put?: never;
@@ -1001,7 +930,8 @@ export interface paths {
          *     ObstacleOasNumbers returned by the navigation log endpoint (POST /api/v1/navlog/calculate)
          *     to retrieve full details for obstacles near a planned route.
          * @description Send a JSON array of OAS number strings in the request body:
-         *     ["12-345678", "12-345679", "12-345680"]
+         *
+         *     ``` ["12-345678", "12-345679", "12-345680"] ```
          */
         post: operations["Obstacle_GetByOasNumbers"];
         delete?: never;
@@ -1058,11 +988,7 @@ export interface paths {
         };
         /**
          * Gets all current domestic SIGMET advisories across all hazard types.
-         *
-         *     Returns every active domestic SIGMET regardless of hazard type. Each advisory includes the
-         *     hazard (convective activity, severe turbulence, severe icing, IFR conditions, or mountain
-         *     obscuration), severity, affected altitude range, and a geographic polygon defining the affected area.
-         *     Use the GET /hazard/{hazardType} endpoint to filter by a specific hazard type.
+         * @description Returns every active domestic SIGMET regardless of hazard type. Each advisory includes the hazard (convective activity, severe turbulence, severe icing, IFR conditions, or mountain obscuration), severity, affected altitude range, and a geographic polygon defining the affected area. Use the `GET /hazard/{hazardType}` endpoint to filter by a specific hazard type.
          */
         get: operations["Sigmet_GetAllSigmets"];
         put?: never;
