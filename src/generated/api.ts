@@ -740,8 +740,22 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Gets all active NOTAMs for a specific airport
-         * @description Returns NOTAMs matching the airport's FAA identifier or ICAO code. The identifier is case-insensitive — `kdfw`, `KDFW`, and `DFW` all match the same airport. Optional filters can narrow results by classification, feature type, text content, or effective date range.
+         * Gets all active NOTAMs for a specific airport.
+         * @description Returns NOTAMs matching the airport's FAA identifier or ICAO code. The identifier is case-insensitive — `kdfw`, `KDFW`, and `DFW` all match the same airport.
+         *
+         *     **Optional Filters**
+         *
+         *     All filter parameters are optional and can be combined to narrow results:
+         *
+         *     - `classification` — NOTAM classification: `INTERNATIONAL`, `MILITARY`, `LOCAL_MILITARY`, `DOMESTIC`, `FDC`
+         *
+         *     - `feature` — feature type: `RWY`, `TWY`, `APRON`, `AD`, `OBST`, `NAV`, `COM`, `SVC`, `AIRSPACE`, `ODP`, `SID`, `STAR`, `CHART`, `DATA`, `DVA`, `IAP`, `VFP`, `ROUTE`, `SPECIAL`, `SECURITY`
+         *
+         *     - `freeText` — text search within NOTAM text (max 80 characters, alphanumeric and `/.-( )` only)
+         *
+         *     - `effectiveStartDate` / `effectiveEndDate` — ISO 8601 date range (must be paired)
+         *
+         *     **Examples**
          *
          *     ``` GET /api/v1/notams/KDFW — all active NOTAMs for DFW GET /api/v1/notams/DFW?classification=FDC — only FDC NOTAMs GET /api/v1/notams/KDFW?feature=RWY — only runway-related NOTAMs GET /api/v1/notams/KDFW?freeText=CLOSED — text search within NOTAM text GET /api/v1/notams/KDFW?classification=DOMESTIC&feature=RWY — combined filters ```
          */
@@ -762,8 +776,12 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Gets NOTAMs within a radius of a geographic point
-         * @description Performs a spatial query using PostGIS to find NOTAMs whose geometry falls within the specified radius of the given coordinates. Only NOTAMs with stored geometry are returned.
+         * Gets NOTAMs within a radius of a geographic point.
+         * @description Performs a spatial query using PostGIS to find NOTAMs whose geometry falls within the specified radius of the given coordinates. Only NOTAMs with stored geometry are returned — NOTAMs that lack geographic data (no point or polygon in the source GeoJSON) are excluded from spatial queries.
+         *
+         *     The same optional filters available on the airport endpoint (`classification`, `feature`, `freeText`, `effectiveStartDate`/`effectiveEndDate`) can be combined with the spatial search.
+         *
+         *     **Examples**
          *
          *     ``` GET /api/v1/notams/radius?latitude=32.8998&longitude=-97.0403&radiusNm=25 GET /api/v1/notams/radius?latitude=32.8998&longitude=-97.0403&radiusNm=10&classification=DOMESTIC ```
          */
@@ -786,16 +804,24 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Gets NOTAMs for a flight route (airports and/or waypoints)
-         * @description Fetches NOTAMs for each point along a route, deduplicates them, and returns a single combined result. The route can be specified in two ways: **Option 1 — Airport identifiers only** (simple):
+         * Gets NOTAMs for a flight route (airports and/or waypoints).
+         * @description Fetches NOTAMs for each point along a route, deduplicates them, and returns a single combined result. The route can be specified in two ways:
+         *
+         *     **Option 1 — Airport identifiers only**
+         *
+         *     The simplest form — provide an array of airport identifiers. Each airport is queried by identifier.
          *
          *     ``` { "airportIdentifiers": ["KDFW", "KAUS"] } ```
          *
-         *     **Option 2 — Route points** (airports + waypoints with coordinates):
+         *     **Option 2 — Route points (airports + waypoints)**
+         *
+         *     Mix airport identifiers and geographic waypoints with coordinates. Waypoints use spatial (radius) queries while airports query by identifier.
          *
          *     ``` { "routePoints": [ { "airportIdentifier": "KDFW" }, { "name": "Lake Travis", "latitude": 30.4082, "longitude": -97.8538 }, { "latitude": 30.1, "longitude": -97.6, "radiusNm": 15 }, { "airportIdentifier": "KAUS" } ], "corridorRadiusNm": 25, "filters": { "classification": "DOMESTIC", "feature": "RWY" } } ```
          *
-         *     If both `routePoints` and `airportIdentifiers` are provided, `routePoints` takes precedence. Each waypoint uses its own `radiusNm` if specified, otherwise falls back to `corridorRadiusNm`, then to the server default (25 nm). Airport points query by identifier, not radius. Optional filters narrow results across all route points.
+         *     **Radius Resolution**
+         *
+         *     If both `routePoints` and `airportIdentifiers` are provided, `routePoints` takes precedence. Each waypoint uses its own `radiusNm` if specified, otherwise falls back to `corridorRadiusNm`, then to the server default (25 NM). Airport points query by identifier, not radius. Optional filters narrow results across all route points.
          */
         post: operations["Notam_GetNotamsForRoute"];
         delete?: never;
@@ -812,8 +838,14 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Searches NOTAMs across all locations using filter criteria
-         * @description Searches the entire active NOTAM database without requiring a specific airport or location. At least one filter parameter is required to prevent unbounded queries. Results are returned with cursor-based pagination — pass the `pagination.nextCursor` value from a previous response as the `cursor` query parameter to retrieve the next page.
+         * Searches NOTAMs across all locations using filter criteria.
+         * @description Searches the entire active NOTAM database without requiring a specific airport or location. At least one filter parameter is required to prevent unbounded queries.
+         *
+         *     **Pagination**
+         *
+         *     Results are returned with cursor-based pagination. Pass the `pagination.nextCursor` value from a previous response as the `cursor` query parameter to retrieve the next page. The `limit` parameter controls page size (1–500, default 100).
+         *
+         *     **Examples**
          *
          *     ``` GET /api/v1/notams/search?classification=FDC — all active FDC NOTAMs GET /api/v1/notams/search?freeText=CLOSED&limit=50 — text search, 50 per page GET /api/v1/notams/search?feature=RWY&classification=DOMESTIC — combined filters GET /api/v1/notams/search?classification=FDC&cursor=ABC123&limit=100 — next page ```
          */
@@ -834,8 +866,10 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Gets a single NOTAM by its NMS ID
-         * @description Retrieves a specific NOTAM by its FAA NMS identifier. Unlike other NOTAM endpoints, this does not filter out cancelled or expired NOTAMs — it returns the NOTAM regardless of its current status, which is useful for looking up referenced or historical NOTAMs.
+         * Gets a single NOTAM by its NMS ID.
+         * @description Retrieves a specific NOTAM by its FAA NMS identifier. Unlike other NOTAM endpoints, this does *not* filter out cancelled or expired NOTAMs — it returns the NOTAM regardless of its current status, which is useful for looking up referenced or historical NOTAMs.
+         *
+         *     **Example**
          *
          *     ``` GET /api/v1/notams/id/1757609538792382 ```
          */
