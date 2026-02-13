@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState, useEffect } from 'react'
-import { Clock, RefreshCw } from 'lucide-react'
+import { Calendar, Clock, RefreshCw } from 'lucide-react'
 import {
   SYNC_JOBS_28,
   SYNC_JOBS_56,
@@ -37,56 +37,39 @@ function LocalTimeCell({ utcHour }: { utcHour: number }) {
   return <span>{label || `${String(utcHour).padStart(2, '0')}:00 UTC`}</span>
 }
 
-function CycleTable({
-  title,
-  cycleDays,
-  jobs,
-}: {
-  title: string
-  cycleDays: number | null
-  jobs: SyncJob[]
-}) {
-  const isContinuous = cycleDays === null
-
+function SyncJobCard({ job, isContinuous }: { job: SyncJob; isContinuous: boolean }) {
   return (
-    <div className="space-y-3">
-      <h3 className="text-lg font-medium">{title}</h3>
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b">
-              <th className="py-3 text-left font-semibold">Job</th>
-              <th className="py-3 text-left font-semibold">
-                {isContinuous ? 'Schedule' : 'Daily Check (Your Time)'}
-              </th>
-              <th className="py-3 text-left font-semibold">Data</th>
-              {!isContinuous && (
-                <th className="py-3 text-left font-semibold">Next Update</th>
-              )}
-            </tr>
-          </thead>
-          <tbody>
-            {jobs.map((job) => (
-              <tr key={job.name} className="border-b">
-                <td className="py-3 font-medium">{job.name}</td>
-                <td className="py-3 text-muted-foreground">
-                  {isContinuous ? (
-                    job.schedule
-                  ) : (
-                    <LocalTimeCell utcHour={job.utcHour} />
-                  )}
-                </td>
-                <td className="py-3 text-muted-foreground">{job.data}</td>
-                {!isContinuous && (
-                  <td className="py-3">
-                    <NextSyncCell job={job} />
-                  </td>
-                )}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <div className="rounded-lg border p-4">
+      <div className="flex items-center justify-between gap-2">
+        <h4 className="font-medium">{job.name}</h4>
+        <span className="shrink-0 text-xs text-muted-foreground">
+          {isContinuous ? (
+            job.schedule
+          ) : (
+            <LocalTimeCell utcHour={job.utcHour} />
+          )}
+        </span>
       </div>
+      <p className="mt-1 text-sm text-muted-foreground">{job.data}</p>
+      {!isContinuous && (
+        <div className="mt-3 flex items-center gap-2 rounded-md bg-muted/50 px-3 py-2 text-sm">
+          <Calendar className="h-3.5 w-3.5 shrink-0 text-accent" />
+          <span className="text-muted-foreground">Next update:</span>
+          <span className="font-medium">
+            <NextSyncCell job={job} />
+          </span>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function SyncJobList({ jobs, isContinuous }: { jobs: SyncJob[]; isContinuous: boolean }) {
+  return (
+    <div className="grid gap-3 sm:grid-cols-2">
+      {jobs.map((job) => (
+        <SyncJobCard key={job.name} job={job} isContinuous={isContinuous} />
+      ))}
     </div>
   )
 }
@@ -148,13 +131,13 @@ function DataFreshnessDocs() {
       {/* 28-Day Cycle */}
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold">28-Day Cycle (AIRAC)</h2>
-        <CycleTable title="" cycleDays={28} jobs={SYNC_JOBS_28} />
+        <SyncJobList jobs={SYNC_JOBS_28} isContinuous={false} />
       </section>
 
       {/* 56-Day Cycle */}
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold">56-Day Cycle (Charting)</h2>
-        <CycleTable title="" cycleDays={56} jobs={SYNC_JOBS_56} />
+        <SyncJobList jobs={SYNC_JOBS_56} isContinuous={false} />
       </section>
 
       {/* NOTAMs */}
@@ -164,7 +147,7 @@ function DataFreshnessDocs() {
           NOTAMs are not tied to the FAA publication cycles. They are kept
           near-real-time through continuous syncing.
         </p>
-        <CycleTable title="" cycleDays={null} jobs={SYNC_JOBS_NOTAMS} />
+        <SyncJobList jobs={SYNC_JOBS_NOTAMS} isContinuous={true} />
       </section>
 
       {/* What to Expect During Syncs */}
