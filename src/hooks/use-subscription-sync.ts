@@ -8,6 +8,7 @@ import {
   reconcileSubscription,
 } from '@/lib/server/stripe'
 import { apimKeys, stripeKeys } from '@/lib/server/apim-queries'
+import { toastError } from '@/lib/toast-error'
 
 // Module-level flag — only run once per page session
 let synced = false
@@ -40,6 +41,9 @@ export function useSubscriptionSync() {
           queryKey: stripeKeys.subscription(userId ?? ''),
         })
       }
+    },
+    onError: (err) => {
+      toastError('Subscription sync failed', err)
     },
   })
 

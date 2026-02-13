@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Eye, EyeOff, RotateCw } from 'lucide-react'
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { toastError } from '@/lib/toast-error'
 import { useAuth } from '@clerk/clerk-react'
 import { createPageHead } from '@/lib/seo'
 import { Button } from '@/components/ui/button'
@@ -62,6 +63,9 @@ function ApiKeysPage() {
           queryKey: apimKeys.keys(activeSubscription.id),
         })
       }
+    },
+    onError: (err) => {
+      toastError('Failed to regenerate key', err)
     },
   })
 

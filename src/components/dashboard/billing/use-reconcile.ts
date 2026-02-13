@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
+import { toastError } from '@/lib/toast-error'
 import { SITE_CONFIG } from '@/lib/constants'
 import { reconcileSubscription } from '@/lib/server/stripe'
 import { apimKeys, stripeKeys } from '@/lib/server/apim-queries'
@@ -35,10 +35,12 @@ export function useReconcile(
         retryCountRef.current += 1
         setTimeout(() => reconcileMutation.mutate(), delay)
       } else {
-        toast.error('Plan activation delayed', {
-          description: `Your payment was received. If your plan doesn't update shortly, contact ${SITE_CONFIG.supportEmail}.`,
-          duration: 10000,
-        })
+        toastError(
+          'Plan activation delayed',
+          new Error(
+            `Your payment was received. If your plan doesn't update shortly, contact ${SITE_CONFIG.supportEmail}.`,
+          ),
+        )
       }
     },
   })

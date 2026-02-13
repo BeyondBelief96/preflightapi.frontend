@@ -93,6 +93,7 @@ export const createCheckoutSession = createServerFn({ method: 'POST' })
       customer: customerId,
       mode: 'subscription',
       automatic_tax: { enabled: true },
+      customer_update: { address: 'auto' },
       line_items: [{ price: priceId, quantity: 1 }],
       success_url: `${getBaseUrl()}/dashboard/billing?checkout=success&plan=${data.planId}`,
       cancel_url: `${getBaseUrl()}/dashboard/billing?checkout=canceled`,

@@ -5,6 +5,7 @@ import {
   CreditCard,
   Key,
   LayoutDashboard,
+  MessageSquare,
   Rocket,
   Settings,
 } from 'lucide-react'
@@ -62,8 +63,8 @@ function SidebarContent({
         ))}
       </nav>
 
-      {/* Docs link */}
-      <div className="border-t px-3 py-4">
+      {/* Docs & Contact links */}
+      <div className="space-y-1 border-t px-3 py-4">
         <Link
           to="/docs"
           className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
@@ -71,6 +72,14 @@ function SidebarContent({
         >
           <BookOpen className="h-4 w-4" />
           API Documentation
+        </Link>
+        <Link
+          to="/contact"
+          className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+          onClick={onNavigate}
+        >
+          <MessageSquare className="h-4 w-4" />
+          Contact Us
         </Link>
       </div>
 
