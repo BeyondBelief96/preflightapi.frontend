@@ -119,7 +119,7 @@ export function UpgradeSuccessBanner({
         {/* Plan details */}
         <div className="rounded-lg border p-4">
           <p className="text-sm font-medium">Your new limits</p>
-          <div className="mt-2 flex gap-6 text-sm text-muted-foreground">
+          <div className="mt-2 flex flex-col gap-1 text-sm text-muted-foreground sm:flex-row sm:gap-6">
             <span>
               {plan.limits.callsPerMonth?.toLocaleString()} API calls/month
             </span>
