@@ -196,7 +196,7 @@ export default defineHandler(async (event) => {
         // customer.deleted fires BEFORE customer.subscription.deleted. By the
         // time the subscription event arrives, the customer is already gone and
         // resolveClerkUserId can't look up metadata. Handle it here instead.
-        const customer = stripeEvent.data.object as Stripe.Customer
+        const customer = stripeEvent.data.object
         const clerkUserId = customer.metadata?.clerkUserId
 
         if (clerkUserId) {
@@ -259,7 +259,7 @@ export default defineHandler(async (event) => {
       // the schedule phase transitions. These handlers provide visibility.
 
       case 'subscription_schedule.created': {
-        const schedule = stripeEvent.data.object as Stripe.SubscriptionSchedule
+        const schedule = stripeEvent.data.object
         log.info(
           {
             scheduleId: schedule.id,
@@ -272,7 +272,7 @@ export default defineHandler(async (event) => {
       }
 
       case 'subscription_schedule.updated': {
-        const schedule = stripeEvent.data.object as Stripe.SubscriptionSchedule
+        const schedule = stripeEvent.data.object
         log.info(
           {
             scheduleId: schedule.id,
@@ -285,7 +285,7 @@ export default defineHandler(async (event) => {
       }
 
       case 'subscription_schedule.canceled': {
-        const schedule = stripeEvent.data.object as Stripe.SubscriptionSchedule
+        const schedule = stripeEvent.data.object
         log.info(
           {
             scheduleId: schedule.id,
@@ -297,7 +297,7 @@ export default defineHandler(async (event) => {
       }
 
       case 'subscription_schedule.completed': {
-        const schedule = stripeEvent.data.object as Stripe.SubscriptionSchedule
+        const schedule = stripeEvent.data.object
         log.info(
           {
             scheduleId: schedule.id,
@@ -309,7 +309,7 @@ export default defineHandler(async (event) => {
       }
 
       case 'subscription_schedule.released': {
-        const schedule = stripeEvent.data.object as Stripe.SubscriptionSchedule
+        const schedule = stripeEvent.data.object
         log.info(
           {
             scheduleId: schedule.id,

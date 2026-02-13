@@ -1,15 +1,15 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Calendar, Clock, RefreshCw } from 'lucide-react'
+import type { SyncJob } from '@/lib/faa-cycles'
 import {
   SYNC_JOBS_28,
   SYNC_JOBS_56,
   SYNC_JOBS_NOTAMS,
-  getNextSyncDate,
   formatLocalDateTime,
   formatUtcHourAsLocal,
+  getNextSyncDate,
 } from '@/lib/faa-cycles'
-import type { SyncJob } from '@/lib/faa-cycles'
 
 export const Route = createFileRoute('/docs/data-freshness')({
   component: DataFreshnessDocs,
@@ -64,7 +64,7 @@ function SyncJobCard({ job, isContinuous }: { job: SyncJob; isContinuous: boolea
   )
 }
 
-function SyncJobList({ jobs, isContinuous }: { jobs: SyncJob[]; isContinuous: boolean }) {
+function SyncJobList({ jobs, isContinuous }: { jobs: Array<SyncJob>; isContinuous: boolean }) {
   return (
     <div className="grid gap-3 sm:grid-cols-2">
       {jobs.map((job) => (
