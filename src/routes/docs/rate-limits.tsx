@@ -99,7 +99,8 @@ function RateLimitsDocs() {
         <ul className="list-inside list-disc space-y-2 text-muted-foreground">
           <li>
             When you hit your monthly quota, all further requests return{' '}
-            <code>403 Forbidden</code> until the quota resets.
+            <code>429 Too Many Requests</code> with a{' '}
+            <code>QuotaExceeded</code> error until the quota resets.
           </li>
           <li>
             You can track your current usage on the{' '}
@@ -176,46 +177,58 @@ X-RateLimit-Remaining: 58`}
       {/* Exceeding Limits */}
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold">Exceeding Limits</h2>
+        <p className="text-muted-foreground">
+          Both rate limit and quota errors return{' '}
+          <code>429 Too Many Requests</code>. You can distinguish them by the{' '}
+          <code>error</code> field in the response body.
+        </p>
 
         <h3 className="text-lg font-medium">Rate limit exceeded (429)</h3>
         <p className="text-muted-foreground">
-          When you exceed your per-minute rate limit, the API gateway returns{' '}
-          <code>429 Too Many Requests</code> with a{' '}
-          <code>Retry-After</code> header indicating how many seconds to wait.
-          The response body uses the gateway error format:
+          When you exceed your per-minute rate limit, the API returns{' '}
+          <code>429 Too Many Requests</code> with a standard{' '}
+          <code>Retry-After</code> header and a{' '}
+          <code>retryAfterSeconds</code> field in the body:
         </p>
         <CodeBlock
           language="json"
           code={`{
-  "statusCode": 429,
-  "message": "Rate limit is exceeded. Try again in 52 seconds."
+  "error": "RateLimitExceeded",
+  "message": "Too many requests. Please slow down and try again shortly.",
+  "retryAfterSeconds": 45
 }`}
         />
 
         <h3 className="mt-6 text-lg font-medium">
-          Monthly quota exceeded (403)
+          Monthly quota exceeded (429)
         </h3>
         <p className="text-muted-foreground">
-          When you exhaust your monthly quota, the API gateway returns{' '}
-          <code>403 Forbidden</code>. The quota resets at the start of your
-          next billing cycle. The response body uses the same gateway format:
+          When you exhaust your monthly quota, the API returns{' '}
+          <code>429 Too Many Requests</code> with a{' '}
+          <code>quotaResetsAt</code> timestamp indicating when your quota
+          renews:
         </p>
         <CodeBlock
           language="json"
           code={`{
-  "statusCode": 403,
-  "message": "Out of call volume quota. Quota will be replenished in 06:23:15."
+  "error": "QuotaExceeded",
+  "message": "You have reached your monthly API call limit.",
+  "quotaResetsAt": "2026-03-15T06:00:00.0000000Z"
 }`}
         />
+        <p className="text-sm text-muted-foreground">
+          The <code>quotaResetsAt</code> value is an ISO 8601 UTC timestamp.
+          The quota resets at the start of your next billing cycle.
+        </p>
         <div className="rounded-lg border bg-muted/30 p-4">
           <p className="text-sm text-muted-foreground">
-            Both <code>429</code> and quota-exceeded <code>403</code> responses
-            use the gateway error format (<code>statusCode</code> +{' '}
-            <code>message</code>), not the backend error format. See the{' '}
+            Check the <code>error</code> field to distinguish rate-limit
+            (<code>RateLimitExceeded</code>) from quota (
+            <code>QuotaExceeded</code>) responses. See the{' '}
             <Link to="/docs/errors" className="text-accent hover:underline">
               error handling guide
             </Link>{' '}
-            for details on distinguishing error formats.
+            for details on all error formats.
           </p>
         </div>
       </section>
@@ -331,15 +344,21 @@ X-RateLimit-Remaining: 58`}
       return response
     }
 
+    // Check if this is a quota error (not retryable)
+    const body = await response.clone().json()
+    if (body.error === 'QuotaExceeded') {
+      throw new Error(\`Monthly quota exceeded. Resets at \${body.quotaResetsAt}\`)
+    }
+
     if (attempt === maxRetries) {
       throw new Error('Rate limit exceeded after max retries')
     }
 
-    // Use Retry-After header if available, otherwise exponential backoff
+    // Use Retry-After header or retryAfterSeconds from body
     const retryAfter = response.headers.get('Retry-After')
     const baseDelay = retryAfter
       ? parseInt(retryAfter, 10) * 1000
-      : Math.pow(2, attempt) * 1000
+      : (body.retryAfterSeconds ?? Math.pow(2, attempt)) * 1000
 
     // Add random jitter (0-500ms) to prevent thundering herd
     const jitter = Math.random() * 500

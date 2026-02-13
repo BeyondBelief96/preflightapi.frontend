@@ -229,7 +229,7 @@ PREFLIGHT_API_KEY=your-subscription-key-here`}
         <CodeBlock
           language="json"
           code={`{
-  "error": "This endpoint is not available on the Free tier. Please upgrade to Starter or Professional."
+  "error": "This endpoint is not available on the Free tier. Please upgrade to Private or Commercial."
 }`}
         />
         <p className="text-muted-foreground">
@@ -298,13 +298,15 @@ PREFLIGHT_API_KEY=your-subscription-key-here`}
               </tr>
               <tr className="border-b">
                 <td className="py-3">
-                  <code className="rounded bg-muted px-1.5 py-0.5">403</code>
+                  <code className="rounded bg-muted px-1.5 py-0.5">429</code>
                 </td>
                 <td className="py-3 text-muted-foreground">
-                  Monthly quota exceeded
+                  Rate limit or monthly quota exceeded
                 </td>
                 <td className="py-3 text-muted-foreground">
-                  Wait for your monthly quota to reset or upgrade your plan
+                  Check the <code>error</code> field:{' '}
+                  <code>RateLimitExceeded</code> (retry after delay) or{' '}
+                  <code>QuotaExceeded</code> (wait for reset or upgrade)
                 </td>
               </tr>
             </tbody>
