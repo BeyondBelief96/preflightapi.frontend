@@ -72,13 +72,13 @@ function buildIndex(): Array<SearchItem> {
 
   // ── Individual endpoints ──
   for (const ep of allEndpoints) {
+    const categorySlug = CATEGORIES.find((c) => c.subcategories.some((s) => s.tag === ep.tag))?.slug ?? 'metars'
     items.push({
       id: `ep-${ep.operationId}`,
       type: 'endpoint',
       title: humanizeOperationId(ep.operationId),
       subtitle: `${ep.method} ${ep.path}`,
-      href: `/docs/${CATEGORIES.find((c) => c.subcategories.some((s) => s.tag === ep.tag))?.slug ?? 'metars'}`,
-      hash: ep.operationId,
+      href: `/docs/${categorySlug}/${ep.operationId}`,
       keywords: [
         ep.operationId.toLowerCase(),
         ep.method.toLowerCase(),

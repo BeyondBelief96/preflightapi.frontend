@@ -18,36 +18,24 @@ import { Route as MarketingRouteImport } from './routes/_marketing'
 import { Route as DocsIndexRouteImport } from './routes/docs/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as MarketingIndexRouteImport } from './routes/_marketing/index'
-import { Route as DocsTafsRouteImport } from './routes/docs/tafs'
-import { Route as DocsSigmetsRouteImport } from './routes/docs/sigmets'
 import { Route as DocsRateLimitsRouteImport } from './routes/docs/rate-limits'
-import { Route as DocsPirepsRouteImport } from './routes/docs/pireps'
 import { Route as DocsOpenapiRouteImport } from './routes/docs/openapi'
-import { Route as DocsObstaclesRouteImport } from './routes/docs/obstacles'
-import { Route as DocsNotamsRouteImport } from './routes/docs/notams'
-import { Route as DocsNavLogRouteImport } from './routes/docs/nav-log'
-import { Route as DocsMetarsRouteImport } from './routes/docs/metars'
 import { Route as DocsGettingStartedRouteImport } from './routes/docs/getting-started'
-import { Route as DocsGAirmetsRouteImport } from './routes/docs/g-airmets'
 import { Route as DocsErrorsRouteImport } from './routes/docs/errors'
-import { Route as DocsE6bRouteImport } from './routes/docs/e6b'
 import { Route as DocsDataFreshnessRouteImport } from './routes/docs/data-freshness'
-import { Route as DocsCommunicationFrequenciesRouteImport } from './routes/docs/communication-frequencies'
-import { Route as DocsChartSupplementsRouteImport } from './routes/docs/chart-supplements'
 import { Route as DocsAuthenticationRouteImport } from './routes/docs/authentication'
 import { Route as DocsApiReferenceRouteImport } from './routes/docs/api-reference'
-import { Route as DocsAirspaceRouteImport } from './routes/docs/airspace'
-import { Route as DocsAirportsRouteImport } from './routes/docs/airports'
-import { Route as DocsAirportDiagramsRouteImport } from './routes/docs/airport-diagrams'
 import { Route as DashboardGettingStartedRouteImport } from './routes/dashboard/getting-started'
 import { Route as MarketingPricingRouteImport } from './routes/_marketing/pricing'
 import { Route as MarketingContactRouteImport } from './routes/_marketing/contact'
 import { Route as MarketingAboutRouteImport } from './routes/_marketing/about'
 import { Route as DocsDataModelsIndexRouteImport } from './routes/docs/data-models/index'
+import { Route as DocsCategoryIndexRouteImport } from './routes/docs/$category/index'
 import { Route as DashboardSettingsIndexRouteImport } from './routes/dashboard/settings/index'
 import { Route as DashboardKeysIndexRouteImport } from './routes/dashboard/keys/index'
 import { Route as DashboardBillingIndexRouteImport } from './routes/dashboard/billing/index'
 import { Route as DocsDataModelsGroupRouteImport } from './routes/docs/data-models/$group'
+import { Route as DocsCategoryOperationIdRouteImport } from './routes/docs/$category/$operationId'
 import { Route as MarketingLegalTermsRouteImport } from './routes/_marketing/legal/terms'
 import { Route as MarketingLegalPrivacyRouteImport } from './routes/_marketing/legal/privacy'
 
@@ -95,24 +83,9 @@ const MarketingIndexRoute = MarketingIndexRouteImport.update({
   path: '/',
   getParentRoute: () => MarketingRoute,
 } as any)
-const DocsTafsRoute = DocsTafsRouteImport.update({
-  id: '/tafs',
-  path: '/tafs',
-  getParentRoute: () => DocsRoute,
-} as any)
-const DocsSigmetsRoute = DocsSigmetsRouteImport.update({
-  id: '/sigmets',
-  path: '/sigmets',
-  getParentRoute: () => DocsRoute,
-} as any)
 const DocsRateLimitsRoute = DocsRateLimitsRouteImport.update({
   id: '/rate-limits',
   path: '/rate-limits',
-  getParentRoute: () => DocsRoute,
-} as any)
-const DocsPirepsRoute = DocsPirepsRouteImport.update({
-  id: '/pireps',
-  path: '/pireps',
   getParentRoute: () => DocsRoute,
 } as any)
 const DocsOpenapiRoute = DocsOpenapiRouteImport.update({
@@ -120,34 +93,9 @@ const DocsOpenapiRoute = DocsOpenapiRouteImport.update({
   path: '/openapi',
   getParentRoute: () => DocsRoute,
 } as any)
-const DocsObstaclesRoute = DocsObstaclesRouteImport.update({
-  id: '/obstacles',
-  path: '/obstacles',
-  getParentRoute: () => DocsRoute,
-} as any)
-const DocsNotamsRoute = DocsNotamsRouteImport.update({
-  id: '/notams',
-  path: '/notams',
-  getParentRoute: () => DocsRoute,
-} as any)
-const DocsNavLogRoute = DocsNavLogRouteImport.update({
-  id: '/nav-log',
-  path: '/nav-log',
-  getParentRoute: () => DocsRoute,
-} as any)
-const DocsMetarsRoute = DocsMetarsRouteImport.update({
-  id: '/metars',
-  path: '/metars',
-  getParentRoute: () => DocsRoute,
-} as any)
 const DocsGettingStartedRoute = DocsGettingStartedRouteImport.update({
   id: '/getting-started',
   path: '/getting-started',
-  getParentRoute: () => DocsRoute,
-} as any)
-const DocsGAirmetsRoute = DocsGAirmetsRouteImport.update({
-  id: '/g-airmets',
-  path: '/g-airmets',
   getParentRoute: () => DocsRoute,
 } as any)
 const DocsErrorsRoute = DocsErrorsRouteImport.update({
@@ -155,25 +103,9 @@ const DocsErrorsRoute = DocsErrorsRouteImport.update({
   path: '/errors',
   getParentRoute: () => DocsRoute,
 } as any)
-const DocsE6bRoute = DocsE6bRouteImport.update({
-  id: '/e6b',
-  path: '/e6b',
-  getParentRoute: () => DocsRoute,
-} as any)
 const DocsDataFreshnessRoute = DocsDataFreshnessRouteImport.update({
   id: '/data-freshness',
   path: '/data-freshness',
-  getParentRoute: () => DocsRoute,
-} as any)
-const DocsCommunicationFrequenciesRoute =
-  DocsCommunicationFrequenciesRouteImport.update({
-    id: '/communication-frequencies',
-    path: '/communication-frequencies',
-    getParentRoute: () => DocsRoute,
-  } as any)
-const DocsChartSupplementsRoute = DocsChartSupplementsRouteImport.update({
-  id: '/chart-supplements',
-  path: '/chart-supplements',
   getParentRoute: () => DocsRoute,
 } as any)
 const DocsAuthenticationRoute = DocsAuthenticationRouteImport.update({
@@ -184,21 +116,6 @@ const DocsAuthenticationRoute = DocsAuthenticationRouteImport.update({
 const DocsApiReferenceRoute = DocsApiReferenceRouteImport.update({
   id: '/api-reference',
   path: '/api-reference',
-  getParentRoute: () => DocsRoute,
-} as any)
-const DocsAirspaceRoute = DocsAirspaceRouteImport.update({
-  id: '/airspace',
-  path: '/airspace',
-  getParentRoute: () => DocsRoute,
-} as any)
-const DocsAirportsRoute = DocsAirportsRouteImport.update({
-  id: '/airports',
-  path: '/airports',
-  getParentRoute: () => DocsRoute,
-} as any)
-const DocsAirportDiagramsRoute = DocsAirportDiagramsRouteImport.update({
-  id: '/airport-diagrams',
-  path: '/airport-diagrams',
   getParentRoute: () => DocsRoute,
 } as any)
 const DashboardGettingStartedRoute = DashboardGettingStartedRouteImport.update({
@@ -226,6 +143,11 @@ const DocsDataModelsIndexRoute = DocsDataModelsIndexRouteImport.update({
   path: '/data-models/',
   getParentRoute: () => DocsRoute,
 } as any)
+const DocsCategoryIndexRoute = DocsCategoryIndexRouteImport.update({
+  id: '/$category/',
+  path: '/$category/',
+  getParentRoute: () => DocsRoute,
+} as any)
 const DashboardSettingsIndexRoute = DashboardSettingsIndexRouteImport.update({
   id: '/settings/',
   path: '/settings/',
@@ -244,6 +166,11 @@ const DashboardBillingIndexRoute = DashboardBillingIndexRouteImport.update({
 const DocsDataModelsGroupRoute = DocsDataModelsGroupRouteImport.update({
   id: '/data-models/$group',
   path: '/data-models/$group',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsCategoryOperationIdRoute = DocsCategoryOperationIdRouteImport.update({
+  id: '/$category/$operationId',
+  path: '/$category/$operationId',
   getParentRoute: () => DocsRoute,
 } as any)
 const MarketingLegalTermsRoute = MarketingLegalTermsRouteImport.update({
@@ -268,35 +195,23 @@ export interface FileRoutesByFullPath {
   '/contact': typeof MarketingContactRoute
   '/pricing': typeof MarketingPricingRoute
   '/dashboard/getting-started': typeof DashboardGettingStartedRoute
-  '/docs/airport-diagrams': typeof DocsAirportDiagramsRoute
-  '/docs/airports': typeof DocsAirportsRoute
-  '/docs/airspace': typeof DocsAirspaceRoute
   '/docs/api-reference': typeof DocsApiReferenceRoute
   '/docs/authentication': typeof DocsAuthenticationRoute
-  '/docs/chart-supplements': typeof DocsChartSupplementsRoute
-  '/docs/communication-frequencies': typeof DocsCommunicationFrequenciesRoute
   '/docs/data-freshness': typeof DocsDataFreshnessRoute
-  '/docs/e6b': typeof DocsE6bRoute
   '/docs/errors': typeof DocsErrorsRoute
-  '/docs/g-airmets': typeof DocsGAirmetsRoute
   '/docs/getting-started': typeof DocsGettingStartedRoute
-  '/docs/metars': typeof DocsMetarsRoute
-  '/docs/nav-log': typeof DocsNavLogRoute
-  '/docs/notams': typeof DocsNotamsRoute
-  '/docs/obstacles': typeof DocsObstaclesRoute
   '/docs/openapi': typeof DocsOpenapiRoute
-  '/docs/pireps': typeof DocsPirepsRoute
   '/docs/rate-limits': typeof DocsRateLimitsRoute
-  '/docs/sigmets': typeof DocsSigmetsRoute
-  '/docs/tafs': typeof DocsTafsRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/docs/': typeof DocsIndexRoute
   '/legal/privacy': typeof MarketingLegalPrivacyRoute
   '/legal/terms': typeof MarketingLegalTermsRoute
+  '/docs/$category/$operationId': typeof DocsCategoryOperationIdRoute
   '/docs/data-models/$group': typeof DocsDataModelsGroupRoute
   '/dashboard/billing/': typeof DashboardBillingIndexRoute
   '/dashboard/keys/': typeof DashboardKeysIndexRoute
   '/dashboard/settings/': typeof DashboardSettingsIndexRoute
+  '/docs/$category/': typeof DocsCategoryIndexRoute
   '/docs/data-models/': typeof DocsDataModelsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -307,36 +222,24 @@ export interface FileRoutesByTo {
   '/contact': typeof MarketingContactRoute
   '/pricing': typeof MarketingPricingRoute
   '/dashboard/getting-started': typeof DashboardGettingStartedRoute
-  '/docs/airport-diagrams': typeof DocsAirportDiagramsRoute
-  '/docs/airports': typeof DocsAirportsRoute
-  '/docs/airspace': typeof DocsAirspaceRoute
   '/docs/api-reference': typeof DocsApiReferenceRoute
   '/docs/authentication': typeof DocsAuthenticationRoute
-  '/docs/chart-supplements': typeof DocsChartSupplementsRoute
-  '/docs/communication-frequencies': typeof DocsCommunicationFrequenciesRoute
   '/docs/data-freshness': typeof DocsDataFreshnessRoute
-  '/docs/e6b': typeof DocsE6bRoute
   '/docs/errors': typeof DocsErrorsRoute
-  '/docs/g-airmets': typeof DocsGAirmetsRoute
   '/docs/getting-started': typeof DocsGettingStartedRoute
-  '/docs/metars': typeof DocsMetarsRoute
-  '/docs/nav-log': typeof DocsNavLogRoute
-  '/docs/notams': typeof DocsNotamsRoute
-  '/docs/obstacles': typeof DocsObstaclesRoute
   '/docs/openapi': typeof DocsOpenapiRoute
-  '/docs/pireps': typeof DocsPirepsRoute
   '/docs/rate-limits': typeof DocsRateLimitsRoute
-  '/docs/sigmets': typeof DocsSigmetsRoute
-  '/docs/tafs': typeof DocsTafsRoute
   '/': typeof MarketingIndexRoute
   '/dashboard': typeof DashboardIndexRoute
   '/docs': typeof DocsIndexRoute
   '/legal/privacy': typeof MarketingLegalPrivacyRoute
   '/legal/terms': typeof MarketingLegalTermsRoute
+  '/docs/$category/$operationId': typeof DocsCategoryOperationIdRoute
   '/docs/data-models/$group': typeof DocsDataModelsGroupRoute
   '/dashboard/billing': typeof DashboardBillingIndexRoute
   '/dashboard/keys': typeof DashboardKeysIndexRoute
   '/dashboard/settings': typeof DashboardSettingsIndexRoute
+  '/docs/$category': typeof DocsCategoryIndexRoute
   '/docs/data-models': typeof DocsDataModelsIndexRoute
 }
 export interface FileRoutesById {
@@ -351,36 +254,24 @@ export interface FileRoutesById {
   '/_marketing/contact': typeof MarketingContactRoute
   '/_marketing/pricing': typeof MarketingPricingRoute
   '/dashboard/getting-started': typeof DashboardGettingStartedRoute
-  '/docs/airport-diagrams': typeof DocsAirportDiagramsRoute
-  '/docs/airports': typeof DocsAirportsRoute
-  '/docs/airspace': typeof DocsAirspaceRoute
   '/docs/api-reference': typeof DocsApiReferenceRoute
   '/docs/authentication': typeof DocsAuthenticationRoute
-  '/docs/chart-supplements': typeof DocsChartSupplementsRoute
-  '/docs/communication-frequencies': typeof DocsCommunicationFrequenciesRoute
   '/docs/data-freshness': typeof DocsDataFreshnessRoute
-  '/docs/e6b': typeof DocsE6bRoute
   '/docs/errors': typeof DocsErrorsRoute
-  '/docs/g-airmets': typeof DocsGAirmetsRoute
   '/docs/getting-started': typeof DocsGettingStartedRoute
-  '/docs/metars': typeof DocsMetarsRoute
-  '/docs/nav-log': typeof DocsNavLogRoute
-  '/docs/notams': typeof DocsNotamsRoute
-  '/docs/obstacles': typeof DocsObstaclesRoute
   '/docs/openapi': typeof DocsOpenapiRoute
-  '/docs/pireps': typeof DocsPirepsRoute
   '/docs/rate-limits': typeof DocsRateLimitsRoute
-  '/docs/sigmets': typeof DocsSigmetsRoute
-  '/docs/tafs': typeof DocsTafsRoute
   '/_marketing/': typeof MarketingIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/docs/': typeof DocsIndexRoute
   '/_marketing/legal/privacy': typeof MarketingLegalPrivacyRoute
   '/_marketing/legal/terms': typeof MarketingLegalTermsRoute
+  '/docs/$category/$operationId': typeof DocsCategoryOperationIdRoute
   '/docs/data-models/$group': typeof DocsDataModelsGroupRoute
   '/dashboard/billing/': typeof DashboardBillingIndexRoute
   '/dashboard/keys/': typeof DashboardKeysIndexRoute
   '/dashboard/settings/': typeof DashboardSettingsIndexRoute
+  '/docs/$category/': typeof DocsCategoryIndexRoute
   '/docs/data-models/': typeof DocsDataModelsIndexRoute
 }
 export interface FileRouteTypes {
@@ -396,35 +287,23 @@ export interface FileRouteTypes {
     | '/contact'
     | '/pricing'
     | '/dashboard/getting-started'
-    | '/docs/airport-diagrams'
-    | '/docs/airports'
-    | '/docs/airspace'
     | '/docs/api-reference'
     | '/docs/authentication'
-    | '/docs/chart-supplements'
-    | '/docs/communication-frequencies'
     | '/docs/data-freshness'
-    | '/docs/e6b'
     | '/docs/errors'
-    | '/docs/g-airmets'
     | '/docs/getting-started'
-    | '/docs/metars'
-    | '/docs/nav-log'
-    | '/docs/notams'
-    | '/docs/obstacles'
     | '/docs/openapi'
-    | '/docs/pireps'
     | '/docs/rate-limits'
-    | '/docs/sigmets'
-    | '/docs/tafs'
     | '/dashboard/'
     | '/docs/'
     | '/legal/privacy'
     | '/legal/terms'
+    | '/docs/$category/$operationId'
     | '/docs/data-models/$group'
     | '/dashboard/billing/'
     | '/dashboard/keys/'
     | '/dashboard/settings/'
+    | '/docs/$category/'
     | '/docs/data-models/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -435,36 +314,24 @@ export interface FileRouteTypes {
     | '/contact'
     | '/pricing'
     | '/dashboard/getting-started'
-    | '/docs/airport-diagrams'
-    | '/docs/airports'
-    | '/docs/airspace'
     | '/docs/api-reference'
     | '/docs/authentication'
-    | '/docs/chart-supplements'
-    | '/docs/communication-frequencies'
     | '/docs/data-freshness'
-    | '/docs/e6b'
     | '/docs/errors'
-    | '/docs/g-airmets'
     | '/docs/getting-started'
-    | '/docs/metars'
-    | '/docs/nav-log'
-    | '/docs/notams'
-    | '/docs/obstacles'
     | '/docs/openapi'
-    | '/docs/pireps'
     | '/docs/rate-limits'
-    | '/docs/sigmets'
-    | '/docs/tafs'
     | '/'
     | '/dashboard'
     | '/docs'
     | '/legal/privacy'
     | '/legal/terms'
+    | '/docs/$category/$operationId'
     | '/docs/data-models/$group'
     | '/dashboard/billing'
     | '/dashboard/keys'
     | '/dashboard/settings'
+    | '/docs/$category'
     | '/docs/data-models'
   id:
     | '__root__'
@@ -478,36 +345,24 @@ export interface FileRouteTypes {
     | '/_marketing/contact'
     | '/_marketing/pricing'
     | '/dashboard/getting-started'
-    | '/docs/airport-diagrams'
-    | '/docs/airports'
-    | '/docs/airspace'
     | '/docs/api-reference'
     | '/docs/authentication'
-    | '/docs/chart-supplements'
-    | '/docs/communication-frequencies'
     | '/docs/data-freshness'
-    | '/docs/e6b'
     | '/docs/errors'
-    | '/docs/g-airmets'
     | '/docs/getting-started'
-    | '/docs/metars'
-    | '/docs/nav-log'
-    | '/docs/notams'
-    | '/docs/obstacles'
     | '/docs/openapi'
-    | '/docs/pireps'
     | '/docs/rate-limits'
-    | '/docs/sigmets'
-    | '/docs/tafs'
     | '/_marketing/'
     | '/dashboard/'
     | '/docs/'
     | '/_marketing/legal/privacy'
     | '/_marketing/legal/terms'
+    | '/docs/$category/$operationId'
     | '/docs/data-models/$group'
     | '/dashboard/billing/'
     | '/dashboard/keys/'
     | '/dashboard/settings/'
+    | '/docs/$category/'
     | '/docs/data-models/'
   fileRoutesById: FileRoutesById
 }
@@ -585,32 +440,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MarketingIndexRouteImport
       parentRoute: typeof MarketingRoute
     }
-    '/docs/tafs': {
-      id: '/docs/tafs'
-      path: '/tafs'
-      fullPath: '/docs/tafs'
-      preLoaderRoute: typeof DocsTafsRouteImport
-      parentRoute: typeof DocsRoute
-    }
-    '/docs/sigmets': {
-      id: '/docs/sigmets'
-      path: '/sigmets'
-      fullPath: '/docs/sigmets'
-      preLoaderRoute: typeof DocsSigmetsRouteImport
-      parentRoute: typeof DocsRoute
-    }
     '/docs/rate-limits': {
       id: '/docs/rate-limits'
       path: '/rate-limits'
       fullPath: '/docs/rate-limits'
       preLoaderRoute: typeof DocsRateLimitsRouteImport
-      parentRoute: typeof DocsRoute
-    }
-    '/docs/pireps': {
-      id: '/docs/pireps'
-      path: '/pireps'
-      fullPath: '/docs/pireps'
-      preLoaderRoute: typeof DocsPirepsRouteImport
       parentRoute: typeof DocsRoute
     }
     '/docs/openapi': {
@@ -620,46 +454,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DocsOpenapiRouteImport
       parentRoute: typeof DocsRoute
     }
-    '/docs/obstacles': {
-      id: '/docs/obstacles'
-      path: '/obstacles'
-      fullPath: '/docs/obstacles'
-      preLoaderRoute: typeof DocsObstaclesRouteImport
-      parentRoute: typeof DocsRoute
-    }
-    '/docs/notams': {
-      id: '/docs/notams'
-      path: '/notams'
-      fullPath: '/docs/notams'
-      preLoaderRoute: typeof DocsNotamsRouteImport
-      parentRoute: typeof DocsRoute
-    }
-    '/docs/nav-log': {
-      id: '/docs/nav-log'
-      path: '/nav-log'
-      fullPath: '/docs/nav-log'
-      preLoaderRoute: typeof DocsNavLogRouteImport
-      parentRoute: typeof DocsRoute
-    }
-    '/docs/metars': {
-      id: '/docs/metars'
-      path: '/metars'
-      fullPath: '/docs/metars'
-      preLoaderRoute: typeof DocsMetarsRouteImport
-      parentRoute: typeof DocsRoute
-    }
     '/docs/getting-started': {
       id: '/docs/getting-started'
       path: '/getting-started'
       fullPath: '/docs/getting-started'
       preLoaderRoute: typeof DocsGettingStartedRouteImport
-      parentRoute: typeof DocsRoute
-    }
-    '/docs/g-airmets': {
-      id: '/docs/g-airmets'
-      path: '/g-airmets'
-      fullPath: '/docs/g-airmets'
-      preLoaderRoute: typeof DocsGAirmetsRouteImport
       parentRoute: typeof DocsRoute
     }
     '/docs/errors': {
@@ -669,32 +468,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DocsErrorsRouteImport
       parentRoute: typeof DocsRoute
     }
-    '/docs/e6b': {
-      id: '/docs/e6b'
-      path: '/e6b'
-      fullPath: '/docs/e6b'
-      preLoaderRoute: typeof DocsE6bRouteImport
-      parentRoute: typeof DocsRoute
-    }
     '/docs/data-freshness': {
       id: '/docs/data-freshness'
       path: '/data-freshness'
       fullPath: '/docs/data-freshness'
       preLoaderRoute: typeof DocsDataFreshnessRouteImport
-      parentRoute: typeof DocsRoute
-    }
-    '/docs/communication-frequencies': {
-      id: '/docs/communication-frequencies'
-      path: '/communication-frequencies'
-      fullPath: '/docs/communication-frequencies'
-      preLoaderRoute: typeof DocsCommunicationFrequenciesRouteImport
-      parentRoute: typeof DocsRoute
-    }
-    '/docs/chart-supplements': {
-      id: '/docs/chart-supplements'
-      path: '/chart-supplements'
-      fullPath: '/docs/chart-supplements'
-      preLoaderRoute: typeof DocsChartSupplementsRouteImport
       parentRoute: typeof DocsRoute
     }
     '/docs/authentication': {
@@ -709,27 +487,6 @@ declare module '@tanstack/react-router' {
       path: '/api-reference'
       fullPath: '/docs/api-reference'
       preLoaderRoute: typeof DocsApiReferenceRouteImport
-      parentRoute: typeof DocsRoute
-    }
-    '/docs/airspace': {
-      id: '/docs/airspace'
-      path: '/airspace'
-      fullPath: '/docs/airspace'
-      preLoaderRoute: typeof DocsAirspaceRouteImport
-      parentRoute: typeof DocsRoute
-    }
-    '/docs/airports': {
-      id: '/docs/airports'
-      path: '/airports'
-      fullPath: '/docs/airports'
-      preLoaderRoute: typeof DocsAirportsRouteImport
-      parentRoute: typeof DocsRoute
-    }
-    '/docs/airport-diagrams': {
-      id: '/docs/airport-diagrams'
-      path: '/airport-diagrams'
-      fullPath: '/docs/airport-diagrams'
-      preLoaderRoute: typeof DocsAirportDiagramsRouteImport
       parentRoute: typeof DocsRoute
     }
     '/dashboard/getting-started': {
@@ -767,6 +524,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DocsDataModelsIndexRouteImport
       parentRoute: typeof DocsRoute
     }
+    '/docs/$category/': {
+      id: '/docs/$category/'
+      path: '/$category'
+      fullPath: '/docs/$category/'
+      preLoaderRoute: typeof DocsCategoryIndexRouteImport
+      parentRoute: typeof DocsRoute
+    }
     '/dashboard/settings/': {
       id: '/dashboard/settings/'
       path: '/settings'
@@ -793,6 +557,13 @@ declare module '@tanstack/react-router' {
       path: '/data-models/$group'
       fullPath: '/docs/data-models/$group'
       preLoaderRoute: typeof DocsDataModelsGroupRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/$category/$operationId': {
+      id: '/docs/$category/$operationId'
+      path: '/$category/$operationId'
+      fullPath: '/docs/$category/$operationId'
+      preLoaderRoute: typeof DocsCategoryOperationIdRouteImport
       parentRoute: typeof DocsRoute
     }
     '/_marketing/legal/terms': {
@@ -855,56 +626,32 @@ const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
 )
 
 interface DocsRouteChildren {
-  DocsAirportDiagramsRoute: typeof DocsAirportDiagramsRoute
-  DocsAirportsRoute: typeof DocsAirportsRoute
-  DocsAirspaceRoute: typeof DocsAirspaceRoute
   DocsApiReferenceRoute: typeof DocsApiReferenceRoute
   DocsAuthenticationRoute: typeof DocsAuthenticationRoute
-  DocsChartSupplementsRoute: typeof DocsChartSupplementsRoute
-  DocsCommunicationFrequenciesRoute: typeof DocsCommunicationFrequenciesRoute
   DocsDataFreshnessRoute: typeof DocsDataFreshnessRoute
-  DocsE6bRoute: typeof DocsE6bRoute
   DocsErrorsRoute: typeof DocsErrorsRoute
-  DocsGAirmetsRoute: typeof DocsGAirmetsRoute
   DocsGettingStartedRoute: typeof DocsGettingStartedRoute
-  DocsMetarsRoute: typeof DocsMetarsRoute
-  DocsNavLogRoute: typeof DocsNavLogRoute
-  DocsNotamsRoute: typeof DocsNotamsRoute
-  DocsObstaclesRoute: typeof DocsObstaclesRoute
   DocsOpenapiRoute: typeof DocsOpenapiRoute
-  DocsPirepsRoute: typeof DocsPirepsRoute
   DocsRateLimitsRoute: typeof DocsRateLimitsRoute
-  DocsSigmetsRoute: typeof DocsSigmetsRoute
-  DocsTafsRoute: typeof DocsTafsRoute
   DocsIndexRoute: typeof DocsIndexRoute
+  DocsCategoryOperationIdRoute: typeof DocsCategoryOperationIdRoute
   DocsDataModelsGroupRoute: typeof DocsDataModelsGroupRoute
+  DocsCategoryIndexRoute: typeof DocsCategoryIndexRoute
   DocsDataModelsIndexRoute: typeof DocsDataModelsIndexRoute
 }
 
 const DocsRouteChildren: DocsRouteChildren = {
-  DocsAirportDiagramsRoute: DocsAirportDiagramsRoute,
-  DocsAirportsRoute: DocsAirportsRoute,
-  DocsAirspaceRoute: DocsAirspaceRoute,
   DocsApiReferenceRoute: DocsApiReferenceRoute,
   DocsAuthenticationRoute: DocsAuthenticationRoute,
-  DocsChartSupplementsRoute: DocsChartSupplementsRoute,
-  DocsCommunicationFrequenciesRoute: DocsCommunicationFrequenciesRoute,
   DocsDataFreshnessRoute: DocsDataFreshnessRoute,
-  DocsE6bRoute: DocsE6bRoute,
   DocsErrorsRoute: DocsErrorsRoute,
-  DocsGAirmetsRoute: DocsGAirmetsRoute,
   DocsGettingStartedRoute: DocsGettingStartedRoute,
-  DocsMetarsRoute: DocsMetarsRoute,
-  DocsNavLogRoute: DocsNavLogRoute,
-  DocsNotamsRoute: DocsNotamsRoute,
-  DocsObstaclesRoute: DocsObstaclesRoute,
   DocsOpenapiRoute: DocsOpenapiRoute,
-  DocsPirepsRoute: DocsPirepsRoute,
   DocsRateLimitsRoute: DocsRateLimitsRoute,
-  DocsSigmetsRoute: DocsSigmetsRoute,
-  DocsTafsRoute: DocsTafsRoute,
   DocsIndexRoute: DocsIndexRoute,
+  DocsCategoryOperationIdRoute: DocsCategoryOperationIdRoute,
   DocsDataModelsGroupRoute: DocsDataModelsGroupRoute,
+  DocsCategoryIndexRoute: DocsCategoryIndexRoute,
   DocsDataModelsIndexRoute: DocsDataModelsIndexRoute,
 }
 

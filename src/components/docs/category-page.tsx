@@ -1,4 +1,5 @@
 import { EndpointCard } from './endpoint-card'
+import { FormatApiText } from './format-api-text'
 import type { ApiCategory, ParsedEndpoint } from '@/lib/docs/types'
 
 interface CategoryPageProps {
@@ -23,7 +24,7 @@ export function CategoryPage({ category, endpoints }: CategoryPageProps) {
       {/* Page header */}
       <div>
         <h1 className="text-3xl font-bold">{category.title}</h1>
-        <p className="mt-2 text-lg text-muted-foreground">{category.description}</p>
+        <FormatApiText text={category.description} className="mt-2 text-base text-muted-foreground" />
       </div>
 
       {/* Subcategory sections */}
@@ -38,7 +39,7 @@ export function CategoryPage({ category, endpoints }: CategoryPageProps) {
 
           <div className="space-y-6">
             {sub.endpoints.map((ep) => (
-              <EndpointCard key={ep.operationId} endpoint={ep} />
+              <EndpointCard key={ep.operationId} endpoint={ep} categorySlug={category.slug} />
             ))}
           </div>
         </section>

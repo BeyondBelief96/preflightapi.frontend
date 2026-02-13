@@ -318,12 +318,29 @@ function parseEndpoints(): Array<ParsedEndpoint> {
         paginatedItemType = successResp.schemaName.replace('PaginatedResponseOf', '')
       }
 
+      // Split long summaries: first paragraph → summary, rest → description
+      const rawSummary = (op.summary ?? '').trim()
+      const rawDescription = (op.description ?? '').trim()
+      const blankLineIdx = rawSummary.search(/\n\s*\n/)
+      let shortSummary: string | undefined
+      let fullDescription: string | undefined
+
+      if (blankLineIdx !== -1) {
+        shortSummary = rawSummary.slice(0, blankLineIdx).trim() || undefined
+        const rest = rawSummary.slice(blankLineIdx).trim()
+        fullDescription =
+          (rest + (rawDescription ? '\n\n' + rawDescription : '')).trim() || undefined
+      } else {
+        shortSummary = rawSummary || undefined
+        fullDescription = rawDescription || undefined
+      }
+
       endpoints.push({
         path,
         method: method.toUpperCase() as ParsedEndpoint['method'],
         operationId: op.operationId ?? '',
-        summary: op.summary,
-        description: op.description,
+        summary: shortSummary,
+        description: fullDescription,
         tag,
         parameters,
         requestBody,
@@ -355,6 +372,10 @@ export const schemas = Object.entries(oaSpec.components.schemas).reduce<
   acc[name] = parseParsedSchema(name, s)
   return acc
 }, {})
+
+export function getEndpointByOperationId(operationId: string): ParsedEndpoint | undefined {
+  return allEndpoints.find((ep) => ep.operationId === operationId)
+}
 
 export function getEndpointsForCategory(
   category: { subcategories: Array<{ tag: string; pathFilter?: string }> },

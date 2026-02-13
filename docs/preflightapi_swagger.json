@@ -522,13 +522,13 @@
         "tags": [
           "Airspace"
         ],
-        "summary": "Gets airspaces by ICAO codes or FAA identifiers",
+        "summary": "Gets controlled airspaces associated with specific airports by ICAO code or FAA identifier.\n            \nReturns all controlled airspace boundaries (Class B, C, D) associated with the given airport\nidentifiers. Each result includes the airspace classification, altitude limits, and boundary\ngeometry. Pass multiple identifiers as a comma-separated list to retrieve airspaces for\nseveral airports in a single request.",
         "operationId": "Airspace_GetByIcaoOrIdent",
         "parameters": [
           {
             "name": "icaoOrIdents",
             "in": "query",
-            "description": "Comma-separated ICAO codes or identifiers",
+            "description": "Comma-separated ICAO codes or FAA identifiers (e.g., KDFW,KORD,KJFK)",
             "schema": {
               "type": "string"
             },
@@ -550,7 +550,7 @@
             }
           },
           "400": {
-            "description": "If the identifiers parameter is empty",
+            "description": "The identifiers parameter is empty",
             "content": {
               "application/json": {
                 "schema": {
@@ -776,14 +776,14 @@
         "tags": [
           "E6B Flight Computer"
         ],
-        "summary": "Calculates crosswind and headwind components for all runways at an airport using the latest METAR wind data.\nReturns components for each runway end and recommends the best runway (lowest crosswind with a headwind).\nRequires the airport to have a current METAR with wind data and at least one runway with heading information.",
+        "summary": "Calculates crosswind and headwind components for every runway at an airport using live METAR wind data.\n            \nFetches the airport's latest METAR observation and computes wind components for each runway end.\nThe response includes a RecommendedRunway — the runway end with the lowest crosswind\nthat also has a headwind (not a tailwind).\n            \nSign Conventions\nCrosswindKt — positive = wind from the right, negative = wind from the left\nHeadwindKt — positive = headwind (favorable), negative = tailwind (unfavorable)\n            \nIf the METAR reports variable wind (VRB), IsVariableWind is true and crosswind components\nare calculated using the full wind speed for all runway ends.\nIf gusts are reported, separate GustCrosswindKt and GustHeadwindKt fields show the\nworst-case gust components.",
         "operationId": "E6b_GetCrosswindForAirport",
         "parameters": [
           {
             "name": "icaoCodeOrIdent",
             "in": "path",
             "required": true,
-            "description": "ICAO code or airport identifier",
+            "description": "ICAO code (e.g., KDFW) or FAA identifier (e.g., DFW)",
             "schema": {
               "type": "string"
             },
@@ -792,7 +792,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Returns crosswind data for all runways",
+            "description": "Returns crosswind data for all runways with a recommended runway",
             "content": {
               "application/json": {
                 "schema": {
@@ -802,7 +802,7 @@
             }
           },
           "400": {
-            "description": "If METAR is missing required wind data",
+            "description": "The METAR is missing wind direction or wind speed data",
             "content": {
               "application/json": {
                 "schema": {
@@ -812,7 +812,7 @@
             }
           },
           "404": {
-            "description": "If the airport or METAR is not found",
+            "description": "The airport was not found, or no current METAR is available for this airport",
             "content": {
               "application/json": {
                 "schema": {
@@ -839,11 +839,11 @@
         "tags": [
           "E6B Flight Computer"
         ],
-        "summary": "Calculates crosswind and headwind components using manually provided wind and runway heading values.\nUseful when you want to calculate components for specific conditions rather than using live METAR data.",
+        "summary": "Calculates crosswind and headwind components from manually provided wind and runway heading values.\n            \nProvide wind direction, wind speed, and a runway heading to compute the headwind and crosswind\ncomponents. Optionally include a gust speed to also compute gust components.\n            \nSign Conventions\nCrosswindKt — positive = wind from the right, negative = wind from the left\nHeadwindKt — positive = headwind (favorable), negative = tailwind (unfavorable)",
         "operationId": "E6b_CalculateCrosswind",
         "requestBody": {
           "x-name": "request",
-          "description": "Wind direction (degrees), wind speed (knots), optional gust speed (knots), and runway heading (magnetic degrees)",
+          "description": "WindDirectionDegrees (0-360, or null for variable),\nWindSpeedKt (knots),\nWindGustKt (knots, optional),\nRunwayHeadingDegrees (magnetic degrees, 0-360).",
           "content": {
             "application/json": {
               "schema": {
@@ -856,7 +856,7 @@
         },
         "responses": {
           "200": {
-            "description": "Returns calculated crosswind components",
+            "description": "Returns the calculated crosswind and headwind components",
             "content": {
               "application/json": {
                 "schema": {
@@ -866,7 +866,7 @@
             }
           },
           "400": {
-            "description": "If the request parameters are invalid",
+            "description": "The request parameters are invalid (e.g., wind speed is negative)",
             "content": {
               "application/json": {
                 "schema": {
@@ -883,15 +883,14 @@
         "tags": [
           "E6B Flight Computer"
         ],
-        "summary": "Calculates density altitude for an airport using the latest METAR temperature and altimeter data.\nOptionally override the temperature or altimeter setting (e.g., for \"what if\" scenarios).\nReturns density altitude, pressure altitude, ISA temperature, and temperature deviation.",
-        "description": "Density altitude is calculated using the ISA (International Standard Atmosphere) model approximation:\nDA = PA + 120 × (OAT − ISA_temp). Real atmospheric density varies with humidity, local pressure\npatterns, and non-standard lapse rates that this model does not account for.",
+        "summary": "Calculates density altitude for an airport using live METAR data with optional overrides.\n            \nFetches the airport's latest METAR to obtain temperature and altimeter setting, then computes\ndensity altitude using the ISA model. You can optionally override either value via query parameters\nfor \"what if\" scenarios (e.g., \"what would density altitude be if the temperature reached 40°C?\").\n            \nResponse Fields\nDensityAltitudeFt — the effective altitude the aircraft \"feels\" based on air density\nPressureAltitudeFt — field elevation corrected for non-standard pressure\nIsaTemperatureCelsius — the standard (ISA) temperature expected at this pressure altitude\nTemperatureDeviationCelsius — how far the actual temperature deviates from ISA (positive = hotter than standard)\n            \nFormula: DA = PA + 120 * (OAT - ISA_temp). This does not account for humidity,\nlocal pressure patterns, or non-standard lapse rates.",
         "operationId": "E6b_GetDensityAltitudeForAirport",
         "parameters": [
           {
             "name": "icaoCodeOrIdent",
             "in": "path",
             "required": true,
-            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW)",
+            "description": "ICAO code (e.g., KDFW) or FAA identifier (e.g., DFW)",
             "schema": {
               "type": "string"
             },
@@ -922,7 +921,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Returns density altitude data",
+            "description": "Returns density altitude data for the airport",
             "content": {
               "application/json": {
                 "schema": {
@@ -932,7 +931,7 @@
             }
           },
           "400": {
-            "description": "If METAR is missing required data and no override provided",
+            "description": "The METAR is missing temperature or altimeter data and no override was provided",
             "content": {
               "application/json": {
                 "schema": {
@@ -942,7 +941,7 @@
             }
           },
           "404": {
-            "description": "If the airport or METAR is not found",
+            "description": "The airport was not found, or no current METAR is available",
             "content": {
               "application/json": {
                 "schema": {
@@ -969,12 +968,11 @@
         "tags": [
           "E6B Flight Computer"
         ],
-        "summary": "Calculates density altitude using manually provided field elevation, altimeter setting, and temperature.\nUseful for any location or for calculating with non-current weather conditions.",
-        "description": "Density altitude is calculated using the ISA (International Standard Atmosphere) model approximation:\nDA = PA + 120 × (OAT − ISA_temp). Real atmospheric density varies with humidity, local pressure\npatterns, and non-standard lapse rates that this model does not account for.",
+        "summary": "Calculates density altitude from manually provided field elevation, altimeter setting, and temperature.\n            \nProvide your own values instead of relying on METAR data. Useful for any location, for planning\nwith forecast temperatures, or when METAR data is not available.\n            \nResponse Fields\nDensityAltitudeFt — the effective altitude the aircraft \"feels\" based on air density\nPressureAltitudeFt — field elevation corrected for non-standard pressure\nIsaTemperatureCelsius — the standard (ISA) temperature expected at this pressure altitude\nTemperatureDeviationCelsius — how far the actual temperature deviates from ISA (positive = hotter than standard)\n            \nFormula: DA = PA + 120 * (OAT - ISA_temp). This does not account for humidity,\nlocal pressure patterns, or non-standard lapse rates.",
         "operationId": "E6b_CalculateDensityAltitude",
         "requestBody": {
           "x-name": "request",
-          "description": "Field elevation (feet MSL), altimeter setting (inches of mercury), and temperature (degrees Celsius)",
+          "description": "FieldElevationFt (feet MSL),\nAltimeterInHg (inches of mercury),\nTemperatureCelsius (degrees Celsius).",
           "content": {
             "application/json": {
               "schema": {
@@ -987,7 +985,7 @@
         },
         "responses": {
           "200": {
-            "description": "Returns calculated density altitude",
+            "description": "Returns the calculated density altitude",
             "content": {
               "application/json": {
                 "schema": {
@@ -997,7 +995,7 @@
             }
           },
           "400": {
-            "description": "If the request parameters are invalid",
+            "description": "The request parameters are invalid",
             "content": {
               "application/json": {
                 "schema": {
@@ -1014,11 +1012,11 @@
         "tags": [
           "E6B Flight Computer"
         ],
-        "summary": "Calculates true heading and ground speed using the wind triangle.\nGiven true course, true airspeed, wind direction, and wind speed, returns the wind correction angle,\ntrue heading, ground speed, and headwind/crosswind components.",
+        "summary": "Solves the wind triangle to compute true heading and ground speed.\n            \nGiven your desired true course, true airspeed, and the wind conditions, this calculates the heading\nyou need to fly to stay on course and your resulting ground speed.\n            \nResponse Fields\nTrueHeadingDegrees — the heading to fly (true course + wind correction angle)\nGroundSpeedKt — your speed over the ground after accounting for wind\nWindCorrectionAngleDegrees — the crab angle needed to stay on course\n(positive = correct to the right, negative = correct to the left)\nHeadwindComponentKt — positive = headwind, negative = tailwind\nCrosswindComponentKt — positive = from the right, negative = from the left\n            \nWind direction is the direction the wind is blowing from (standard meteorological convention).",
         "operationId": "E6b_CalculateWindTriangle",
         "requestBody": {
           "x-name": "request",
-          "description": "True course (degrees), TAS (knots), wind direction (degrees), wind speed (knots)",
+          "description": "TrueCourseDegrees (0-360),\nTrueAirspeedKt (knots, must be greater than 0),\nWindDirectionDegrees (0-360, direction wind blows from),\nWindSpeedKt (knots).",
           "content": {
             "application/json": {
               "schema": {
@@ -1031,7 +1029,7 @@
         },
         "responses": {
           "200": {
-            "description": "Returns wind triangle calculation results",
+            "description": "Returns the wind triangle solution",
             "content": {
               "application/json": {
                 "schema": {
@@ -1041,7 +1039,7 @@
             }
           },
           "400": {
-            "description": "If the request parameters are invalid",
+            "description": "The request parameters are invalid (e.g., TAS is zero or negative)",
             "content": {
               "application/json": {
                 "schema": {
@@ -1058,12 +1056,11 @@
         "tags": [
           "E6B Flight Computer"
         ],
-        "summary": "Calculates true airspeed (TAS) from calibrated airspeed, pressure altitude, and outside air temperature.\nUses the full compressible isentropic flow conversion (CAS → impact pressure → Mach → TAS),\naccurate from sea level through FL410+ including above the tropopause (36,089 ft).\nAlso returns density altitude and Mach number at the given conditions.\nReference: ICAO Doc 7488 (Standard Atmosphere), isentropic flow relations.",
-        "description": "This calculation assumes the ISA tropopause at 36,089 ft. The real tropopause varies from\n~26,000 ft near the poles to ~55,000 ft near the equator. Pressure ratio and temperature\nmodel transitions at this boundary affect TAS accuracy at high altitudes in non-mid-latitude regions.",
+        "summary": "Calculates true airspeed (TAS) from calibrated airspeed, pressure altitude, and outside air temperature.\n            \nUses the full compressible isentropic flow conversion (CAS to impact pressure to Mach to TAS),\naccurate from sea level through FL410+ including above the ISA tropopause at 36,089 ft.\nThis is more accurate than the simplified CAS / sqrt(sigma) formula, which diverges\nsignificantly at higher altitudes.\n            \nResponse Fields\nTrueAirspeedKt — the aircraft's actual speed through the air mass (knots)\nDensityAltitudeFt — density altitude at the given conditions (feet)\nMachNumber — the aircraft's speed as a fraction of the local speed of sound\n            \nNote: The ISA tropopause is modeled at 36,089 ft. The real tropopause varies from\n~26,000 ft near the poles to ~55,000 ft near the equator, which affects accuracy at high\naltitudes in non-mid-latitude regions.",
         "operationId": "E6b_CalculateTrueAirspeed",
         "requestBody": {
           "x-name": "request",
-          "description": "Calibrated airspeed (knots), pressure altitude (feet), OAT (°C)",
+          "description": "CalibratedAirspeedKt (knots, must be greater than 0),\nPressureAltitudeFt (feet, can be negative),\nOutsideAirTemperatureCelsius (degrees Celsius).",
           "content": {
             "application/json": {
               "schema": {
@@ -1076,7 +1073,7 @@
         },
         "responses": {
           "200": {
-            "description": "Returns TAS calculation results",
+            "description": "Returns the TAS calculation",
             "content": {
               "application/json": {
                 "schema": {
@@ -1086,7 +1083,7 @@
             }
           },
           "400": {
-            "description": "If the request parameters are invalid",
+            "description": "The request parameters are invalid (e.g., CAS is zero or negative)",
             "content": {
               "application/json": {
                 "schema": {
@@ -1103,12 +1100,11 @@
         "tags": [
           "E6B Flight Computer"
         ],
-        "summary": "Estimates cloud base height AGL from surface temperature and dewpoint.\nUses the standard spread × 400 formula (equivalent to spread / 2.5 × 1000).",
-        "description": "This estimation uses the average dry adiabatic lapse rate (~3°C/1000 ft) and dewpoint lapse\nrate (~0.5°C/1000 ft) to approximate the lifting condensation level. Actual cloud bases vary\nwith humidity profiles, inversions, and local convective conditions.",
+        "summary": "Estimates cloud base height AGL from surface temperature and dewpoint spread.\n            \nUses the standard pilot rule of thumb: cloud base (ft AGL) = (temperature - dewpoint) * 400.\nThis approximates the lifting condensation level based on the average dry adiabatic lapse rate\n(~3°C/1000 ft) and dewpoint lapse rate (~0.5°C/1000 ft).\n            \nResponse Fields\nEstimatedCloudBaseFtAgl — estimated height of the cloud base above ground level (feet)\nTemperatureDewpointSpreadCelsius — the difference between temperature and dewpoint (degrees Celsius)\n            \nNote: Actual cloud bases vary with humidity profiles, inversions, and local convective\nconditions. A small spread (less than 3°C) generally indicates a high likelihood of low ceilings or fog.",
         "operationId": "E6b_CalculateCloudBase",
         "requestBody": {
           "x-name": "request",
-          "description": "Surface temperature (°C) and dewpoint (°C)",
+          "description": "TemperatureCelsius (surface temperature in °C) and\nDewpointCelsius (dewpoint in °C, must be less than or equal to the temperature).",
           "content": {
             "application/json": {
               "schema": {
@@ -1121,7 +1117,7 @@
         },
         "responses": {
           "200": {
-            "description": "Returns cloud base estimation",
+            "description": "Returns the cloud base estimation",
             "content": {
               "application/json": {
                 "schema": {
@@ -1131,7 +1127,7 @@
             }
           },
           "400": {
-            "description": "If dewpoint exceeds temperature",
+            "description": "The dewpoint exceeds the temperature, which is physically invalid",
             "content": {
               "application/json": {
                 "schema": {
@@ -1148,12 +1144,11 @@
         "tags": [
           "E6B Flight Computer"
         ],
-        "summary": "Calculates pressure altitude from field elevation and altimeter setting.\nPA = field elevation + (29.92 − altimeter) × 1000.",
-        "description": "This uses the standard altimetry relationship from the ICAO Standard Atmosphere. The 1 inHg ≈ 1000 ft\napproximation is most accurate near sea level and diverges slightly at higher altitudes and extreme\naltimeter settings.",
+        "summary": "Calculates pressure altitude from field elevation and altimeter setting.\n            \nPressure altitude is the altitude in the standard atmosphere where the pressure equals the\ncurrent pressure at your location. It is the starting point for density altitude, TAS,\nand performance chart calculations.\n            \nFormula: PA = FieldElevation + (29.92 - Altimeter) * 1000\n            \nResponse Fields\nPressureAltitudeFt — the calculated pressure altitude (feet)\nAltimeterCorrectionFt — the deviation from standard pressure expressed in feet (positive = lower pressure than standard, negative = higher)\n            \nNote: The 1 inHg = 1000 ft approximation is most accurate near sea level and diverges\nslightly at higher elevations and extreme altimeter settings.",
         "operationId": "E6b_CalculatePressureAltitude",
         "requestBody": {
           "x-name": "request",
-          "description": "Field elevation (feet MSL) and altimeter setting (inHg)",
+          "description": "FieldElevationFt (feet MSL) and\nAltimeterInHg (inches of mercury, must be between 25.0 and 35.0).",
           "content": {
             "application/json": {
               "schema": {
@@ -1166,7 +1161,7 @@
         },
         "responses": {
           "200": {
-            "description": "Returns pressure altitude calculation",
+            "description": "Returns the pressure altitude calculation",
             "content": {
               "application/json": {
                 "schema": {
@@ -1176,7 +1171,7 @@
             }
           },
           "400": {
-            "description": "If the altimeter setting is out of range",
+            "description": "The altimeter setting is outside the valid range (25.0 - 35.0 inHg)",
             "content": {
               "application/json": {
                 "schema": {
@@ -1193,11 +1188,11 @@
         "tags": [
           "Weather - G-AIRMETs"
         ],
-        "summary": "Gets all current G-AIRMETs (Graphical AIRMETs)",
+        "summary": "Gets all current G-AIRMET advisories across all product types and hazards.\n            \nReturns every active G-AIRMET regardless of product type (SIERRA, TANGO, ZULU) or hazard type.\nEach advisory includes the hazard, severity, affected altitude range, forecast valid time,\nand a geographic polygon defining the affected area. Use the\nGET /product/{product} or GET /hazard/{hazardType} endpoints to filter\nby specific product or hazard type.",
         "operationId": "GAirmet_GetAllGAirmets",
         "responses": {
           "200": {
-            "description": "Returns the list of G-AIRMETs",
+            "description": "Returns the list of all current G-AIRMETs",
             "content": {
               "application/json": {
                 "schema": {
@@ -1418,11 +1413,11 @@
         "tags": [
           "Navigation Log"
         ],
-        "summary": "Calculates a complete VFR navigation log for a cross-country flight. Provide an ordered list of\nwaypoints and aircraft performance data (airspeeds, climb/descent rates, fuel burn rates).\nThe response includes per-leg calculations (true/magnetic course, heading, ground speed, distance,\ntime, fuel burn, wind data) and identifiers for airspaces and obstacles along the route.\nUse the returned AirspaceGlobalIds with GET /api/v1/airspaces/by-global-ids,\nSpecialUseAirspaceGlobalIds with GET /api/v1/airspaces/special-use/by-global-ids,\nand ObstacleOasNumbers with POST /api/v1/obstacles/by-oas-numbers to get full details.",
+        "summary": "Calculates a complete VFR navigation log for a cross-country flight.\n            \nProvide an ordered list of waypoints (minimum 2) with aircraft performance data, a cruising altitude,\nand a departure time. The service calculates every leg of the route and returns detailed per-leg data\nincluding course, heading, ground speed, distance, estimated time, fuel burn, and wind information.\n            \nAutomatic Waypoint Insertion\nThe service automatically inserts calculated waypoints into the route to model climb and descent phases:\n            \nTop of Climb (TOC)\nInserted after departure (or after a refueling stop) at the point where the aircraft reaches\ncruising altitude. Position is calculated using the climb true airspeed and climb rate from\nyour performance data. Legs before the TOC use climb airspeed and climb fuel burn rate.\nTop of Descent (TOD)\nInserted before the destination (or before a refueling stop) at the point where the aircraft\nshould begin descending. Calculated using descent airspeed, descent rate, and a 3 NM final\napproach buffer. Legs after the TOD use descent airspeed and descent fuel burn rate.\nBottom of Descent (BOD)\nInserted 3 NM before the destination airport at Traffic Pattern Altitude (airport elevation + 1000 ft,\nrounded to the nearest 100 ft). This marks the point where the aircraft levels off at pattern altitude\nfor the approach.\n            \nWind Correction\nThe service automatically fetches winds aloft forecast data based on your departure time and selects the\nnearest reporting station to each waypoint. Wind direction, speed, and temperature are interpolated to\nthe leg's altitude. The magnetic heading returned for each leg is the actual heading to fly after\naccounting for both magnetic variation and wind correction. If wind data is unavailable, the calculation\nproceeds with zero-wind assumptions (ground speed equals true airspeed).\n            \nFuel Tracking\nFuel is tracked across the entire route. Start/Taxi/Takeoff (STT) fuel is deducted at departure and again\nafter each refueling stop. Each leg burns fuel at the rate matching its phase (climb, cruise, or descent).\nThe RemainingFuelGals field on each leg shows usable fuel remaining at the end of that leg.\nRefueling stops can either add a specific number of gallons or refuel to full capacity.\n            \nRefueling Stops\nAny intermediate waypoint can be marked as a refueling stop. When a refueling stop is present, the route\nis segmented so that each segment gets its own independent TOC, TOD, and BOD waypoints. This models\na real multi-leg flight where you climb out after each stop and descend into each landing.\n            \nAirspace and Obstacle Detection\nAfter calculating the route, the service queries the database for controlled airspaces (Class B, C, D, E),\nspecial use airspaces (Restricted, Prohibited, MOA, Warning, Alert), and obstacles along the route corridor.\nThe response includes identifier collections that you can use with other endpoints to retrieve full details:\n            \nAirspaceGlobalIds — use with GET /api/v1/airspaces/by-global-ids\nSpecialUseAirspaceGlobalIds — use with GET /api/v1/airspaces/special-use/by-global-ids\nObstacleOasNumbers — use with POST /api/v1/obstacles/by-oas-numbers",
         "operationId": "Navlog_CalculateNavlog",
         "requestBody": {
           "x-name": "request",
-          "description": "Navigation log request including ordered waypoints, aircraft performance data, cruising altitude, and departure time",
+          "description": "Navigation log request containing:\nWaypoints (ordered route points with lat/lon/altitude, minimum 2),\nPerformanceData (climb/cruise/descent airspeeds in knots, climb/descent rates in FPM,\nfuel burn rates in GPH, STT fuel in gallons, and total fuel on board in gallons),\nPlannedCruisingAltitude (feet MSL), and\nTimeOfDeparture (UTC, used to select the appropriate winds aloft forecast).",
           "content": {
             "application/json": {
               "schema": {
@@ -1445,7 +1440,7 @@
             }
           },
           "400": {
-            "description": "If the request data is invalid (e.g., fewer than 2 waypoints)",
+            "description": "\n             The request data is invalid. Common causes: fewer than 2 waypoints, missing performance data,\n             or invalid coordinate values.\n             ",
             "content": {
               "application/json": {
                 "schema": {
@@ -1465,7 +1460,7 @@
             }
           },
           "503": {
-            "description": "If an external service (magnetic variation or winds aloft) is unavailable",
+            "description": "\n             An external service required for the calculation is temporarily unavailable.\n             This can be the NOAA magnetic variation API or the winds aloft data source.\n             ",
             "content": {
               "application/json": {
                 "schema": {
@@ -1482,11 +1477,11 @@
         "tags": [
           "Navigation Log"
         ],
-        "summary": "Calculates the great-circle bearing and distance between two geographic points.\nReturns true course, magnetic course (adjusted for local magnetic variation), and\ndistance in nautical miles. Useful for quick point-to-point calculations without\na full navigation log.",
+        "summary": "Calculates the great-circle bearing and distance between two geographic points.\n            \nProvide a start and end point as latitude/longitude in decimal degrees. The service computes:\n            \nTrue Course\nThe initial bearing from start to end referenced to True North (0-360 degrees),\ncomputed using WGS84 geodesic (great-circle) geometry.\nMagnetic Course\nThe true course adjusted for local magnetic variation at the start point.\nThis is the course you would read on a magnetic compass (0-360 degrees).\nDistance\nThe great-circle distance between the two points in nautical miles.\n            \nThis endpoint is useful for quick point-to-point calculations without building a full navigation log.\nNote that this returns course (direction of the route), not heading (direction the\naircraft nose points). For wind-corrected headings, use the full navigation log endpoint.",
         "operationId": "Navlog_CalculateBearingAndDistance",
         "requestBody": {
           "x-name": "request",
-          "description": "Start and end point coordinates (latitude/longitude in decimal degrees)",
+          "description": "Start and end point coordinates. All values are in decimal degrees\n(e.g., 36.1245 for latitude, -86.6782 for longitude).",
           "content": {
             "application/json": {
               "schema": {
@@ -1509,7 +1504,7 @@
             }
           },
           "400": {
-            "description": "If the coordinates are invalid",
+            "description": "The coordinates are invalid (e.g., latitude outside -90 to 90 range)",
             "content": {
               "application/json": {
                 "schema": {
@@ -1519,7 +1514,7 @@
             }
           },
           "503": {
-            "description": "If the magnetic variation service is unavailable",
+            "description": "The NOAA magnetic variation service is temporarily unavailable",
             "content": {
               "application/json": {
                 "schema": {
@@ -1536,14 +1531,14 @@
         "tags": [
           "Navigation Log"
         ],
-        "summary": "Gets winds aloft (FB) forecast data for all reporting sites across the US.\nReturns wind direction, speed, and temperature at standard altitude levels (3000, 6000, 9000, 12000,\n18000, 24000, 30000, 34000, 39000 ft MSL) for each reporting site. This is the raw forecast data\nthat the navlog calculator uses internally to compute wind-corrected headings and ground speeds.",
+        "summary": "Retrieves winds aloft (FB) forecast data for all reporting sites across the US.\n            \nReturns wind direction, wind speed, and temperature at standard altitude levels for every\nwinds aloft reporting station in the United States. This is the same raw forecast data that\nthe navigation log calculator uses internally to compute wind-corrected headings and ground speeds.\n            \nAltitude Levels\nData is provided at the following standard levels (feet MSL):\n3000, 6000, 9000, 12000, 18000, 24000, 30000, 34000, and 39000.\nNot all stations report temperature at every level. Wind direction and speed may be null\nfor calm or light/variable conditions.\n            \nForecast Periods\n6-hour\nShort-range forecast, most accurate for near-term flights\n12-hour\nMedium-range forecast for flights departing later in the day\n24-hour\nLong-range forecast for next-day planning\n            \nResponse Structure\nThe response includes the forecast validity window (ValidTime, ForUseStartTime,\nForUseEndTime) and a list of reporting sites. Each site has an identifier, coordinates,\nand a dictionary of wind/temperature data keyed by altitude level (e.g., \"3000\", \"6000\").\nWind direction is in degrees true (the direction wind is blowing from), speed is in knots,\nand temperature is in degrees Celsius.",
         "operationId": "Navlog_GetWindsAloftData",
         "parameters": [
           {
             "name": "forecast",
             "in": "path",
             "required": true,
-            "description": "Forecast period in hours: 6, 12, or 24",
+            "description": "Forecast period in hours. Must be 6, 12, or 24.",
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -1553,7 +1548,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Returns the winds aloft data",
+            "description": "Returns the winds aloft forecast data",
             "content": {
               "application/json": {
                 "schema": {
@@ -1563,7 +1558,7 @@
             }
           },
           "400": {
-            "description": "If the forecast period is not 6, 12, or 24",
+            "description": "The forecast period is not 6, 12, or 24",
             "content": {
               "application/json": {
                 "schema": {
@@ -1573,7 +1568,7 @@
             }
           },
           "503": {
-            "description": "If the winds aloft data source is unavailable",
+            "description": "The winds aloft data source is temporarily unavailable",
             "content": {
               "application/json": {
                 "schema": {
@@ -2552,11 +2547,11 @@
         "tags": [
           "Weather - Domestic SIGMETs"
         ],
-        "summary": "Gets all current domestic SIGMETs",
+        "summary": "Gets all current domestic SIGMET advisories across all hazard types.\n            \nReturns every active domestic SIGMET regardless of hazard type. Each advisory includes the\nhazard (convective activity, severe turbulence, severe icing, IFR conditions, or mountain\nobscuration), severity, affected altitude range, and a geographic polygon defining the affected area.\nUse the GET /hazard/{hazardType} endpoint to filter by a specific hazard type.",
         "operationId": "Sigmet_GetAllSigmets",
         "responses": {
           "200": {
-            "description": "Returns the list of SIGMETs",
+            "description": "Returns the list of all current domestic SIGMETs",
             "content": {
               "application/json": {
                 "schema": {
@@ -7783,7 +7778,7 @@
     },
     {
       "name": "E6B Flight Computer",
-      "description": "Provides E6B flight computer calculations for VFR pilots, including crosswind components, density altitude, wind triangle, true airspeed, cloud base estimation, and pressure altitude. Airport-based calculations automatically use the latest METAR data for wind, temperature, and altimeter settings. Manual calculation endpoints allow you to provide your own parameters.\n\n**DISCLAIMER:** These calculations are intended for PRE-FLIGHT planning purposes only and must not be used for in-flight navigation. Results are approximations based on the ICAO Standard Atmosphere (ISA) model, which assumes mid-latitude atmospheric conditions. The actual tropopause altitude varies from ~26,000 ft at the poles to ~55,000 ft at the equator, and real atmospheric conditions differ from the ISA model. Always verify against certified instruments and official flight planning tools."
+      "description": "Provides E6B flight computer calculations for VFR pilots.\n\nEach calculation is available in two forms:\n\n- **Airport-based** — Automatically pulls wind, temperature, and altimeter data from the airport's latest METAR observation. Some airport-based endpoints accept optional overrides for \"what if\" scenarios.\n\n- **Manual** — You provide all input values directly. Useful for any location, hypothetical conditions, or when METAR data is not available.\n\n**Available Calculations**\n\n- **Crosswind** — Headwind and crosswind components for runway selection\n\n- **Density Altitude** — Pressure altitude corrected for non-standard temperature\n\n- **Wind Triangle** — True heading, ground speed, and wind correction angle from course/wind data\n\n- **True Airspeed** — TAS from calibrated airspeed, pressure altitude, and temperature\n\n- **Cloud Base** — Estimated ceiling height from temperature/dewpoint spread\n\n- **Pressure Altitude** — Altitude corrected from field elevation and current altimeter setting\n\n**DISCLAIMER:** These calculations are intended for PRE-FLIGHT planning purposes only and must not be used for in-flight navigation. Results are approximations based on the ICAO Standard Atmosphere (ISA) model, which assumes mid-latitude atmospheric conditions. The actual tropopause altitude varies from ~26,000 ft at the poles to ~55,000 ft at the equator. Always verify against certified instruments and official flight planning tools."
     },
     {
       "name": "Weather - G-AIRMETs",
@@ -7795,7 +7790,7 @@
     },
     {
       "name": "Navigation Log",
-      "description": "Provides VFR cross-country flight planning tools including full navigation log calculation, bearing/distance computation, and winds aloft data. The navigation log calculates course, heading, ground speed, time, and fuel for each leg while accounting for wind and magnetic variation. The navlog response also identifies airspaces and obstacles along the route — use the returned IDs with the Airspace and Obstacle endpoints to retrieve full details."
+      "description": "Provides VFR cross-country flight planning tools.\n\nThis controller offers three capabilities:\n\n- **Navigation Log** — Full route calculation with per-leg course, heading, ground speed, time, fuel burn, and wind data. Automatically detects airspaces and obstacles along the route.\n\n- **Bearing and Distance** — Quick point-to-point great-circle bearing and distance between any two coordinates.\n\n- **Winds Aloft** — Raw winds aloft (FB) forecast data for all US reporting sites at standard altitude levels."
     },
     {
       "name": "NOTAMs",
