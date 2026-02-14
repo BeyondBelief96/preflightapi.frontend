@@ -5,7 +5,7 @@ import z from 'zod'
 import { createLogger } from './logger'
 
 const CONTACT_TO = 'support@preflightapi.io'
-const logger = createLogger('contact-form');
+const logger = createLogger('contact-form')
 
 const subjectLabels: Record<string, string> = {
   general: 'General Inquiry',
