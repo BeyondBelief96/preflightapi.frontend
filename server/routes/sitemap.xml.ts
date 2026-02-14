@@ -1,8 +1,9 @@
-import { defineEventHandler, setResponseHeader } from 'h3'
+import { defineEventHandler } from 'h3'
 import { CATEGORIES } from '@/lib/docs/category-config'
 import { SCHEMA_GROUPS } from '@/lib/docs/schema-groups'
+import { env } from '@/env'
 
-const SITE_URL = 'https://preflightapi.io'
+const SITE_URL = env.VITE_BASE_URL ?? 'https://preflightapi.io'
 
 // Static marketing pages
 const STATIC_PAGES = [
@@ -28,8 +29,8 @@ const CATEGORY_SLUGS = CATEGORIES.map((c) => c.slug)
 const DATA_MODEL_SLUGS = SCHEMA_GROUPS.map((g) => g.slug)
 
 export default defineEventHandler((event) => {
-  setResponseHeader(event, 'Content-Type', 'application/xml; charset=utf-8')
-  setResponseHeader(event, 'Cache-Control', 'public, max-age=3600, s-maxage=86400')
+  event.res.headers.set('Content-Type', 'application/xml; charset=utf-8')
+  event.res.headers.set('Cache-Control', 'public, max-age=3600, s-maxage=86400')
 
   const today = new Date().toISOString().split('T')[0]
 

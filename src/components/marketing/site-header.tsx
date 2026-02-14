@@ -3,7 +3,7 @@ import { SignedIn, SignedOut, UserButton } from '@clerk/clerk-react'
 import { Menu, X } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { Logo } from '@/components/logo'
+import { PlaneAnimation } from '@/components/plane-animation'
 import { isWaitlistMode } from '@/lib/waitlist'
 
 const navLinks = [
@@ -21,7 +21,7 @@ export function SiteHeader() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
-          <Logo size="lg" />
+          <PlaneAnimation size="lg" />
         </Link>
 
         {/* Desktop Navigation */}

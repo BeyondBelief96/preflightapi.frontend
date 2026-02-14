@@ -3,7 +3,7 @@ import { Waitlist } from '@clerk/clerk-react'
 import { createPageHead } from '@/lib/seo'
 import { isWaitlistMode } from '@/lib/waitlist'
 import { AnimatedBackdrop } from '@/components/animated-backdrop'
-import { Logo } from '@/components/logo'
+import { PlaneAnimation } from '@/components/plane-animation'
 
 export const Route = createFileRoute('/waitlist')({
   beforeLoad: () => {
@@ -28,7 +28,7 @@ function WaitlistPage() {
       <AnimatedBackdrop />
       <div className="flex w-full flex-col items-center">
         <a href="/" className="mb-8">
-          <Logo size="lg" />
+          <PlaneAnimation size="lg" />
         </a>
         <Waitlist signInUrl={`${import.meta.env.VITE_BASE_URL}/sign-in`} />
       </div>

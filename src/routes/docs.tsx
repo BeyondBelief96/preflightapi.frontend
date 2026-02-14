@@ -6,7 +6,7 @@ import { createPageHead } from '@/lib/seo'
 import { DocsSidebar } from '@/components/docs/docs-sidebar'
 import { DocsSearch } from '@/components/docs/docs-search'
 import { Button } from '@/components/ui/button'
-import { Logo } from '@/components/logo'
+import { PlaneAnimation } from '@/components/plane-animation'
 import { isWaitlistMode } from '@/lib/waitlist'
 
 export const Route = createFileRoute('/docs')({
@@ -54,7 +54,7 @@ function DocsLayout() {
       >
         <div className="flex h-16 items-center justify-between border-b px-6">
           <Link to="/" className="flex items-center gap-2">
-            <Logo size="sm" />
+            <PlaneAnimation size="sm" />
           </Link>
           <SignedIn>
             <Link to="/dashboard">
