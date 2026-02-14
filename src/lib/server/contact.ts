@@ -1,8 +1,11 @@
 import { createServerFn } from '@tanstack/react-start'
 import { Resend } from 'resend'
 import { env } from '@/env'
+import z from 'zod'
+import { createLogger } from './logger'
 
 const CONTACT_TO = 'support@preflightapi.io'
+const logger = createLogger('contact-form');
 
 const subjectLabels: Record<string, string> = {
   general: 'General Inquiry',
@@ -12,32 +15,25 @@ const subjectLabels: Record<string, string> = {
   atp: 'Enterprise / ATP Plan',
 }
 
+const emailSchema = z.object({
+  firstName: z.string().min(1),
+  lastName: z.string().min(1),
+  email: z.email(),
+  subject: z.string().min(1),
+  message: z.string().min(1),
+})
+
 export const sendContactEmail = createServerFn({ method: 'POST' })
-  .inputValidator(
-    (input: {
-      firstName: string
-      lastName: string
-      email: string
-      subject: string
-      message: string
-    }) => {
-      if (!input.firstName.trim()) throw new Error('First name is required')
-      if (!input.email.trim()) throw new Error('Email is required')
-      if (!input.subject) throw new Error('Subject is required')
-      if (!input.message.trim()) throw new Error('Message is required')
-      return input
-    },
-  )
+  .inputValidator(  
+    (input: z.input<typeof emailSchema>) => emailSchema.parse(input))
   .handler(async ({ data }) => {
-    const apiKey = env.RESEND_API_KEY
-    if (!apiKey) {
+    if(!env.RESEND_API_KEY) {
+      logger.error('RESEND_API_KEY is not configured')
       throw new Error('RESEND_API_KEY is not configured')
     }
-
-    const resend = new Resend(apiKey)
+    const resend = new Resend(env.RESEND_API_KEY ?? '')
     const topicLabel = subjectLabels[data.subject] ?? data.subject
-    const fullName =
-      `${data.firstName} ${data.lastName}`.trim() || data.firstName
+    const fullName = `${data.firstName} ${data.lastName}`.trim() || data.firstName
 
     const { error } = await resend.emails.send({
       from: `PreflightAPI <support@contact.preflightapi.io>`,
@@ -54,6 +50,7 @@ export const sendContactEmail = createServerFn({ method: 'POST' })
     })
 
     if (error) {
+      logger.error(`Failed to send email: ${error.message}`)  
       throw new Error(`Failed to send email: ${error.message}`)
     }
 
