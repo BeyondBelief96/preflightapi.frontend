@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { SITE_CONFIG } from '@/lib/constants'
-import { Logo } from '@/components/logo'
+import { PlaneAnimation } from '@/components/plane-animation'
 
 const footerLinks = {
   Product: [
@@ -43,7 +43,7 @@ export function SiteFooter() {
           ))}
         </div>
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t pt-8 md:flex-row">
-          <Logo size="sm" />
+          <PlaneAnimation size="sm" />
           <p className="text-sm text-muted-foreground">
             &copy; {new Date().getFullYear()} {SITE_CONFIG.name}. All rights
             reserved.

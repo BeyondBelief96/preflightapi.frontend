@@ -2558,6 +2558,17 @@ export interface components {
              */
             altimeterInHg?: number;
         };
+        /**
+         * @description Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the
+         *     pagination.nextCursor value as the cursor query parameter in your next request.
+         *     Continue until pagination.hasMore is false.
+         */
+        PaginatedResponseOfGAirmetDto: {
+            /** @description The current page of results. */
+            data?: components["schemas"]["GAirmetDto"][];
+            /** @description Pagination metadata including the cursor to fetch the next page. */
+            pagination?: components["schemas"]["PaginationMetadata"];
+        };
         /** @description G-AIRMET (Graphical AIRMET) advisory data with hazard, altitude, and area information. */
         GAirmetDto: {
             /**
@@ -3398,6 +3409,17 @@ export interface components {
         ObstacleMarking: "Unknown" | "OrangeOrOrangeWhitePaint" | "WhitePaintOnly" | "Marked" | "FlagMarker" | "SphericalMarker" | "None";
         /** @enum {string} */
         VerificationStatus: "Unknown" | "Verified" | "Unverified";
+        /**
+         * @description Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the
+         *     pagination.nextCursor value as the cursor query parameter in your next request.
+         *     Continue until pagination.hasMore is false.
+         */
+        PaginatedResponseOfPirepDto: {
+            /** @description The current page of results. */
+            data?: components["schemas"]["PirepDto"][];
+            /** @description Pagination metadata including the cursor to fetch the next page. */
+            pagination?: components["schemas"]["PaginationMetadata"];
+        };
         /** @description PIREP (Pilot Report) data including turbulence, icing, and sky conditions. */
         PirepDto: {
             /**
@@ -3531,6 +3553,17 @@ export interface components {
              * @description Top of the icing layer in feet MSL.
              */
             icingTopFtMsl?: number | null;
+        };
+        /**
+         * @description Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the
+         *     pagination.nextCursor value as the cursor query parameter in your next request.
+         *     Continue until pagination.hasMore is false.
+         */
+        PaginatedResponseOfSigmetDto: {
+            /** @description The current page of results. */
+            data?: components["schemas"]["SigmetDto"][];
+            /** @description Pagination metadata including the cursor to fetch the next page. */
+            pagination?: components["schemas"]["PaginationMetadata"];
         };
         /** @description Domestic SIGMET advisory data including hazard information and affected area. */
         SigmetDto: {
@@ -3823,6 +3856,7 @@ export type CloudBaseResponseDto = components['schemas']['CloudBaseResponseDto']
 export type CloudBaseRequestDto = components['schemas']['CloudBaseRequestDto'];
 export type PressureAltitudeResponseDto = components['schemas']['PressureAltitudeResponseDto'];
 export type PressureAltitudeRequestDto = components['schemas']['PressureAltitudeRequestDto'];
+export type PaginatedResponseOfGAirmetDto = components['schemas']['PaginatedResponseOfGAirmetDto'];
 export type GAirmetDto = components['schemas']['GAirmetDto'];
 export type GAirmetProduct = components['schemas']['GAirmetProduct'];
 export type GAirmetHazardType = components['schemas']['GAirmetHazardType'];
@@ -3864,11 +3898,13 @@ export type HorizontalAccuracy = components['schemas']['HorizontalAccuracy'];
 export type VerticalAccuracy = components['schemas']['VerticalAccuracy'];
 export type ObstacleMarking = components['schemas']['ObstacleMarking'];
 export type VerificationStatus = components['schemas']['VerificationStatus'];
+export type PaginatedResponseOfPirepDto = components['schemas']['PaginatedResponseOfPirepDto'];
 export type PirepDto = components['schemas']['PirepDto'];
 export type PirepQualityControlFlags = components['schemas']['PirepQualityControlFlags'];
 export type PirepSkyCondition = components['schemas']['PirepSkyCondition'];
 export type PirepTurbulenceCondition = components['schemas']['PirepTurbulenceCondition'];
 export type PirepIcingCondition = components['schemas']['PirepIcingCondition'];
+export type PaginatedResponseOfSigmetDto = components['schemas']['PaginatedResponseOfSigmetDto'];
 export type SigmetDto = components['schemas']['SigmetDto'];
 export type SigmetAltitude = components['schemas']['SigmetAltitude'];
 export type SigmetHazardDto = components['schemas']['SigmetHazardDto'];
@@ -4691,27 +4727,37 @@ export interface operations {
     };
     GAirmet_GetAllGAirmets: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+                cursor?: string | null;
+                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+                limit?: number;
+            };
             header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Returns the list of all current G-AIRMETs */
+            /** @description Returns the paginated list of all current G-AIRMETs */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["GAirmetDto"][];
+                    "application/json": components["schemas"]["PaginatedResponseOfGAirmetDto"];
                 };
             };
         };
     };
     GAirmet_GetGAirmetsByProduct: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+                cursor?: string | null;
+                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+                limit?: number;
+            };
             header?: never;
             path: {
                 /** @description Product type: SIERRA, TANGO, or ZULU */
@@ -4727,7 +4773,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["GAirmetDto"][];
+                    "application/json": components["schemas"]["PaginatedResponseOfGAirmetDto"];
                 };
             };
             /** @description If the product type is invalid */
@@ -4743,7 +4789,12 @@ export interface operations {
     };
     GAirmet_GetGAirmetsByHazardType: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+                cursor?: string | null;
+                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+                limit?: number;
+            };
             header?: never;
             path: {
                 /** @description Hazard type: MT_OBSC, IFR, TURB_LO, TURB_HI, LLWS, SFC_WIND, ICE, FZLVL, or M_FZLVL */
@@ -4759,7 +4810,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["GAirmetDto"][];
+                    "application/json": components["schemas"]["PaginatedResponseOfGAirmetDto"];
                 };
             };
             /** @description If the hazard type is invalid */
@@ -5483,47 +5534,62 @@ export interface operations {
     };
     Pirep_GetAllPireps: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+                cursor?: string | null;
+                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+                limit?: number;
+            };
             header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Returns the list of PIREPs */
+            /** @description Returns the paginated list of PIREPs */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["PirepDto"][];
+                    "application/json": components["schemas"]["PaginatedResponseOfPirepDto"];
                 };
             };
         };
     };
     Sigmet_GetAllSigmets: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+                cursor?: string | null;
+                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+                limit?: number;
+            };
             header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Returns the list of all current domestic SIGMETs */
+            /** @description Returns the paginated list of all current domestic SIGMETs */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["SigmetDto"][];
+                    "application/json": components["schemas"]["PaginatedResponseOfSigmetDto"];
                 };
             };
         };
     };
     Sigmet_GetSigmetsByHazardType: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+                cursor?: string | null;
+                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+                limit?: number;
+            };
             header?: never;
             path: {
                 /** @description Hazard type: CONVECTIVE, ICE, TURB, IFR, or MTN_OBSCN */
@@ -5539,7 +5605,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["SigmetDto"][];
+                    "application/json": components["schemas"]["PaginatedResponseOfSigmetDto"];
                 };
             };
             /** @description If the hazard type is invalid */

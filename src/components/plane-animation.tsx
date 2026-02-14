@@ -7,7 +7,7 @@ const SIZE_CONFIG = {
   lg: { box: 'h-8 w-8', icon: 'h-5 w-5', text: 'text-xl', rounded: 'rounded-lg' },
 } as const
 
-export function Logo({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) {
+export function PlaneAnimation({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) {
   const cfg = SIZE_CONFIG[size]
   return (
     <div className="flex items-center gap-2">

@@ -14,7 +14,7 @@ import {
   SheetContent,
   SheetTitle,
 } from '@/components/ui/sheet'
-import { Logo } from '@/components/logo'
+import { PlaneAnimation } from '@/components/plane-animation'
 
 const sidebarLinks = [
   { label: 'Overview', href: '/dashboard', icon: LayoutDashboard },
@@ -40,7 +40,7 @@ function SidebarContent({
       {/* Logo */}
       <div className="flex h-16 items-center gap-2 border-b px-6">
         <Link to="/" className="flex items-center gap-2">
-          <Logo size="md" />
+          <PlaneAnimation size="md" />
         </Link>
       </div>
 

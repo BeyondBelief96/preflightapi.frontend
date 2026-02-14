@@ -1200,16 +1200,38 @@
         "summary": "Gets all current G-AIRMET advisories across all product types and hazards.",
         "description": "Returns every active G-AIRMET regardless of product type (SIERRA, TANGO, ZULU) or hazard type. Each advisory includes the hazard, severity, affected altitude range, forecast valid time, and a geographic polygon defining the affected area. Use the `GET /product/{product}` or `GET /hazard/{hazardType}` endpoints to filter by specific product or hazard type.",
         "operationId": "GAirmet_GetAllGAirmets",
+        "parameters": [
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1
+            },
+            "x-position": 2
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Returns the list of all current G-AIRMETs",
+            "description": "Returns the paginated list of all current G-AIRMETs",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/GAirmetDto"
-                  }
+                  "$ref": "#/components/schemas/PaginatedResponseOfGAirmetDto"
                 }
               }
             }
@@ -1234,6 +1256,29 @@
               "type": "string"
             },
             "x-position": 1
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1
+            },
+            "x-position": 3
           }
         ],
         "responses": {
@@ -1242,10 +1287,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/GAirmetDto"
-                  }
+                  "$ref": "#/components/schemas/PaginatedResponseOfGAirmetDto"
                 }
               }
             }
@@ -1280,6 +1322,29 @@
               "type": "string"
             },
             "x-position": 1
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1
+            },
+            "x-position": 3
           }
         ],
         "responses": {
@@ -1288,10 +1353,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/GAirmetDto"
-                  }
+                  "$ref": "#/components/schemas/PaginatedResponseOfGAirmetDto"
                 }
               }
             }
@@ -2538,16 +2600,38 @@
         ],
         "summary": "Gets all current PIREPs. Returns all active pilot reports with reported conditions\nincluding turbulence (type, intensity, altitude), icing (type, intensity, altitude),\nand sky conditions. Each report includes the geographic coordinates and altitude where\nthe observation was made.",
         "operationId": "Pirep_GetAllPireps",
+        "parameters": [
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1
+            },
+            "x-position": 2
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Returns the list of PIREPs",
+            "description": "Returns the paginated list of PIREPs",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/PirepDto"
-                  }
+                  "$ref": "#/components/schemas/PaginatedResponseOfPirepDto"
                 }
               }
             }
@@ -2563,16 +2647,38 @@
         "summary": "Gets all current domestic SIGMET advisories across all hazard types.",
         "description": "Returns every active domestic SIGMET regardless of hazard type. Each advisory includes the hazard (convective activity, severe turbulence, severe icing, IFR conditions, or mountain obscuration), severity, affected altitude range, and a geographic polygon defining the affected area. Use the `GET /hazard/{hazardType}` endpoint to filter by a specific hazard type.",
         "operationId": "Sigmet_GetAllSigmets",
+        "parameters": [
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1
+            },
+            "x-position": 2
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Returns the list of all current domestic SIGMETs",
+            "description": "Returns the paginated list of all current domestic SIGMETs",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/SigmetDto"
-                  }
+                  "$ref": "#/components/schemas/PaginatedResponseOfSigmetDto"
                 }
               }
             }
@@ -2597,6 +2703,29 @@
               "type": "string"
             },
             "x-position": 1
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1
+            },
+            "x-position": 3
           }
         ],
         "responses": {
@@ -2605,10 +2734,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/SigmetDto"
-                  }
+                  "$ref": "#/components/schemas/PaginatedResponseOfSigmetDto"
                 }
               }
             }
@@ -5515,6 +5641,28 @@
           }
         }
       },
+      "PaginatedResponseOfGAirmetDto": {
+        "type": "object",
+        "description": "Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the\npagination.nextCursor value as the cursor query parameter in your next request.\nContinue until pagination.hasMore is false.",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "type": "array",
+            "description": "The current page of results.",
+            "items": {
+              "$ref": "#/components/schemas/GAirmetDto"
+            }
+          },
+          "pagination": {
+            "description": "Pagination metadata including the cursor to fetch the next page.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PaginationMetadata"
+              }
+            ]
+          }
+        }
+      },
       "GAirmetDto": {
         "type": "object",
         "description": "G-AIRMET (Graphical AIRMET) advisory data with hazard, altitude, and area information.",
@@ -7067,6 +7215,28 @@
           "Unverified"
         ]
       },
+      "PaginatedResponseOfPirepDto": {
+        "type": "object",
+        "description": "Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the\npagination.nextCursor value as the cursor query parameter in your next request.\nContinue until pagination.hasMore is false.",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "type": "array",
+            "description": "The current page of results.",
+            "items": {
+              "$ref": "#/components/schemas/PirepDto"
+            }
+          },
+          "pagination": {
+            "description": "Pagination metadata including the cursor to fetch the next page.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PaginationMetadata"
+              }
+            ]
+          }
+        }
+      },
       "PirepDto": {
         "type": "object",
         "description": "PIREP (Pilot Report) data including turbulence, icing, and sky conditions.",
@@ -7310,6 +7480,28 @@
             "description": "Top of the icing layer in feet MSL.",
             "format": "int32",
             "nullable": true
+          }
+        }
+      },
+      "PaginatedResponseOfSigmetDto": {
+        "type": "object",
+        "description": "Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the\npagination.nextCursor value as the cursor query parameter in your next request.\nContinue until pagination.hasMore is false.",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "type": "array",
+            "description": "The current page of results.",
+            "items": {
+              "$ref": "#/components/schemas/SigmetDto"
+            }
+          },
+          "pagination": {
+            "description": "Pagination metadata including the cursor to fetch the next page.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PaginationMetadata"
+              }
+            ]
           }
         }
       },
