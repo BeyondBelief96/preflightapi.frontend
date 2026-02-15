@@ -35,8 +35,7 @@ export function TermlyCMP({
     script.src = scriptSrc
     document.head.appendChild(script)
     isScriptAdded.current = true
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- script is intentionally loaded only once
-  }, [])
+  }, []) // intentionally empty — script is loaded only once
 
   const { pathname } = useLocation()
 
