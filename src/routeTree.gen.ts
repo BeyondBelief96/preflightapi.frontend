@@ -38,6 +38,7 @@ import { Route as DocsDataModelsGroupRouteImport } from './routes/docs/data-mode
 import { Route as DocsCategoryOperationIdRouteImport } from './routes/docs/$category/$operationId'
 import { Route as MarketingLegalTermsRouteImport } from './routes/_marketing/legal/terms'
 import { Route as MarketingLegalPrivacyRouteImport } from './routes/_marketing/legal/privacy'
+import { Route as MarketingLegalCookiePolicyRouteImport } from './routes/_marketing/legal/cookie-policy'
 
 const WaitlistRoute = WaitlistRouteImport.update({
   id: '/waitlist',
@@ -183,6 +184,12 @@ const MarketingLegalPrivacyRoute = MarketingLegalPrivacyRouteImport.update({
   path: '/legal/privacy',
   getParentRoute: () => MarketingRoute,
 } as any)
+const MarketingLegalCookiePolicyRoute =
+  MarketingLegalCookiePolicyRouteImport.update({
+    id: '/legal/cookie-policy',
+    path: '/legal/cookie-policy',
+    getParentRoute: () => MarketingRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof MarketingIndexRoute
@@ -204,6 +211,7 @@ export interface FileRoutesByFullPath {
   '/docs/rate-limits': typeof DocsRateLimitsRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/docs/': typeof DocsIndexRoute
+  '/legal/cookie-policy': typeof MarketingLegalCookiePolicyRoute
   '/legal/privacy': typeof MarketingLegalPrivacyRoute
   '/legal/terms': typeof MarketingLegalTermsRoute
   '/docs/$category/$operationId': typeof DocsCategoryOperationIdRoute
@@ -232,6 +240,7 @@ export interface FileRoutesByTo {
   '/': typeof MarketingIndexRoute
   '/dashboard': typeof DashboardIndexRoute
   '/docs': typeof DocsIndexRoute
+  '/legal/cookie-policy': typeof MarketingLegalCookiePolicyRoute
   '/legal/privacy': typeof MarketingLegalPrivacyRoute
   '/legal/terms': typeof MarketingLegalTermsRoute
   '/docs/$category/$operationId': typeof DocsCategoryOperationIdRoute
@@ -264,6 +273,7 @@ export interface FileRoutesById {
   '/_marketing/': typeof MarketingIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/docs/': typeof DocsIndexRoute
+  '/_marketing/legal/cookie-policy': typeof MarketingLegalCookiePolicyRoute
   '/_marketing/legal/privacy': typeof MarketingLegalPrivacyRoute
   '/_marketing/legal/terms': typeof MarketingLegalTermsRoute
   '/docs/$category/$operationId': typeof DocsCategoryOperationIdRoute
@@ -296,6 +306,7 @@ export interface FileRouteTypes {
     | '/docs/rate-limits'
     | '/dashboard/'
     | '/docs/'
+    | '/legal/cookie-policy'
     | '/legal/privacy'
     | '/legal/terms'
     | '/docs/$category/$operationId'
@@ -324,6 +335,7 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/docs'
+    | '/legal/cookie-policy'
     | '/legal/privacy'
     | '/legal/terms'
     | '/docs/$category/$operationId'
@@ -355,6 +367,7 @@ export interface FileRouteTypes {
     | '/_marketing/'
     | '/dashboard/'
     | '/docs/'
+    | '/_marketing/legal/cookie-policy'
     | '/_marketing/legal/privacy'
     | '/_marketing/legal/terms'
     | '/docs/$category/$operationId'
@@ -580,6 +593,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MarketingLegalPrivacyRouteImport
       parentRoute: typeof MarketingRoute
     }
+    '/_marketing/legal/cookie-policy': {
+      id: '/_marketing/legal/cookie-policy'
+      path: '/legal/cookie-policy'
+      fullPath: '/legal/cookie-policy'
+      preLoaderRoute: typeof MarketingLegalCookiePolicyRouteImport
+      parentRoute: typeof MarketingRoute
+    }
   }
 }
 
@@ -588,6 +608,7 @@ interface MarketingRouteChildren {
   MarketingContactRoute: typeof MarketingContactRoute
   MarketingPricingRoute: typeof MarketingPricingRoute
   MarketingIndexRoute: typeof MarketingIndexRoute
+  MarketingLegalCookiePolicyRoute: typeof MarketingLegalCookiePolicyRoute
   MarketingLegalPrivacyRoute: typeof MarketingLegalPrivacyRoute
   MarketingLegalTermsRoute: typeof MarketingLegalTermsRoute
 }
@@ -597,6 +618,7 @@ const MarketingRouteChildren: MarketingRouteChildren = {
   MarketingContactRoute: MarketingContactRoute,
   MarketingPricingRoute: MarketingPricingRoute,
   MarketingIndexRoute: MarketingIndexRoute,
+  MarketingLegalCookiePolicyRoute: MarketingLegalCookiePolicyRoute,
   MarketingLegalPrivacyRoute: MarketingLegalPrivacyRoute,
   MarketingLegalTermsRoute: MarketingLegalTermsRoute,
 }

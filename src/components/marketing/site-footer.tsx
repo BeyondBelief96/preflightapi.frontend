@@ -11,6 +11,9 @@ const footerLinks = {
   Company: [
     { label: 'About', href: '/about' },
     { label: 'Contact', href: '/contact' },
+    { label: 'Terms of Service', href: '/legal/terms' },
+    { label: 'Privacy Policy', href: '/legal/privacy' },
+    { label: 'Cookie Policy', href: '/legal/cookie-policy' },
   ],
   Developers: [
     { label: 'Authentication', href: '/docs/authentication' },
@@ -23,7 +26,7 @@ export function SiteFooter() {
   return (
     <footer className="border-t bg-muted/30">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="flex flex-wrap justify-center gap-16">
+        <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 sm:gap-16">
           {Object.entries(footerLinks).map(([category, links]) => (
             <div key={category}>
               <h3 className="text-sm font-semibold">{category}</h3>
@@ -38,6 +41,16 @@ export function SiteFooter() {
                     </Link>
                   </li>
                 ))}
+                {category === 'Company' && (
+                  <li>
+                    <a
+                      href="#"
+                      className="termly-display-preferences text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                      Consent Preferences
+                    </a>
+                  </li>
+                )}
               </ul>
             </div>
           ))}
