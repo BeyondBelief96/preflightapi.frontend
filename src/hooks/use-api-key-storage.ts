@@ -16,9 +16,7 @@ export function useApiKeyStorage() {
     staleTime: 5 * 60 * 1000,
   })
 
-  const activeSubscription = subsQuery.data?.find(
-    (s) => s.state === 'active',
-  )
+  const activeSubscription = subsQuery.data?.find((s) => s.state === 'active')
 
   const keysQuery = useQuery({
     queryKey: apimKeys.keys(activeSubscription?.id ?? ''),

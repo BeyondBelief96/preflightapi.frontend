@@ -16,9 +16,9 @@ export function DisclaimerBanner() {
             </p>
             <p>
               Developers integrating this API should ensure their end users
-              understand that the information is supplemental in nature.
-              Pilots and operators should continue to obtain official briefings
-              from FAA-approved sources such as 1800wxbrief.com, the FAA NOTAM
+              understand that the information is supplemental in nature. Pilots
+              and operators should continue to obtain official briefings from
+              FAA-approved sources such as 1800wxbrief.com, the FAA NOTAM
               Search, and certified flight planning tools before any flight.
             </p>
             <p>

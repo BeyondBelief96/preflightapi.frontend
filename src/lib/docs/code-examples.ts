@@ -49,7 +49,9 @@ function buildUrl(endpoint: ParsedEndpoint): string {
   }
 
   // Add query params
-  const queryParams = endpoint.parameters.filter((p) => p.in === 'query' && p.name !== 'cursor')
+  const queryParams = endpoint.parameters.filter(
+    (p) => p.in === 'query' && p.name !== 'cursor',
+  )
   if (queryParams.length > 0) {
     const qs = queryParams
       .map((p) => `${p.name}=${getExampleValue(p)}`)
@@ -66,79 +68,76 @@ function buildUrl(endpoint: ParsedEndpoint): string {
  */
 function getExampleBodies(): Record<string, unknown> {
   return {
-  [`${API_BASE_PATH}/navlog/calculate`]: {
-    waypoints: [
-      {
-        id: 'KCLT',
-        name: 'Charlotte Douglas Intl',
-        latitude: 35.214,
-        longitude: -80.9431,
-        altitude: 748,
-        waypointType: 'Airport',
-        isRefuelingStop: false,
+    [`${API_BASE_PATH}/navlog/calculate`]: {
+      waypoints: [
+        {
+          id: 'KCLT',
+          name: 'Charlotte Douglas Intl',
+          latitude: 35.214,
+          longitude: -80.9431,
+          altitude: 748,
+          waypointType: 'Airport',
+          isRefuelingStop: false,
+        },
+        {
+          id: 'KTYS',
+          name: 'McGhee Tyson',
+          latitude: 35.811,
+          longitude: -83.994,
+          altitude: 981,
+          waypointType: 'Airport',
+          isRefuelingStop: true,
+          refuelToFull: true,
+        },
+        {
+          id: 'KBNA',
+          name: 'Nashville Intl',
+          latitude: 36.1245,
+          longitude: -86.6782,
+          altitude: 599,
+          waypointType: 'Airport',
+          isRefuelingStop: false,
+        },
+      ],
+      performanceData: {
+        climbTrueAirspeed: 80,
+        cruiseTrueAirspeed: 120,
+        descentTrueAirspeed: 100,
+        climbFpm: 500,
+        descentFpm: 500,
+        climbFuelBurn: 10.0,
+        cruiseFuelBurn: 8.5,
+        descentFuelBurn: 5.0,
+        sttFuelGals: 1.2,
+        fuelOnBoardGals: 40.0,
       },
-      {
-        id: 'KTYS',
-        name: 'McGhee Tyson',
-        latitude: 35.811,
-        longitude: -83.994,
-        altitude: 981,
-        waypointType: 'Airport',
-        isRefuelingStop: true,
-        refuelToFull: true,
-      },
-      {
-        id: 'KBNA',
-        name: 'Nashville Intl',
-        latitude: 36.1245,
-        longitude: -86.6782,
-        altitude: 599,
-        waypointType: 'Airport',
-        isRefuelingStop: false,
-      },
-    ],
-    performanceData: {
-      climbTrueAirspeed: 80,
-      cruiseTrueAirspeed: 120,
-      descentTrueAirspeed: 100,
-      climbFpm: 500,
-      descentFpm: 500,
-      climbFuelBurn: 10.0,
-      cruiseFuelBurn: 8.5,
-      descentFuelBurn: 5.0,
-      sttFuelGals: 1.2,
-      fuelOnBoardGals: 40.0,
+      plannedCruisingAltitude: 7500,
+      timeOfDeparture: new Date(Date.now() + 2 * 60 * 60 * 1000)
+        .toISOString()
+        .replace(/\.\d+Z$/, 'Z'),
     },
-    plannedCruisingAltitude: 7500,
-    timeOfDeparture: new Date(
-      Date.now() + 2 * 60 * 60 * 1000,
-    ).toISOString().replace(/\.\d+Z$/, 'Z'),
-  },
-  [`${API_BASE_PATH}/navlog/bearing-and-distance`]: {
-    startLatitude: 35.214,
-    startLongitude: -80.9431,
-    endLatitude: 36.1245,
-    endLongitude: -86.6782,
-  },
-  [`${API_BASE_PATH}/e6b/crosswind/calculate`]: {
-    windDirectionDegrees: 230,
-    windSpeedKt: 15,
-    windGustKt: 22,
-    runwayHeadingDegrees: 180,
-  },
-  [`${API_BASE_PATH}/e6b/density-altitude/calculate`]: {
-    fieldElevationFt: 748,
-    altimeterInHg: 29.92,
-    temperatureCelsius: 30,
-  },
-  [`${API_BASE_PATH}/notams/route`]: {
-    airportIdentifiers: ['KCLT', 'KTYS', 'KBNA'],
-    corridorRadiusNm: 25,
-  },
-  [`${API_BASE_PATH}/obstacles/by-oas-numbers`]: [
-    '12-345678',
-    '12-345679',
-  ],
+    [`${API_BASE_PATH}/navlog/bearing-and-distance`]: {
+      startLatitude: 35.214,
+      startLongitude: -80.9431,
+      endLatitude: 36.1245,
+      endLongitude: -86.6782,
+    },
+    [`${API_BASE_PATH}/e6b/crosswind/calculate`]: {
+      windDirectionDegrees: 230,
+      windSpeedKt: 15,
+      windGustKt: 22,
+      runwayHeadingDegrees: 180,
+    },
+    [`${API_BASE_PATH}/e6b/density-altitude/calculate`]: {
+      fieldElevationFt: 748,
+      altimeterInHg: 29.92,
+      temperatureCelsius: 30,
+    },
+    [`${API_BASE_PATH}/notams/route`]: {
+      airportIdentifiers: ['KCLT', 'KTYS', 'KBNA'],
+      corridorRadiusNm: 25,
+    },
+    [`${API_BASE_PATH}/obstacles/by-oas-numbers`]: ['12-345678', '12-345679'],
   }
 }
 
@@ -227,7 +226,11 @@ export function generatePython(endpoint: ParsedEndpoint): string {
     code += '        "Ocp-Apim-Subscription-Key": "YOUR_API_KEY",\n'
     code += '        "Content-Type": "application/json"\n'
     code += '    },\n'
-    code += `    json=${body.replace(/"/g, "'").replace(/: true/g, ': True').replace(/: false/g, ': False').replace(/: null/g, ': None')}\n`
+    code += `    json=${body
+      .replace(/"/g, "'")
+      .replace(/: true/g, ': True')
+      .replace(/: false/g, ': False')
+      .replace(/: null/g, ': None')}\n`
   } else {
     code += '    headers={"Ocp-Apim-Subscription-Key": "YOUR_API_KEY"}\n'
   }

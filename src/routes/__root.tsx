@@ -26,7 +26,8 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       },
       {
         name: 'viewport',
-        content: 'width=device-width, initial-scale=1, interactive-widget=resizes-content',
+        content:
+          'width=device-width, initial-scale=1, interactive-widget=resizes-content',
       },
       {
         title: 'PreflightAPI - Aviation Data API for Developers',

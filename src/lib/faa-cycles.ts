@@ -42,28 +42,78 @@ export interface SyncJob {
 }
 
 export const SYNC_JOBS_28: Array<SyncJob> = [
-  { name: 'Airports', utcHour: 0, data: 'Airport base data, runways, runway ends (from FAA NASR)', cycleDays: 28 },
-  { name: 'Frequencies', utcHour: 1, data: 'Communication frequencies (from FAA NASR)', cycleDays: 28 },
-  { name: 'Airport Diagrams', utcHour: 5, data: 'Airport diagram PDFs (stored in Azure Blob Storage)', cycleDays: 28 },
+  {
+    name: 'Airports',
+    utcHour: 0,
+    data: 'Airport base data, runways, runway ends (from FAA NASR)',
+    cycleDays: 28,
+  },
+  {
+    name: 'Frequencies',
+    utcHour: 1,
+    data: 'Communication frequencies (from FAA NASR)',
+    cycleDays: 28,
+  },
+  {
+    name: 'Airport Diagrams',
+    utcHour: 5,
+    data: 'Airport diagram PDFs (stored in Azure Blob Storage)',
+    cycleDays: 28,
+  },
 ]
 
 export const SYNC_JOBS_56: Array<SyncJob> = [
-  { name: 'Airspaces', utcHour: 2, data: 'Airspace boundaries (from ArcGIS REST API)', cycleDays: 56 },
-  { name: 'Special Use Airspaces', utcHour: 3, data: 'SUA boundaries (from ArcGIS REST API)', cycleDays: 56 },
-  { name: 'Chart Supplements', utcHour: 4, data: 'FAA chart supplement PDFs (stored in Azure Blob Storage)', cycleDays: 56 },
-  { name: 'Obstacles', utcHour: 6, data: 'Obstacle data (from FAA NASR)', cycleDays: 56 },
+  {
+    name: 'Airspaces',
+    utcHour: 2,
+    data: 'Airspace boundaries (from ArcGIS REST API)',
+    cycleDays: 56,
+  },
+  {
+    name: 'Special Use Airspaces',
+    utcHour: 3,
+    data: 'SUA boundaries (from ArcGIS REST API)',
+    cycleDays: 56,
+  },
+  {
+    name: 'Chart Supplements',
+    utcHour: 4,
+    data: 'FAA chart supplement PDFs (stored in Azure Blob Storage)',
+    cycleDays: 56,
+  },
+  {
+    name: 'Obstacles',
+    utcHour: 6,
+    data: 'Obstacle data (from FAA NASR)',
+    cycleDays: 56,
+  },
 ]
 
 export const SYNC_JOBS_NOTAMS: Array<SyncJob> = [
-  { name: 'NOTAM Delta Sync', utcHour: -1, data: 'Incremental NOTAM updates from NMS API', cycleDays: null, schedule: 'Every 3 minutes' },
-  { name: 'NOTAM Initial Load', utcHour: 6, data: 'Full reload across all 5 NOTAM classifications', cycleDays: null, schedule: 'Daily at 06:00 UTC' },
+  {
+    name: 'NOTAM Delta Sync',
+    utcHour: -1,
+    data: 'Incremental NOTAM updates from NMS API',
+    cycleDays: null,
+    schedule: 'Every 3 minutes',
+  },
+  {
+    name: 'NOTAM Initial Load',
+    utcHour: 6,
+    data: 'Full reload across all 5 NOTAM classifications',
+    cycleDays: null,
+    schedule: 'Daily at 06:00 UTC',
+  },
 ]
 
 /**
  * Gets the next sync date for a cyclic job. Returns a Date set to the
  * cycle effective date at the job's UTC hour.
  */
-export function getNextSyncDate(job: SyncJob, now: Date = new Date()): Date | null {
+export function getNextSyncDate(
+  job: SyncJob,
+  now: Date = new Date(),
+): Date | null {
   if (job.cycleDays === null) return null
 
   const next = nextCycleDate(job.cycleDays, now)

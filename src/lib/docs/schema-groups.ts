@@ -183,9 +183,7 @@ export const SCHEMA_GROUPS: Array<SchemaGroup> = [
 
 /** Reverse lookup: schema name → group slug */
 export const SCHEMA_TO_GROUP: Record<string, string> = Object.fromEntries(
-  SCHEMA_GROUPS.flatMap((g) =>
-    g.schemaNames.map((name) => [name, g.slug]),
-  ),
+  SCHEMA_GROUPS.flatMap((g) => g.schemaNames.map((name) => [name, g.slug])),
 )
 
 /** Get a schema group by its slug */

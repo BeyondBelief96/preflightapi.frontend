@@ -72,7 +72,8 @@ function resolveSchema(
   if (!s) return undefined
   if (s.$ref) {
     const name = stripRef(s.$ref)
-    if (visited.has(name)) return { type: 'object', description: `(circular: ${name})` }
+    if (visited.has(name))
+      return { type: 'object', description: `(circular: ${name})` }
     visited.add(name)
     return resolveSchema(lookupSchema(name), visited)
   }
@@ -153,7 +154,11 @@ function parseSchemaFields(
     if (refName && depth < 3) {
       const innerSchema = lookupSchema(refName)
       if (innerSchema && innerSchema.properties) {
-        field.fields = parseSchemaFields(innerSchema, new Set([...visited, refName]), depth + 1)
+        field.fields = parseSchemaFields(
+          innerSchema,
+          new Set([...visited, refName]),
+          depth + 1,
+        )
       }
     }
 
@@ -171,10 +176,18 @@ function parseSchemaFields(
       if (itemRef && depth < 3) {
         const itemSchema = lookupSchema(itemRef)
         if (itemSchema?.properties) {
-          field.items.fields = parseSchemaFields(itemSchema, new Set([...visited, itemRef]), depth + 1)
+          field.items.fields = parseSchemaFields(
+            itemSchema,
+            new Set([...visited, itemRef]),
+            depth + 1,
+          )
         }
       } else if (itemResolved?.properties && depth < 3) {
-        field.items.fields = parseSchemaFields(itemResolved, new Set(visited), depth + 1)
+        field.items.fields = parseSchemaFields(
+          itemResolved,
+          new Set(visited),
+          depth + 1,
+        )
       }
     }
 
@@ -226,7 +239,10 @@ const tierPatterns: Array<{ pattern: RegExp; key: string }> = [
   { pattern: /\/e6b\/cloud-base/, key: 'e6b/cloud-base' },
   { pattern: /\/e6b\/pressure-altitude/, key: 'e6b/pressure-altitude' },
   { pattern: /\/e6b\//, key: 'e6b/calculator' },
-  { pattern: /\/navlog\/bearing-and-distance/, key: 'navigation/bearing-distance' },
+  {
+    pattern: /\/navlog\/bearing-and-distance/,
+    key: 'navigation/bearing-distance',
+  },
   { pattern: /\/navlog\/winds-aloft/, key: 'navigation/winds-aloft' },
   { pattern: /\/navlog/, key: 'navigation/nav-log' },
 ]
@@ -251,19 +267,21 @@ function parseEndpoints(): Array<ParsedEndpoint> {
       const tag = op.tags[0]
 
       // Parameters
-      const parameters: Array<ParsedParameter> = (op.parameters ?? []).map((p) => {
-        const resolved = resolveSchema(p.schema)
-        return {
-          name: p.name,
-          in: p.in as ParsedParameter['in'],
-          required: p.required ?? false,
-          type: schemaToType(p.schema),
-          format: resolved?.format,
-          nullable: resolved?.nullable ?? false,
-          description: p.description ?? resolved?.description,
-          enum: resolved?.enum?.map(String),
-        }
-      })
+      const parameters: Array<ParsedParameter> = (op.parameters ?? []).map(
+        (p) => {
+          const resolved = resolveSchema(p.schema)
+          return {
+            name: p.name,
+            in: p.in as ParsedParameter['in'],
+            required: p.required ?? false,
+            type: schemaToType(p.schema),
+            format: resolved?.format,
+            nullable: resolved?.nullable ?? false,
+            description: p.description ?? resolved?.description,
+            enum: resolved?.enum?.map(String),
+          }
+        },
+      )
 
       // Request body
       let requestBody: ParsedEndpoint['requestBody']
@@ -274,48 +292,62 @@ function parseEndpoints(): Array<ParsedEndpoint> {
           requestBody = {
             schemaName: refName,
             schema: refName
-              ? parseParsedSchema(refName, lookupSchema(refName) ?? jsonContent.schema)
+              ? parseParsedSchema(
+                  refName,
+                  lookupSchema(refName) ?? jsonContent.schema,
+                )
               : undefined,
           }
         }
       }
 
       // Responses
-      const responses: Array<ParsedResponse> = Object.entries(op.responses ?? {}).map(
-        ([code, resp]) => {
-          const jsonContent = resp.content?.['application/json']
-          const refName = jsonContent?.schema ? getRefName(jsonContent.schema) : undefined
-          let schema: ParsedSchema | undefined
-          let isArray = false
+      const responses: Array<ParsedResponse> = Object.entries(
+        op.responses ?? {},
+      ).map(([code, resp]) => {
+        const jsonContent = resp.content?.['application/json']
+        const refName = jsonContent?.schema
+          ? getRefName(jsonContent.schema)
+          : undefined
+        let schema: ParsedSchema | undefined
+        let isArray = false
 
-          if (jsonContent?.schema) {
-            const resolvedResp = resolveSchema(jsonContent.schema)
-            if (resolvedResp?.type === 'array' && resolvedResp.items) {
-              isArray = true
-              const itemRef = getRefName(resolvedResp.items)
-              if (itemRef) {
-                schema = parseParsedSchema(itemRef, lookupSchema(itemRef) ?? resolvedResp.items)
-              }
-            } else if (refName) {
-              schema = parseParsedSchema(refName, lookupSchema(refName) ?? jsonContent.schema)
+        if (jsonContent?.schema) {
+          const resolvedResp = resolveSchema(jsonContent.schema)
+          if (resolvedResp?.type === 'array' && resolvedResp.items) {
+            isArray = true
+            const itemRef = getRefName(resolvedResp.items)
+            if (itemRef) {
+              schema = parseParsedSchema(
+                itemRef,
+                lookupSchema(itemRef) ?? resolvedResp.items,
+              )
             }
+          } else if (refName) {
+            schema = parseParsedSchema(
+              refName,
+              lookupSchema(refName) ?? jsonContent.schema,
+            )
           }
+        }
 
-          return {
-            statusCode: code,
-            description: resp.description ?? '',
-            schemaName: refName,
-            schema,
-            isArray,
-          }
-        },
-      )
+        return {
+          statusCode: code,
+          description: resp.description ?? '',
+          schemaName: refName,
+          schema,
+          isArray,
+        }
+      })
 
       // Detect paginated response
       let paginatedItemType: string | undefined
       const successResp = responses.find((r) => r.statusCode === '200')
       if (successResp?.schemaName?.startsWith('PaginatedResponseOf')) {
-        paginatedItemType = successResp.schemaName.replace('PaginatedResponseOf', '')
+        paginatedItemType = successResp.schemaName.replace(
+          'PaginatedResponseOf',
+          '',
+        )
       }
 
       // Split long summaries: first paragraph → summary, rest → description
@@ -329,7 +361,8 @@ function parseEndpoints(): Array<ParsedEndpoint> {
         shortSummary = rawSummary.slice(0, blankLineIdx).trim() || undefined
         const rest = rawSummary.slice(blankLineIdx).trim()
         fullDescription =
-          (rest + (rawDescription ? '\n\n' + rawDescription : '')).trim() || undefined
+          (rest + (rawDescription ? '\n\n' + rawDescription : '')).trim() ||
+          undefined
       } else {
         shortSummary = rawSummary || undefined
         fullDescription = rawDescription || undefined
@@ -358,13 +391,12 @@ function parseEndpoints(): Array<ParsedEndpoint> {
 
 export const allEndpoints = parseEndpoints()
 
-export const endpointsByTag = allEndpoints.reduce<Record<string, Array<ParsedEndpoint>>>(
-  (acc, ep) => {
-    ;(acc[ep.tag] ??= []).push(ep)
-    return acc
-  },
-  {},
-)
+export const endpointsByTag = allEndpoints.reduce<
+  Record<string, Array<ParsedEndpoint>>
+>((acc, ep) => {
+  ;(acc[ep.tag] ??= []).push(ep)
+  return acc
+}, {})
 
 export const schemas = Object.entries(oaSpec.components.schemas).reduce<
   Record<string, ParsedSchema>
@@ -373,13 +405,15 @@ export const schemas = Object.entries(oaSpec.components.schemas).reduce<
   return acc
 }, {})
 
-export function getEndpointByOperationId(operationId: string): ParsedEndpoint | undefined {
+export function getEndpointByOperationId(
+  operationId: string,
+): ParsedEndpoint | undefined {
   return allEndpoints.find((ep) => ep.operationId === operationId)
 }
 
-export function getEndpointsForCategory(
-  category: { subcategories: Array<{ tag: string; pathFilter?: string }> },
-): Array<ParsedEndpoint> {
+export function getEndpointsForCategory(category: {
+  subcategories: Array<{ tag: string; pathFilter?: string }>
+}): Array<ParsedEndpoint> {
   return category.subcategories.flatMap((sub) => {
     const tagged = endpointsByTag[sub.tag] ?? []
     if (sub.pathFilter) {

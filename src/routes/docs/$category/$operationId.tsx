@@ -7,9 +7,7 @@ import { createPageHead } from '@/lib/seo'
 export const Route = createFileRoute('/docs/$category/$operationId')({
   head: ({ params }) => {
     const category = getCategoryBySlug(params.category)
-    const categoryEndpoints = category
-      ? getEndpointsForCategory(category)
-      : []
+    const categoryEndpoints = category ? getEndpointsForCategory(category) : []
     const endpoint = categoryEndpoints.find(
       (ep) => ep.operationId === params.operationId,
     )
@@ -35,7 +33,9 @@ function EndpointDetailRoute() {
 
   // Verify the endpoint exists and belongs to this category
   const categoryEndpoints = getEndpointsForCategory(category)
-  const endpoint = categoryEndpoints.find((ep) => ep.operationId === operationId)
+  const endpoint = categoryEndpoints.find(
+    (ep) => ep.operationId === operationId,
+  )
 
   if (!endpoint) {
     throw notFound()

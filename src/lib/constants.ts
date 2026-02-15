@@ -63,10 +63,7 @@ export const TIER_FEATURES: Record<string, Array<string>> = {
   ],
 }
 
-export const TIER_UI: Record<
-  string,
-  { highlighted?: boolean; cta: string }
-> = {
+export const TIER_UI: Record<string, { highlighted?: boolean; cta: string }> = {
   student: { cta: 'Get Started Free' },
   private: { highlighted: true, cta: 'Go Private' },
   commercial: { cta: 'Go Commercial' },
@@ -171,10 +168,10 @@ export const PLANS: Array<PlanDefinition> = [
     interval: null,
     apimProductId: '',
     limits: { callsPerMonth: null, ratePerMinute: null },
-    features: buildPlanFeatures(
-      'atp',
-      { callsPerMonth: null, ratePerMinute: null },
-    ),
+    features: buildPlanFeatures('atp', {
+      callsPerMonth: null,
+      ratePerMinute: null,
+    }),
     cta: 'Contact Us',
     marketingOnly: true,
   },

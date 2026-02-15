@@ -20,7 +20,16 @@ export function useApiRequest() {
   const [error, setError] = useState<string | null>(null)
 
   const send = async (options: UseApiRequestOptions) => {
-    const { method, path: basePath, apiKey, pathParams, queryParams, paramValues, body, onSuccess } = options
+    const {
+      method,
+      path: basePath,
+      apiKey,
+      pathParams,
+      queryParams,
+      paramValues,
+      body,
+      onSuccess,
+    } = options
 
     if (!apiKey.trim()) {
       setError('Please enter your API key')

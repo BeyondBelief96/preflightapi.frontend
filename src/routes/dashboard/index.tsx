@@ -56,8 +56,7 @@ function DashboardOverview() {
   })
 
   const stripeSub = stripeSubQuery.data
-  const currentPlan =
-    plans.find((p) => p.id === stripeSub?.planId) ?? plans[0]
+  const currentPlan = plans.find((p) => p.id === stripeSub?.planId) ?? plans[0]
   const isPaid = stripeSub != null
   const isCanceling = Boolean(
     stripeSub?.cancelAtPeriodEnd || stripeSub?.cancelAt,
@@ -163,7 +162,10 @@ function DashboardOverview() {
               >
                 Dismiss
               </Button>
-              <Link to="/dashboard/getting-started" className="flex-1 sm:flex-initial">
+              <Link
+                to="/dashboard/getting-started"
+                className="flex-1 sm:flex-initial"
+              >
                 <Button size="sm" className="w-full gap-2 sm:w-auto">
                   Continue Setup
                   <ArrowRight className="h-3 w-3" />

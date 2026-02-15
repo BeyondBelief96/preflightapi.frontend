@@ -48,8 +48,8 @@ describe('resolveApimProductId', () => {
   })
 
   it('falls back to student for unrecognized metadata plan ID', () => {
-    expect(
-      resolveApimProductId(undefined, 'enterprise', PRODUCT_IDS),
-    ).toBe('student-pilot')
+    expect(resolveApimProductId(undefined, 'enterprise', PRODUCT_IDS)).toBe(
+      'student-pilot',
+    )
   })
 })

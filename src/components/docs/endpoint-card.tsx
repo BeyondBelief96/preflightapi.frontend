@@ -31,12 +31,17 @@ export function EndpointCard({ endpoint, categorySlug }: EndpointCardProps) {
       <div className="min-w-0 flex-1 space-y-1">
         <div className="flex flex-wrap items-center gap-2">
           <MethodBadge method={endpoint.method} />
-          <code className="text-sm font-semibold text-foreground">{endpoint.path}</code>
+          <code className="text-sm font-semibold text-foreground">
+            {endpoint.path}
+          </code>
           <TierBadge tier={endpoint.tier} />
         </div>
         <h3 className="text-lg font-semibold">{title}</h3>
         {endpoint.summary && (
-          <FormatApiText text={endpoint.summary} className="text-sm text-muted-foreground" />
+          <FormatApiText
+            text={endpoint.summary}
+            className="text-sm text-muted-foreground"
+          />
         )}
       </div>
       <ChevronRight className="mt-1 h-5 w-5 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />

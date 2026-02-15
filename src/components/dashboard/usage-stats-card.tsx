@@ -40,13 +40,13 @@ export function UsageStatsCards({
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">
-            API Calls Today
-          </CardTitle>
+          <CardTitle className="text-sm font-medium">API Calls Today</CardTitle>
           <Activity className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className={`text-2xl font-bold ${callsLimit && !isDailyLoading ? getUsageColor(dailyPercent) : ''}`}>
+          <div
+            className={`text-2xl font-bold ${callsLimit && !isDailyLoading ? getUsageColor(dailyPercent) : ''}`}
+          >
             {isDailyLoading ? (
               <Skeleton className="h-8 w-16" />
             ) : (
@@ -86,7 +86,9 @@ export function UsageStatsCards({
           <UsageRing percent={isMonthlyLoading ? 0 : usagePercent} />
         </CardHeader>
         <CardContent>
-          <div className={`text-2xl font-bold ${callsLimit && !isMonthlyLoading ? getUsageColor(usagePercent) : ''}`}>
+          <div
+            className={`text-2xl font-bold ${callsLimit && !isMonthlyLoading ? getUsageColor(usagePercent) : ''}`}
+          >
             {isMonthlyLoading ? (
               <Skeleton className="h-8 w-20" />
             ) : (
@@ -113,7 +115,9 @@ export function UsageStatsCards({
             </>
           ) : (
             <>
-              <div className={`text-2xl font-bold ${isCanceling ? 'text-yellow-600 dark:text-yellow-400' : ''}`}>
+              <div
+                className={`text-2xl font-bold ${isCanceling ? 'text-yellow-600 dark:text-yellow-400' : ''}`}
+              >
                 {isCanceling ? 'Canceling' : isPaid ? 'Active' : 'Free'}
               </div>
               <p className="text-xs text-muted-foreground">

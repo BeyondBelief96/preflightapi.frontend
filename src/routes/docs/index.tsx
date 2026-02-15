@@ -62,46 +62,122 @@ const categoryGroups: Array<CategoryGroup> = [
   {
     title: 'Weather',
     items: [
-      { icon: 'thermometer', title: 'METARs', description: 'Surface weather observations for airports.', href: '/docs/metars' },
-      { icon: 'thermometer', title: 'TAFs', description: 'Terminal aerodrome forecasts.', href: '/docs/tafs' },
-      { icon: 'radio', title: 'PIREPs', description: 'Pilot reports of in-flight conditions.', href: '/docs/pireps' },
-      { icon: 'cloud-lightning', title: 'Domestic SIGMETs', description: 'Domestic SIGMET weather advisories.', href: '/docs/sigmets' },
-      { icon: 'map', title: 'G-AIRMETs', description: 'Graphical AIRMET hazard areas.', href: '/docs/g-airmets' },
+      {
+        icon: 'thermometer',
+        title: 'METARs',
+        description: 'Surface weather observations for airports.',
+        href: '/docs/metars',
+      },
+      {
+        icon: 'thermometer',
+        title: 'TAFs',
+        description: 'Terminal aerodrome forecasts.',
+        href: '/docs/tafs',
+      },
+      {
+        icon: 'radio',
+        title: 'PIREPs',
+        description: 'Pilot reports of in-flight conditions.',
+        href: '/docs/pireps',
+      },
+      {
+        icon: 'cloud-lightning',
+        title: 'Domestic SIGMETs',
+        description: 'Domestic SIGMET weather advisories.',
+        href: '/docs/sigmets',
+      },
+      {
+        icon: 'map',
+        title: 'G-AIRMETs',
+        description: 'Graphical AIRMET hazard areas.',
+        href: '/docs/g-airmets',
+      },
     ],
   },
   {
     title: 'Airports & Airspace',
     items: [
-      { icon: 'plane', title: 'Airports', description: 'Search, details, and runways.', href: '/docs/airports' },
-      { icon: 'radio', title: 'Communication Frequencies', description: 'Airport and facility radio frequencies.', href: '/docs/communication-frequencies' },
-      { icon: 'layers', title: 'Airspace', description: 'Controlled and special-use boundaries.', href: '/docs/airspace' },
-      { icon: 'alert-triangle', title: 'NOTAMs', description: 'Notices to Air Missions.', href: '/docs/notams' },
-      { icon: 'triangle-alert', title: 'Obstacles', description: '625,000+ FAA-charted obstacles.', href: '/docs/obstacles' },
+      {
+        icon: 'plane',
+        title: 'Airports',
+        description: 'Search, details, and runways.',
+        href: '/docs/airports',
+      },
+      {
+        icon: 'radio',
+        title: 'Communication Frequencies',
+        description: 'Airport and facility radio frequencies.',
+        href: '/docs/communication-frequencies',
+      },
+      {
+        icon: 'layers',
+        title: 'Airspace',
+        description: 'Controlled and special-use boundaries.',
+        href: '/docs/airspace',
+      },
+      {
+        icon: 'alert-triangle',
+        title: 'NOTAMs',
+        description: 'Notices to Air Missions.',
+        href: '/docs/notams',
+      },
+      {
+        icon: 'triangle-alert',
+        title: 'Obstacles',
+        description: '625,000+ FAA-charted obstacles.',
+        href: '/docs/obstacles',
+      },
     ],
   },
   {
     title: 'Documents',
     items: [
-      { icon: 'file-text', title: 'Airport Diagrams', description: 'FAA airport diagram PDFs.', href: '/docs/airport-diagrams' },
-      { icon: 'file-text', title: 'Chart Supplements', description: 'FAA Chart Supplement (A/FD) PDFs.', href: '/docs/chart-supplements' },
+      {
+        icon: 'file-text',
+        title: 'Airport Diagrams',
+        description: 'FAA airport diagram PDFs.',
+        href: '/docs/airport-diagrams',
+      },
+      {
+        icon: 'file-text',
+        title: 'Chart Supplements',
+        description: 'FAA Chart Supplement (A/FD) PDFs.',
+        href: '/docs/chart-supplements',
+      },
     ],
   },
   {
     title: 'E6B Flight Computer',
     items: [
-      { icon: 'calculator', title: 'E6B Flight Computer', description: 'Crosswind, density altitude, wind triangle, TAS, cloud base, and pressure altitude.', href: '/docs/e6b' },
+      {
+        icon: 'calculator',
+        title: 'E6B Flight Computer',
+        description:
+          'Crosswind, density altitude, wind triangle, TAS, cloud base, and pressure altitude.',
+        href: '/docs/e6b',
+      },
     ],
   },
   {
     title: 'Navigation',
     items: [
-      { icon: 'route', title: 'Navigation Log', description: 'Nav log, bearing & distance, and winds aloft.', href: '/docs/nav-log' },
+      {
+        icon: 'route',
+        title: 'Navigation Log',
+        description: 'Nav log, bearing & distance, and winds aloft.',
+        href: '/docs/nav-log',
+      },
     ],
   },
   {
     title: 'Reference',
     items: [
-      { icon: 'database', title: 'Data Models', description: 'Complete reference for all request and response schemas.', href: '/docs/data-models' },
+      {
+        icon: 'database',
+        title: 'Data Models',
+        description: 'Complete reference for all request and response schemas.',
+        href: '/docs/data-models',
+      },
     ],
   },
 ]
@@ -109,28 +185,77 @@ const categoryGroups: Array<CategoryGroup> = [
 const endpointAccessRows = [
   { category: 'METARs', student: true, private: true, commercial: true },
   { category: 'TAFs', student: true, private: true, commercial: true },
-  { category: 'Airports (search, details & runways)', student: true, private: true, commercial: true },
-  { category: 'Communication Frequencies', student: true, private: true, commercial: true },
+  {
+    category: 'Airports (search, details & runways)',
+    student: true,
+    private: true,
+    commercial: true,
+  },
+  {
+    category: 'Communication Frequencies',
+    student: true,
+    private: true,
+    commercial: true,
+  },
   { category: 'PIREPs', student: false, private: true, commercial: true },
-  { category: 'Domestic SIGMETs', student: false, private: true, commercial: true },
+  {
+    category: 'Domestic SIGMETs',
+    student: false,
+    private: true,
+    commercial: true,
+  },
   { category: 'G-AIRMETs', student: false, private: true, commercial: true },
-  { category: 'Airspace & Special-Use Airspace', student: false, private: true, commercial: true },
+  {
+    category: 'Airspace & Special-Use Airspace',
+    student: false,
+    private: true,
+    commercial: true,
+  },
   { category: 'Obstacles', student: false, private: true, commercial: true },
   { category: 'NOTAMs', student: false, private: false, commercial: true },
-  { category: 'Airport Diagrams', student: false, private: false, commercial: true },
-  { category: 'Chart Supplements', student: false, private: false, commercial: true },
-  { category: 'E6B Flight Computer', student: false, private: false, commercial: true },
-  { category: 'Navigation Log', student: false, private: false, commercial: true },
+  {
+    category: 'Airport Diagrams',
+    student: false,
+    private: false,
+    commercial: true,
+  },
+  {
+    category: 'Chart Supplements',
+    student: false,
+    private: false,
+    commercial: true,
+  },
+  {
+    category: 'E6B Flight Computer',
+    student: false,
+    private: false,
+    commercial: true,
+  },
+  {
+    category: 'Navigation Log',
+    student: false,
+    private: false,
+    commercial: true,
+  },
 ]
 
 const cacheDurations = [
   { category: 'Real-time weather (METARs, PIREPs)', duration: '2 minutes' },
   { category: 'E6B calculations (live METAR mode)', duration: '2 minutes' },
-  { category: 'Forecasts & advisories (TAFs, SIGMETs, G-AIRMETs)', duration: '5 minutes' },
+  {
+    category: 'Forecasts & advisories (TAFs, SIGMETs, G-AIRMETs)',
+    duration: '5 minutes',
+  },
   { category: 'NOTAMs', duration: '5 minutes' },
   { category: 'Winds aloft', duration: '5 minutes' },
-  { category: 'Documents (airport diagrams, chart supplements)', duration: '10 minutes' },
-  { category: 'Static data (airports, frequencies, airspace, obstacles)', duration: '15 minutes' },
+  {
+    category: 'Documents (airport diagrams, chart supplements)',
+    duration: '10 minutes',
+  },
+  {
+    category: 'Static data (airports, frequencies, airspace, obstacles)',
+    duration: '15 minutes',
+  },
   { category: 'POST endpoints', duration: 'Not cached' },
 ]
 
@@ -144,10 +269,12 @@ function DocsIndex() {
     <div>
       <h1 className="text-3xl font-bold">Overview</h1>
       <p className="mt-4 text-lg text-muted-foreground">
-        PreflightAPI is a REST API for aviation data and flight planning calculations. It provides real-time
-        METAR's, Terminal Area Forecasts (TAFs), airport information, geospatial airspace boundaries, NOTAMs, 
-        Chart Supplements, Airport Diagrams, and many other flight planning tools — sourced from NOAA, FAA NASR Subscriptions,
-        the NOTAM Management System, and more. Here's how to get started.
+        PreflightAPI is a REST API for aviation data and flight planning
+        calculations. It provides real-time METAR's, Terminal Area Forecasts
+        (TAFs), airport information, geospatial airspace boundaries, NOTAMs,
+        Chart Supplements, Airport Diagrams, and many other flight planning
+        tools — sourced from NOAA, FAA NASR Subscriptions, the NOTAM Management
+        System, and more. Here's how to get started.
       </p>
 
       {/* Quick links */}
@@ -186,9 +313,7 @@ function DocsIndex() {
       <section className="mt-10 space-y-4">
         <h2 className="text-2xl font-semibold">Base URL</h2>
         <div className="rounded-lg border bg-muted/30 p-4">
-          <code className="block text-sm text-accent">
-            {API_BASE_URL}
-          </code>
+          <code className="block text-sm text-accent">{API_BASE_URL}</code>
           <p className="mt-2 text-sm text-muted-foreground">
             All API endpoints are relative to this base URL. Every request must
             include an{' '}
@@ -216,8 +341,8 @@ function DocsIndex() {
           </li>
           <li>
             <strong className="text-foreground">Versioned</strong> — The current
-            API version is <code>{API_VERSION}</code>, included in every URL path (
-            <code>{API_BASE_PATH}/...</code>).
+            API version is <code>{API_VERSION}</code>, included in every URL
+            path (<code>{API_BASE_PATH}/...</code>).
           </li>
           <li>
             <strong className="text-foreground">Cursor-based pagination</strong>{' '}
@@ -268,17 +393,13 @@ function DocsIndex() {
             <thead>
               <tr className="border-b">
                 <th className="py-3 text-left font-semibold">Data Type</th>
-                <th className="py-3 text-left font-semibold">
-                  Cache Duration
-                </th>
+                <th className="py-3 text-left font-semibold">Cache Duration</th>
               </tr>
             </thead>
             <tbody>
               {cacheDurations.map((row) => (
                 <tr key={row.category} className="border-b">
-                  <td className="py-3 text-muted-foreground">
-                    {row.category}
-                  </td>
+                  <td className="py-3 text-muted-foreground">{row.category}</td>
                   <td className="py-3 font-medium">{row.duration}</td>
                 </tr>
               ))}
@@ -292,8 +413,8 @@ function DocsIndex() {
         <h2 className="text-2xl font-semibold">Endpoint Access by Plan</h2>
         <p className="text-muted-foreground">
           Not all endpoints are available on every plan. Requesting an endpoint
-          your plan doesn't include returns a{' '}
-          <code>403 Forbidden</code> response. See{' '}
+          your plan doesn't include returns a <code>403 Forbidden</code>{' '}
+          response. See{' '}
           <Link to="/pricing" className="text-accent hover:underline">
             pricing
           </Link>{' '}
@@ -303,19 +424,49 @@ function DocsIndex() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b">
-                <th className="py-3 text-left font-semibold">Endpoint Category</th>
-                <th className="py-3 text-center font-semibold">{studentPlan?.name ?? 'Student Pilot'}<br /><span className="font-normal text-muted-foreground">Free</span></th>
-                <th className="py-3 text-center font-semibold">{privatePlan?.name ?? 'Private Pilot'}<br /><span className="font-normal text-muted-foreground">{privatePlan?.price != null ? `$${privatePlan.price}/mo` : ''}</span></th>
-                <th className="py-3 text-center font-semibold">{commercialPlan?.name ?? 'Commercial Pilot'}<br /><span className="font-normal text-muted-foreground">{commercialPlan?.price != null ? `$${commercialPlan.price}/mo` : ''}</span></th>
+                <th className="py-3 text-left font-semibold">
+                  Endpoint Category
+                </th>
+                <th className="py-3 text-center font-semibold">
+                  {studentPlan?.name ?? 'Student Pilot'}
+                  <br />
+                  <span className="font-normal text-muted-foreground">
+                    Free
+                  </span>
+                </th>
+                <th className="py-3 text-center font-semibold">
+                  {privatePlan?.name ?? 'Private Pilot'}
+                  <br />
+                  <span className="font-normal text-muted-foreground">
+                    {privatePlan?.price != null
+                      ? `$${privatePlan.price}/mo`
+                      : ''}
+                  </span>
+                </th>
+                <th className="py-3 text-center font-semibold">
+                  {commercialPlan?.name ?? 'Commercial Pilot'}
+                  <br />
+                  <span className="font-normal text-muted-foreground">
+                    {commercialPlan?.price != null
+                      ? `$${commercialPlan.price}/mo`
+                      : ''}
+                  </span>
+                </th>
               </tr>
             </thead>
             <tbody>
               {endpointAccessRows.map((row) => (
                 <tr key={row.category} className="border-b">
                   <td className="py-3 text-muted-foreground">{row.category}</td>
-                  <td className="py-3 text-center">{row.student ? '\u2705' : '\u2014'}</td>
-                  <td className="py-3 text-center">{row.private ? '\u2705' : '\u2014'}</td>
-                  <td className="py-3 text-center">{row.commercial ? '\u2705' : '\u2014'}</td>
+                  <td className="py-3 text-center">
+                    {row.student ? '\u2705' : '\u2014'}
+                  </td>
+                  <td className="py-3 text-center">
+                    {row.private ? '\u2705' : '\u2014'}
+                  </td>
+                  <td className="py-3 text-center">
+                    {row.commercial ? '\u2705' : '\u2014'}
+                  </td>
                 </tr>
               ))}
             </tbody>

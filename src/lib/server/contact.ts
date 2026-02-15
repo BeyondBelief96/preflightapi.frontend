@@ -24,16 +24,18 @@ const emailSchema = z.object({
 })
 
 export const sendContactEmail = createServerFn({ method: 'POST' })
-  .inputValidator(  
-    (input: z.input<typeof emailSchema>) => emailSchema.parse(input))
+  .inputValidator((input: z.input<typeof emailSchema>) =>
+    emailSchema.parse(input),
+  )
   .handler(async ({ data }) => {
-    if(!env.RESEND_API_KEY) {
+    if (!env.RESEND_API_KEY) {
       logger.error('RESEND_API_KEY is not configured')
       throw new Error('RESEND_API_KEY is not configured')
     }
     const resend = new Resend(env.RESEND_API_KEY)
     const topicLabel = subjectLabels[data.subject] ?? data.subject
-    const fullName = `${data.firstName} ${data.lastName}`.trim() || data.firstName
+    const fullName =
+      `${data.firstName} ${data.lastName}`.trim() || data.firstName
 
     const { error } = await resend.emails.send({
       from: `PreflightAPI <support@contact.preflightapi.io>`,
@@ -50,7 +52,7 @@ export const sendContactEmail = createServerFn({ method: 'POST' })
     })
 
     if (error) {
-      logger.error(`Failed to send email: ${error.message}`)  
+      logger.error(`Failed to send email: ${error.message}`)
       throw new Error(`Failed to send email: ${error.message}`)
     }
 

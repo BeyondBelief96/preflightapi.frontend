@@ -3,11 +3,7 @@ import { useRouterState } from '@tanstack/react-router'
 import { Menu } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
-export function DashboardHeader({
-  onMenuClick,
-}: {
-  onMenuClick: () => void
-}) {
+export function DashboardHeader({ onMenuClick }: { onMenuClick: () => void }) {
   const routerState = useRouterState()
   const pathname = routerState.location.pathname
 

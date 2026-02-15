@@ -55,9 +55,7 @@ function ContactPage() {
       setMessage('')
     } catch (err) {
       setStatus('error')
-      setErrorMsg(
-        err instanceof Error ? err.message : 'Something went wrong.',
-      )
+      setErrorMsg(err instanceof Error ? err.message : 'Something went wrong.')
     }
   }
 
@@ -139,9 +137,7 @@ function ContactPage() {
                       </SelectItem>
                       <SelectItem value="billing">Billing</SelectItem>
                       <SelectItem value="partnership">Partnership</SelectItem>
-                      <SelectItem value="atp">
-                        Enterprise / ATP Plan
-                      </SelectItem>
+                      <SelectItem value="atp">Enterprise / ATP Plan</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -160,15 +156,13 @@ function ContactPage() {
                 {status === 'error' && (
                   <div className="flex items-start gap-3 rounded-lg border border-destructive/30 bg-destructive/10 p-4 text-sm">
                     <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />
-                    <p>{errorMsg || 'Failed to send message. Please try again.'}</p>
+                    <p>
+                      {errorMsg || 'Failed to send message. Please try again.'}
+                    </p>
                   </div>
                 )}
 
-                <Button
-                  type="submit"
-                  size="lg"
-                  disabled={status === 'sending'}
-                >
+                <Button type="submit" size="lg" disabled={status === 'sending'}>
                   {status === 'sending' ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />

@@ -1,11 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import {
-  AlertCircle,
-  AlertTriangle,
-  ExternalLink,
-  Loader2,
-} from 'lucide-react'
+import { AlertCircle, AlertTriangle, ExternalLink, Loader2 } from 'lucide-react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '@clerk/clerk-react'
 import { z } from 'zod'
@@ -63,8 +58,7 @@ function BillingPage() {
   })
 
   const stripeSub = stripeSubQuery.data
-  const currentPlan =
-    plans.find((p) => p.id === stripeSub?.planId) ?? plans[0]
+  const currentPlan = plans.find((p) => p.id === stripeSub?.planId) ?? plans[0]
   const isPaid = stripeSub !== null && stripeSub !== undefined
   const isPastDue = stripeSub?.status === 'past_due'
   const isCanceling = Boolean(
@@ -288,15 +282,16 @@ function BillingPage() {
               <p className="mt-1 text-sm text-muted-foreground">
                 You still have full access to your {currentPlan.name} plan until{' '}
                 <span className="font-medium text-foreground">
-                  {new Date(cancelDate).toLocaleDateString(
-                    undefined,
-                    { year: 'numeric', month: 'long', day: 'numeric' },
-                  )}
+                  {new Date(cancelDate).toLocaleDateString(undefined, {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
                 </span>
                 . After that, you'll be downgraded to the{' '}
-                {plans.find((p) => p.id === 'student')?.name ?? 'Student Pilot'} plan. Your
-                API keys will remain the same, but access to paid-tier endpoints
-                will be restricted.
+                {plans.find((p) => p.id === 'student')?.name ?? 'Student Pilot'}{' '}
+                plan. Your API keys will remain the same, but access to
+                paid-tier endpoints will be restricted.
               </p>
               <div className="mt-3 flex flex-col gap-2 sm:flex-row">
                 <Button

@@ -14,9 +14,7 @@
   "paths": {
     "/api/v1/airports": {
       "get": {
-        "tags": [
-          "Airports"
-        ],
+        "tags": ["Airports"],
         "summary": "Lists airports with optional search and state filtering",
         "description": "Supports combinable query parameters for flexible filtering:\n\n``` GET /api/v1/airports — all airports (paginated) GET /api/v1/airports?search=Dallas — text search across name, city, ICAO, and FAA identifier GET /api/v1/airports?state=TX — airports in Texas GET /api/v1/airports?state=TX,OK,LA — airports in multiple states GET /api/v1/airports?search=Regional&state=TX — combined search + state filter ```",
         "operationId": "Airport_GetAirports",
@@ -81,9 +79,7 @@
     },
     "/api/v1/airports/{icaoCodeOrIdent}": {
       "get": {
-        "tags": [
-          "Airports"
-        ],
+        "tags": ["Airports"],
         "summary": "Gets a specific airport by ICAO code or FAA identifier",
         "operationId": "Airport_GetAirportByIcaoCodeOrIdent",
         "parameters": [
@@ -124,9 +120,7 @@
     },
     "/api/v1/airports/batch": {
       "get": {
-        "tags": [
-          "Airports"
-        ],
+        "tags": ["Airports"],
         "summary": "Gets multiple airports by their ICAO codes or FAA identifiers",
         "description": "Pass ICAO codes or FAA identifiers as a single comma-separated query parameter:\n\n``` GET /api/v1/airports/batch?ids=KDFW,KAUS,KHOU ```\n\nBoth ICAO codes (KDFW) and FAA identifiers (DFW) can be mixed in the same request.",
         "operationId": "Airport_GetAirportsBatch",
@@ -170,9 +164,7 @@
     },
     "/api/v1/airports/{icaoCodeOrIdent}/runways": {
       "get": {
-        "tags": [
-          "Airports"
-        ],
+        "tags": ["Airports"],
         "summary": "Gets runways for a specific airport, including dimensions, surface type, lighting,\nand detailed runway end information (approach types, markings, obstacles).\nRunway heading data can be used with the E6B crosswind calculator endpoint.",
         "operationId": "Airport_GetRunwaysByAirport",
         "parameters": [
@@ -216,9 +208,7 @@
     },
     "/api/v1/airport-diagrams/{icaoCodeOrIdent}": {
       "get": {
-        "tags": [
-          "Airport Diagrams"
-        ],
+        "tags": ["Airport Diagrams"],
         "summary": "Gets time-limited pre-signed URLs for all available airport diagram PDFs.\nThe URLs expire after a limited period; request new URLs if they have expired.",
         "operationId": "AirportDiagram_GetAirportDiagrams",
         "parameters": [
@@ -259,9 +249,7 @@
     },
     "/api/v1/airspaces/by-classes": {
       "get": {
-        "tags": [
-          "Airspace"
-        ],
+        "tags": ["Airspace"],
         "summary": "Gets airspaces filtered by airspace classes",
         "operationId": "Airspace_GetByClasses",
         "parameters": [
@@ -324,9 +312,7 @@
     },
     "/api/v1/airspaces/by-cities": {
       "get": {
-        "tags": [
-          "Airspace"
-        ],
+        "tags": ["Airspace"],
         "summary": "Gets airspaces filtered by city names",
         "operationId": "Airspace_GetByCity",
         "parameters": [
@@ -389,9 +375,7 @@
     },
     "/api/v1/airspaces/by-states": {
       "get": {
-        "tags": [
-          "Airspace"
-        ],
+        "tags": ["Airspace"],
         "summary": "Gets airspaces filtered by state codes",
         "operationId": "Airspace_GetByState",
         "parameters": [
@@ -454,9 +438,7 @@
     },
     "/api/v1/airspaces/special-use/by-type-codes": {
       "get": {
-        "tags": [
-          "Airspace"
-        ],
+        "tags": ["Airspace"],
         "summary": "Gets special use airspaces filtered by type codes",
         "operationId": "Airspace_GetByTypeCode",
         "parameters": [
@@ -519,9 +501,7 @@
     },
     "/api/v1/airspaces/by-icao-or-idents": {
       "get": {
-        "tags": [
-          "Airspace"
-        ],
+        "tags": ["Airspace"],
         "summary": "Gets controlled airspaces associated with specific airports by ICAO code or FAA identifier.",
         "description": "Returns all controlled airspace boundaries (Class B, C, D) associated with the given airport identifiers. Each result includes the airspace classification, altitude limits, and boundary geometry. Pass multiple identifiers as a comma-separated list to retrieve airspaces for several airports in a single request.",
         "operationId": "Airspace_GetByIcaoOrIdent",
@@ -565,9 +545,7 @@
     },
     "/api/v1/airspaces/by-global-ids": {
       "get": {
-        "tags": [
-          "Airspace"
-        ],
+        "tags": ["Airspace"],
         "summary": "Gets controlled airspaces by their global IDs. This endpoint is designed to be used with the\nAirspaceGlobalIds returned by the navigation log endpoint (POST /api/v1/navlog/calculate)\nto retrieve full details for airspaces along a planned route.",
         "operationId": "Airspace_GetByGlobalIds",
         "parameters": [
@@ -610,9 +588,7 @@
     },
     "/api/v1/airspaces/special-use/by-global-ids": {
       "get": {
-        "tags": [
-          "Airspace"
-        ],
+        "tags": ["Airspace"],
         "summary": "Gets special use airspaces by their global IDs. This endpoint is designed to be used with the\nSpecialUseAirspaceGlobalIds returned by the navigation log endpoint (POST /api/v1/navlog/calculate)\nto retrieve full details for special use airspaces along a planned route.",
         "operationId": "Airspace_GetSpecialUseByGlobalIds",
         "parameters": [
@@ -655,9 +631,7 @@
     },
     "/api/v1/chart-supplements/{icaoCodeOrIdent}": {
       "get": {
-        "tags": [
-          "Chart Supplements"
-        ],
+        "tags": ["Chart Supplements"],
         "summary": "Gets time-limited pre-signed URLs for all chart supplement pages for an airport.\nMulti-page supplements will have one URL per page. The URLs expire after a limited period;\nrequest new URLs if they have expired.",
         "operationId": "ChartSupplement_GetChartSupplements",
         "parameters": [
@@ -698,9 +672,7 @@
     },
     "/api/v1/communication-frequencies/{servicedFacility}": {
       "get": {
-        "tags": [
-          "Communication Frequencies"
-        ],
+        "tags": ["Communication Frequencies"],
         "summary": "Gets all communication frequencies for a serviced facility (airport or ATC facility).\nReturns frequencies including their intended use (e.g., TWR, GND, ATIS, APP, DEP),\ncall signs, operating hours, and sectorization details.",
         "operationId": "CommunicationFrequency_GetFrequenciesByServicedFacility",
         "parameters": [
@@ -774,9 +746,7 @@
     },
     "/api/v1/e6b/crosswind/{icaoCodeOrIdent}": {
       "get": {
-        "tags": [
-          "E6B Flight Computer"
-        ],
+        "tags": ["E6B Flight Computer"],
         "summary": "Calculates crosswind and headwind components for every runway at an airport using live METAR wind data.",
         "description": "Fetches the airport's latest METAR observation and computes wind components for each runway end. The response includes a `RecommendedRunway` — the runway end with the lowest crosswind that also has a headwind (not a tailwind).\n\n**Sign Conventions**\n\n- `CrosswindKt` — positive = wind from the right, negative = wind from the left\n\n- `HeadwindKt` — positive = headwind (favorable), negative = tailwind (unfavorable)\n\nIf the METAR reports variable wind (VRB), `IsVariableWind` is true and crosswind components are calculated using the full wind speed for all runway ends. If gusts are reported, separate `GustCrosswindKt` and `GustHeadwindKt` fields show the worst-case gust components.",
         "operationId": "E6b_GetCrosswindForAirport",
@@ -838,9 +808,7 @@
     },
     "/api/v1/e6b/crosswind/calculate": {
       "post": {
-        "tags": [
-          "E6B Flight Computer"
-        ],
+        "tags": ["E6B Flight Computer"],
         "summary": "Calculates crosswind and headwind components from manually provided wind and runway heading values.",
         "description": "Provide wind direction, wind speed, and a runway heading to compute the headwind and crosswind components. Optionally include a gust speed to also compute gust components.\n\n**Sign Conventions**\n\n- `CrosswindKt` — positive = wind from the right, negative = wind from the left\n\n- `HeadwindKt` — positive = headwind (favorable), negative = tailwind (unfavorable)",
         "operationId": "E6b_CalculateCrosswind",
@@ -883,9 +851,7 @@
     },
     "/api/v1/e6b/density-altitude/{icaoCodeOrIdent}": {
       "get": {
-        "tags": [
-          "E6B Flight Computer"
-        ],
+        "tags": ["E6B Flight Computer"],
         "summary": "Calculates density altitude for an airport using live METAR data with optional overrides.",
         "description": "Fetches the airport's latest METAR to obtain temperature and altimeter setting, then computes density altitude using the ISA model. You can optionally override either value via query parameters for \"what if\" scenarios (e.g., \"what would density altitude be if the temperature reached 40°C?\").\n\n**Response Fields**\n\n- `DensityAltitudeFt` — the effective altitude the aircraft \"feels\" based on air density\n\n- `PressureAltitudeFt` — field elevation corrected for non-standard pressure\n\n- `IsaTemperatureCelsius` — the standard (ISA) temperature expected at this pressure altitude\n\n- `TemperatureDeviationCelsius` — how far the actual temperature deviates from ISA (positive = hotter than standard)\n\n*Formula:*`DA = PA + 120 * (OAT - ISA_temp)`. This does not account for humidity, local pressure patterns, or non-standard lapse rates.",
         "operationId": "E6b_GetDensityAltitudeForAirport",
@@ -969,9 +935,7 @@
     },
     "/api/v1/e6b/density-altitude/calculate": {
       "post": {
-        "tags": [
-          "E6B Flight Computer"
-        ],
+        "tags": ["E6B Flight Computer"],
         "summary": "Calculates density altitude from manually provided field elevation, altimeter setting, and temperature.",
         "description": "Provide your own values instead of relying on METAR data. Useful for any location, for planning with forecast temperatures, or when METAR data is not available.\n\n**Response Fields**\n\n- `DensityAltitudeFt` — the effective altitude the aircraft \"feels\" based on air density\n\n- `PressureAltitudeFt` — field elevation corrected for non-standard pressure\n\n- `IsaTemperatureCelsius` — the standard (ISA) temperature expected at this pressure altitude\n\n- `TemperatureDeviationCelsius` — how far the actual temperature deviates from ISA (positive = hotter than standard)\n\n*Formula:*`DA = PA + 120 * (OAT - ISA_temp)`. This does not account for humidity, local pressure patterns, or non-standard lapse rates.",
         "operationId": "E6b_CalculateDensityAltitude",
@@ -1014,9 +978,7 @@
     },
     "/api/v1/e6b/wind-triangle/calculate": {
       "post": {
-        "tags": [
-          "E6B Flight Computer"
-        ],
+        "tags": ["E6B Flight Computer"],
         "summary": "Solves the wind triangle to compute true heading and ground speed.",
         "description": "Given your desired true course, true airspeed, and the wind conditions, this calculates the heading you need to fly to stay on course and your resulting ground speed.\n\n**Response Fields**\n\n- `TrueHeadingDegrees` — the heading to fly (true course + wind correction angle)\n\n- `GroundSpeedKt` — your speed over the ground after accounting for wind\n\n- `WindCorrectionAngleDegrees` — the crab angle needed to stay on course (positive = correct to the right, negative = correct to the left)\n\n- `HeadwindComponentKt` — positive = headwind, negative = tailwind\n\n- `CrosswindComponentKt` — positive = from the right, negative = from the left\n\nWind direction is the direction the wind is blowing *from* (standard meteorological convention).",
         "operationId": "E6b_CalculateWindTriangle",
@@ -1059,9 +1021,7 @@
     },
     "/api/v1/e6b/true-airspeed/calculate": {
       "post": {
-        "tags": [
-          "E6B Flight Computer"
-        ],
+        "tags": ["E6B Flight Computer"],
         "summary": "Calculates true airspeed (TAS) from calibrated airspeed, pressure altitude, and outside air temperature.",
         "description": "Uses the full compressible isentropic flow conversion (CAS to impact pressure to Mach to TAS), accurate from sea level through FL410+ including above the ISA tropopause at 36,089 ft. This is more accurate than the simplified `CAS / sqrt(sigma)` formula, which diverges significantly at higher altitudes.\n\n**Response Fields**\n\n- `TrueAirspeedKt` — the aircraft's actual speed through the air mass (knots)\n\n- `DensityAltitudeFt` — density altitude at the given conditions (feet)\n\n- `MachNumber` — the aircraft's speed as a fraction of the local speed of sound\n\n*Note:* The ISA tropopause is modeled at 36,089 ft. The real tropopause varies from ~26,000 ft near the poles to ~55,000 ft near the equator, which affects accuracy at high altitudes in non-mid-latitude regions.",
         "operationId": "E6b_CalculateTrueAirspeed",
@@ -1104,9 +1064,7 @@
     },
     "/api/v1/e6b/cloud-base/calculate": {
       "post": {
-        "tags": [
-          "E6B Flight Computer"
-        ],
+        "tags": ["E6B Flight Computer"],
         "summary": "Estimates cloud base height AGL from surface temperature and dewpoint spread.",
         "description": "Uses the standard pilot rule of thumb: `cloud base (ft AGL) = (temperature - dewpoint) * 400`. This approximates the lifting condensation level based on the average dry adiabatic lapse rate (~3°C/1000 ft) and dewpoint lapse rate (~0.5°C/1000 ft).\n\n**Response Fields**\n\n- `EstimatedCloudBaseFtAgl` — estimated height of the cloud base above ground level (feet)\n\n- `TemperatureDewpointSpreadCelsius` — the difference between temperature and dewpoint (degrees Celsius)\n\n*Note:* Actual cloud bases vary with humidity profiles, inversions, and local convective conditions. A small spread (less than 3°C) generally indicates a high likelihood of low ceilings or fog.",
         "operationId": "E6b_CalculateCloudBase",
@@ -1149,9 +1107,7 @@
     },
     "/api/v1/e6b/pressure-altitude/calculate": {
       "post": {
-        "tags": [
-          "E6B Flight Computer"
-        ],
+        "tags": ["E6B Flight Computer"],
         "summary": "Calculates pressure altitude from field elevation and altimeter setting.",
         "description": "Pressure altitude is the altitude in the standard atmosphere where the pressure equals the current pressure at your location. It is the starting point for density altitude, TAS, and performance chart calculations.\n\n*Formula:*`PA = FieldElevation + (29.92 - Altimeter) * 1000`\n\n**Response Fields**\n\n- `PressureAltitudeFt` — the calculated pressure altitude (feet)\n\n- `AltimeterCorrectionFt` — the deviation from standard pressure expressed in feet (positive = lower pressure than standard, negative = higher)\n\n*Note:* The 1 inHg = 1000 ft approximation is most accurate near sea level and diverges slightly at higher elevations and extreme altimeter settings.",
         "operationId": "E6b_CalculatePressureAltitude",
@@ -1194,9 +1150,7 @@
     },
     "/api/v1/g-airmets": {
       "get": {
-        "tags": [
-          "Weather - G-AIRMETs"
-        ],
+        "tags": ["Weather - G-AIRMETs"],
         "summary": "Gets all current G-AIRMET advisories across all product types and hazards.",
         "description": "Returns every active G-AIRMET regardless of product type (SIERRA, TANGO, ZULU) or hazard type. Each advisory includes the hazard, severity, affected altitude range, forecast valid time, and a geographic polygon defining the affected area. Use the `GET /product/{product}` or `GET /hazard/{hazardType}` endpoints to filter by specific product or hazard type.",
         "operationId": "GAirmet_GetAllGAirmets",
@@ -1241,9 +1195,7 @@
     },
     "/api/v1/g-airmets/product/{product}": {
       "get": {
-        "tags": [
-          "Weather - G-AIRMETs"
-        ],
+        "tags": ["Weather - G-AIRMETs"],
         "summary": "Gets G-AIRMETs filtered by product type",
         "operationId": "GAirmet_GetGAirmetsByProduct",
         "parameters": [
@@ -1307,9 +1259,7 @@
     },
     "/api/v1/g-airmets/hazard/{hazardType}": {
       "get": {
-        "tags": [
-          "Weather - G-AIRMETs"
-        ],
+        "tags": ["Weather - G-AIRMETs"],
         "summary": "Gets G-AIRMETs filtered by hazard type",
         "operationId": "GAirmet_GetGAirmetsByHazardType",
         "parameters": [
@@ -1373,9 +1323,7 @@
     },
     "/api/v1/metars/{icaoCodeOrIdent}": {
       "get": {
-        "tags": [
-          "Weather - METARs"
-        ],
+        "tags": ["Weather - METARs"],
         "summary": "Gets the most recent METAR observation for a specific airport.\nReturns decoded weather data including wind, visibility, sky conditions, temperature, and flight category.",
         "operationId": "Metar_GetMetarForAirport",
         "parameters": [
@@ -1416,9 +1364,7 @@
     },
     "/api/v1/metars": {
       "get": {
-        "tags": [
-          "Weather - METARs"
-        ],
+        "tags": ["Weather - METARs"],
         "summary": "Gets METARs for airports in one or more states",
         "description": "Pass state codes as a single comma-separated query parameter:\n\n``` GET /api/v1/metars?state=TX — METARs for Texas airports GET /api/v1/metars?state=TX,OK,LA — METARs for multiple states ```",
         "operationId": "Metar_GetMetarsByState",
@@ -1482,9 +1428,7 @@
     },
     "/api/v1/navlog/calculate": {
       "post": {
-        "tags": [
-          "Navigation Log"
-        ],
+        "tags": ["Navigation Log"],
         "summary": "Calculates a complete VFR navigation log for a cross-country flight.",
         "description": "Provide an ordered list of waypoints (minimum 2) with aircraft performance data, a cruising altitude, and a departure time. The service calculates every leg of the route and returns detailed per-leg data including course, heading, ground speed, distance, estimated time, fuel burn, and wind information.\n\n**Automatic Waypoint Insertion**\n\nThe service automatically inserts calculated waypoints into the route to model climb and descent phases:\n\n- **Top of Climb (TOC)** — Inserted after departure (or after a refueling stop) at the point where the aircraft reaches cruising altitude. Position is calculated using the climb true airspeed and climb rate from your performance data. Legs before the TOC use climb airspeed and climb fuel burn rate.\n\n- **Top of Descent (TOD)** — Inserted before the destination (or before a refueling stop) at the point where the aircraft should begin descending. Calculated using descent airspeed, descent rate, and a 3 NM final approach buffer. Legs after the TOD use descent airspeed and descent fuel burn rate.\n\n- **Bottom of Descent (BOD)** — Inserted 3 NM before the destination airport at Traffic Pattern Altitude (airport elevation + 1000 ft, rounded to the nearest 100 ft). This marks the point where the aircraft levels off at pattern altitude for the approach.\n\n**Wind Correction**\n\nThe service automatically fetches winds aloft forecast data based on your departure time and selects the nearest reporting station to each waypoint. Wind direction, speed, and temperature are interpolated to the leg's altitude. The magnetic heading returned for each leg is the actual heading to fly after accounting for both magnetic variation and wind correction. If wind data is unavailable, the calculation proceeds with zero-wind assumptions (ground speed equals true airspeed).\n\n**Fuel Tracking**\n\nFuel is tracked across the entire route. Start/Taxi/Takeoff (STT) fuel is deducted at departure and again after each refueling stop. Each leg burns fuel at the rate matching its phase (climb, cruise, or descent). The `RemainingFuelGals` field on each leg shows usable fuel remaining at the end of that leg. Refueling stops can either add a specific number of gallons or refuel to full capacity.\n\n**Refueling Stops**\n\nAny intermediate waypoint can be marked as a refueling stop. When a refueling stop is present, the route is segmented so that each segment gets its own independent TOC, TOD, and BOD waypoints. This models a real multi-leg flight where you climb out after each stop and descend into each landing.\n\n**Airspace and Obstacle Detection**\n\nAfter calculating the route, the service queries the database for controlled airspaces (Class B, C, D, E), special use airspaces (Restricted, Prohibited, MOA, Warning, Alert), and obstacles along the route corridor. The response includes identifier collections that you can use with other endpoints to retrieve full details:\n\n- `AirspaceGlobalIds` — use with `GET /api/v1/airspaces/by-global-ids`\n\n- `SpecialUseAirspaceGlobalIds` — use with `GET /api/v1/airspaces/special-use/by-global-ids`\n\n- `ObstacleOasNumbers` — use with `POST /api/v1/obstacles/by-oas-numbers`",
         "operationId": "Navlog_CalculateNavlog",
@@ -1547,9 +1491,7 @@
     },
     "/api/v1/navlog/bearing-and-distance": {
       "post": {
-        "tags": [
-          "Navigation Log"
-        ],
+        "tags": ["Navigation Log"],
         "summary": "Calculates the great-circle bearing and distance between two geographic points.",
         "description": "Provide a start and end point as latitude/longitude in decimal degrees. The service computes:\n\n- **True Course** — The initial bearing from start to end referenced to True North (0-360 degrees), computed using WGS84 geodesic (great-circle) geometry.\n\n- **Magnetic Course** — The true course adjusted for local magnetic variation at the start point. This is the course you would read on a magnetic compass (0-360 degrees).\n\n- **Distance** — The great-circle distance between the two points in nautical miles.\n\nThis endpoint is useful for quick point-to-point calculations without building a full navigation log. Note that this returns *course* (direction of the route), not *heading* (direction the aircraft nose points). For wind-corrected headings, use the full navigation log endpoint.",
         "operationId": "Navlog_CalculateBearingAndDistance",
@@ -1602,9 +1544,7 @@
     },
     "/api/v1/navlog/winds-aloft/{forecast}": {
       "get": {
-        "tags": [
-          "Navigation Log"
-        ],
+        "tags": ["Navigation Log"],
         "summary": "Retrieves winds aloft (FB) forecast data for all reporting sites across the US.",
         "description": "Returns wind direction, wind speed, and temperature at standard altitude levels for every winds aloft reporting station in the United States. This is the same raw forecast data that the navigation log calculator uses internally to compute wind-corrected headings and ground speeds.\n\n**Altitude Levels**\n\nData is provided at the following standard levels (feet MSL): 3000, 6000, 9000, 12000, 18000, 24000, 30000, 34000, and 39000. Not all stations report temperature at every level. Wind direction and speed may be null for calm or light/variable conditions.\n\n**Forecast Periods**\n\n- **6-hour** — Short-range forecast, most accurate for near-term flights\n\n- **12-hour** — Medium-range forecast for flights departing later in the day\n\n- **24-hour** — Long-range forecast for next-day planning\n\n**Response Structure**\n\nThe response includes the forecast validity window (`ValidTime`, `ForUseStartTime`, `ForUseEndTime`) and a list of reporting sites. Each site has an identifier, coordinates, and a dictionary of wind/temperature data keyed by altitude level (e.g., \"3000\", \"6000\"). Wind direction is in degrees true (the direction wind is blowing *from*), speed is in knots, and temperature is in degrees Celsius.",
         "operationId": "Navlog_GetWindsAloftData",
@@ -1657,9 +1597,7 @@
     },
     "/api/v1/notams/{icaoCodeOrIdent}": {
       "get": {
-        "tags": [
-          "NOTAMs"
-        ],
+        "tags": ["NOTAMs"],
         "summary": "Gets all active NOTAMs for a specific airport.",
         "description": "Returns NOTAMs matching the airport's FAA identifier or ICAO code. The identifier is case-insensitive — `kdfw`, `KDFW`, and `DFW` all match the same airport.\n\n**Optional Filters**\n\nAll filter parameters are optional and can be combined to narrow results:\n\n- `classification` — NOTAM classification: `INTERNATIONAL`, `MILITARY`, `LOCAL_MILITARY`, `DOMESTIC`, `FDC`\n\n- `feature` — feature type: `RWY`, `TWY`, `APRON`, `AD`, `OBST`, `NAV`, `COM`, `SVC`, `AIRSPACE`, `ODP`, `SID`, `STAR`, `CHART`, `DATA`, `DVA`, `IAP`, `VFP`, `ROUTE`, `SPECIAL`, `SECURITY`\n\n- `freeText` — text search within NOTAM text (max 80 characters, alphanumeric and `/.-( )` only)\n\n- `effectiveStartDate` / `effectiveEndDate` — ISO 8601 date range (must be paired)\n\n**Examples**\n\n``` GET /api/v1/notams/KDFW — all active NOTAMs for DFW GET /api/v1/notams/DFW?classification=FDC — only FDC NOTAMs GET /api/v1/notams/KDFW?feature=RWY — only runway-related NOTAMs GET /api/v1/notams/KDFW?freeText=CLOSED — text search within NOTAM text GET /api/v1/notams/KDFW?classification=DOMESTIC&feature=RWY — combined filters ```",
         "operationId": "Notam_GetNotamsForAirport",
@@ -1761,9 +1699,7 @@
     },
     "/api/v1/notams/radius": {
       "get": {
-        "tags": [
-          "NOTAMs"
-        ],
+        "tags": ["NOTAMs"],
         "summary": "Gets NOTAMs within a radius of a geographic point.",
         "description": "Performs a spatial query using PostGIS to find NOTAMs whose geometry falls within the specified radius of the given coordinates. Only NOTAMs with stored geometry are returned — NOTAMs that lack geographic data (no point or polygon in the source GeoJSON) are excluded from spatial queries.\n\nThe same optional filters available on the airport endpoint (`classification`, `feature`, `freeText`, `effectiveStartDate`/`effectiveEndDate`) can be combined with the spatial search.\n\n**Examples**\n\n``` GET /api/v1/notams/radius?latitude=32.8998&longitude=-97.0403&radiusNm=25 GET /api/v1/notams/radius?latitude=32.8998&longitude=-97.0403&radiusNm=10&classification=DOMESTIC ```",
         "operationId": "Notam_GetNotamsByRadius",
@@ -1885,9 +1821,7 @@
     },
     "/api/v1/notams/route": {
       "post": {
-        "tags": [
-          "NOTAMs"
-        ],
+        "tags": ["NOTAMs"],
         "summary": "Gets NOTAMs for a flight route (airports and/or waypoints).",
         "description": "Fetches NOTAMs for each point along a route, deduplicates them, and returns a single combined result. The route can be specified in two ways:\n\n**Option 1 — Airport identifiers only**\n\nThe simplest form — provide an array of airport identifiers. Each airport is queried by identifier.\n\n``` { \"airportIdentifiers\": [\"KDFW\", \"KAUS\"] } ```\n\n**Option 2 — Route points (airports + waypoints)**\n\nMix airport identifiers and geographic waypoints with coordinates. Waypoints use spatial (radius) queries while airports query by identifier.\n\n``` { \"routePoints\": [ { \"airportIdentifier\": \"KDFW\" }, { \"name\": \"Lake Travis\", \"latitude\": 30.4082, \"longitude\": -97.8538 }, { \"latitude\": 30.1, \"longitude\": -97.6, \"radiusNm\": 15 }, { \"airportIdentifier\": \"KAUS\" } ], \"corridorRadiusNm\": 25, \"filters\": { \"classification\": \"DOMESTIC\", \"feature\": \"RWY\" } } ```\n\n**Radius Resolution**\n\nIf both `routePoints` and `airportIdentifiers` are provided, `routePoints` takes precedence. Each waypoint uses its own `radiusNm` if specified, otherwise falls back to `corridorRadiusNm`, then to the server default (25 NM). Airport points query by identifier, not radius. Optional filters narrow results across all route points.",
         "operationId": "Notam_GetNotamsForRoute",
@@ -1940,9 +1874,7 @@
     },
     "/api/v1/notams/search": {
       "get": {
-        "tags": [
-          "NOTAMs"
-        ],
+        "tags": ["NOTAMs"],
         "summary": "Searches NOTAMs across all locations using filter criteria.",
         "description": "Searches the entire active NOTAM database without requiring a specific airport or location. At least one filter parameter is required to prevent unbounded queries.\n\n**Pagination**\n\nResults are returned with cursor-based pagination. Pass the `pagination.nextCursor` value from a previous response as the `cursor` query parameter to retrieve the next page. The `limit` parameter controls page size (1–500, default 100).\n\n**Examples**\n\n``` GET /api/v1/notams/search?classification=FDC — all active FDC NOTAMs GET /api/v1/notams/search?freeText=CLOSED&limit=50 — text search, 50 per page GET /api/v1/notams/search?feature=RWY&classification=DOMESTIC — combined filters GET /api/v1/notams/search?classification=FDC&cursor=ABC123&limit=100 — next page ```",
         "operationId": "Notam_SearchNotams",
@@ -2057,9 +1989,7 @@
     },
     "/api/v1/notams/id/{nmsId}": {
       "get": {
-        "tags": [
-          "NOTAMs"
-        ],
+        "tags": ["NOTAMs"],
         "summary": "Gets a single NOTAM by its NMS ID.",
         "description": "Retrieves a specific NOTAM by its FAA NMS identifier. Unlike other NOTAM endpoints, this does *not* filter out cancelled or expired NOTAMs — it returns the NOTAM regardless of its current status, which is useful for looking up referenced or historical NOTAMs.\n\n**Example**\n\n``` GET /api/v1/notams/id/1757609538792382 ```",
         "operationId": "Notam_GetNotamByNmsId",
@@ -2121,9 +2051,7 @@
     },
     "/api/v1/obstacles/airport/{icaoCodeOrIdent}": {
       "get": {
-        "tags": [
-          "Obstacles"
-        ],
+        "tags": ["Obstacles"],
         "summary": "Searches for obstacles near an airport",
         "operationId": "Obstacle_SearchNearAirport",
         "parameters": [
@@ -2219,9 +2147,7 @@
     },
     "/api/v1/obstacles/search": {
       "get": {
-        "tags": [
-          "Obstacles"
-        ],
+        "tags": ["Obstacles"],
         "summary": "Searches for obstacles near a geographic point",
         "operationId": "Obstacle_SearchNearby",
         "parameters": [
@@ -2317,9 +2243,7 @@
     },
     "/api/v1/obstacles/state/{stateCode}": {
       "get": {
-        "tags": [
-          "Obstacles"
-        ],
+        "tags": ["Obstacles"],
         "summary": "Gets obstacles in a specific state",
         "operationId": "Obstacle_GetByState",
         "parameters": [
@@ -2394,9 +2318,7 @@
     },
     "/api/v1/obstacles/{oasNumber}": {
       "get": {
-        "tags": [
-          "Obstacles"
-        ],
+        "tags": ["Obstacles"],
         "summary": "Gets an obstacle by its OAS number",
         "operationId": "Obstacle_GetByOasNumber",
         "parameters": [
@@ -2437,9 +2359,7 @@
     },
     "/api/v1/obstacles/by-oas-numbers": {
       "post": {
-        "tags": [
-          "Obstacles"
-        ],
+        "tags": ["Obstacles"],
         "summary": "Gets multiple obstacles by their OAS numbers. This endpoint is designed to be used with the\nObstacleOasNumbers returned by the navigation log endpoint (POST /api/v1/navlog/calculate)\nto retrieve full details for obstacles near a planned route.",
         "description": "Send a JSON array of OAS number strings in the request body:\n\n``` [\"12-345678\", \"12-345679\", \"12-345680\"] ```",
         "operationId": "Obstacle_GetByOasNumbers",
@@ -2488,9 +2408,7 @@
     },
     "/api/v1/obstacles/bbox": {
       "get": {
-        "tags": [
-          "Obstacles"
-        ],
+        "tags": ["Obstacles"],
         "summary": "Gets obstacles within a geographic bounding box",
         "operationId": "Obstacle_GetByBoundingBox",
         "parameters": [
@@ -2595,9 +2513,7 @@
     },
     "/api/v1/pireps": {
       "get": {
-        "tags": [
-          "Weather - PIREPs"
-        ],
+        "tags": ["Weather - PIREPs"],
         "summary": "Gets all current PIREPs. Returns all active pilot reports with reported conditions\nincluding turbulence (type, intensity, altitude), icing (type, intensity, altitude),\nand sky conditions. Each report includes the geographic coordinates and altitude where\nthe observation was made.",
         "operationId": "Pirep_GetAllPireps",
         "parameters": [
@@ -2641,9 +2557,7 @@
     },
     "/api/v1/sigmets": {
       "get": {
-        "tags": [
-          "Weather - Domestic SIGMETs"
-        ],
+        "tags": ["Weather - Domestic SIGMETs"],
         "summary": "Gets all current domestic SIGMET advisories across all hazard types.",
         "description": "Returns every active domestic SIGMET regardless of hazard type. Each advisory includes the hazard (convective activity, severe turbulence, severe icing, IFR conditions, or mountain obscuration), severity, affected altitude range, and a geographic polygon defining the affected area. Use the `GET /hazard/{hazardType}` endpoint to filter by a specific hazard type.",
         "operationId": "Sigmet_GetAllSigmets",
@@ -2688,9 +2602,7 @@
     },
     "/api/v1/sigmets/hazard/{hazardType}": {
       "get": {
-        "tags": [
-          "Weather - Domestic SIGMETs"
-        ],
+        "tags": ["Weather - Domestic SIGMETs"],
         "summary": "Gets SIGMETs filtered by hazard type",
         "operationId": "Sigmet_GetSigmetsByHazardType",
         "parameters": [
@@ -2754,9 +2666,7 @@
     },
     "/api/v1/tafs/{icaoCodeOrIdent}": {
       "get": {
-        "tags": [
-          "Weather - TAFs"
-        ],
+        "tags": ["Weather - TAFs"],
         "summary": "Gets the current TAF for a specific airport, including all forecast periods with expected\nweather conditions (wind, visibility, sky cover, precipitation, turbulence, and icing).",
         "operationId": "Taf_GetTafByIcaoCodeOrIdent",
         "parameters": [
@@ -3437,16 +3347,8 @@
       "AirportFacilityUse": {
         "type": "string",
         "description": "Airport Facility Use. Corresponds to FAA NASR field FACILITY_USE_CODE (APT_BASE).",
-        "x-enumNames": [
-          "Unknown",
-          "PublicUse",
-          "PrivateUse"
-        ],
-        "enum": [
-          "Unknown",
-          "PublicUse",
-          "PrivateUse"
-        ]
+        "x-enumNames": ["Unknown", "PublicUse", "PrivateUse"],
+        "enum": ["Unknown", "PublicUse", "PrivateUse"]
       },
       "AirportStatus": {
         "type": "string",
@@ -3467,16 +3369,8 @@
       "SurveyMethod": {
         "type": "string",
         "description": "Survey Method for position or elevation determination. Corresponds to FAA NASR fields SURVEY_METHOD_CODE and ELEV_METHOD_CODE (APT_BASE).",
-        "x-enumNames": [
-          "Unknown",
-          "Estimated",
-          "Surveyed"
-        ],
-        "enum": [
-          "Unknown",
-          "Estimated",
-          "Surveyed"
-        ]
+        "x-enumNames": ["Unknown", "Estimated", "Surveyed"],
+        "enum": ["Unknown", "Estimated", "Surveyed"]
       },
       "AirportInspectionMethod": {
         "type": "string",
@@ -3501,52 +3395,20 @@
       "AirportInspectorAgency": {
         "type": "string",
         "description": "Airport Inspector Agency. Corresponds to FAA NASR field INSPECTOR_CODE (APT_BASE).",
-        "x-enumNames": [
-          "Unknown",
-          "Faa",
-          "State",
-          "Contractor"
-        ],
-        "enum": [
-          "Unknown",
-          "Faa",
-          "State",
-          "Contractor"
-        ]
+        "x-enumNames": ["Unknown", "Faa", "State", "Contractor"],
+        "enum": ["Unknown", "Faa", "State", "Contractor"]
       },
       "RepairServiceAvailability": {
         "type": "string",
         "description": "Repair Service Availability. Corresponds to FAA NASR fields AIRFRAME_REPAIR_SER_CODE and PWR_PLANT_REPAIR_SER (APT_BASE).",
-        "x-enumNames": [
-          "Unknown",
-          "None",
-          "Major",
-          "Minor"
-        ],
-        "enum": [
-          "Unknown",
-          "None",
-          "Major",
-          "Minor"
-        ]
+        "x-enumNames": ["Unknown", "None", "Major", "Minor"],
+        "enum": ["Unknown", "None", "Major", "Minor"]
       },
       "OxygenPressureType": {
         "type": "string",
         "description": "Oxygen Pressure Type. Corresponds to FAA NASR fields BOTTLED_OXY_TYPE and BULK_OXY_TYPE (APT_BASE).",
-        "x-enumNames": [
-          "Unknown",
-          "None",
-          "High",
-          "Low",
-          "HighAndLow"
-        ],
-        "enum": [
-          "Unknown",
-          "None",
-          "High",
-          "Low",
-          "HighAndLow"
-        ]
+        "x-enumNames": ["Unknown", "None", "High", "Low", "HighAndLow"],
+        "enum": ["Unknown", "None", "High", "Low", "HighAndLow"]
       },
       "BeaconLensColor": {
         "type": "string",
@@ -3571,34 +3433,14 @@
       "SegmentedCircleMarkerType": {
         "type": "string",
         "description": "Segmented Circle Airport Marker. Corresponds to FAA NASR field SEG_CIRCLE_MKR_FLAG (APT_BASE).",
-        "x-enumNames": [
-          "Unknown",
-          "None",
-          "Yes",
-          "YesLighted"
-        ],
-        "enum": [
-          "Unknown",
-          "None",
-          "Yes",
-          "YesLighted"
-        ]
+        "x-enumNames": ["Unknown", "None", "Yes", "YesLighted"],
+        "enum": ["Unknown", "None", "Yes", "YesLighted"]
       },
       "WindIndicatorType": {
         "type": "string",
         "description": "Wind Indicator Type. Corresponds to FAA NASR field WIND_INDCR_FLAG (APT_BASE).",
-        "x-enumNames": [
-          "Unknown",
-          "None",
-          "Unlighted",
-          "Lighted"
-        ],
-        "enum": [
-          "Unknown",
-          "None",
-          "Unlighted",
-          "Lighted"
-        ]
+        "x-enumNames": ["Unknown", "None", "Unlighted", "Lighted"],
+        "enum": ["Unknown", "None", "Unlighted", "Lighted"]
       },
       "PaginationMetadata": {
         "type": "object",
@@ -4390,18 +4232,8 @@
       "RunwayMarkingsCondition": {
         "type": "string",
         "description": "Runway Markings Condition. Corresponds to FAA NASR field RWY_MARKING_COND (APT_RWY_END).",
-        "x-enumNames": [
-          "Unknown",
-          "Good",
-          "Fair",
-          "Poor"
-        ],
-        "enum": [
-          "Unknown",
-          "Good",
-          "Fair",
-          "Poor"
-        ]
+        "x-enumNames": ["Unknown", "Good", "Fair", "Poor"],
+        "enum": ["Unknown", "Good", "Fair", "Poor"]
       },
       "VisualGlideSlopeIndicatorType": {
         "type": "string",
@@ -4543,13 +4375,7 @@
           "Lighted",
           "MarkedAndLighted"
         ],
-        "enum": [
-          "Unknown",
-          "None",
-          "Marked",
-          "Lighted",
-          "MarkedAndLighted"
-        ]
+        "enum": ["Unknown", "None", "Marked", "Lighted", "MarkedAndLighted"]
       },
       "AirportDiagramsResponseDto": {
         "type": "object",
@@ -5757,16 +5583,8 @@
       "GAirmetProduct": {
         "type": "string",
         "description": "G-AIRMET product types",
-        "x-enumNames": [
-          "SIERRA",
-          "TANGO",
-          "ZULU"
-        ],
-        "enum": [
-          "SIERRA",
-          "TANGO",
-          "ZULU"
-        ]
+        "x-enumNames": ["SIERRA", "TANGO", "ZULU"],
+        "enum": ["SIERRA", "TANGO", "ZULU"]
       },
       "GAirmetHazardType": {
         "type": "string",
@@ -6282,18 +6100,8 @@
       "WaypointType": {
         "type": "string",
         "description": "",
-        "x-enumNames": [
-          "Airport",
-          "Custom",
-          "CalculatedPoint",
-          "Navaid"
-        ],
-        "enum": [
-          "Airport",
-          "Custom",
-          "CalculatedPoint",
-          "Navaid"
-        ]
+        "x-enumNames": ["Airport", "Custom", "CalculatedPoint", "Navaid"],
+        "enum": ["Airport", "Custom", "CalculatedPoint", "Navaid"]
       },
       "NavlogRequestDto": {
         "type": "object",
@@ -7204,16 +7012,8 @@
       "VerificationStatus": {
         "type": "string",
         "description": "",
-        "x-enumNames": [
-          "Unknown",
-          "Verified",
-          "Unverified"
-        ],
-        "enum": [
-          "Unknown",
-          "Verified",
-          "Unverified"
-        ]
+        "x-enumNames": ["Unknown", "Verified", "Unverified"],
+        "enum": ["Unknown", "Verified", "Unverified"]
       },
       "PaginatedResponseOfPirepDto": {
         "type": "object",
@@ -7618,20 +7418,8 @@
       "SigmetHazardType": {
         "type": "string",
         "description": "SIGMET hazard types",
-        "x-enumNames": [
-          "CONVECTIVE",
-          "ICE",
-          "TURB",
-          "IFR",
-          "MTN_OBSCN"
-        ],
-        "enum": [
-          "CONVECTIVE",
-          "ICE",
-          "TURB",
-          "IFR",
-          "MTN_OBSCN"
-        ]
+        "x-enumNames": ["CONVECTIVE", "ICE", "TURB", "IFR", "MTN_OBSCN"],
+        "enum": ["CONVECTIVE", "ICE", "TURB", "IFR", "MTN_OBSCN"]
       },
       "SigmetArea": {
         "type": "object",

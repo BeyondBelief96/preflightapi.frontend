@@ -45,12 +45,17 @@ export function EndpointPage({ endpoint, category }: EndpointPageProps) {
       <div className="space-y-2">
         <div className="flex flex-wrap items-center gap-2">
           <MethodBadge method={endpoint.method} />
-          <code className="text-sm font-semibold text-foreground">{endpoint.path}</code>
+          <code className="text-sm font-semibold text-foreground">
+            {endpoint.path}
+          </code>
           <TierBadge tier={endpoint.tier} />
         </div>
         <h1 className="text-3xl font-bold">{title}</h1>
         {endpoint.summary && (
-          <FormatApiText text={endpoint.summary} className="text-lg text-muted-foreground" />
+          <FormatApiText
+            text={endpoint.summary}
+            className="text-lg text-muted-foreground"
+          />
         )}
       </div>
 
@@ -60,10 +65,14 @@ export function EndpointPage({ endpoint, category }: EndpointPageProps) {
         {endpoint.description && (
           <section>
             <h2 className="mb-3 text-xl font-semibold">Description</h2>
-            <FormatApiText text={endpoint.description} className="text-sm text-muted-foreground" />
+            <FormatApiText
+              text={endpoint.description}
+              className="text-sm text-muted-foreground"
+            />
             {endpoint.paginatedItemType && (
               <p className="mt-2 text-xs text-muted-foreground">
-                Returns paginated results of <SchemaLink name={endpoint.paginatedItemType} />
+                Returns paginated results of{' '}
+                <SchemaLink name={endpoint.paginatedItemType} />
               </p>
             )}
           </section>
@@ -78,17 +87,21 @@ export function EndpointPage({ endpoint, category }: EndpointPageProps) {
         )}
 
         {/* Request Body */}
-        {endpoint.requestBody?.schema && endpoint.requestBody.schema.fields.length > 0 && (
-          <section>
-            <h2 className="mb-3 text-xl font-semibold">
-              Request Body
-              {endpoint.requestBody.schemaName && (
-                <SchemaLink name={endpoint.requestBody.schemaName} className="ml-2 text-base font-normal" />
-              )}
-            </h2>
-            <SchemaViewer fields={endpoint.requestBody.schema.fields} />
-          </section>
-        )}
+        {endpoint.requestBody?.schema &&
+          endpoint.requestBody.schema.fields.length > 0 && (
+            <section>
+              <h2 className="mb-3 text-xl font-semibold">
+                Request Body
+                {endpoint.requestBody.schemaName && (
+                  <SchemaLink
+                    name={endpoint.requestBody.schemaName}
+                    className="ml-2 text-base font-normal"
+                  />
+                )}
+              </h2>
+              <SchemaViewer fields={endpoint.requestBody.schema.fields} />
+            </section>
+          )}
 
         {/* Responses */}
         {endpoint.responses.length > 0 && (

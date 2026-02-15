@@ -10,7 +10,8 @@ export const CATEGORIES: Array<ApiCategory> = [
   {
     slug: 'metars',
     title: 'METARs',
-    description: tagsMeta['Weather - METARs'] ?? 'METAR surface weather observations.',
+    description:
+      tagsMeta['Weather - METARs'] ?? 'METAR surface weather observations.',
     icon: 'thermometer',
     subcategories: [
       {
@@ -36,7 +37,9 @@ export const CATEGORIES: Array<ApiCategory> = [
   {
     slug: 'pireps',
     title: 'PIREPs',
-    description: tagsMeta['Weather - PIREPs'] ?? 'Pilot reports of in-flight weather conditions.',
+    description:
+      tagsMeta['Weather - PIREPs'] ??
+      'Pilot reports of in-flight weather conditions.',
     icon: 'radio',
     subcategories: [
       {
@@ -49,20 +52,25 @@ export const CATEGORIES: Array<ApiCategory> = [
   {
     slug: 'sigmets',
     title: 'Domestic SIGMETs',
-    description: tagsMeta['Weather - Domestic SIGMETs'] ?? 'Domestic SIGMET advisories for significant weather hazards.',
+    description:
+      tagsMeta['Weather - Domestic SIGMETs'] ??
+      'Domestic SIGMET advisories for significant weather hazards.',
     icon: 'cloud-lightning',
     subcategories: [
       {
         tag: 'Weather - Domestic SIGMETs',
         label: 'Domestic SIGMETs',
-        description: 'Domestic SIGMET advisories for the contiguous United States.',
+        description:
+          'Domestic SIGMET advisories for the contiguous United States.',
       },
     ],
   },
   {
     slug: 'g-airmets',
     title: 'G-AIRMETs',
-    description: tagsMeta['Weather - G-AIRMETs'] ?? 'Graphical AIRMETs with gridded hazard areas.',
+    description:
+      tagsMeta['Weather - G-AIRMETs'] ??
+      'Graphical AIRMETs with gridded hazard areas.',
     icon: 'map',
     subcategories: [
       {
@@ -77,7 +85,8 @@ export const CATEGORIES: Array<ApiCategory> = [
   {
     slug: 'airports',
     title: 'Airports',
-    description: tagsMeta['Airports'] ?? 'FAA airport data from the NASR database.',
+    description:
+      tagsMeta['Airports'] ?? 'FAA airport data from the NASR database.',
     icon: 'plane',
     subcategories: [
       {
@@ -90,7 +99,9 @@ export const CATEGORIES: Array<ApiCategory> = [
   {
     slug: 'communication-frequencies',
     title: 'Communication Frequencies',
-    description: tagsMeta['Communication Frequencies'] ?? 'Airport and facility communication frequency data.',
+    description:
+      tagsMeta['Communication Frequencies'] ??
+      'Airport and facility communication frequency data.',
     icon: 'radio',
     subcategories: [
       {
@@ -103,7 +114,8 @@ export const CATEGORIES: Array<ApiCategory> = [
   {
     slug: 'airspace',
     title: 'Airspace',
-    description: tagsMeta['Airspace'] ?? 'Controlled and special-use airspace boundaries.',
+    description:
+      tagsMeta['Airspace'] ?? 'Controlled and special-use airspace boundaries.',
     icon: 'layers',
     subcategories: [
       {
@@ -157,7 +169,8 @@ export const CATEGORIES: Array<ApiCategory> = [
   {
     slug: 'chart-supplements',
     title: 'Chart Supplements',
-    description: tagsMeta['Chart Supplements'] ?? 'FAA Chart Supplement (A/FD) PDFs.',
+    description:
+      tagsMeta['Chart Supplements'] ?? 'FAA Chart Supplement (A/FD) PDFs.',
     icon: 'file-text',
     subcategories: [
       {
@@ -172,7 +185,8 @@ export const CATEGORIES: Array<ApiCategory> = [
   {
     slug: 'e6b',
     title: 'E6B Flight Computer',
-    description: tagsMeta['E6B Flight Computer'] ?? 'E6B flight computer calculations.',
+    description:
+      tagsMeta['E6B Flight Computer'] ?? 'E6B flight computer calculations.',
     icon: 'calculator',
     subcategories: [
       {
@@ -187,13 +201,15 @@ export const CATEGORIES: Array<ApiCategory> = [
   {
     slug: 'nav-log',
     title: 'Navigation Log',
-    description: tagsMeta['Navigation Log'] ?? 'VFR cross-country flight planning tools.',
+    description:
+      tagsMeta['Navigation Log'] ?? 'VFR cross-country flight planning tools.',
     icon: 'route',
     subcategories: [
       {
         tag: 'Navigation Log',
         label: 'Navigation Log',
-        description: 'Flight navigation log, bearing & distance, and winds aloft.',
+        description:
+          'Flight navigation log, bearing & distance, and winds aloft.',
       },
     ],
   },

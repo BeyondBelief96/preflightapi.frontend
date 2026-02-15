@@ -36,8 +36,8 @@ function OpenApiDocs() {
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold">Download the Spec</h2>
         <p className="text-muted-foreground">
-          The specification is available as a JSON file. You can view it in
-          your browser or download it for use with code generation tools.
+          The specification is available as a JSON file. You can view it in your
+          browser or download it for use with code generation tools.
         </p>
         <div className="flex gap-3">
           <a href="/api/openapi" target="_blank" rel="noopener noreferrer">
@@ -56,8 +56,8 @@ function OpenApiDocs() {
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold">Generate Typed Clients</h2>
         <p className="text-muted-foreground">
-          Use popular open-source tools to generate fully typed API clients
-          from the spec. Choose the approach that best fits your workflow.
+          Use popular open-source tools to generate fully typed API clients from
+          the spec. Choose the approach that best fits your workflow.
         </p>
       </section>
 

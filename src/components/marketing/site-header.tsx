@@ -109,10 +109,7 @@ export function SiteHeader() {
             <SignedOut>
               <div className="mt-3 flex flex-col gap-2 border-t pt-3">
                 {isWaitlistMode ? (
-                  <Link
-                    to="/waitlist"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
+                  <Link to="/waitlist" onClick={() => setMobileMenuOpen(false)}>
                     <Button className="w-full" size="sm">
                       Join Waitlist
                     </Button>

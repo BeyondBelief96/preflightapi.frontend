@@ -1,4 +1,10 @@
-import { Link, Outlet, createFileRoute, redirect, useLocation } from '@tanstack/react-router'
+import {
+  Link,
+  Outlet,
+  createFileRoute,
+  redirect,
+  useLocation,
+} from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
 import { useEffect, useRef, useState } from 'react'
 import { AlertTriangle } from 'lucide-react'
@@ -45,7 +51,10 @@ function DashboardLayout() {
         <DashboardHeader onMenuClick={() => setSidebarOpen(true)} />
         <main className="relative min-w-0 flex-1 overflow-hidden">
           <DashboardBackdrop />
-          <div ref={scrollRef} className="h-full overflow-x-hidden overflow-y-auto overscroll-contain p-6 [-webkit-overflow-scrolling:touch]">
+          <div
+            ref={scrollRef}
+            className="h-full overflow-x-hidden overflow-y-auto overscroll-contain p-6 [-webkit-overflow-scrolling:touch]"
+          >
             <div className="mx-auto min-w-0 max-w-5xl">
               <Outlet />
             </div>

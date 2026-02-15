@@ -1,6 +1,10 @@
 import { apimFetch } from './apim-client'
 import { getStripe } from './stripe-client'
-import { PLAN_IDS, getApimProductIds, planIdFromProductId } from './apim-products'
+import {
+  PLAN_IDS,
+  getApimProductIds,
+  planIdFromProductId,
+} from './apim-products'
 import { createLogger } from './logger'
 import type { EndpointTier } from '@/lib/constants'
 import { env } from '@/env'
@@ -106,9 +110,7 @@ async function fetchProductPolicy(
   }
 }
 
-async function fetchProductApis(
-  productId: string,
-): Promise<Array<string>> {
+async function fetchProductApis(productId: string): Promise<Array<string>> {
   const result = await apimFetch<{
     value: Array<{ properties: { path: string } }>
   }>(`/products/${productId}/apis`)
@@ -219,7 +221,10 @@ async function fetchStripePrices(): Promise<Record<string, TierPrice>> {
 function getDefaultProducts(): Record<string, TierProduct> {
   const productIds = getApimProductIds()
   return {
-    student: { apimProductId: productIds.student, displayName: 'Student Pilot' },
+    student: {
+      apimProductId: productIds.student,
+      displayName: 'Student Pilot',
+    },
     private: {
       apimProductId: productIds.private,
       displayName: 'Private Pilot',

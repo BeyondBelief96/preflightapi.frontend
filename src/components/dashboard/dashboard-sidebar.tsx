@@ -9,11 +9,7 @@ import {
   Rocket,
   Settings,
 } from 'lucide-react'
-import {
-  Sheet,
-  SheetContent,
-  SheetTitle,
-} from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet'
 import { PlaneAnimation } from '@/components/plane-animation'
 
 const sidebarLinks = [
@@ -119,7 +115,11 @@ export function DashboardSidebar({
 
       {/* Mobile sidebar */}
       <Sheet open={open} onOpenChange={onOpenChange}>
-        <SheetContent side="left" className="w-64 bg-sidebar p-0" showCloseButton={false}>
+        <SheetContent
+          side="left"
+          className="w-64 bg-sidebar p-0"
+          showCloseButton={false}
+        >
           <SheetTitle className="sr-only">Navigation</SheetTitle>
           <SidebarContent
             onNavigate={() => onOpenChange(false)}

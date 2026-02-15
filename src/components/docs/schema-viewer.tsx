@@ -14,11 +14,7 @@ function TypeBadge({ type, refName }: { type: string; refName?: string }) {
   if (refName) {
     return <SchemaLink name={refName} />
   }
-  return (
-    <span className="font-mono text-xs text-blue-400">
-      {type}
-    </span>
-  )
+  return <span className="font-mono text-xs text-blue-400">{type}</span>
 }
 
 function FieldRow({
@@ -29,7 +25,8 @@ function FieldRow({
   depth: number
 }) {
   const [expanded, setExpanded] = useState(depth < 1)
-  const hasChildren = (field.fields && field.fields.length > 0) ||
+  const hasChildren =
+    (field.fields && field.fields.length > 0) ||
     (field.items?.fields && field.items.fields.length > 0)
   const childFields = field.fields ?? field.items?.fields ?? []
 
@@ -65,7 +62,9 @@ function FieldRow({
           <span className="shrink-0 text-xs text-red-400">required</span>
         )}
         {field.nullable && (
-          <span className="shrink-0 text-xs text-muted-foreground">nullable</span>
+          <span className="shrink-0 text-xs text-muted-foreground">
+            nullable
+          </span>
         )}
 
         {field.description && (
@@ -92,7 +91,11 @@ function FieldRow({
   )
 }
 
-export function SchemaViewer({ fields, depth = 0, className }: SchemaViewerProps) {
+export function SchemaViewer({
+  fields,
+  depth = 0,
+  className,
+}: SchemaViewerProps) {
   if (fields.length === 0) return null
 
   return (

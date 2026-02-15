@@ -33,9 +33,7 @@ function GettingStartedPage() {
 
   const topRef = useRef<HTMLDivElement>(null)
   const [currentStep, setCurrentStep] = useState(0)
-  const [completedSteps, setCompletedSteps] = useState<Set<number>>(
-    new Set(),
-  )
+  const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set())
   const [revealKey, setRevealKey] = useState(false)
   const [hasFirstSuccess, setHasFirstSuccess] = useState(false)
 
@@ -46,9 +44,7 @@ function GettingStartedPage() {
     enabled: !!userId,
   })
 
-  const activeSubscription = subsQuery.data?.find(
-    (s) => s.state === 'active',
-  )
+  const activeSubscription = subsQuery.data?.find((s) => s.state === 'active')
 
   const keysQuery = useQuery({
     queryKey: apimKeys.keys(activeSubscription?.id ?? ''),
@@ -111,10 +107,7 @@ function GettingStartedPage() {
 
       <div className="min-h-[400px]">
         {currentStep === 0 && (
-          <WelcomeStep
-            firstName={user?.firstName}
-            onNext={() => goToStep(1)}
-          />
+          <WelcomeStep firstName={user?.firstName} onNext={() => goToStep(1)} />
         )}
 
         {currentStep === 1 && (
@@ -135,9 +128,7 @@ function GettingStartedPage() {
           />
         )}
 
-        {currentStep === 3 && (
-          <CompleteStep onComplete={handleComplete} />
-        )}
+        {currentStep === 3 && <CompleteStep onComplete={handleComplete} />}
       </div>
 
       <WizardNavigation

@@ -28,17 +28,33 @@ export function ParameterInputs({
 
   return (
     <div className="space-y-1.5">
-      <Label className="text-xs font-medium text-muted-foreground">{label}</Label>
+      <Label className="text-xs font-medium text-muted-foreground">
+        {label}
+      </Label>
       <div className="grid gap-2 sm:grid-cols-2">
         {params.map((p) => (
           <div key={p.name} className="space-y-1">
-            <label htmlFor={`param-${p.name}`} className="text-xs text-muted-foreground">
+            <label
+              htmlFor={`param-${p.name}`}
+              className="text-xs text-muted-foreground"
+            >
               {p.name}
-              {p.required && <span className="ml-0.5 text-red-400" aria-label="required">*</span>}
+              {p.required && (
+                <span className="ml-0.5 text-red-400" aria-label="required">
+                  *
+                </span>
+              )}
             </label>
             {p.enum?.length ? (
-              <Select value={values[p.name] ?? ''} onValueChange={(v) => onChange(p.name, v)}>
-                <SelectTrigger size="sm" className="w-full font-mono text-xs" id={`param-${p.name}`}>
+              <Select
+                value={values[p.name] ?? ''}
+                onValueChange={(v) => onChange(p.name, v)}
+              >
+                <SelectTrigger
+                  size="sm"
+                  className="w-full font-mono text-xs"
+                  id={`param-${p.name}`}
+                >
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -55,7 +71,11 @@ export function ParameterInputs({
                 value={values[p.name] ?? ''}
                 onChange={(e) => onChange(p.name, e.target.value)}
                 className="font-mono text-xs"
-                placeholder={showOptionalHint && !p.required ? `${p.name} (optional)` : p.name}
+                placeholder={
+                  showOptionalHint && !p.required
+                    ? `${p.name} (optional)`
+                    : p.name
+                }
               />
             )}
           </div>

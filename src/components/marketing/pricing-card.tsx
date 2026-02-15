@@ -21,9 +21,7 @@ export function PricingCard({ plan }: PricingCardProps) {
   return (
     <div
       className={`relative flex flex-col rounded-xl border bg-card p-6 ${
-        plan.highlighted
-          ? 'border-accent shadow-lg shadow-accent/10'
-          : ''
+        plan.highlighted ? 'border-accent shadow-lg shadow-accent/10' : ''
       }`}
     >
       {plan.highlighted && (
@@ -36,13 +34,9 @@ export function PricingCard({ plan }: PricingCardProps) {
         <div className="mt-3">
           {plan.price !== null ? (
             <div className="flex items-baseline gap-1">
-              <span className="text-4xl font-bold">
-                ${plan.price}
-              </span>
+              <span className="text-4xl font-bold">${plan.price}</span>
               {plan.price > 0 && (
-                <span className="text-sm text-muted-foreground">
-                  /month
-                </span>
+                <span className="text-sm text-muted-foreground">/month</span>
               )}
             </div>
           ) : (
@@ -52,10 +46,7 @@ export function PricingCard({ plan }: PricingCardProps) {
       </div>
       <ul className="mt-6 flex-1 space-y-3">
         {plan.features.map((feature) => (
-          <li
-            key={feature}
-            className="flex items-start gap-2 text-sm"
-          >
+          <li key={feature} className="flex items-start gap-2 text-sm">
             <Check className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
             <span>{feature}</span>
           </li>

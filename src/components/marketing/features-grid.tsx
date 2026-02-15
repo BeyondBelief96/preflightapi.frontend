@@ -12,37 +12,37 @@ const features = [
     icon: Cloud,
     title: 'Real-Time Weather',
     description:
-      'Real-time METARs, TAFs, PIREPs, SIGMETs, G-AIRMETs, and Winds Aloft. Sourced from aviationweather.gov.',
+      'METARs, TAFs, PIREPs, SIGMETs, G-AIRMETs, and winds aloft. Sourced from aviationweather.gov. Refreshed every 5 minutes.',
   },
   {
     icon: Plane,
     title: '~19,600 US Airports',
     description:
-      'US airport data sources straight from the FAA, updated every 28 days. Includes runways, frequencies, airport diagrams, and chart supplements.',
+      'From the FAA NASR subscription. Runways, frequencies, diagrams, chart supplements. We deal with the fixed-width parsing so you don\u2019t have to. Updated every 28 days.',
   },
   {
     icon: Map,
-    title: 'Airspace Data',
+    title: 'Airspace Boundaries',
     description:
-      'Controlled and special use airspace data and geospatial boundaries from FAA/ArcGIS, updated every 56 days. Includes polygons, altitude limits, and classifications.',
+      'Class B through E and special use airspace with full geospatial polygons. From FAA ArcGIS. Updated every 56 days.',
   },
   {
     icon: AlertTriangle,
     title: 'NOTAMs',
     description:
-      'Notices to Air Missions sourced from the FAA NMS (NOTAM Management System). Query by airport, geographic radius, or waypoints.',
+      'Straight from the FAA NOTAM Management System. We have the API access so you don\u2019t need to apply. Updated every 3 minutes.',
   },
   {
     icon: Navigation,
-    title: 'Flight Planning Tools',
+    title: 'Flight Planning',
     description:
-      'Navigation log generation with waypoints, winds aloft integration, bearing/distance calculations, and magnetic variation corrections.',
+      'Nav log generation with waypoints, winds aloft, magnetic variation, and fuel burn. Plus bearing/distance and coordinate conversions.',
   },
   {
     icon: Calculator,
-    title: 'Performance Calculators',
+    title: 'E6B Calculators',
     description:
-      'Crosswind, density altitude, wind triangle, true airspeed, cloud base, and pressure altitude — like an E6B in API form.',
+      'Crosswind, density altitude, wind triangle, true airspeed, cloud base, pressure altitude. Your E6B as an API.',
   },
 ]
 
@@ -52,11 +52,11 @@ export function FeaturesGrid() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Everything You Need for US Aviation Apps
+            What you get
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            One API to access the full spectrum of aviation data. Built on
-            official FAA and NOAA data sources.
+            40+ endpoints across weather, airports, airspace, NOTAMs, obstacles,
+            and flight planning.
           </p>
         </div>
         <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">

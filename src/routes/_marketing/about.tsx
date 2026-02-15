@@ -27,7 +27,8 @@ export const Route = createFileRoute('/_marketing/about')({
 function AboutPage() {
   const { plans } = usePlans()
   const studentPlan = plans.find((p) => p.id === 'student')
-  const freeCallsLabel = studentPlan?.limits.callsPerMonth?.toLocaleString() ?? '500'
+  const freeCallsLabel =
+    studentPlan?.limits.callsPerMonth?.toLocaleString() ?? '500'
 
   return (
     <div>
@@ -43,8 +44,8 @@ function AboutPage() {
             <span className="text-accent">for Developers</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-            PreflightAPI started as a personal need and grew into a mission: give
-            every aviation developer access to comprehensive, accurate US
+            PreflightAPI started as a personal need and grew into a mission:
+            give every aviation developer access to comprehensive, accurate US
             aviation data from a single source.
           </p>
         </div>
@@ -161,13 +162,12 @@ function AboutPage() {
                 Chapter 3
               </p>
               <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
-                Why PreflightAPI{' '}
-                <span className="text-accent">Exists</span>
+                Why PreflightAPI <span className="text-accent">Exists</span>
               </h2>
               <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
                 If I needed this, other developers probably do too. Aviation
-                data is scattered across the FAA, NOAA, ArcGIS, and more —
-                each with its own formats, restrictions, and update schedules.
+                data is scattered across the FAA, NOAA, ArcGIS, and more — each
+                with its own formats, restrictions, and update schedules.
                 PreflightAPI is the infrastructure that pulls it all together,
                 so you can focus on building your product.
               </p>
@@ -250,10 +250,7 @@ function AboutPage() {
                 data: '625,000+ obstacles including towers, buildings, cranes, and terrain',
               },
             ].map((item) => (
-              <div
-                key={item.source}
-                className="rounded-xl border bg-card p-5"
-              >
+              <div key={item.source} className="rounded-xl border bg-card p-5">
                 <p className="text-sm font-semibold text-accent">
                   {item.source}
                 </p>

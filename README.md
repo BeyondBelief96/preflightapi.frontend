@@ -29,20 +29,20 @@ Built with [TanStack Start](https://tanstack.com/start), React 19, and deployed 
 
 ## Tech Stack
 
-| Category | Technology |
-|---|---|
-| **Framework** | TanStack Start (SSR via Nitro) |
-| **UI** | React 19, Tailwind CSS v4, shadcn/ui (New York style) |
-| **Routing** | TanStack Router (file-based) |
-| **Data** | TanStack Query, TanStack Form, TanStack Table |
-| **Auth** | Clerk |
-| **Payments** | Stripe (SDK v20, API `2026-01-28.clover`) |
-| **API Gateway** | Azure API Management |
-| **Validation** | Zod v4 |
-| **Build** | Vite 7 |
-| **Language** | TypeScript 5.7 (strict mode) |
-| **Deployment** | Vercel |
-| **Node** | 25.6.0 (see `.nvmrc`) |
+| Category        | Technology                                            |
+| --------------- | ----------------------------------------------------- |
+| **Framework**   | TanStack Start (SSR via Nitro)                        |
+| **UI**          | React 19, Tailwind CSS v4, shadcn/ui (New York style) |
+| **Routing**     | TanStack Router (file-based)                          |
+| **Data**        | TanStack Query, TanStack Form, TanStack Table         |
+| **Auth**        | Clerk                                                 |
+| **Payments**    | Stripe (SDK v20, API `2026-01-28.clover`)             |
+| **API Gateway** | Azure API Management                                  |
+| **Validation**  | Zod v4                                                |
+| **Build**       | Vite 7                                                |
+| **Language**    | TypeScript 5.7 (strict mode)                          |
+| **Deployment**  | Vercel                                                |
+| **Node**        | 25.6.0 (see `.nvmrc`)                                 |
 
 ## Prerequisites
 
@@ -124,14 +124,14 @@ preflightapi.frontend/
 
 ### Key files to know
 
-| File | Purpose |
-|---|---|
-| `src/routeTree.gen.ts` | Auto-generated route tree — **never edit manually** |
-| `src/env.ts` | T3Env validation for all environment variables |
-| `src/lib/constants.ts` | Tier definitions, endpoint access map, site config |
-| `src/lib/utils.ts` | `cn()` utility for Tailwind class merging |
-| `vite.config.ts` | Vite + Nitro + Tailwind + TanStack Start plugin config |
-| `components.json` | shadcn/ui configuration (New York style, zinc base) |
+| File                   | Purpose                                                |
+| ---------------------- | ------------------------------------------------------ |
+| `src/routeTree.gen.ts` | Auto-generated route tree — **never edit manually**    |
+| `src/env.ts`           | T3Env validation for all environment variables         |
+| `src/lib/constants.ts` | Tier definitions, endpoint access map, site config     |
+| `src/lib/utils.ts`     | `cn()` utility for Tailwind class merging              |
+| `vite.config.ts`       | Vite + Nitro + Tailwind + TanStack Start plugin config |
+| `components.json`      | shadcn/ui configuration (New York style, zinc base)    |
 
 ## Architecture
 
@@ -146,12 +146,12 @@ This project uses **TanStack Router with file-based routing**. Routes are define
 
 **Layout structure:**
 
-| Layout File | Type | URL Prefix | Purpose |
-|---|---|---|---|
-| `__root.tsx` | Root | `/` | HTML shell, providers (Clerk, Query, Toaster) |
-| `_marketing.tsx` | Pathless | _(none)_ | Public pages (landing, pricing, about, contact, legal) |
-| `dashboard.tsx` | Path-based | `/dashboard/` | Authenticated user pages |
-| `docs.tsx` | Path-based | `/docs/` | API documentation with sidebar |
+| Layout File      | Type       | URL Prefix    | Purpose                                                |
+| ---------------- | ---------- | ------------- | ------------------------------------------------------ |
+| `__root.tsx`     | Root       | `/`           | HTML shell, providers (Clerk, Query, Toaster)          |
+| `_marketing.tsx` | Pathless   | _(none)_      | Public pages (landing, pricing, about, contact, legal) |
+| `dashboard.tsx`  | Path-based | `/dashboard/` | Authenticated user pages                               |
+| `docs.tsx`       | Path-based | `/docs/`      | API documentation with sidebar                         |
 
 **Full route map:**
 
@@ -217,20 +217,20 @@ Server-side logic uses the **Backend for Frontend (BFF)** pattern via TanStack S
 
 **Server function modules** (`src/lib/server/`):
 
-| Module | Purpose |
-|---|---|
-| `apim.ts` | APIM user & subscription management |
-| `apim-client.ts` | Authenticated Azure APIM REST client |
-| `apim-products.ts` | APIM product ID mapping |
-| `apim-queries.ts` | TanStack Query keys for APIM data |
-| `stripe.ts` | Checkout, portal, subscription management |
-| `stripe-client.ts` | Stripe SDK singleton |
-| `stripe-utils.ts` | Price/plan ID mapping utilities |
-| `tier-config.ts` | Dynamic plan data (APIM limits + Stripe prices, cached 5 min) |
-| `auth.ts` | `requireAuth()` and `requireOwnership()` helpers |
-| `api-proxy.ts` | Gateway proxy for authenticated API calls |
-| `contact.ts` | Contact form handler (sends via Resend) |
-| `health.ts` | Health check endpoint |
+| Module             | Purpose                                                       |
+| ------------------ | ------------------------------------------------------------- |
+| `apim.ts`          | APIM user & subscription management                           |
+| `apim-client.ts`   | Authenticated Azure APIM REST client                          |
+| `apim-products.ts` | APIM product ID mapping                                       |
+| `apim-queries.ts`  | TanStack Query keys for APIM data                             |
+| `stripe.ts`        | Checkout, portal, subscription management                     |
+| `stripe-client.ts` | Stripe SDK singleton                                          |
+| `stripe-utils.ts`  | Price/plan ID mapping utilities                               |
+| `tier-config.ts`   | Dynamic plan data (APIM limits + Stripe prices, cached 5 min) |
+| `auth.ts`          | `requireAuth()` and `requireOwnership()` helpers              |
+| `api-proxy.ts`     | Gateway proxy for authenticated API calls                     |
+| `contact.ts`       | Contact form handler (sends via Resend)                       |
+| `health.ts`        | Health check endpoint                                         |
 
 **Conventions for writing server functions:**
 
@@ -240,20 +240,21 @@ import { z } from 'zod/v4'
 import { auth } from '@clerk/tanstack-react-start/server'
 
 const myServerFn = createServerFn()
-  .inputValidator(z.object({ id: z.string() }))  // Use .inputValidator(), NOT .validator()
-  .handler(async ({ data }) => {                   // Destructure { data } from handler arg
-    const { userId } = await auth()                // No request param needed
+  .inputValidator(z.object({ id: z.string() })) // Use .inputValidator(), NOT .validator()
+  .handler(async ({ data }) => {
+    // Destructure { data } from handler arg
+    const { userId } = await auth() // No request param needed
     // ... server-side logic
   })
 ```
 
 **HTTP endpoints** (`server/api/`) — for webhooks and other external-facing routes:
 
-| Endpoint | Purpose |
-|---|---|
+| Endpoint            | Purpose                                                        |
+| ------------------- | -------------------------------------------------------------- |
 | `stripe/webhook.ts` | Handles Stripe subscription events, syncs tier changes to APIM |
-| `clerk/` | Clerk webhook handlers |
-| `openapi.get.ts` | Serves the OpenAPI JSON spec |
+| `clerk/`            | Clerk webhook handlers                                         |
+| `openapi.get.ts`    | Serves the OpenAPI JSON spec                                   |
 
 > **Note:** `src/lib/server/` contains modules imported by server functions. `server/api/` contains Nitro HTTP endpoints (webhooks, public APIs). These are different concerns.
 
@@ -273,11 +274,11 @@ Authentication is handled by [Clerk](https://clerk.com):
 
 Three subscription tiers. Plan data (names, limits, prices) is fetched dynamically from APIM and Stripe at runtime:
 
-| Tier | Plan ID | APIM Product ID | Default Price | Default Calls/Month | Rate Limit |
-|---|---|---|---|---|---|
-| Student Pilot | `student` | `student-pilot` | Free | 500 | 10 req/min |
-| Private Pilot | `private` | `private-pilot` | $29.99/mo | 25,000 | 60 req/min |
-| Commercial Pilot | `commercial` | `commercial-pilot` | $79.99/mo | 250,000 | 300 req/min |
+| Tier             | Plan ID      | APIM Product ID    | Default Price | Default Calls/Month | Rate Limit  |
+| ---------------- | ------------ | ------------------ | ------------- | ------------------- | ----------- |
+| Student Pilot    | `student`    | `student-pilot`    | Free          | 500                 | 10 req/min  |
+| Private Pilot    | `private`    | `private-pilot`    | $29.99/mo     | 25,000              | 60 req/min  |
+| Commercial Pilot | `commercial` | `commercial-pilot` | $79.99/mo     | 250,000             | 300 req/min |
 
 - `ENDPOINT_ACCESS` in `src/lib/constants.ts` maps each API endpoint to its minimum required tier
 - UI pages use the `usePlans()` hook for dynamic plan data — avoid hardcoding tier names or prices
@@ -320,14 +321,14 @@ pnpm dlx shadcn@latest add <component>
 
 **Aviation-specific CSS variables** (defined in `src/styles.css`):
 
-| Variable | Purpose |
-|---|---|
-| `--aviation-sky` | Sky blue accent |
-| `--aviation-navy` | Deep navy for panels |
-| `--aviation-dark` | Darkest background |
-| `--aviation-runway` | Muted gray for secondary elements |
-| `--aviation-warning` | Amber warning color |
-| `--aviation-success` | Green success color |
+| Variable             | Purpose                           |
+| -------------------- | --------------------------------- |
+| `--aviation-sky`     | Sky blue accent                   |
+| `--aviation-navy`    | Deep navy for panels              |
+| `--aviation-dark`    | Darkest background                |
+| `--aviation-runway`  | Muted gray for secondary elements |
+| `--aviation-warning` | Amber warning color               |
+| `--aviation-success` | Green success color               |
 
 ## Environment Variables
 
@@ -335,37 +336,37 @@ All environment variables are validated at startup via [T3Env](https://env.t3.gg
 
 ### Client-side (`VITE_` prefix — exposed to browser)
 
-| Variable | Description | Default |
-|---|---|---|
-| `VITE_CLERK_PUBLISHABLE_KEY` | Clerk publishable key | _(required)_ |
-| `VITE_WAITLIST_MODE` | Enable waitlist mode (`"true"` / `"false"`) | `"false"` |
-| `VITE_APIM_GATEWAY_URL` | API gateway base URL | test instance |
-| `VITE_APP_TITLE` | App title override | _(optional)_ |
+| Variable                     | Description                                 | Default       |
+| ---------------------------- | ------------------------------------------- | ------------- |
+| `VITE_CLERK_PUBLISHABLE_KEY` | Clerk publishable key                       | _(required)_  |
+| `VITE_WAITLIST_MODE`         | Enable waitlist mode (`"true"` / `"false"`) | `"false"`     |
+| `VITE_APIM_GATEWAY_URL`      | API gateway base URL                        | test instance |
+| `VITE_APP_TITLE`             | App title override                          | _(optional)_  |
 
 ### Server-side (never exposed to browser)
 
-| Variable | Description | Default |
-|---|---|---|
-| **Clerk** | | |
-| `CLERK_SECRET_KEY` | Clerk secret key | _(required)_ |
-| **Resend** | | |
-| `RESEND_API_KEY` | Resend API key (contact form emails) | _(required)_ |
-| **Azure** | | |
-| `AZURE_TENANT_ID` | Azure AD tenant ID | _(required)_ |
-| `AZURE_CLIENT_ID` | Service principal client ID | _(required)_ |
-| `AZURE_CLIENT_SECRET` | Service principal secret | _(required)_ |
-| `AZURE_SUBSCRIPTION_ID` | Azure subscription ID | _(required)_ |
-| `APIM_RESOURCE_GROUP` | APIM resource group name | _(required)_ |
-| `APIM_SERVICE_NAME` | APIM service instance name | _(required)_ |
-| `APIM_API_VERSION` | Azure APIM REST API version | `2024-05-01` |
-| `APIM_STUDENT_PRODUCT_ID` | APIM product for student tier | `student-pilot` |
-| `APIM_PRIVATE_PRODUCT_ID` | APIM product for private tier | `private-pilot` |
-| `APIM_COMMERCIAL_PRODUCT_ID` | APIM product for commercial tier | `commercial-pilot` |
-| **Stripe** | | |
-| `STRIPE_SECRET_KEY` | Stripe secret key | _(required)_ |
-| `STRIPE_WEBHOOK_SECRET` | Stripe webhook signing secret | _(required)_ |
-| `STRIPE_PRIVATE_PRICE_ID` | Stripe price ID for private tier | _(required)_ |
-| `STRIPE_COMMERCIAL_PRICE_ID` | Stripe price ID for commercial tier | _(required)_ |
+| Variable                     | Description                          | Default            |
+| ---------------------------- | ------------------------------------ | ------------------ |
+| **Clerk**                    |                                      |                    |
+| `CLERK_SECRET_KEY`           | Clerk secret key                     | _(required)_       |
+| **Resend**                   |                                      |                    |
+| `RESEND_API_KEY`             | Resend API key (contact form emails) | _(required)_       |
+| **Azure**                    |                                      |                    |
+| `AZURE_TENANT_ID`            | Azure AD tenant ID                   | _(required)_       |
+| `AZURE_CLIENT_ID`            | Service principal client ID          | _(required)_       |
+| `AZURE_CLIENT_SECRET`        | Service principal secret             | _(required)_       |
+| `AZURE_SUBSCRIPTION_ID`      | Azure subscription ID                | _(required)_       |
+| `APIM_RESOURCE_GROUP`        | APIM resource group name             | _(required)_       |
+| `APIM_SERVICE_NAME`          | APIM service instance name           | _(required)_       |
+| `APIM_API_VERSION`           | Azure APIM REST API version          | `2024-05-01`       |
+| `APIM_STUDENT_PRODUCT_ID`    | APIM product for student tier        | `student-pilot`    |
+| `APIM_PRIVATE_PRODUCT_ID`    | APIM product for private tier        | `private-pilot`    |
+| `APIM_COMMERCIAL_PRODUCT_ID` | APIM product for commercial tier     | `commercial-pilot` |
+| **Stripe**                   |                                      |                    |
+| `STRIPE_SECRET_KEY`          | Stripe secret key                    | _(required)_       |
+| `STRIPE_WEBHOOK_SECRET`      | Stripe webhook signing secret        | _(required)_       |
+| `STRIPE_PRIVATE_PRICE_ID`    | Stripe price ID for private tier     | _(required)_       |
+| `STRIPE_COMMERCIAL_PRICE_ID` | Stripe price ID for commercial tier  | _(required)_       |
 
 > **Note:** Stripe price IDs differ between test and live environments. Use your test mode IDs for local development.
 
@@ -383,19 +384,19 @@ console.log(env.STRIPE_SECRET_KEY)
 
 ## Scripts
 
-| Command | Description |
-|---|---|
-| `npm run dev` | Start dev server on port 3000 (auto-syncs API spec) |
-| `npm run build` | Production build (runs lint + API sync first) |
-| `npm run start` | Start the production server (`.output/server/index.mjs`) |
-| `npm run preview` | Preview the production build locally |
-| `npm run test` | Run Vitest tests |
-| `npm run lint` | Run ESLint with auto-fix |
-| `npm run format` | Run Prettier |
-| `npm run check` | Run Prettier --write + ESLint --fix |
-| `npm run sync-api` | Fetch latest OpenAPI spec + regenerate TypeScript types |
-| `npm run update-api-spec` | Fetch latest OpenAPI spec from backend |
-| `npm run generate-api-types` | Generate TypeScript types from the local OpenAPI spec |
+| Command                      | Description                                              |
+| ---------------------------- | -------------------------------------------------------- |
+| `npm run dev`                | Start dev server on port 3000 (auto-syncs API spec)      |
+| `npm run build`              | Production build (runs lint + API sync first)            |
+| `npm run start`              | Start the production server (`.output/server/index.mjs`) |
+| `npm run preview`            | Preview the production build locally                     |
+| `npm run test`               | Run Vitest tests                                         |
+| `npm run lint`               | Run ESLint with auto-fix                                 |
+| `npm run format`             | Run Prettier                                             |
+| `npm run check`              | Run Prettier --write + ESLint --fix                      |
+| `npm run sync-api`           | Fetch latest OpenAPI spec + regenerate TypeScript types  |
+| `npm run update-api-spec`    | Fetch latest OpenAPI spec from backend                   |
+| `npm run generate-api-types` | Generate TypeScript types from the local OpenAPI spec    |
 
 ## API Spec Synchronization
 

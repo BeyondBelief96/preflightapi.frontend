@@ -3,15 +3,29 @@ const AIRPLANE_PATH =
 
 const SIZE_CONFIG = {
   sm: { box: 'h-6 w-6', icon: 'h-4 w-4', text: 'text-sm', rounded: 'rounded' },
-  md: { box: 'h-7 w-7', icon: 'h-4 w-4', text: 'text-lg', rounded: 'rounded-lg' },
-  lg: { box: 'h-8 w-8', icon: 'h-5 w-5', text: 'text-xl', rounded: 'rounded-lg' },
+  md: {
+    box: 'h-7 w-7',
+    icon: 'h-4 w-4',
+    text: 'text-lg',
+    rounded: 'rounded-lg',
+  },
+  lg: {
+    box: 'h-8 w-8',
+    icon: 'h-5 w-5',
+    text: 'text-xl',
+    rounded: 'rounded-lg',
+  },
 } as const
 
 export function PlaneAnimation({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) {
   const cfg = SIZE_CONFIG[size]
   return (
     <div className="flex items-center gap-2">
-      <LogoIcon className={cfg.box} iconClassName={cfg.icon} rounded={cfg.rounded} />
+      <LogoIcon
+        className={cfg.box}
+        iconClassName={cfg.icon}
+        rounded={cfg.rounded}
+      />
       <span className={`${cfg.text} font-bold tracking-tight`}>
         Preflight<span className="text-accent">API</span>
       </span>
@@ -29,7 +43,9 @@ export function LogoIcon({
   rounded?: string
 }) {
   return (
-    <div className={`flex items-center justify-center ${rounded} bg-primary ${className}`}>
+    <div
+      className={`flex items-center justify-center ${rounded} bg-primary ${className}`}
+    >
       <svg
         viewBox="0 0 24 24"
         fill="none"

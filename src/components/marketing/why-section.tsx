@@ -4,21 +4,21 @@ import { Layers, RefreshCw, Zap } from 'lucide-react'
 const reasons = [
   {
     icon: Layers,
-    title: 'One Source of Truth',
+    title: 'Seven sources, one key',
     description:
-      'Weather, airports, airspace, NOTAMs, obstacles, charts — all behind a single API key. No juggling multiple government sources yourself.',
+      'NASR, DOF, d-TPPs, DAFD, ArcGIS, NMS, aviationweather.gov. One API key for all of it.',
   },
   {
     icon: RefreshCw,
-    title: 'We Keep It Current',
+    title: 'Always current',
     description:
-      'Data stays in sync with FAA publication cycles and real-time weather feeds. You never have to think about polling, caching, or stale data.',
+      'Weather refreshes every 5 minutes. NOTAMs every 3. Airport and airspace data syncs every FAA publication cycle. You never think about it.',
   },
   {
     icon: Zap,
-    title: 'Start Building in Minutes',
+    title: 'Minutes to first call',
     description:
-      'Sign up, grab your API key, and make your first call. No contracts, no onboarding calls, no waiting for access.',
+      'Sign up, get a key, hit an endpoint. No contracts, no FAA approval process, no onboarding calls.',
   },
 ]
 
@@ -33,17 +33,14 @@ export function WhySection() {
               Why PreflightAPI?
             </p>
             <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
-              Your Aviation Data Infrastructure,
-              <br />
-              <span className="text-accent">Already Built.</span>
+              Your aviation data infrastructure,{' '}
+              <span className="text-accent">already running.</span>
             </h2>
             <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-              Aviation data is scattered across the FAA, NOAA, ArcGIS, and
-              more — each with its own formats, restrictions, and update
-              schedules. Building the infrastructure to collect, parse, store,
-              and keep all of it current is a project in itself. PreflightAPI is
-              that infrastructure. Spend your time building your product, not
-              your data pipeline.
+              Aviation data is scattered across the FAA, NOAA, and ArcGIS — each
+              with its own format, access requirements, and update schedule. We
+              handle the fetching, parsing, and normalizing. You get an API that
+              just works.
             </p>
             <Link
               to="/about"
