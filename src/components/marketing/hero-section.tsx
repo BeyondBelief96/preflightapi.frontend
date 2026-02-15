@@ -178,18 +178,18 @@ export function HeroSection() {
           <div>
             <ApiStatusBadge />
             <h1 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-              US aviation data,{' '}
-              <span className="text-accent">developer-ready.</span>
+              US Aviation Data,{' '}
+              <span className="text-accent">Developer-Ready.</span>
             </h1>
             <p className="mt-4 text-lg font-medium text-muted-foreground sm:text-xl">
               40+ endpoints. One API key. Airports, weather, NOTAMs, airspace,
               obstacles, flight planning.
             </p>
             <p className="mt-6 text-base leading-relaxed text-muted-foreground">
-              Built by a pilot and software engineer. Sourced from NASR
-              subscriptions, the NOTAM Management System, aviationweather.gov,
-              FAA ArcGIS, and more. We handle the parsing and keep everything
-              current so you don&apos;t have to.
+              Built by a pilot and software engineer. Sourced from FAA NASR
+              subscriptions, the NOTAM Management System, NOAA Weather, and more.
+              We handle the parsing and keep everything current so you don&apos;t
+              have to.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <Link to={isWaitlistMode ? '/waitlist' : '/sign-up'}>

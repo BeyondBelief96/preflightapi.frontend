@@ -6,7 +6,7 @@ import {
   useRouter,
 } from '@tanstack/react-router'
 import { Toaster } from '../components/ui/sonner'
-import { TermlyCMP } from '../components/termly-cmp'
+import { TermlyRouteSync } from '../components/termly-cmp'
 import ClerkProvider from '../integrations/clerk/provider'
 
 import appCss from '../styles.css?url'
@@ -36,6 +36,11 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         name: 'description',
         content:
           'Access real-time aviation data including METAR, TAF, NOTAMs, airport information, airspace data, and flight planning tools through a modern REST API.',
+      },
+    ],
+    scripts: [
+      {
+        src: 'https://app.termly.io/resource-blocker/0ccdca7f-29fb-4a23-9b78-86aaf517434d?autoBlock=on',
       },
     ],
     links: [
@@ -117,10 +122,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         />
       </head>
       <body>
-        <TermlyCMP
-          websiteUUID="0ccdca7f-29fb-4a23-9b78-86aaf517434d"
-          autoBlock
-        />
+        <TermlyRouteSync />
         <ClerkProvider>
           {children}
           <Toaster />
