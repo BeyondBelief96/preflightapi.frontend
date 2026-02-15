@@ -6,6 +6,7 @@ import {
   useRouter,
 } from '@tanstack/react-router'
 import { Toaster } from '../components/ui/sonner'
+import { TermlyCMP } from '../components/termly-cmp'
 import ClerkProvider from '../integrations/clerk/provider'
 
 import appCss from '../styles.css?url'
@@ -115,6 +116,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         />
       </head>
       <body>
+        <TermlyCMP
+          websiteUUID="0ccdca7f-29fb-4a23-9b78-86aaf517434d"
+          autoBlock
+        />
         <ClerkProvider>
           {children}
           <Toaster />
