@@ -27,8 +27,8 @@ export default defineEventHandler((event) => {
     ...clerkOrigins,
     // Clerk bot protection
     'https://challenges.cloudflare.com',
-    // Termly consent banner
-    'https://app.termly.io',
+    // Termly consent banner + AutoBlocker
+    'https://*.termly.io',
   ].join(' ')
 
   event.res.headers.set(
@@ -37,11 +37,11 @@ export default defineEventHandler((event) => {
       "default-src 'self'",
       `script-src ${scriptSrc}`,
       // unsafe-inline required: Clerk uses runtime CSS-in-JS (on their roadmap to remove)
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://app.termly.io",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://*.termly.io",
       "font-src 'self' https://fonts.gstatic.com",
-      "img-src 'self' data: https://*.clerk.com https://img.clerk.com https://app.termly.io",
-      `connect-src 'self' ${clerkOrigins.join(' ')} https://*.azure-api.net https://api.stripe.com https://app.termly.io`,
-      `frame-src 'self' ${clerkOrigins.join(' ')} https://challenges.cloudflare.com https://js.stripe.com https://app.termly.io`,
+      "img-src 'self' data: https://*.clerk.com https://img.clerk.com https://*.termly.io",
+      `connect-src 'self' ${clerkOrigins.join(' ')} https://*.azure-api.net https://api.stripe.com https://*.termly.io`,
+      `frame-src 'self' ${clerkOrigins.join(' ')} https://challenges.cloudflare.com https://js.stripe.com https://*.termly.io`,
       // Clerk uses web workers via blob URLs
       "worker-src 'self' blob:",
     ].join('; '),
