@@ -1,11 +1,11 @@
 import { createServerFn } from '@tanstack/react-start'
 import { Resend } from 'resend'
-import z from 'zod'
-import { createLogger } from './logger'
 import { env } from '@/env'
+import { z } from 'zod'
+import { createLogger } from './logger'
 
 const CONTACT_TO = 'support@preflightapi.io'
-const logger = createLogger('contact-form');
+const logger = createLogger('contact-form')
 
 const subjectLabels: Record<string, string> = {
   general: 'General Inquiry',
@@ -31,7 +31,7 @@ export const sendContactEmail = createServerFn({ method: 'POST' })
       logger.error('RESEND_API_KEY is not configured')
       throw new Error('RESEND_API_KEY is not configured')
     }
-    const resend = new Resend(env.RESEND_API_KEY ?? '')
+    const resend = new Resend(env.RESEND_API_KEY)
     const topicLabel = subjectLabels[data.subject] ?? data.subject
     const fullName = `${data.firstName} ${data.lastName}`.trim() || data.firstName
 
