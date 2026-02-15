@@ -32,13 +32,11 @@ function AuthenticationDocs() {
 
       {/* Subscription Key Header */}
       <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">
-          Subscription Key Header
-        </h2>
+        <h2 className="text-2xl font-semibold">Subscription Key Header</h2>
         <p className="text-muted-foreground">
           Include your subscription key in the{' '}
-          <code>Ocp-Apim-Subscription-Key</code> header with every request.
-          This is the recommended authentication method.
+          <code>Ocp-Apim-Subscription-Key</code> header with every request. This
+          is the recommended authentication method.
         </p>
 
         <Tabs defaultValue="curl" className="w-full">
@@ -92,8 +90,8 @@ function AuthenticationDocs() {
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold">Obtaining Your Keys</h2>
         <p className="text-muted-foreground">
-          API keys are provisioned automatically when you create an account.
-          You can view and manage them from the{' '}
+          API keys are provisioned automatically when you create an account. You
+          can view and manage them from the{' '}
           <Link to="/dashboard/keys" className="text-accent hover:underline">
             API Keys
           </Link>{' '}
@@ -130,16 +128,11 @@ function AuthenticationDocs() {
             <strong className="text-foreground">secondary</strong> key.
           </li>
           <li>
-            Regenerate the{' '}
-            <strong className="text-foreground">primary</strong> key from your
-            dashboard.
+            Regenerate the <strong className="text-foreground">primary</strong>{' '}
+            key from your dashboard.
           </li>
-          <li>
-            Update your application to use the new primary key.
-          </li>
-          <li>
-            Optionally regenerate the secondary key for a full rotation.
-          </li>
+          <li>Update your application to use the new primary key.</li>
+          <li>Optionally regenerate the secondary key for a full rotation.</li>
         </ol>
       </section>
 
@@ -206,10 +199,7 @@ PREFLIGHT_API_KEY=your-subscription-key-here`}
           </li>
           <li>
             If a key is compromised, regenerate it immediately from the{' '}
-            <Link
-              to="/dashboard/keys"
-              className="text-accent hover:underline"
-            >
+            <Link to="/dashboard/keys" className="text-accent hover:underline">
               API Keys
             </Link>{' '}
             page.
@@ -251,8 +241,8 @@ PREFLIGHT_API_KEY=your-subscription-key-here`}
         <h2 className="text-2xl font-semibold">Authentication Errors</h2>
         <p className="text-muted-foreground">
           If authentication fails (missing key, invalid key, or expired
-          subscription), the API gateway returns a{' '}
-          <code>401 Unauthorized</code> response:
+          subscription), the API gateway returns a <code>401 Unauthorized</code>{' '}
+          response:
         </p>
         <CodeBlock
           language="json"

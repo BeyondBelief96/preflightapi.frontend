@@ -1,5 +1,17 @@
-import { Link, Outlet, createFileRoute, useLocation } from '@tanstack/react-router'
-import { ArrowLeft, FileJson, FileQuestion, Menu, Search, X } from 'lucide-react'
+import {
+  Link,
+  Outlet,
+  createFileRoute,
+  useLocation,
+} from '@tanstack/react-router'
+import {
+  ArrowLeft,
+  FileJson,
+  FileQuestion,
+  Menu,
+  Search,
+  X,
+} from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { SignedIn, SignedOut, UserButton } from '@clerk/clerk-react'
 import { createPageHead } from '@/lib/seo'

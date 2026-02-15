@@ -47,9 +47,17 @@ function EnumTable({ schema }: { schema: ParsedSchema }) {
   )
 }
 
-function SchemaCard({ schema, hashTarget }: { schema: ParsedSchema; hashTarget?: string }) {
+function SchemaCard({
+  schema,
+  hashTarget,
+}: {
+  schema: ParsedSchema
+  hashTarget?: string
+}) {
   const [expanded, setExpanded] = useState(schema.name === hashTarget)
-  const hasContent = schema.isEnum ? (schema.enum?.length ?? 0) > 0 : schema.fields.length > 0
+  const hasContent = schema.isEnum
+    ? (schema.enum?.length ?? 0) > 0
+    : schema.fields.length > 0
 
   // Auto-expand when this card becomes the hash target (e.g. from search navigation)
   useEffect(() => {
@@ -59,10 +67,7 @@ function SchemaCard({ schema, hashTarget }: { schema: ParsedSchema; hashTarget?:
   }, [hashTarget, schema.name])
 
   return (
-    <div
-      id={schema.name}
-      className="scroll-mt-20 rounded-lg border"
-    >
+    <div id={schema.name} className="scroll-mt-20 rounded-lg border">
       <button
         type="button"
         onClick={() => setExpanded(!expanded)}
@@ -117,9 +122,7 @@ export function SchemaGroupPage({ group }: SchemaGroupPageProps) {
   const hashTarget = location.hash
 
   const groupSchemas = useMemo(() => {
-    return group.schemaNames
-      .map((name) => schemas[name])
-      .filter(Boolean)
+    return group.schemaNames.map((name) => schemas[name]).filter(Boolean)
   }, [group.schemaNames])
 
   const filteredSchemas = useMemo(() => {
@@ -150,9 +153,7 @@ export function SchemaGroupPage({ group }: SchemaGroupPageProps) {
       </Link>
 
       <h1 className="text-3xl font-bold">{group.title}</h1>
-      <p className="mt-2 text-muted-foreground">
-        {group.description}
-      </p>
+      <p className="mt-2 text-muted-foreground">{group.description}</p>
       <p className="mt-1 text-sm text-muted-foreground">
         {groupSchemas.length} schemas in this group
       </p>

@@ -167,7 +167,8 @@ function CodeTabs() {
 export function HeroSection() {
   const { plans } = usePlans()
   const studentPlan = plans.find((p) => p.id === 'student')
-  const freeCallsLabel = studentPlan?.limits.callsPerMonth?.toLocaleString() ?? '500'
+  const freeCallsLabel =
+    studentPlan?.limits.callsPerMonth?.toLocaleString() ?? '500'
 
   return (
     <section className="relative overflow-hidden">
@@ -176,21 +177,19 @@ export function HeroSection() {
           {/* Left: Copy */}
           <div>
             <ApiStatusBadge />
-            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-              US Aviation Data.{' '}
-              <span className="text-accent">One API.</span>
+            <h1 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+              US Aviation Data,{' '}
+              <span className="text-accent">Developer-Ready.</span>
             </h1>
-            <p className="mt-3 text-xl font-medium text-muted-foreground sm:text-2xl">
-              Built by a pilot,{' '}
-              <span className="font-semibold text-accent/80">
-                for developers.
-              </span>
+            <p className="mt-4 text-lg font-medium text-muted-foreground sm:text-xl">
+              40+ endpoints. One API key. Airports, weather, NOTAMs, airspace,
+              obstacles, flight planning.
             </p>
-            <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-              Access real-time weather, airport information, NOTAMs, airspace
-              data, and flight planning tools through a single, well-documented
-              REST API. Built for aviation apps, EFBs, and flight planning
-              software.
+            <p className="mt-6 text-base leading-relaxed text-muted-foreground">
+              Built by a pilot and software engineer. Sourced from FAA NASR
+              subscriptions, the NOTAM Management System, NOAA Weather, and more.
+              We handle the parsing and keep everything current so you don&apos;t
+              have to.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <Link to={isWaitlistMode ? '/waitlist' : '/sign-up'}>
@@ -207,8 +206,7 @@ export function HeroSection() {
               </Link>
             </div>
             <p className="mt-4 text-sm text-muted-foreground">
-              Try with the {studentPlan?.name ?? 'Student Pilot'} plan today with{' '}
-              {freeCallsLabel} API calls/month — no credit card required.
+              {freeCallsLabel} calls/month free. No credit card required.
             </p>
           </div>
 

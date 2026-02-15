@@ -1,9 +1,7 @@
 'use client'
 
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect } from 'react'
 import { useLocation } from '@tanstack/react-router'
-
-const SCRIPT_SRC_BASE = 'https://app.termly.io'
 
 declare global {
   interface Window {
@@ -11,32 +9,12 @@ declare global {
   }
 }
 
-export function TermlyCMP({
-  websiteUUID,
-  autoBlock,
-}: {
-  websiteUUID: string
-  autoBlock?: boolean
-}) {
-  const scriptSrc = useMemo(() => {
-    const url = new URL(SCRIPT_SRC_BASE)
-    url.pathname = `/resource-blocker/${websiteUUID}`
-    if (autoBlock) {
-      url.searchParams.set('autoBlock', 'on')
-    }
-    return url.toString()
-  }, [autoBlock, websiteUUID])
-
-  const isScriptAdded = useRef(false)
-
-  useEffect(() => {
-    if (isScriptAdded.current) return
-    const script = document.createElement('script')
-    script.src = scriptSrc
-    document.head.appendChild(script)
-    isScriptAdded.current = true
-  }, []) // intentionally empty — script is loaded only once
-
+/**
+ * Re-initializes Termly on client-side route changes.
+ * The Termly resource-blocker script itself is loaded via the
+ * root route's `head()` so it appears first in <head>.
+ */
+export function TermlyRouteSync() {
   const { pathname } = useLocation()
 
   useEffect(() => {

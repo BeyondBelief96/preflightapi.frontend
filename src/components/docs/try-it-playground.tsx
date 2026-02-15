@@ -1,5 +1,12 @@
 import { useMemo, useState } from 'react'
-import { ChevronDown, ChevronUp, Eye, EyeOff, Loader2, Send } from 'lucide-react'
+import {
+  ChevronDown,
+  ChevronUp,
+  Eye,
+  EyeOff,
+  Loader2,
+  Send,
+} from 'lucide-react'
 import { MethodBadge } from './method-badge'
 import { ParameterInputs } from './playground/parameter-inputs'
 import { ResponseDisplay } from './playground/response-display'
@@ -17,7 +24,9 @@ interface TryItPlaygroundProps {
   endpoint: ParsedEndpoint
 }
 
-function initParamValues(params: Array<ParsedParameter>): Record<string, string> {
+function initParamValues(
+  params: Array<ParsedParameter>,
+): Record<string, string> {
   const values: Record<string, string> = {}
   for (const p of params) {
     if (p.in === 'path' || p.in === 'query') {
@@ -85,7 +94,9 @@ export function TryItPlayground({ endpoint }: TryItPlaygroundProps) {
     <div className="space-y-4 rounded-lg border border-accent/30 bg-accent/5 p-4">
       {/* API Key */}
       <div className="space-y-1.5">
-        <Label className="text-xs font-medium text-muted-foreground">API Key</Label>
+        <Label className="text-xs font-medium text-muted-foreground">
+          API Key
+        </Label>
         <div className="flex gap-2">
           <div className="relative flex-1">
             <Input
@@ -102,7 +113,11 @@ export function TryItPlayground({ endpoint }: TryItPlaygroundProps) {
               className="absolute right-1 top-1/2 h-7 w-7 -translate-y-1/2 text-muted-foreground hover:text-foreground"
               onClick={() => setShowKey(!showKey)}
             >
-              {showKey ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+              {showKey ? (
+                <EyeOff className="h-3.5 w-3.5" />
+              ) : (
+                <Eye className="h-3.5 w-3.5" />
+              )}
             </Button>
           </div>
         </div>
@@ -126,7 +141,9 @@ export function TryItPlayground({ endpoint }: TryItPlaygroundProps) {
       {/* Request Body */}
       {hasBody && (
         <div className="space-y-1.5">
-          <Label className="text-xs font-medium text-muted-foreground">Request Body</Label>
+          <Label className="text-xs font-medium text-muted-foreground">
+            Request Body
+          </Label>
           <Textarea
             value={bodyValue}
             onChange={(e) => setBodyValue(e.target.value)}
@@ -138,10 +155,14 @@ export function TryItPlayground({ endpoint }: TryItPlaygroundProps) {
 
       {/* URL Preview */}
       <div className="space-y-1.5">
-        <Label className="text-xs font-medium text-muted-foreground">URL Preview</Label>
+        <Label className="text-xs font-medium text-muted-foreground">
+          URL Preview
+        </Label>
         <div className="flex items-center gap-2 overflow-x-auto rounded-md border bg-muted/50 px-3 py-2">
           <MethodBadge method={endpoint.method} />
-          <code className="whitespace-nowrap text-xs text-muted-foreground">{urlPreview}</code>
+          <code className="whitespace-nowrap text-xs text-muted-foreground">
+            {urlPreview}
+          </code>
         </div>
       </div>
 

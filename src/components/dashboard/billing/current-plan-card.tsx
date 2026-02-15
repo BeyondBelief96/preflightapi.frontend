@@ -43,17 +43,16 @@ export function CurrentPlanCard({
             <div className="flex items-center gap-3">
               <h3 className="text-2xl font-bold">{currentPlan.name}</h3>
               {isPastDue ? (
-                <Badge variant="destructive">
-                  Past Due
-                </Badge>
+                <Badge variant="destructive">Past Due</Badge>
               ) : isCanceling ? (
-                <Badge variant="outline" className="border-yellow-500 text-yellow-600 dark:text-yellow-400">
+                <Badge
+                  variant="outline"
+                  className="border-yellow-500 text-yellow-600 dark:text-yellow-400"
+                >
                   Canceling
                 </Badge>
               ) : (
-                <Badge>
-                  {isPaid ? 'Active' : 'Free'}
-                </Badge>
+                <Badge>{isPaid ? 'Active' : 'Free'}</Badge>
               )}
             </div>
             <p className="mt-1 text-muted-foreground">
@@ -63,8 +62,7 @@ export function CurrentPlanCard({
             </p>
             {isCanceling && cancelDate && (
               <p className="mt-1 text-sm text-yellow-600 dark:text-yellow-400">
-                Access until{' '}
-                {new Date(cancelDate).toLocaleDateString()}
+                Access until {new Date(cancelDate).toLocaleDateString()}
               </p>
             )}
             {stripeSub && !isCanceling && (
@@ -89,19 +87,21 @@ export function CurrentPlanCard({
             </Button>
           ) : (
             <div className="flex flex-col gap-2 sm:flex-row">
-              {plans.filter((p) => p.id !== 'student' && !p.marketingOnly).map((plan) => (
-                <Button
-                  key={plan.id}
-                  variant={plan.highlighted ? 'default' : 'outline'}
-                  onClick={() => onCheckout(plan.id)}
-                  disabled={isCheckoutPending}
-                >
-                  {isCheckoutPending ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  ) : null}
-                  {plan.cta}
-                </Button>
-              ))}
+              {plans
+                .filter((p) => p.id !== 'student' && !p.marketingOnly)
+                .map((plan) => (
+                  <Button
+                    key={plan.id}
+                    variant={plan.highlighted ? 'default' : 'outline'}
+                    onClick={() => onCheckout(plan.id)}
+                    disabled={isCheckoutPending}
+                  >
+                    {isCheckoutPending ? (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    ) : null}
+                    {plan.cta}
+                  </Button>
+                ))}
             </div>
           )}
         </div>

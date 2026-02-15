@@ -24,9 +24,7 @@ export function TakeoffCelebration() {
         ))}
 
         {/* Airplane */}
-        <div
-          className="absolute bottom-[20%] left-1/2 -translate-x-1/2 motion-safe:animate-takeoff"
-        >
+        <div className="absolute bottom-[20%] left-1/2 -translate-x-1/2 motion-safe:animate-takeoff">
           <PlaneTakeoff className="h-12 w-12 text-accent" />
         </div>
       </div>

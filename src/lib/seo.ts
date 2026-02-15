@@ -11,9 +11,7 @@ interface PageHeadOptions {
 export function createPageHead(options: PageHeadOptions) {
   const fullTitle = `${options.title} | ${SITE_CONFIG.name}`
   const ogImage = `${SITE_CONFIG.url}${options.ogImage ?? '/logo.png'}`
-  const url = options.path
-    ? `${SITE_CONFIG.url}${options.path}`
-    : undefined
+  const url = options.path ? `${SITE_CONFIG.url}${options.path}` : undefined
 
   return {
     meta: [
@@ -31,8 +29,6 @@ export function createPageHead(options: PageHeadOptions) {
       { name: 'twitter:image', content: ogImage },
       ...(options.noIndex ? [{ name: 'robots', content: 'noindex' }] : []),
     ],
-    links: [
-      ...(url ? [{ rel: 'canonical', href: url }] : []),
-    ],
+    links: [...(url ? [{ rel: 'canonical', href: url }] : [])],
   }
 }

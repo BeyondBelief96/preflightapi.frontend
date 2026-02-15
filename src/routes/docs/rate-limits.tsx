@@ -26,8 +26,7 @@ const cacheDurations = [
     duration: '10 minutes',
   },
   {
-    category:
-      'Static / NASR data (airports, frequencies, airspace, obstacles)',
+    category: 'Static / NASR data (airports, frequencies, airspace, obstacles)',
     duration: '15 minutes',
   },
 ]
@@ -56,9 +55,7 @@ function RateLimitsDocs() {
             <thead>
               <tr className="border-b">
                 <th className="py-3 text-left font-semibold">Plan</th>
-                <th className="py-3 text-left font-semibold">
-                  Rate Limit
-                </th>
+                <th className="py-3 text-left font-semibold">Rate Limit</th>
                 <th className="py-3 text-left font-semibold">Monthly Quota</th>
               </tr>
             </thead>
@@ -99,8 +96,8 @@ function RateLimitsDocs() {
         <ul className="list-inside list-disc space-y-2 text-muted-foreground">
           <li>
             When you hit your monthly quota, all further requests return{' '}
-            <code>429 Too Many Requests</code> with a{' '}
-            <code>QuotaExceeded</code> error until the quota resets.
+            <code>429 Too Many Requests</code> with a <code>QuotaExceeded</code>{' '}
+            error until the quota resets.
           </li>
           <li>
             You can track your current usage on the{' '}
@@ -187,8 +184,8 @@ X-RateLimit-Remaining: 58`}
         <p className="text-muted-foreground">
           When you exceed your per-minute rate limit, the API returns{' '}
           <code>429 Too Many Requests</code> with a standard{' '}
-          <code>Retry-After</code> header and a{' '}
-          <code>retryAfterSeconds</code> field in the body:
+          <code>Retry-After</code> header and a <code>retryAfterSeconds</code>{' '}
+          field in the body:
         </p>
         <CodeBlock
           language="json"
@@ -204,9 +201,8 @@ X-RateLimit-Remaining: 58`}
         </h3>
         <p className="text-muted-foreground">
           When you exhaust your monthly quota, the API returns{' '}
-          <code>429 Too Many Requests</code> with a{' '}
-          <code>quotaResetsAt</code> timestamp indicating when your quota
-          renews:
+          <code>429 Too Many Requests</code> with a <code>quotaResetsAt</code>{' '}
+          timestamp indicating when your quota renews:
         </p>
         <CodeBlock
           language="json"
@@ -217,13 +213,13 @@ X-RateLimit-Remaining: 58`}
 }`}
         />
         <p className="text-sm text-muted-foreground">
-          The <code>quotaResetsAt</code> value is an ISO 8601 UTC timestamp.
-          The quota resets at the start of your next billing cycle.
+          The <code>quotaResetsAt</code> value is an ISO 8601 UTC timestamp. The
+          quota resets at the start of your next billing cycle.
         </p>
         <div className="rounded-lg border bg-muted/30 p-4">
           <p className="text-sm text-muted-foreground">
-            Check the <code>error</code> field to distinguish rate-limit
-            (<code>RateLimitExceeded</code>) from quota (
+            Check the <code>error</code> field to distinguish rate-limit (
+            <code>RateLimitExceeded</code>) from quota (
             <code>QuotaExceeded</code>) responses. See the{' '}
             <Link to="/docs/errors" className="text-accent hover:underline">
               error handling guide
@@ -245,16 +241,16 @@ X-RateLimit-Remaining: 58`}
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b">
-                <th className="py-3 text-left font-semibold">Endpoint Category</th>
+                <th className="py-3 text-left font-semibold">
+                  Endpoint Category
+                </th>
                 <th className="py-3 text-left font-semibold">Cache Duration</th>
               </tr>
             </thead>
             <tbody>
               {cacheDurations.map((row) => (
                 <tr key={row.category} className="border-b">
-                  <td className="py-3 text-muted-foreground">
-                    {row.category}
-                  </td>
+                  <td className="py-3 text-muted-foreground">{row.category}</td>
                   <td className="py-3 font-medium">{row.duration}</td>
                 </tr>
               ))}
@@ -279,13 +275,13 @@ X-RateLimit-Remaining: 58`}
           </li>
           <li>
             <strong className="text-foreground">Response headers</strong> —
-            Check <code>X-RateLimit-Remaining</code> after each request to
-            track your real-time rate limit usage.
+            Check <code>X-RateLimit-Remaining</code> after each request to track
+            your real-time rate limit usage.
           </li>
           <li>
             <strong className="text-foreground">Proactive alerts</strong> — If
-            you're consistently hitting your limits, consider upgrading your plan
-            for higher throughput.
+            you're consistently hitting your limits, consider upgrading your
+            plan for higher throughput.
           </li>
         </ul>
       </section>
@@ -300,9 +296,7 @@ X-RateLimit-Remaining: 58`}
             TTL to the gateway cache duration for optimal freshness.
           </li>
           <li>
-            <strong className="text-foreground">
-              Use exponential backoff
-            </strong>{' '}
+            <strong className="text-foreground">Use exponential backoff</strong>{' '}
             — When you receive a <code>429</code>, wait for the{' '}
             <code>Retry-After</code> duration before retrying. Use exponential
             backoff with jitter to avoid thundering herds.

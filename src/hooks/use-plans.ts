@@ -1,6 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
 import type { EndpointTier, PlanDefinition } from '@/lib/constants'
-import { ENDPOINT_ACCESS, PLANS, TIER_UI, buildPlanFeatures } from '@/lib/constants'
+import {
+  ENDPOINT_ACCESS,
+  PLANS,
+  TIER_UI,
+  buildPlanFeatures,
+} from '@/lib/constants'
 import { fetchTierConfig } from '@/lib/server/apim'
 import { apimKeys } from '@/lib/server/apim-queries'
 

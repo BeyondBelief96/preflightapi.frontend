@@ -38,8 +38,8 @@ export function WelcomeStep({
             {firstName ? `, ${firstName}` : ''}!
           </h2>
           <p className="mt-2 text-muted-foreground">
-            Access real-time aviation weather, airport data, NOTAMs, and
-            more through a single REST API.
+            Access real-time aviation weather, airport data, NOTAMs, and more
+            through a single REST API.
           </p>
         </div>
 
@@ -169,8 +169,8 @@ export function TryItStep({
         <div>
           <h2 className="text-2xl font-bold">Make Your First Request</h2>
           <p className="mt-2 text-muted-foreground">
-            Try fetching live METAR weather data. Change the ICAO code to
-            any airport you like.
+            Try fetching live METAR weather data. Change the ICAO code to any
+            airport you like.
           </p>
         </div>
 
@@ -189,12 +189,8 @@ export function TryItStep({
           />
         ) : (
           <p className="text-sm text-muted-foreground">
-            Unable to load the METAR endpoint. You can try it later from
-            the{' '}
-            <Link
-              to="/docs"
-              className="text-accent hover:underline"
-            >
+            Unable to load the METAR endpoint. You can try it later from the{' '}
+            <Link to="/docs" className="text-accent hover:underline">
               API documentation
             </Link>
             .

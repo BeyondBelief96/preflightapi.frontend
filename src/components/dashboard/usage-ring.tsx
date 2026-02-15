@@ -11,12 +11,7 @@ export function UsageRing({ percent }: { percent: number }) {
         : 'var(--accent)'
 
   return (
-    <svg
-      width="40"
-      height="40"
-      viewBox="0 0 40 40"
-      className="shrink-0"
-    >
+    <svg width="40" height="40" viewBox="0 0 40 40" className="shrink-0">
       <circle
         cx="20"
         cy="20"

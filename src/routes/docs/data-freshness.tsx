@@ -45,7 +45,13 @@ function LocalTimeCell({ utcHour }: { utcHour: number }) {
   return <span>{label || `${String(utcHour).padStart(2, '0')}:00 UTC`}</span>
 }
 
-function SyncJobCard({ job, isContinuous }: { job: SyncJob; isContinuous: boolean }) {
+function SyncJobCard({
+  job,
+  isContinuous,
+}: {
+  job: SyncJob
+  isContinuous: boolean
+}) {
   return (
     <div className="rounded-lg border p-4">
       <div className="flex items-center justify-between gap-2">
@@ -72,7 +78,13 @@ function SyncJobCard({ job, isContinuous }: { job: SyncJob; isContinuous: boolea
   )
 }
 
-function SyncJobList({ jobs, isContinuous }: { jobs: Array<SyncJob>; isContinuous: boolean }) {
+function SyncJobList({
+  jobs,
+  isContinuous,
+}: {
+  jobs: Array<SyncJob>
+  isContinuous: boolean
+}) {
   return (
     <div className="grid gap-3 sm:grid-cols-2">
       {jobs.map((job) => (
@@ -127,10 +139,13 @@ function DataFreshnessDocs() {
           <Clock className="mt-0.5 h-5 w-5 shrink-0 text-accent" />
           <div className="text-sm text-muted-foreground">
             <p>
-              <strong className="text-foreground">Times shown in your local timezone.</strong>{' '}
-              The &quot;Daily Check&quot; column shows when each sync job runs, converted
-              to your local time. The &quot;Next Update&quot; column shows the next FAA
-              cycle date when fresh data will actually be loaded.
+              <strong className="text-foreground">
+                Times shown in your local timezone.
+              </strong>{' '}
+              The &quot;Daily Check&quot; column shows when each sync job runs,
+              converted to your local time. The &quot;Next Update&quot; column
+              shows the next FAA cycle date when fresh data will actually be
+              loaded.
             </p>
           </div>
         </div>
@@ -174,9 +189,10 @@ function DataFreshnessDocs() {
                 endpoints remain fully available throughout the sync.
               </li>
               <li>
-                <strong className="text-foreground">Brief data overlap</strong> —
-                During the sync, you may see a mix of old-cycle and new-cycle
-                data for a short period. This typically lasts only a few minutes.
+                <strong className="text-foreground">Brief data overlap</strong>{' '}
+                — During the sync, you may see a mix of old-cycle and new-cycle
+                data for a short period. This typically lasts only a few
+                minutes.
               </li>
               <li>
                 <strong className="text-foreground">
@@ -199,29 +215,43 @@ function DataFreshnessDocs() {
             <thead>
               <tr className="border-b">
                 <th className="py-3 text-left font-semibold">Dataset</th>
-                <th className="py-3 text-left font-semibold">Update Frequency</th>
+                <th className="py-3 text-left font-semibold">
+                  Update Frequency
+                </th>
                 <th className="py-3 text-left font-semibold">Source</th>
               </tr>
             </thead>
             <tbody>
               <tr className="border-b">
-                <td className="py-3 font-medium">Airports, Frequencies, Diagrams</td>
+                <td className="py-3 font-medium">
+                  Airports, Frequencies, Diagrams
+                </td>
                 <td className="py-3 text-muted-foreground">Every 28 days</td>
                 <td className="py-3 text-muted-foreground">FAA NASR / AIRAC</td>
               </tr>
               <tr className="border-b">
-                <td className="py-3 font-medium">Airspace, SUA, Chart Supplements, Obstacles</td>
+                <td className="py-3 font-medium">
+                  Airspace, SUA, Chart Supplements, Obstacles
+                </td>
                 <td className="py-3 text-muted-foreground">Every 56 days</td>
-                <td className="py-3 text-muted-foreground">FAA Charting / ArcGIS</td>
+                <td className="py-3 text-muted-foreground">
+                  FAA Charting / ArcGIS
+                </td>
               </tr>
               <tr className="border-b">
                 <td className="py-3 font-medium">NOTAMs</td>
-                <td className="py-3 text-muted-foreground">Every 3 minutes (delta) + daily full reload</td>
+                <td className="py-3 text-muted-foreground">
+                  Every 3 minutes (delta) + daily full reload
+                </td>
                 <td className="py-3 text-muted-foreground">FAA NMS API</td>
               </tr>
               <tr className="border-b">
-                <td className="py-3 font-medium">Weather (METARs, TAFs, PIREPs, SIGMETs, G-AIRMETs)</td>
-                <td className="py-3 text-muted-foreground">Real-time (on request)</td>
+                <td className="py-3 font-medium">
+                  Weather (METARs, TAFs, PIREPs, SIGMETs, G-AIRMETs)
+                </td>
+                <td className="py-3 text-muted-foreground">
+                  Real-time (on request)
+                </td>
                 <td className="py-3 text-muted-foreground">FAA / NWS</td>
               </tr>
             </tbody>

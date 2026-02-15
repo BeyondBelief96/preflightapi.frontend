@@ -25,12 +25,14 @@ body {
 }
 
 /* Ensure html/body don't create competing scroll containers on mobile */
-html, body {
+html,
+body {
   height: 100%;
 }
 
 @supports (height: 100dvh) {
-  html, body {
+  html,
+  body {
     height: 100dvh;
   }
 }
@@ -168,8 +170,10 @@ code {
   --color-aviation-success: var(--aviation-success);
 
   /* Font families for Tailwind utility classes */
-  --font-sans: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-  --font-mono: 'Geist Mono', source-code-pro, Menlo, Monaco, Consolas, monospace;
+  --font-sans:
+    'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  --font-mono:
+    'Geist Mono', source-code-pro, Menlo, Monaco, Consolas, monospace;
 }
 
 @layer base {
@@ -200,24 +204,45 @@ code {
 }
 
 @utility animate-marquee {
-  animation: marquee 40s linear infinite;
+  animation: marquee 75s linear infinite;
 }
 
 @keyframes float-1 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(30px, -30px) scale(1.05); }
-  66% { transform: translate(-20px, 20px) scale(0.95); }
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(30px, -30px) scale(1.05);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.95);
+  }
 }
 
 @keyframes float-2 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(-30px, 20px) scale(0.95); }
-  66% { transform: translate(20px, -25px) scale(1.05); }
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(-30px, 20px) scale(0.95);
+  }
+  66% {
+    transform: translate(20px, -25px) scale(1.05);
+  }
 }
 
 @keyframes float-3 {
-  0%, 100% { transform: scale(1); opacity: 0.07; }
-  50% { transform: scale(1.1); opacity: 0.1; }
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.07;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.1;
+  }
 }
 
 @utility animate-float-1 {
@@ -230,36 +255,65 @@ code {
   animation: float-3 20s ease-in-out infinite;
 }
 
-
 @keyframes success-pulse {
-  0% { transform: scale(0); opacity: 0; }
-  50% { transform: scale(1.2); opacity: 1; }
-  100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 @utility animate-success-pulse {
   animation: success-pulse 0.5s ease-out forwards;
 }
 
 @keyframes fade-in-up {
-  0% { opacity: 0; transform: translateY(8px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 @utility animate-fade-in-up {
   animation: fade-in-up 0.3s ease-out forwards;
 }
 
 @keyframes takeoff {
-  0% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 1; }
-  70% { transform: translate(80px, -120px) rotate(-15deg) scale(1.3); opacity: 1; }
-  100% { transform: translate(150px, -200px) rotate(-15deg) scale(1.3); opacity: 0; }
+  0% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  70% {
+    transform: translate(80px, -120px) rotate(-15deg) scale(1.3);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(150px, -200px) rotate(-15deg) scale(1.3);
+    opacity: 0;
+  }
 }
 @utility animate-takeoff {
   animation: takeoff 1.5s ease-in-out forwards;
 }
 
 @keyframes trail-fade {
-  0% { opacity: 0.6; transform: scale(1); }
-  100% { opacity: 0; transform: scale(0.3); }
+  0% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
 }
 @utility animate-trail-fade {
   animation: trail-fade 1s ease-out forwards;
@@ -267,13 +321,32 @@ code {
 
 /* Radar backdrop animations */
 @keyframes radar-sweep {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 @keyframes radar-blip {
-  0% { opacity: 0; transform: scale(0.5); }
-  1% { opacity: 0.8; transform: scale(1); }
-  8% { opacity: 0.35; transform: scale(1); }
-  20% { opacity: 0; transform: scale(0.7); }
-  100% { opacity: 0; transform: scale(0.7); }
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  1% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  8% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  20% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
 }

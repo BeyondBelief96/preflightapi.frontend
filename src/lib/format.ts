@@ -3,8 +3,7 @@ export function statusColor(status: number): string {
     return 'bg-green-500/15 text-green-400 border-green-500/30'
   if (status >= 400 && status < 500)
     return 'bg-amber-500/15 text-amber-400 border-amber-500/30'
-  if (status >= 500)
-    return 'bg-red-500/15 text-red-400 border-red-500/30'
+  if (status >= 500) return 'bg-red-500/15 text-red-400 border-red-500/30'
   return 'bg-muted text-muted-foreground'
 }
 

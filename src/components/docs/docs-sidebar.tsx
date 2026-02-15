@@ -32,7 +32,10 @@ const sections = [
     title: 'Airports & Airspace',
     items: [
       { label: 'Airports', href: '/docs/airports' },
-      { label: 'Communication Frequencies', href: '/docs/communication-frequencies' },
+      {
+        label: 'Communication Frequencies',
+        href: '/docs/communication-frequencies',
+      },
       { label: 'Airspace', href: '/docs/airspace' },
       { label: 'NOTAMs', href: '/docs/notams' },
       { label: 'Obstacles', href: '/docs/obstacles' },
@@ -47,15 +50,11 @@ const sections = [
   },
   {
     title: 'E6B Flight Computer',
-    items: [
-      { label: 'E6B Flight Computer', href: '/docs/e6b' },
-    ],
+    items: [{ label: 'E6B Flight Computer', href: '/docs/e6b' }],
   },
   {
     title: 'Navigation',
-    items: [
-      { label: 'Navigation Log', href: '/docs/nav-log' },
-    ],
+    items: [{ label: 'Navigation Log', href: '/docs/nav-log' }],
   },
   {
     title: 'Data Models',
@@ -93,7 +92,10 @@ export function DocsSidebar({ onNavigate }: DocsSidebarProps) {
                     activeProps={{
                       className: 'bg-muted text-foreground font-medium',
                     }}
-                    activeOptions={{ exact: item.exact ?? false, includeSearch: false }}
+                    activeOptions={{
+                      exact: item.exact ?? false,
+                      includeSearch: false,
+                    }}
                   >
                     {item.label}
                   </Link>

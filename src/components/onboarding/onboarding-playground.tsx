@@ -83,9 +83,7 @@ export function OnboardingPlayground({
               <div key={p.name} className="space-y-1">
                 <label className="text-xs text-muted-foreground">
                   {p.name}
-                  {p.required && (
-                    <span className="ml-0.5 text-red-400">*</span>
-                  )}
+                  {p.required && <span className="ml-0.5 text-red-400">*</span>}
                 </label>
                 <Input
                   value={paramValues[p.name] ?? ''}
@@ -135,9 +133,7 @@ export function OnboardingPlayground({
       )}
 
       {/* Response */}
-      {response && (
-        <ResponseDisplay result={response} />
-      )}
+      {response && <ResponseDisplay result={response} />}
     </div>
   )
 }

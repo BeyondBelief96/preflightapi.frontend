@@ -24,7 +24,10 @@ export function CategoryPage({ category, endpoints }: CategoryPageProps) {
       {/* Page header */}
       <div>
         <h1 className="text-3xl font-bold">{category.title}</h1>
-        <FormatApiText text={category.description} className="mt-2 text-base text-muted-foreground" />
+        <FormatApiText
+          text={category.description}
+          className="mt-2 text-base text-muted-foreground"
+        />
       </div>
 
       {/* Subcategory sections */}
@@ -39,7 +42,11 @@ export function CategoryPage({ category, endpoints }: CategoryPageProps) {
 
           <div className="space-y-6">
             {sub.endpoints.map((ep) => (
-              <EndpointCard key={ep.operationId} endpoint={ep} categorySlug={category.slug} />
+              <EndpointCard
+                key={ep.operationId}
+                endpoint={ep}
+                categorySlug={category.slug}
+              />
             ))}
           </div>
         </section>

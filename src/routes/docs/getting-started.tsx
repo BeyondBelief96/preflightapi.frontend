@@ -23,8 +23,7 @@ function GettingStartedDocs() {
   const { plans } = usePlans()
   const studentPlan = plans.find((p) => p.id === 'student')
   const freeName = studentPlan?.name ?? 'Student Pilot'
-  const freeCalls =
-    studentPlan?.limits.callsPerMonth?.toLocaleString() ?? '500'
+  const freeCalls = studentPlan?.limits.callsPerMonth?.toLocaleString() ?? '500'
 
   return (
     <div className="space-y-10">
@@ -46,9 +45,9 @@ function GettingStartedDocs() {
             preflightapi.com/sign-up
           </Link>
           . No credit card required. You'll start on the{' '}
-          <strong className="text-foreground">{freeName}</strong> plan, which
-          is free and includes {freeCalls} API calls per month — enough to
-          explore every endpoint.
+          <strong className="text-foreground">{freeName}</strong> plan, which is
+          free and includes {freeCalls} API calls per month — enough to explore
+          every endpoint.
         </p>
       </section>
 
@@ -63,8 +62,8 @@ function GettingStartedDocs() {
           page in your dashboard. Your subscription includes a{' '}
           <strong className="text-foreground">primary</strong> and{' '}
           <strong className="text-foreground">secondary</strong> key — both work
-          identically. Having two keys lets you rotate one without downtime. Copy
-          either key to use in the next step.
+          identically. Having two keys lets you rotate one without downtime.
+          Copy either key to use in the next step.
         </p>
         <div className="rounded-lg border bg-muted/30 p-4">
           <p className="text-sm text-muted-foreground">
@@ -86,9 +85,8 @@ function GettingStartedDocs() {
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold">3. Make Your First Request</h2>
         <p className="text-muted-foreground">
-          Include your API key in the{' '}
-          <code>Ocp-Apim-Subscription-Key</code> header. Let's fetch the
-          current METAR for JFK International Airport:
+          Include your API key in the <code>Ocp-Apim-Subscription-Key</code>{' '}
+          header. Let's fetch the current METAR for JFK International Airport:
         </p>
 
         <Tabs defaultValue="curl" className="w-full">
@@ -154,9 +152,7 @@ console.log(data)`}
 
       {/* Step 4 */}
       <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">
-          4. Understand the Response
-        </h2>
+        <h2 className="text-2xl font-semibold">4. Understand the Response</h2>
         <p className="text-muted-foreground">
           Single-resource endpoints (like fetching a METAR by ICAO code) return
           the object directly. Collection endpoints that return multiple items
@@ -179,9 +175,9 @@ console.log(data)`}
         />
 
         <p className="text-muted-foreground">
-          To fetch the next page, pass the <code>nextCursor</code> value as
-          the <code>cursor</code> query parameter. You can also control page
-          size with the <code>limit</code> parameter (1–500, default 100).
+          To fetch the next page, pass the <code>nextCursor</code> value as the{' '}
+          <code>cursor</code> query parameter. You can also control page size
+          with the <code>limit</code> parameter (1–500, default 100).
         </p>
 
         <CodeBlock
@@ -206,27 +202,18 @@ console.log(data)`}
             </h3>
             <ul className="list-inside list-disc space-y-1.5 text-muted-foreground">
               <li>
-                <Link
-                  to="/docs/metars"
-                  className="text-accent hover:underline"
-                >
+                <Link to="/docs/metars" className="text-accent hover:underline">
                   METARs
                 </Link>{' '}
                 &{' '}
-                <Link
-                  to="/docs/tafs"
-                  className="text-accent hover:underline"
-                >
+                <Link to="/docs/tafs" className="text-accent hover:underline">
                   TAFs
                 </Link>{' '}
                 — Start here. Surface observations and terminal forecasts for
                 any US airport.
               </li>
               <li>
-                <Link
-                  to="/docs/pireps"
-                  className="text-accent hover:underline"
-                >
+                <Link to="/docs/pireps" className="text-accent hover:underline">
                   PIREPs
                 </Link>{' '}
                 — Pilot reports of turbulence, icing, and sky conditions.
@@ -278,10 +265,7 @@ console.log(data)`}
                 boundaries.
               </li>
               <li>
-                <Link
-                  to="/docs/notams"
-                  className="text-accent hover:underline"
-                >
+                <Link to="/docs/notams" className="text-accent hover:underline">
                   NOTAMs
                 </Link>{' '}
                 — Notices to Air Missions by airport, radius, or route.
@@ -304,10 +288,7 @@ console.log(data)`}
             </h3>
             <ul className="list-inside list-disc space-y-1.5 text-muted-foreground">
               <li>
-                <Link
-                  to="/docs/e6b"
-                  className="text-accent hover:underline"
-                >
+                <Link to="/docs/e6b" className="text-accent hover:underline">
                   E6B Flight Computer
                 </Link>{' '}
                 — Crosswind, density altitude, wind triangle, TAS, cloud base,
@@ -320,8 +301,8 @@ console.log(data)`}
                 >
                   Navigation Log
                 </Link>{' '}
-                — Full navigation log with wind correction, fuel burn, bearing
-                & distance, and winds aloft.
+                — Full navigation log with wind correction, fuel burn, bearing &
+                distance, and winds aloft.
               </li>
             </ul>
           </div>
@@ -340,10 +321,7 @@ console.log(data)`}
             authentication guide
           </Link>
           ,{' '}
-          <Link
-            to="/docs/rate-limits"
-            className="text-accent hover:underline"
-          >
+          <Link to="/docs/rate-limits" className="text-accent hover:underline">
             rate limits
           </Link>
           , and{' '}

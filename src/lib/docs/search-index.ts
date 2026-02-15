@@ -25,13 +25,53 @@ function buildIndex(): Array<SearchItem> {
 
   // ── Documentation pages ──
   const docPages = [
-    { title: 'Overview', href: '/docs', keywords: ['home', 'introduction', 'getting started'] },
-    { title: 'Quick Start', href: '/docs/getting-started', keywords: ['setup', 'install', 'first request'] },
-    { title: 'Authentication', href: '/docs/authentication', keywords: ['api key', 'auth', 'header', 'ocp-apim'] },
-    { title: 'Rate Limits', href: '/docs/rate-limits', keywords: ['throttle', 'quota', '429', 'limit'] },
-    { title: 'Error Handling', href: '/docs/errors', keywords: ['error', 'status code', '400', '403', '500'] },
-    { title: 'Data Freshness', href: '/docs/data-freshness', keywords: ['sync', 'update', 'cycle', 'airac', 'faa', 'publication', 'schedule', 'freshness', '28-day', '56-day', 'notam'] },
-    { title: 'OpenAPI Spec', href: '/docs/openapi', keywords: ['swagger', 'openapi', 'spec', 'json'] },
+    {
+      title: 'Overview',
+      href: '/docs',
+      keywords: ['home', 'introduction', 'getting started'],
+    },
+    {
+      title: 'Quick Start',
+      href: '/docs/getting-started',
+      keywords: ['setup', 'install', 'first request'],
+    },
+    {
+      title: 'Authentication',
+      href: '/docs/authentication',
+      keywords: ['api key', 'auth', 'header', 'ocp-apim'],
+    },
+    {
+      title: 'Rate Limits',
+      href: '/docs/rate-limits',
+      keywords: ['throttle', 'quota', '429', 'limit'],
+    },
+    {
+      title: 'Error Handling',
+      href: '/docs/errors',
+      keywords: ['error', 'status code', '400', '403', '500'],
+    },
+    {
+      title: 'Data Freshness',
+      href: '/docs/data-freshness',
+      keywords: [
+        'sync',
+        'update',
+        'cycle',
+        'airac',
+        'faa',
+        'publication',
+        'schedule',
+        'freshness',
+        '28-day',
+        '56-day',
+        'notam',
+      ],
+    },
+    {
+      title: 'OpenAPI Spec',
+      href: '/docs/openapi',
+      keywords: ['swagger', 'openapi', 'spec', 'json'],
+    },
   ]
   for (const page of docPages) {
     items.push({
@@ -72,7 +112,9 @@ function buildIndex(): Array<SearchItem> {
 
   // ── Individual endpoints ──
   for (const ep of allEndpoints) {
-    const categorySlug = CATEGORIES.find((c) => c.subcategories.some((s) => s.tag === ep.tag))?.slug ?? 'metars'
+    const categorySlug =
+      CATEGORIES.find((c) => c.subcategories.some((s) => s.tag === ep.tag))
+        ?.slug ?? 'metars'
     items.push({
       id: `ep-${ep.operationId}`,
       type: 'endpoint',
@@ -100,9 +142,7 @@ function buildIndex(): Array<SearchItem> {
       subtitle: schema.isEnum
         ? `enum · ${schema.enum?.length ?? 0} values`
         : `${schema.fields.length} fields`,
-      href: groupSlug
-        ? `/docs/data-models/${groupSlug}`
-        : '/docs/data-models',
+      href: groupSlug ? `/docs/data-models/${groupSlug}` : '/docs/data-models',
       hash: name,
       keywords: [
         name.toLowerCase(),

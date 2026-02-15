@@ -30,8 +30,7 @@ export function useReconcile(
     },
     onError: () => {
       if (retryCountRef.current < MAX_RECONCILE_RETRIES - 1) {
-        const delay =
-          RECONCILE_BASE_DELAY * Math.pow(2, retryCountRef.current)
+        const delay = RECONCILE_BASE_DELAY * Math.pow(2, retryCountRef.current)
         retryCountRef.current += 1
         setTimeout(() => reconcileMutation.mutate(), delay)
       } else {

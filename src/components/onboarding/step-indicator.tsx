@@ -23,9 +23,7 @@ export function StepIndicator({
             {i > 0 && (
               <div
                 className={`h-0.5 w-8 sm:w-16 ${
-                  completedSteps.has(i - 1)
-                    ? 'bg-aviation-success'
-                    : 'bg-muted'
+                  completedSteps.has(i - 1) ? 'bg-aviation-success' : 'bg-muted'
                 }`}
               />
             )}
@@ -41,11 +39,7 @@ export function StepIndicator({
                       : 'border-2 border-muted text-muted-foreground'
                 }`}
               >
-                {isCompleted ? (
-                  <Check className="h-4 w-4" />
-                ) : (
-                  i + 1
-                )}
+                {isCompleted ? <Check className="h-4 w-4" /> : i + 1}
               </div>
 
               {/* Label (hidden on mobile) */}

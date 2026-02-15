@@ -100,13 +100,12 @@ export async function apimFetch<T = unknown>(
 
       return response.json() as Promise<T>
     } catch (err) {
-      lastError =
-        err instanceof Error ? err : new Error('APIM request failed')
+      lastError = err instanceof Error ? err : new Error('APIM request failed')
 
       // Retry on network errors (fetch throws on network failure)
       if (
         attempt < MAX_RETRIES &&
-        !(lastError.message.startsWith('APIM Management API error'))
+        !lastError.message.startsWith('APIM Management API error')
       ) {
         const delay = RETRY_BASE_DELAY * 2 ** attempt
         await new Promise((resolve) => setTimeout(resolve, delay))

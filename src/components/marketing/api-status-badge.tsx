@@ -2,10 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import type { ApiStatus } from '@/lib/server/health'
 import { checkApiHealth } from '@/lib/server/health'
 
-const statusConfig: Record<
-  ApiStatus,
-  { label: string; dotClass: string }
-> = {
+const statusConfig: Record<ApiStatus, { label: string; dotClass: string }> = {
   operational: {
     label: 'All systems operational',
     dotClass: 'bg-aviation-success',

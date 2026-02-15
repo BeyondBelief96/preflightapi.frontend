@@ -24,7 +24,10 @@ interface DocsSearchProps {
   onOpenChange: (open: boolean) => void
 }
 
-const typeIcons: Record<SearchItem['type'], React.ComponentType<{ className?: string }>> = {
+const typeIcons: Record<
+  SearchItem['type'],
+  React.ComponentType<{ className?: string }>
+> = {
   page: BookOpen,
   endpoint: Code2,
   schema: Database,
@@ -42,7 +45,12 @@ function scoreItem(item: SearchItem, q: string): number {
   if (titleLower.startsWith(q)) return 80
 
   // Title contains query as a word boundary (e.g. "metar" in "Get Metars By Icao")
-  if (new RegExp(`\\b${q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`).test(titleLower)) return 60
+  if (
+    new RegExp(`\\b${q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`).test(
+      titleLower,
+    )
+  )
+    return 60
 
   // Title contains query anywhere
   if (titleLower.includes(q)) return 40
@@ -107,7 +115,9 @@ export function DocsSearch({ open, onOpenChange }: DocsSearchProps) {
     return searchIndex
       .map((item) => ({ item, score: scoreItem(item, q) }))
       .filter((r) => r.score > 0)
-      .sort((a, b) => b.score - a.score || a.item.title.localeCompare(b.item.title))
+      .sort(
+        (a, b) => b.score - a.score || a.item.title.localeCompare(b.item.title),
+      )
       .map((r) => r.item)
   }, [query])
 
@@ -157,8 +167,15 @@ export function DocsSearch({ open, onOpenChange }: DocsSearchProps) {
           Search docs, endpoints, and schemas
         </DialogDescription>
       </DialogHeader>
-      <DialogContent className="overflow-hidden p-0 sm:max-w-lg" showCloseButton={false}>
-        <Command shouldFilter={false} value={selected} onValueChange={setSelected}>
+      <DialogContent
+        className="overflow-hidden p-0 sm:max-w-lg"
+        showCloseButton={false}
+      >
+        <Command
+          shouldFilter={false}
+          value={selected}
+          onValueChange={setSelected}
+        >
           <CommandInput
             placeholder="Search docs, endpoints, schemas..."
             value={query}

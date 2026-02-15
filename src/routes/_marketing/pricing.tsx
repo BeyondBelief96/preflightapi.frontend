@@ -267,12 +267,7 @@ function buildComparisonFeatures(plans: Array<PlanDefinition>) {
         name: 'Rate Limit (req/min)',
         student: formatLimit(plans, 'student', 'ratePerMinute', 'Custom'),
         private: formatLimit(plans, 'private', 'ratePerMinute', 'Custom'),
-        commercial: formatLimit(
-          plans,
-          'commercial',
-          'ratePerMinute',
-          'Custom',
-        ),
+        commercial: formatLimit(plans, 'commercial', 'ratePerMinute', 'Custom'),
         atp: 'Custom',
       },
       {

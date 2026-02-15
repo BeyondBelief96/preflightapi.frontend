@@ -14,14 +14,32 @@ const ENDPOINT_DOCS: Record<string, { label: string; href: string }> = {
   pirep: { label: 'PIREPs', href: '/docs/pireps' },
   sigmet: { label: 'Domestic SIGMETs', href: '/docs/sigmets' },
   'g-airmet': { label: 'G-AIRMETs', href: '/docs/g-airmets' },
-  'airspace/controlled': { label: 'Controlled Airspace', href: '/docs/airspace' },
-  'airspace/special-use': { label: 'Special Use Airspace', href: '/docs/airspace' },
-  'navigation/obstacles': { label: 'Obstacle Database', href: '/docs/obstacles' },
+  'airspace/controlled': {
+    label: 'Controlled Airspace',
+    href: '/docs/airspace',
+  },
+  'airspace/special-use': {
+    label: 'Special Use Airspace',
+    href: '/docs/airspace',
+  },
+  'navigation/obstacles': {
+    label: 'Obstacle Database',
+    href: '/docs/obstacles',
+  },
   notams: { label: 'NOTAMs', href: '/docs/notams' },
-  'airports/diagrams': { label: 'Airport Diagrams', href: '/docs/airport-diagrams' },
-  'charts/supplements': { label: 'Chart Supplements', href: '/docs/chart-supplements' },
+  'airports/diagrams': {
+    label: 'Airport Diagrams',
+    href: '/docs/airport-diagrams',
+  },
+  'charts/supplements': {
+    label: 'Chart Supplements',
+    href: '/docs/chart-supplements',
+  },
   'e6b/calculator': { label: 'E6B Flight Computer', href: '/docs/e6b' },
-  'navigation/bearing-distance': { label: 'Bearing & Distance', href: '/docs/nav-log' },
+  'navigation/bearing-distance': {
+    label: 'Bearing & Distance',
+    href: '/docs/nav-log',
+  },
   'navigation/winds-aloft': { label: 'Winds Aloft', href: '/docs/nav-log' },
   'navigation/nav-log': { label: 'Navigation Log', href: '/docs/nav-log' },
 }

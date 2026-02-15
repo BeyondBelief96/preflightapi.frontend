@@ -24,7 +24,9 @@ export function PlanOverviewCard({
   cancelDate,
 }: PlanOverviewCardProps) {
   return (
-    <Card className={`border-l-4 ${isCanceling ? 'border-l-yellow-500' : 'border-l-accent'}`}>
+    <Card
+      className={`border-l-4 ${isCanceling ? 'border-l-yellow-500' : 'border-l-accent'}`}
+    >
       <CardContent className="flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
         {isLoading ? (
           <>
@@ -37,16 +39,19 @@ export function PlanOverviewCard({
         ) : (
           <>
             <div className="flex items-center gap-3">
-              <CreditCard className={`h-5 w-5 shrink-0 ${isCanceling ? 'text-yellow-500' : 'text-accent'}`} />
+              <CreditCard
+                className={`h-5 w-5 shrink-0 ${isCanceling ? 'text-yellow-500' : 'text-accent'}`}
+              />
               <span className="text-lg font-bold">{currentPlan.name}</span>
               {isCanceling ? (
-                <Badge variant="outline" className="border-yellow-500 text-yellow-600 dark:text-yellow-400">
+                <Badge
+                  variant="outline"
+                  className="border-yellow-500 text-yellow-600 dark:text-yellow-400"
+                >
                   Canceling
                 </Badge>
               ) : (
-                <Badge variant="secondary">
-                  {isPaid ? 'Active' : 'Free'}
-                </Badge>
+                <Badge variant="secondary">{isPaid ? 'Active' : 'Free'}</Badge>
               )}
             </div>
             {isCanceling && cancelDate ? (
@@ -55,7 +60,11 @@ export function PlanOverviewCard({
                   Ends {new Date(cancelDate).toLocaleDateString()}
                 </span>
                 <Link to="/dashboard/billing">
-                  <Button size="sm" variant="outline" className="w-full gap-2 sm:w-auto">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="w-full gap-2 sm:w-auto"
+                  >
                     Reactivate
                     <ArrowRight className="h-3 w-3" />
                   </Button>
@@ -63,7 +72,11 @@ export function PlanOverviewCard({
               </div>
             ) : isPaid ? (
               <Link to="/dashboard/billing">
-                <Button size="sm" variant="outline" className="w-full gap-2 sm:w-auto">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="w-full gap-2 sm:w-auto"
+                >
                   Manage Plan
                   <ArrowRight className="h-3 w-3" />
                 </Button>

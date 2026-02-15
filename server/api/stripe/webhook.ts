@@ -61,15 +61,22 @@ export default defineHandler(async (event) => {
 
   if (!webhookSecret) {
     log.error('STRIPE_WEBHOOK_SECRET not configured')
-    throw new HTTPError({ statusCode: 500, statusMessage: 'Webhook secret not configured' })
+    throw new HTTPError({
+      statusCode: 500,
+      statusMessage: 'Webhook secret not configured',
+    })
   }
 
   // Warn about missing price env vars (makes misconfiguration visible in logs)
   if (!process.env.STRIPE_PRIVATE_PRICE_ID) {
-    log.warn('STRIPE_PRIVATE_PRICE_ID is not set — price-based tier mapping will fail for private plans')
+    log.warn(
+      'STRIPE_PRIVATE_PRICE_ID is not set — price-based tier mapping will fail for private plans',
+    )
   }
   if (!process.env.STRIPE_COMMERCIAL_PRICE_ID) {
-    log.warn('STRIPE_COMMERCIAL_PRICE_ID is not set — price-based tier mapping will fail for commercial plans')
+    log.warn(
+      'STRIPE_COMMERCIAL_PRICE_ID is not set — price-based tier mapping will fail for commercial plans',
+    )
   }
 
   const body = await event.req.text()
@@ -77,7 +84,10 @@ export default defineHandler(async (event) => {
 
   if (!body || !sig) {
     log.error('Missing body or signature')
-    throw new HTTPError({ statusCode: 400, statusMessage: 'Missing body or signature' })
+    throw new HTTPError({
+      statusCode: 400,
+      statusMessage: 'Missing body or signature',
+    })
   }
 
   let stripeEvent: Stripe.Event
@@ -230,9 +240,8 @@ export default defineHandler(async (event) => {
           // Clear stale stripeCustomerId from Clerk so getOrCreateStripeCustomer
           // will create a fresh customer on the next checkout attempt.
           try {
-            const { clerkClient } = await import(
-              '@clerk/tanstack-react-start/server'
-            )
+            const { clerkClient } =
+              await import('@clerk/tanstack-react-start/server')
             const clerk = clerkClient()
             await clerk.users.updateUserMetadata(clerkUserId, {
               privateMetadata: { stripeCustomerId: null },
@@ -260,7 +269,10 @@ export default defineHandler(async (event) => {
 
       case 'invoice.payment_failed': {
         const invoice = stripeEvent.data.object
-        log.warn({ customerId: invoice.customer }, 'Payment failed for customer')
+        log.warn(
+          { customerId: invoice.customer },
+          'Payment failed for customer',
+        )
 
         // Downgrade to student tier so user doesn't keep paid access
         const subRef = invoice.parent?.subscription_details?.subscription
@@ -272,7 +284,9 @@ export default defineHandler(async (event) => {
           if (clerkUserId) {
             await syncTierToApim(apimFetch, clerkUserId, studentProductId)
           } else {
-            log.warn('Could not resolve clerkUserId for failed invoice subscription')
+            log.warn(
+              'Could not resolve clerkUserId for failed invoice subscription',
+            )
           }
         }
         break
@@ -362,7 +376,10 @@ export default defineHandler(async (event) => {
 
 async function resolveClerkUserId(
   stripe: ReturnType<typeof GetStripeFn>,
-  subscription: { metadata: Record<string, string>; customer: string | { id: string } },
+  subscription: {
+    metadata: Record<string, string>
+    customer: string | { id: string }
+  },
 ): Promise<string | undefined> {
   // Fast path: subscription metadata
   const fromSub = subscription.metadata?.clerkUserId
@@ -389,9 +406,7 @@ async function getCurrentApimProductId(
     const result = await apimFetch<SubscriptionListResponse>(
       `/users/${clerkUserId}/subscriptions`,
     )
-    const activeSub = result.value.find(
-      (s) => s.properties.state === 'active',
-    )
+    const activeSub = result.value.find((s) => s.properties.state === 'active')
     if (!activeSub) return undefined
     return activeSub.properties.scope.split('/').pop() ?? undefined
   } catch {
@@ -415,12 +430,13 @@ async function syncTierToApim(
     `/users/${clerkUserId}/subscriptions`,
   )
 
-  const activeSubs = result.value.filter(
-    (s) => s.properties.state === 'active',
-  )
+  const activeSubs = result.value.filter((s) => s.properties.state === 'active')
 
   if (activeSubs.length === 0) {
-    log.warn({ userId: clerkUserId }, 'No active APIM subscription found for user')
+    log.warn(
+      { userId: clerkUserId },
+      'No active APIM subscription found for user',
+    )
     return
   }
 
@@ -458,7 +474,11 @@ async function syncTierToApim(
   }
 
   log.info(
-    { userId: clerkUserId, productId: apimProductId, subCount: activeSubs.length },
+    {
+      userId: clerkUserId,
+      productId: apimProductId,
+      subCount: activeSubs.length,
+    },
     'Synced user to APIM product',
   )
 }

@@ -49,7 +49,8 @@ function isHeadingLike(line: string, nextLine?: string): boolean {
   // Must be followed by a longer line (to distinguish from short sentence fragments)
   if (nextLine) {
     const nextTrimmed = nextLine.trim()
-    if (nextTrimmed.length > 0 && nextTrimmed.length > trimmed.length) return true
+    if (nextTrimmed.length > 0 && nextTrimmed.length > trimmed.length)
+      return true
   }
   // Very short (≤ 3 words) is likely a heading even without longer follow-up
   return wordCount <= 3
@@ -115,7 +116,11 @@ function parseSegments(text: string): Array<TextSegment> {
         i++
       }
       i++ // skip closing ```
-      segments.push({ type: 'code-block', content: codeLines.join('\n'), language })
+      segments.push({
+        type: 'code-block',
+        content: codeLines.join('\n'),
+        language,
+      })
       continue
     }
 
@@ -135,7 +140,11 @@ function parseSegments(text: string): Array<TextSegment> {
         jsonLines.push(jLine)
         i++
       }
-      segments.push({ type: 'code-block', content: jsonLines.join('\n'), language: 'json' })
+      segments.push({
+        type: 'code-block',
+        content: jsonLines.join('\n'),
+        language: 'json',
+      })
       continue
     }
 
@@ -252,14 +261,20 @@ function formatInlineText(text: string): Array<React.ReactNode> {
     } else if (match[2] !== undefined) {
       // Inline code: `something`
       parts.push(
-        <code key={key++} className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">
+        <code
+          key={key++}
+          className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs"
+        >
           {match[2]}
         </code>,
       )
     } else if (match[3] !== undefined) {
       // API path: GET /api/v1/...
       parts.push(
-        <code key={key++} className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">
+        <code
+          key={key++}
+          className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs"
+        >
           {match[0]}
         </code>,
       )
@@ -276,7 +291,10 @@ function formatInlineText(text: string): Array<React.ReactNode> {
   return parts.length > 0 ? parts : [text]
 }
 
-function renderExampleCalls(content: string, segmentKey: number): React.ReactNode {
+function renderExampleCalls(
+  content: string,
+  segmentKey: number,
+): React.ReactNode {
   const lines = content.split('\n')
   return (
     <div key={segmentKey} className="space-y-1.5">
@@ -286,19 +304,26 @@ function renderExampleCalls(content: string, segmentKey: number): React.ReactNod
         if (dashIndex !== -1) {
           const methodPath = line.slice(0, dashIndex).trim()
           // Skip past the dash and surrounding whitespace
-          const rest = line.slice(dashIndex).replace(/^\s[—–-]\s/, '').trim()
+          const rest = line
+            .slice(dashIndex)
+            .replace(/^\s[—–-]\s/, '')
+            .trim()
           return (
             <div key={j} className="flex items-baseline gap-2">
               <code className="shrink-0 rounded bg-muted px-1.5 py-0.5 font-mono text-xs">
                 {methodPath}
               </code>
-              <span className="text-muted-foreground">{formatInlineText(rest)}</span>
+              <span className="text-muted-foreground">
+                {formatInlineText(rest)}
+              </span>
             </div>
           )
         }
         return (
           <div key={j} className="flex items-baseline gap-2">
-            <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">{line}</code>
+            <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">
+              {line}
+            </code>
           </div>
         )
       })}
@@ -315,12 +340,18 @@ export function FormatApiText({ text, className }: FormatApiTextProps) {
         switch (segment.type) {
           case 'code-block':
             return (
-              <CodeBlock key={i} code={segment.content} language={segment.language || 'text'} />
+              <CodeBlock
+                key={i}
+                code={segment.content}
+                language={segment.language || 'text'}
+              />
             )
           case 'bullet-list':
             return (
               <ul key={i} className="list-disc space-y-1 pl-5">
-                {segment.items?.map((item, j) => <li key={j}>{formatInlineText(item)}</li>)}
+                {segment.items?.map((item, j) => (
+                  <li key={j}>{formatInlineText(item)}</li>
+                ))}
               </ul>
             )
           case 'example-calls':

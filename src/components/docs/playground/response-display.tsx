@@ -35,12 +35,16 @@ function formatBody(result: ProxyResult): FormattedBody {
     const parsed = JSON.parse(fullBody)
     const pretty = JSON.stringify(parsed, null, 2)
     return {
-      display: truncated ? pretty.slice(0, MAX_DISPLAY_BYTES) + '\n\n... (truncated)' : pretty,
+      display: truncated
+        ? pretty.slice(0, MAX_DISPLAY_BYTES) + '\n\n... (truncated)'
+        : pretty,
       truncated,
       fullBody: pretty,
     }
   } catch {
-    const display = truncated ? fullBody.slice(0, MAX_DISPLAY_BYTES) + '\n\n... (truncated)' : fullBody
+    const display = truncated
+      ? fullBody.slice(0, MAX_DISPLAY_BYTES) + '\n\n... (truncated)'
+      : fullBody
     return { display, truncated, fullBody }
   }
 }
@@ -70,7 +74,9 @@ export function ResponseDisplay({
       <Badge variant="outline" className={statusColor(result.status)}>
         {result.status} {result.statusText}
       </Badge>
-      <span className="text-xs text-muted-foreground">{result.durationMs}ms</span>
+      <span className="text-xs text-muted-foreground">
+        {result.durationMs}ms
+      </span>
     </div>
   )
 
@@ -91,16 +97,17 @@ export function ResponseDisplay({
       {isOpen && (
         <div className="relative">
           <div className={`${maxHeight} overflow-auto rounded-md`}>
-            <CodeBlock
-              code={formatted.display}
-              language="json"
-            />
+            <CodeBlock code={formatted.display} language="json" />
           </div>
           {formatted.truncated && (
             <div className="mt-2 flex items-center gap-2">
-              <span className="text-xs text-muted-foreground">Response truncated for display</span>
+              <span className="text-xs text-muted-foreground">
+                Response truncated for display
+              </span>
               <CopyButton text={formatted.fullBody} className="h-6 w-6" />
-              <span className="text-xs text-muted-foreground">Copy full response</span>
+              <span className="text-xs text-muted-foreground">
+                Copy full response
+              </span>
             </div>
           )}
         </div>

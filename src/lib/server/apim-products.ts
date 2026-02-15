@@ -26,7 +26,11 @@ export function planIdFromProductId(productId: string): string {
 /**
  * Ordered list of plan IDs from lowest to highest tier.
  */
-export const PLAN_IDS = ['student-pilot', 'private-pilot', 'commercial-pilot'] as const
+export const PLAN_IDS = [
+  'student-pilot',
+  'private-pilot',
+  'commercial-pilot',
+] as const
 
 /**
  * Numeric tier ordering for upgrade/downgrade comparisons.

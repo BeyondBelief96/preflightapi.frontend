@@ -21,10 +21,17 @@ export function CopyButton({ text, className }: CopyButtonProps) {
     <Button
       variant="ghost"
       size="icon"
-      className={cn('h-7 w-7 text-muted-foreground hover:text-foreground', className)}
+      className={cn(
+        'h-7 w-7 text-muted-foreground hover:text-foreground',
+        className,
+      )}
       onClick={handleCopy}
     >
-      {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+      {copied ? (
+        <Check className="h-3.5 w-3.5" />
+      ) : (
+        <Copy className="h-3.5 w-3.5" />
+      )}
     </Button>
   )
 }
