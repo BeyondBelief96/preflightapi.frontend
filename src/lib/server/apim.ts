@@ -1,9 +1,11 @@
 import { createServerFn } from '@tanstack/react-start'
 import { apimFetch } from './apim-client'
+import { logAnalyticsQuery } from './log-analytics-client'
 import { getApimProductIds, planIdFromProductId } from './apim-products'
 import { getTierConfig } from './tier-config'
 import { requireAuth, requireOwnership } from './auth'
 import { createLogger } from './logger'
+import { env } from '@/env'
 import type { ApimUsageReport } from '@/types/plans'
 import type { SubscriptionListResponse } from '@/types/apim'
 
@@ -160,7 +162,19 @@ export const regenerateKey = createServerFn({ method: 'POST' })
     return keys
   })
 
-// --- Usage Analytics ---
+// --- Usage Analytics (via Azure Monitor Log Analytics) ---
+
+const ZERO_REPORT: ApimUsageReport = {
+  callCountTotal: 0,
+  callCountSuccess: 0,
+  callCountBlocked: 0,
+  callCountFailed: 0,
+  callCountOther: 0,
+  bandwidth: 0,
+  apiTimeAvg: 0,
+  apiTimeMin: 0,
+  apiTimeMax: 0,
+}
 
 export const getUsageAnalytics = createServerFn({ method: 'GET' })
   .inputValidator(
@@ -171,52 +185,63 @@ export const getUsageAnalytics = createServerFn({ method: 'GET' })
     const userId = await requireAuth()
     requireOwnership(userId, data.subscriptionId)
 
-    const filter = `timestamp ge datetime'${data.fromDate}' and timestamp le datetime'${data.toDate}'`
-
-    const result = await apimFetch<{
-      value: Array<{
-        subscriptionId: string
-        callCountSuccess: number
-        callCountBlocked: number
-        callCountFailed: number
-        callCountOther: number
-        callCountTotal: number
-        bandwidth: number
-        apiTimeAvg: number
-        apiTimeMin: number
-        apiTimeMax: number
-      }>
-    }>(`/reports/bySubscription?$filter=${encodeURIComponent(filter)}`)
-
-    const report = result.value.find((r) =>
-      r.subscriptionId.includes(data.subscriptionId),
-    )
-
-    if (!report) {
-      return {
-        callCountTotal: 0,
-        callCountSuccess: 0,
-        callCountBlocked: 0,
-        callCountFailed: 0,
-        callCountOther: 0,
-        bandwidth: 0,
-        apiTimeAvg: 0,
-        apiTimeMin: 0,
-        apiTimeMax: 0,
-      } satisfies ApimUsageReport
+    if (!env.LOG_ANALYTICS_WORKSPACE_ID) {
+      log.warn('LOG_ANALYTICS_WORKSPACE_ID not configured — returning zeros')
+      return ZERO_REPORT
     }
 
-    return {
-      callCountTotal: report.callCountTotal,
-      callCountSuccess: report.callCountSuccess,
-      callCountBlocked: report.callCountBlocked,
-      callCountFailed: report.callCountFailed,
-      callCountOther: report.callCountOther,
-      bandwidth: report.bandwidth,
-      apiTimeAvg: report.apiTimeAvg,
-      apiTimeMin: report.apiTimeMin,
-      apiTimeMax: report.apiTimeMax,
-    } satisfies ApimUsageReport
+    const kql = `
+ApiManagementGatewayLogs
+| where TimeGenerated >= datetime('${data.fromDate}')
+  and TimeGenerated < datetime('${data.toDate}')
+  and ApimSubscriptionId == '${data.subscriptionId}'
+| summarize
+    callCountTotal = count(),
+    callCountSuccess = countif(ResponseCode >= 200 and ResponseCode < 300),
+    callCountBlocked = countif(ResponseCode == 429),
+    callCountFailed = countif(ResponseCode >= 400 and ResponseCode != 429),
+    callCountOther = countif(ResponseCode < 200 or (ResponseCode >= 300 and ResponseCode < 400)),
+    bandwidth = sum(ResponseSize),
+    apiTimeAvg = avg(todecimal(TotalTime)),
+    apiTimeMin = min(TotalTime),
+    apiTimeMax = max(TotalTime)
+`.trim()
+
+    try {
+      const result = await logAnalyticsQuery(kql)
+
+      const table = result.tables[0]
+      if (!table || table.rows.length === 0) {
+        return ZERO_REPORT
+      }
+
+      const columns = table.columns.map((c) => c.name)
+      const row = table.rows[0]
+
+      function col(name: string): number {
+        const idx = columns.indexOf(name)
+        if (idx === -1) return 0
+        return Number(row[idx]) || 0
+      }
+
+      return {
+        callCountTotal: col('callCountTotal'),
+        callCountSuccess: col('callCountSuccess'),
+        callCountBlocked: col('callCountBlocked'),
+        callCountFailed: col('callCountFailed'),
+        callCountOther: col('callCountOther'),
+        bandwidth: col('bandwidth'),
+        apiTimeAvg: col('apiTimeAvg'),
+        apiTimeMin: col('apiTimeMin'),
+        apiTimeMax: col('apiTimeMax'),
+      } satisfies ApimUsageReport
+    } catch (err) {
+      log.error(
+        { err, subscriptionId: data.subscriptionId },
+        'Failed to query Log Analytics for usage data',
+      )
+      return ZERO_REPORT
+    }
   })
 
 // --- Tier Configuration (public, no auth required) ---
