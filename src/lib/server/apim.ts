@@ -185,7 +185,7 @@ export const getUsageAnalytics = createServerFn({ method: 'GET' })
     const userId = await requireAuth()
     requireOwnership(userId, data.subscriptionId)
 
-    if (!env.LOG_ANALYTICS_WORKSPACE_ID) {
+    if (!env.APIM_LOG_ANALYTICS_WORKSPACE_ID) {
       log.warn('LOG_ANALYTICS_WORKSPACE_ID not configured — returning zeros')
       return ZERO_REPORT
     }

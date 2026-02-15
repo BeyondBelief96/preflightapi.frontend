@@ -44,7 +44,7 @@ function isRetryable(status: number): boolean {
 export async function logAnalyticsQuery(
   query: string,
 ): Promise<LogAnalyticsResponse> {
-  const workspaceId = env.LOG_ANALYTICS_WORKSPACE_ID
+  const workspaceId = env.APIM_LOG_ANALYTICS_WORKSPACE_ID
   if (!workspaceId) {
     throw new Error(
       'LOG_ANALYTICS_WORKSPACE_ID not configured. Set it to your Log Analytics workspace GUID.',

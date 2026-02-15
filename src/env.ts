@@ -4,7 +4,7 @@ import { z } from 'zod'
 export const env = createEnv({
   server: {
     SERVER_URL: z.url().optional(),
-    PREFLIGHT_API_BASE_URL: z.string().url().optional(),
+    PREFLIGHT_API_BASE_URL: z.url().optional(),
     AZURE_TENANT_ID: z.string().optional(),
     AZURE_CLIENT_ID: z.string().optional(),
     AZURE_CLIENT_SECRET: z.string().optional(),
@@ -12,7 +12,7 @@ export const env = createEnv({
     APIM_RESOURCE_GROUP: z.string().optional(),
     APIM_SERVICE_NAME: z.string().optional(),
     APIM_API_VERSION: z.string().optional(),
-    LOG_ANALYTICS_WORKSPACE_ID: z.string().optional(),
+    APIM_LOG_ANALYTICS_WORKSPACE_ID: z.string().optional(),
     APIM_STUDENT_PRODUCT_ID: z.string().optional().default('student-pilot'),
     APIM_PRIVATE_PRODUCT_ID: z.string().optional().default('private-pilot'),
     APIM_COMMERCIAL_PRODUCT_ID: z
