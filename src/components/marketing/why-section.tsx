@@ -34,13 +34,10 @@ export function WhySection() {
             </p>
             <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
               Your aviation data infrastructure,{' '}
-              <span className="text-accent">already running.</span>
+              <span className="text-accent">already built.</span>
             </h2>
             <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-              Aviation data is scattered across the FAA, NOAA, and ArcGIS — each
-              with its own format, access requirements, and update schedule. We
-              handle the fetching, parsing, and normalizing. You get an API that
-              just works.
+              Save time and money so you can build your next generation aviation product.
             </p>
             <Link
               to="/about"

@@ -258,7 +258,7 @@ function ArchitectureDiagram() {
         {/* ── Wires (glow layer) ──────────────────────── */}
         <g
           stroke="var(--accent)"
-          strokeWidth="3"
+          strokeWidth="5"
           fill="none"
           opacity="0.06"
           strokeLinecap="round"
@@ -495,7 +495,7 @@ export function DataPipelineSection() {
         </div>
 
         <p className="mt-10 text-center text-lg font-semibold">
-          We built the pipeline.{' '}
+          We built the infrastructure.{' '}
           <span className="text-accent">You build the product.</span>
         </p>
       </div>
