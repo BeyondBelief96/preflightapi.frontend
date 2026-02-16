@@ -6,18 +6,23 @@ import { getApimProductIds, planIdFromProductId } from './apim-products'
 import { getTierConfig } from './tier-config'
 import { requireAuth, requireOwnership } from './auth'
 import { createLogger } from './logger'
-import { env } from '@/env'
 import type {
   ApimUsageReport,
   DailyUsagePoint,
   EndpointBreakdownItem,
 } from '@/types/plans'
 import type { SubscriptionListResponse } from '@/types/apim'
+import { env } from '@/env'
 
 const log = createLogger('apim')
 
 // Strict schemas to prevent KQL injection via string interpolation
-const isoDateSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Invalid date')
+const isoDateTimeSchema = z
+  .string()
+  .regex(
+    /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(\.\d{3})?Z)?$/,
+    'Invalid date/datetime',
+  )
 const subscriptionIdSchema = z
   .string()
   .regex(/^[\w-]+$/, 'Invalid subscription ID')
@@ -85,7 +90,7 @@ export const getUserSubscription = createServerFn({ method: 'GET' }).handler(
           properties: {
             ownerId: `/users/${userId}`,
             scope: `/products/${productIds.student}`,
-            displayName: userId,
+            displayName: `${userId}|0`,
             state: 'active',
           },
         }),
@@ -191,8 +196,8 @@ export const getUsageAnalytics = createServerFn({ method: 'GET' })
   .inputValidator(
     z.object({
       subscriptionId: subscriptionIdSchema,
-      fromDate: isoDateSchema,
-      toDate: isoDateSchema,
+      fromDate: isoDateTimeSchema,
+      toDate: isoDateTimeSchema,
     }).parse,
   )
   .handler(async ({ data }) => {
@@ -262,7 +267,7 @@ ApiManagementGatewayLogs
 
 export const getDailyUsageTrend = createServerFn({ method: 'GET' })
   .inputValidator(z.object({ subscriptionId: subscriptionIdSchema }).parse)
-  .handler(async ({ data }): Promise<DailyUsagePoint[]> => {
+  .handler(async ({ data }): Promise<Array<DailyUsagePoint>> => {
     const userId = await requireAuth()
     requireOwnership(userId, data.subscriptionId)
 
@@ -310,7 +315,7 @@ ApiManagementGatewayLogs
 
 export const getEndpointBreakdown = createServerFn({ method: 'GET' })
   .inputValidator(z.object({ subscriptionId: subscriptionIdSchema }).parse)
-  .handler(async ({ data }): Promise<EndpointBreakdownItem[]> => {
+  .handler(async ({ data }): Promise<Array<EndpointBreakdownItem>> => {
     const userId = await requireAuth()
     requireOwnership(userId, data.subscriptionId)
 

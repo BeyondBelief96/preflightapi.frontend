@@ -164,6 +164,9 @@ async function getStripeSubscriptionInternal(
   return {
     status: sub.status,
     planId: planId as StripeSubscriptionStatus['planId'],
+    currentPeriodStart: new Date(
+      (firstItem?.current_period_start ?? 0) * 1000,
+    ).toISOString(),
     currentPeriodEnd: new Date(
       (firstItem?.current_period_end ?? 0) * 1000,
     ).toISOString(),

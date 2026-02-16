@@ -1,7 +1,7 @@
-import { CheckCircle2, XCircle, ShieldAlert } from 'lucide-react'
+import { CheckCircle2, ShieldAlert, XCircle } from 'lucide-react'
+import type { ApimUsageReport } from '@/types/plans'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import type { ApimUsageReport } from '@/types/plans'
 
 interface ResponseBreakdownCardProps {
   report: ApimUsageReport | undefined

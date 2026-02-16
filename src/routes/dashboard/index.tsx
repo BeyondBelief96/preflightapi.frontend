@@ -69,34 +69,36 @@ function DashboardOverview() {
   )
 
   const now = new Date()
-  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
-    .toISOString()
-    .split('T')[0]
-  const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0)
-    .toISOString()
-    .split('T')[0]
-  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-    .toISOString()
-    .split('T')[0]
+  const todayStart = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+  ).toISOString()
   const tomorrowStart = new Date(
     now.getFullYear(),
     now.getMonth(),
     now.getDate() + 1,
-  )
-    .toISOString()
-    .split('T')[0]
+  ).toISOString()
+
+  // For "Calls This Month": use Stripe billing period for paid users,
+  // calendar month for free users
+  const stripeSettled = !stripeSubQuery.isLoading
+  const monthFromDate = stripeSub?.currentPeriodStart
+    ?? new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
+  const monthToDate = stripeSub?.currentPeriodEnd
+    ?? new Date(now.getFullYear(), now.getMonth() + 1, 1).toISOString()
 
   const monthlyUsageQuery = useQuery({
-    queryKey: apimKeys.usage(activeSubscription?.id ?? '', monthStart),
+    queryKey: apimKeys.usage(activeSubscription?.id ?? '', monthFromDate),
     queryFn: () =>
       getUsageAnalytics({
         data: {
           subscriptionId: activeSubscription!.id,
-          fromDate: monthStart,
-          toDate: monthEnd,
+          fromDate: monthFromDate,
+          toDate: monthToDate,
         },
       }),
-    enabled: !!activeSubscription?.id,
+    enabled: !!activeSubscription?.id && stripeSettled,
     staleTime: 0,
     refetchOnMount: 'always',
   })

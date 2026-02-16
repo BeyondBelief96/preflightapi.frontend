@@ -48,7 +48,9 @@
       "Bash(npm run check:*)",
       "WebFetch(domain:support.termly.io)",
       "WebFetch(domain:ui.shadcn.com)",
-      "Bash(pnpm dlx:*)"
+      "Bash(pnpm dlx:*)",
+      "Bash(git stash:*)",
+      "Bash(npm view:*)"
     ]
   }
 }

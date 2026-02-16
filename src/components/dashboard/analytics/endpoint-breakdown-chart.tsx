@@ -1,16 +1,17 @@
 import { Bar, BarChart, XAxis, YAxis } from 'recharts'
+import type { EndpointBreakdownItem } from '@/types/plans'
+import type {ChartConfig} from '@/components/ui/chart';
 import {
+  
   ChartContainer,
   ChartTooltip,
-  ChartTooltipContent,
-  type ChartConfig,
+  ChartTooltipContent
 } from '@/components/ui/chart'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import type { EndpointBreakdownItem } from '@/types/plans'
 
 interface EndpointBreakdownChartProps {
-  data: EndpointBreakdownItem[] | undefined
+  data: Array<EndpointBreakdownItem> | undefined
   isLoading: boolean
 }
 
@@ -27,7 +28,7 @@ function cleanEndpointName(name: string): string {
     .replace(/\b\w/g, (c) => c.toUpperCase())
 }
 
-function estimateLabelWidth(labels: string[], fontSize: number): number {
+function estimateLabelWidth(labels: Array<string>, fontSize: number): number {
   const longest = labels.reduce(
     (a, b) => (a.length > b.length ? a : b),
     '',

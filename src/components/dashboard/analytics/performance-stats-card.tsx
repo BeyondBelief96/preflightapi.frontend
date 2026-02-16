@@ -1,8 +1,8 @@
-import { Gauge, Clock, ArrowDownToLine } from 'lucide-react'
+import { ArrowDownToLine, Clock, Gauge } from 'lucide-react'
+import type { ApimUsageReport } from '@/types/plans'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { formatMs, formatBytes } from '@/lib/format'
-import type { ApimUsageReport } from '@/types/plans'
+import { formatBytes, formatMs } from '@/lib/format'
 
 interface PerformanceStatsCardProps {
   report: ApimUsageReport | undefined
