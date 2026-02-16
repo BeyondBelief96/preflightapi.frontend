@@ -2,7 +2,6 @@ import { Bar, BarChart, XAxis, YAxis } from 'recharts'
 import type { EndpointBreakdownItem } from '@/types/plans'
 import type {ChartConfig} from '@/components/ui/chart';
 import {
-  
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent

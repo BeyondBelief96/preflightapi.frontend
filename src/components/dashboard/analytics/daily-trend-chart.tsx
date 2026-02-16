@@ -2,7 +2,6 @@ import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts'
 import type { DailyUsagePoint } from '@/types/plans'
 import type {ChartConfig} from '@/components/ui/chart';
 import {
-  
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent
