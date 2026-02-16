@@ -46,7 +46,9 @@
       "WebFetch(domain:docs.stripe.com)",
       "WebFetch(domain:fonts.googleapis.com)",
       "Bash(npm run check:*)",
-      "WebFetch(domain:support.termly.io)"
+      "WebFetch(domain:support.termly.io)",
+      "WebFetch(domain:ui.shadcn.com)",
+      "Bash(pnpm dlx:*)"
     ]
   }
 }

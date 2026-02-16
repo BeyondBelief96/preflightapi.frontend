@@ -1,13 +1,26 @@
 import { createServerFn } from '@tanstack/react-start'
+import { z } from 'zod'
 import { apimFetch } from './apim-client'
+import { logAnalyticsQuery } from './log-analytics-client'
 import { getApimProductIds, planIdFromProductId } from './apim-products'
 import { getTierConfig } from './tier-config'
 import { requireAuth, requireOwnership } from './auth'
 import { createLogger } from './logger'
-import type { ApimUsageReport } from '@/types/plans'
+import { env } from '@/env'
+import type {
+  ApimUsageReport,
+  DailyUsagePoint,
+  EndpointBreakdownItem,
+} from '@/types/plans'
 import type { SubscriptionListResponse } from '@/types/apim'
 
 const log = createLogger('apim')
+
+// Strict schemas to prevent KQL injection via string interpolation
+const isoDateSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Invalid date')
+const subscriptionIdSchema = z
+  .string()
+  .regex(/^[\w-]+$/, 'Invalid subscription ID')
 
 // --- User Management ---
 
@@ -160,63 +173,186 @@ export const regenerateKey = createServerFn({ method: 'POST' })
     return keys
   })
 
-// --- Usage Analytics ---
+// --- Usage Analytics (via Azure Monitor Log Analytics) ---
+
+const ZERO_REPORT: ApimUsageReport = {
+  callCountTotal: 0,
+  callCountSuccess: 0,
+  callCountBlocked: 0,
+  callCountFailed: 0,
+  callCountOther: 0,
+  bandwidth: 0,
+  apiTimeAvg: 0,
+  apiTimeMin: 0,
+  apiTimeMax: 0,
+}
 
 export const getUsageAnalytics = createServerFn({ method: 'GET' })
   .inputValidator(
-    (input: { subscriptionId: string; fromDate: string; toDate: string }) =>
-      input,
+    z.object({
+      subscriptionId: subscriptionIdSchema,
+      fromDate: isoDateSchema,
+      toDate: isoDateSchema,
+    }).parse,
   )
   .handler(async ({ data }) => {
     const userId = await requireAuth()
     requireOwnership(userId, data.subscriptionId)
 
-    const filter = `timestamp ge datetime'${data.fromDate}' and timestamp le datetime'${data.toDate}'`
-
-    const result = await apimFetch<{
-      value: Array<{
-        subscriptionId: string
-        callCountSuccess: number
-        callCountBlocked: number
-        callCountFailed: number
-        callCountOther: number
-        callCountTotal: number
-        bandwidth: number
-        apiTimeAvg: number
-        apiTimeMin: number
-        apiTimeMax: number
-      }>
-    }>(`/reports/bySubscription?$filter=${encodeURIComponent(filter)}`)
-
-    const report = result.value.find((r) =>
-      r.subscriptionId.includes(data.subscriptionId),
-    )
-
-    if (!report) {
-      return {
-        callCountTotal: 0,
-        callCountSuccess: 0,
-        callCountBlocked: 0,
-        callCountFailed: 0,
-        callCountOther: 0,
-        bandwidth: 0,
-        apiTimeAvg: 0,
-        apiTimeMin: 0,
-        apiTimeMax: 0,
-      } satisfies ApimUsageReport
+    if (!env.APIM_LOG_ANALYTICS_WORKSPACE_ID) {
+      log.warn('LOG_ANALYTICS_WORKSPACE_ID not configured — returning zeros')
+      return ZERO_REPORT
     }
 
-    return {
-      callCountTotal: report.callCountTotal,
-      callCountSuccess: report.callCountSuccess,
-      callCountBlocked: report.callCountBlocked,
-      callCountFailed: report.callCountFailed,
-      callCountOther: report.callCountOther,
-      bandwidth: report.bandwidth,
-      apiTimeAvg: report.apiTimeAvg,
-      apiTimeMin: report.apiTimeMin,
-      apiTimeMax: report.apiTimeMax,
-    } satisfies ApimUsageReport
+    const kql = `
+ApiManagementGatewayLogs
+| where TimeGenerated >= datetime('${data.fromDate}')
+  and TimeGenerated < datetime('${data.toDate}')
+  and ApimSubscriptionId == '${data.subscriptionId}'
+| summarize
+    callCountTotal = count(),
+    callCountSuccess = countif(ResponseCode >= 200 and ResponseCode < 300),
+    callCountBlocked = countif(ResponseCode == 429),
+    callCountFailed = countif(ResponseCode >= 400 and ResponseCode != 429),
+    callCountOther = countif(ResponseCode < 200 or (ResponseCode >= 300 and ResponseCode < 400)),
+    bandwidth = sum(ResponseSize),
+    apiTimeAvg = avg(todecimal(TotalTime)),
+    apiTimeMin = min(TotalTime),
+    apiTimeMax = max(TotalTime)
+`.trim()
+
+    try {
+      const result = await logAnalyticsQuery(kql)
+
+      const table = result.tables[0]
+      if (!table || table.rows.length === 0) {
+        return ZERO_REPORT
+      }
+
+      const columns = table.columns.map((c) => c.name)
+      const row = table.rows[0]
+
+      function col(name: string): number {
+        const idx = columns.indexOf(name)
+        if (idx === -1) return 0
+        return Number(row[idx]) || 0
+      }
+
+      return {
+        callCountTotal: col('callCountTotal'),
+        callCountSuccess: col('callCountSuccess'),
+        callCountBlocked: col('callCountBlocked'),
+        callCountFailed: col('callCountFailed'),
+        callCountOther: col('callCountOther'),
+        bandwidth: col('bandwidth'),
+        apiTimeAvg: col('apiTimeAvg'),
+        apiTimeMin: col('apiTimeMin'),
+        apiTimeMax: col('apiTimeMax'),
+      } satisfies ApimUsageReport
+    } catch (err) {
+      log.error(
+        { err, subscriptionId: data.subscriptionId },
+        'Failed to query Log Analytics for usage data',
+      )
+      return ZERO_REPORT
+    }
+  })
+
+// --- Daily Usage Trend (via Azure Monitor Log Analytics) ---
+
+export const getDailyUsageTrend = createServerFn({ method: 'GET' })
+  .inputValidator(z.object({ subscriptionId: subscriptionIdSchema }).parse)
+  .handler(async ({ data }): Promise<DailyUsagePoint[]> => {
+    const userId = await requireAuth()
+    requireOwnership(userId, data.subscriptionId)
+
+    if (!env.APIM_LOG_ANALYTICS_WORKSPACE_ID) {
+      log.warn(
+        'LOG_ANALYTICS_WORKSPACE_ID not configured — returning empty trend',
+      )
+      return []
+    }
+
+    const kql = `
+ApiManagementGatewayLogs
+| where TimeGenerated >= ago(30d)
+  and ApimSubscriptionId == '${data.subscriptionId}'
+| summarize calls = count() by bin(TimeGenerated, 1d)
+| order by TimeGenerated asc
+`.trim()
+
+    try {
+      const result = await logAnalyticsQuery(kql)
+
+      const table = result.tables[0]
+      if (!table || table.rows.length === 0) {
+        return []
+      }
+
+      const columns = table.columns.map((c) => c.name)
+      const dateIdx = columns.indexOf('TimeGenerated')
+      const callsIdx = columns.indexOf('calls')
+
+      return table.rows.map((row) => ({
+        date: String(row[dateIdx]).split('T')[0],
+        calls: Number(row[callsIdx]) || 0,
+      }))
+    } catch (err) {
+      log.error(
+        { err, subscriptionId: data.subscriptionId },
+        'Failed to query Log Analytics for daily trend',
+      )
+      return []
+    }
+  })
+
+// --- Endpoint Breakdown (via Azure Monitor Log Analytics) ---
+
+export const getEndpointBreakdown = createServerFn({ method: 'GET' })
+  .inputValidator(z.object({ subscriptionId: subscriptionIdSchema }).parse)
+  .handler(async ({ data }): Promise<EndpointBreakdownItem[]> => {
+    const userId = await requireAuth()
+    requireOwnership(userId, data.subscriptionId)
+
+    if (!env.APIM_LOG_ANALYTICS_WORKSPACE_ID) {
+      log.warn(
+        'LOG_ANALYTICS_WORKSPACE_ID not configured — returning empty breakdown',
+      )
+      return []
+    }
+
+    const kql = `
+ApiManagementGatewayLogs
+| where TimeGenerated >= ago(30d)
+  and ApimSubscriptionId == '${data.subscriptionId}'
+  and isnotempty(OperationId)
+| summarize calls = count() by OperationId
+| top 10 by calls desc
+`.trim()
+
+    try {
+      const result = await logAnalyticsQuery(kql)
+
+      const table = result.tables[0]
+      if (!table || table.rows.length === 0) {
+        return []
+      }
+
+      const columns = table.columns.map((c) => c.name)
+      const endpointIdx = columns.indexOf('OperationId')
+      const callsIdx = columns.indexOf('calls')
+
+      return table.rows.map((row) => ({
+        endpoint: String(row[endpointIdx]),
+        calls: Number(row[callsIdx]) || 0,
+      }))
+    } catch (err) {
+      log.error(
+        { err, subscriptionId: data.subscriptionId },
+        'Failed to query Log Analytics for endpoint breakdown',
+      )
+      return []
+    }
   })
 
 // --- Tier Configuration (public, no auth required) ---
