@@ -4,7 +4,7 @@ import { Layers, RefreshCw, Zap } from 'lucide-react'
 const reasons = [
   {
     icon: Layers,
-    title: 'One API key, all the FAA data you need.',
+    title: 'One API key, all the FAA data you need',
     description:
       'Weather, airports, airspace, NOTAMs, obstacles, charts — all behind a single API key.',
   },
