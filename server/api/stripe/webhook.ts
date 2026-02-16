@@ -179,7 +179,12 @@ export default defineHandler(async (event) => {
           // Any non-active status loses paid access immediately.
           // If Stripe recovers a past_due payment, subscription.updated
           // fires again with status=active and we re-sync the paid tier.
-          await syncTierToApim(apimFetch, clerkUserId, studentProductId)
+          await syncTierToApim(
+            apimFetch,
+            clerkUserId,
+            studentProductId,
+            true,
+          )
         }
         break
       }
@@ -189,7 +194,12 @@ export default defineHandler(async (event) => {
         const clerkUserId = await resolveClerkUserId(stripe, subscription)
 
         if (clerkUserId) {
-          await syncTierToApim(apimFetch, clerkUserId, studentProductId)
+          await syncTierToApim(
+            apimFetch,
+            clerkUserId,
+            studentProductId,
+            true,
+          )
         } else {
           log.warn('Could not resolve clerkUserId for paused subscription')
         }
@@ -219,7 +229,12 @@ export default defineHandler(async (event) => {
         const clerkUserId = await resolveClerkUserId(stripe, subscription)
 
         if (clerkUserId) {
-          await syncTierToApim(apimFetch, clerkUserId, studentProductId)
+          await syncTierToApim(
+            apimFetch,
+            clerkUserId,
+            studentProductId,
+            true,
+          )
         } else {
           log.warn('Could not resolve clerkUserId for deleted subscription')
         }
@@ -235,7 +250,12 @@ export default defineHandler(async (event) => {
         const clerkUserId = customer.metadata?.clerkUserId
 
         if (clerkUserId) {
-          await syncTierToApim(apimFetch, clerkUserId, studentProductId)
+          await syncTierToApim(
+            apimFetch,
+            clerkUserId,
+            studentProductId,
+            true,
+          )
 
           // Clear stale stripeCustomerId from Clerk so getOrCreateStripeCustomer
           // will create a fresh customer on the next checkout attempt.
@@ -282,11 +302,46 @@ export default defineHandler(async (event) => {
           const clerkUserId = await resolveClerkUserId(stripe, subscription)
 
           if (clerkUserId) {
-            await syncTierToApim(apimFetch, clerkUserId, studentProductId)
+            await syncTierToApim(
+              apimFetch,
+              clerkUserId,
+              studentProductId,
+              true,
+            )
           } else {
             log.warn(
               'Could not resolve clerkUserId for failed invoice subscription',
             )
+          }
+        }
+        break
+      }
+
+      case 'invoice.paid': {
+        const invoice = stripeEvent.data.object
+        const billingReason = invoice.billing_reason
+
+        // Only update epoch on new subscriptions and renewals
+        // NOT on subscription_update (mid-cycle tier change)
+        if (
+          billingReason === 'subscription_create' ||
+          billingReason === 'subscription_cycle'
+        ) {
+          const subRef = invoice.parent?.subscription_details?.subscription
+          if (subRef) {
+            const subId = typeof subRef === 'string' ? subRef : subRef.id
+            const subscription = await stripe.subscriptions.retrieve(subId)
+            const clerkUserId = await resolveClerkUserId(stripe, subscription)
+
+            if (clerkUserId) {
+              const firstItem = subscription.items.data[0]
+              const periodStart = firstItem?.current_period_start ?? 0
+              await syncQuotaEpoch(apimFetch, clerkUserId, periodStart)
+            } else {
+              log.warn(
+                'Could not resolve clerkUserId for invoice.paid subscription',
+              )
+            }
           }
         }
         break
@@ -425,6 +480,7 @@ async function syncTierToApim(
   apimFetch: ApimFetchFn,
   clerkUserId: string,
   apimProductId: string,
+  resetEpoch?: boolean,
 ): Promise<void> {
   const result = await apimFetch<SubscriptionListResponse>(
     `/users/${clerkUserId}/subscriptions`,
@@ -440,16 +496,20 @@ async function syncTierToApim(
     return
   }
 
+  // Build the PATCH payload — always update scope, optionally reset epoch
+  const properties: Record<string, string> = {
+    scope: `/products/${apimProductId}`,
+  }
+  if (resetEpoch) {
+    properties.displayName = `${clerkUserId}|0`
+  }
+
   // Sync ALL active subscriptions to prevent orphaned subs with stale tiers
   const results = await Promise.allSettled(
     activeSubs.map((sub) =>
       apimFetch(`/subscriptions/${sub.name}`, {
         method: 'PATCH',
-        body: JSON.stringify({
-          properties: {
-            scope: `/products/${apimProductId}`,
-          },
-        }),
+        body: JSON.stringify({ properties }),
       }),
     ),
   )
@@ -478,7 +538,45 @@ async function syncTierToApim(
       userId: clerkUserId,
       productId: apimProductId,
       subCount: activeSubs.length,
+      resetEpoch: !!resetEpoch,
     },
     'Synced user to APIM product',
+  )
+}
+
+// --- Quota Epoch Sync Helper ---
+
+async function syncQuotaEpoch(
+  apimFetch: ApimFetchFn,
+  clerkUserId: string,
+  periodStartUnix: number,
+): Promise<void> {
+  const result = await apimFetch<SubscriptionListResponse>(
+    `/users/${clerkUserId}/subscriptions`,
+  )
+  const activeSubs = result.value.filter((s) => s.properties.state === 'active')
+
+  if (activeSubs.length === 0) return
+
+  const newDisplayName = `${clerkUserId}|${periodStartUnix}`
+
+  await Promise.allSettled(
+    activeSubs.map((sub) =>
+      apimFetch(`/subscriptions/${sub.name}`, {
+        method: 'PATCH',
+        body: JSON.stringify({
+          properties: { displayName: newDisplayName },
+        }),
+      }),
+    ),
+  )
+
+  log.info(
+    {
+      userId: clerkUserId,
+      epoch: periodStartUnix,
+      subCount: activeSubs.length,
+    },
+    'Synced quota epoch to APIM subscriptions',
   )
 }

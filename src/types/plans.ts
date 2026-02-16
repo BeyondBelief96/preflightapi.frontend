@@ -61,6 +61,7 @@ export interface EndpointBreakdownItem {
 export interface StripeSubscriptionStatus {
   status: string
   planId: PlanId
+  currentPeriodStart: string
   currentPeriodEnd: string
   cancelAtPeriodEnd: boolean
   cancelAt: string | null
