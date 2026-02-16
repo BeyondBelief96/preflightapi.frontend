@@ -37,7 +37,7 @@ const MERGE_CX = 380
 
 const batchSources = [
   { id: 'nasr', label: 'FAA NASR', meta: 'CSV · 28d', x: 16, w: SRC_W },
-  { id: 'dof', label: 'FAA DOF', meta: 'CSV · 56d', x: 106, w: SRC_W },
+  { id: 'dof', label: 'FAA DOF', meta: 'CSV · 56d+Daily', x: 106, w: SRC_W },
   { id: 'dtpps', label: 'FAA d-TPPs', meta: 'PDF · 28d', x: 196, w: SRC_W },
   { id: 'dcs', label: 'FAA d-CS', meta: 'PDF · 56d', x: 286, w: SRC_W },
   { id: 'adds', label: 'FAA ADDS', meta: 'GeoJSON · 56d', x: 376, w: SRC_W },
@@ -52,7 +52,7 @@ const stages = [
   {
     id: 'batch',
     label: 'Batch Ingestion',
-    sub: '28-day and 56-day cycles',
+    sub: '28-day and 56-day cycles + daily',
     cx: BATCH_CX,
     y: PROC_Y,
     w: PROC_W,
