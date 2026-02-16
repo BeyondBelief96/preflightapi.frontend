@@ -27,6 +27,15 @@ function cleanEndpointName(name: string): string {
     .replace(/\b\w/g, (c) => c.toUpperCase())
 }
 
+function estimateLabelWidth(labels: string[], fontSize: number): number {
+  const longest = labels.reduce(
+    (a, b) => (a.length > b.length ? a : b),
+    '',
+  )
+  // ~0.6em per character at the given font size, plus 12px padding
+  return Math.ceil(longest.length * fontSize * 0.6) + 12
+}
+
 export function EndpointBreakdownChart({
   data,
   isLoading,
@@ -37,6 +46,12 @@ export function EndpointBreakdownChart({
   }))
 
   const chartHeight = chartData ? Math.max(chartData.length * 36, 100) : 200
+  const yAxisWidth = chartData
+    ? estimateLabelWidth(
+        chartData.map((d) => d.label),
+        12,
+      )
+    : 120
 
   return (
     <Card>
@@ -68,7 +83,7 @@ export function EndpointBreakdownChart({
                 type="category"
                 tickLine={false}
                 axisLine={false}
-                width={120}
+                width={yAxisWidth}
                 tick={{ fill: 'var(--muted-foreground)', fontSize: 12 }}
               />
               <ChartTooltip content={<ChartTooltipContent />} />
