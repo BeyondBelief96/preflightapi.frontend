@@ -4,7 +4,7 @@ import {
   Cloud,
   Map,
   Navigation,
-  Plane,
+  TowerControl,
 } from 'lucide-react'
 
 const features = [
@@ -12,35 +12,35 @@ const features = [
     icon: Cloud,
     title: 'Real-Time Weather',
     description:
-      'METARs, TAFs, PIREPs, SIGMETs, G-AIRMETs, and winds aloft. Sourced from aviationweather.gov. Refreshed every 5 minutes.',
+      'METARs, TAFs, PIREPs, SIGMETs, G-AIRMETs, and winds aloft. Sourced from aviationweather.gov.',
   },
   {
-    icon: Plane,
-    title: '~19,600 US Airports',
+    icon: TowerControl,
+    title: '19,600+ US Airports',
     description:
-      'From the FAA NASR subscription. Runways, frequencies, diagrams, chart supplements. We deal with the fixed-width parsing so you don\u2019t have to. Updated every 28 days.',
+      'Sourced from the FAA NASR subscription. Runways, frequencies, airport diagrams, chart supplements. Updated every 28 days.',
   },
   {
     icon: Map,
     title: 'Airspace Boundaries',
     description:
-      'Class B through E and special use airspace with full geospatial polygons. From FAA ArcGIS. Updated every 56 days.',
+      'Class B, C, D and special use airspace with full geospatial boundaries and coordinates. From FAA Aeronautical Data Delivery System. Updated every 56 days.',
   },
   {
     icon: AlertTriangle,
     title: 'NOTAMs',
     description:
-      'Straight from the FAA NOTAM Management System. We have the API access so you don\u2019t need to apply. Updated every 3 minutes.',
+      'Straight from the FAA NOTAM Management System. Don\'t worry about applying for access, we\'ve already done it for you.',
   },
   {
     icon: Navigation,
-    title: 'Flight Planning',
+    title: 'VFR Navigation Logs',
     description:
       'Nav log generation with waypoints, winds aloft, magnetic variation, and fuel burn. Plus bearing/distance and coordinate conversions.',
   },
   {
     icon: Calculator,
-    title: 'E6B Calculators',
+    title: 'E6B Calculator Utilities',
     description:
       'Crosswind, density altitude, wind triangle, true airspeed, cloud base, pressure altitude. Your E6B as an API.',
   },
@@ -52,12 +52,8 @@ export function FeaturesGrid() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            What you get
+            What we offer
           </h2>
-          <p className="mt-4 text-lg text-muted-foreground">
-            40+ endpoints across weather, airports, airspace, NOTAMs, obstacles,
-            and flight planning.
-          </p>
         </div>
         <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((feature) => (

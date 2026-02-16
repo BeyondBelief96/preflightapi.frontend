@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { codeToHtml } from 'shiki'
 import { ApiStatusBadge } from '@/components/marketing/api-status-badge'
 import { Button } from '@/components/ui/button'
-import { API_BASE_PATH } from '@/lib/api-metadata'
+import { API_BASE_URL } from '@/lib/gateway-url'
 import { isWaitlistMode } from '@/lib/waitlist'
 import { usePlans } from '@/hooks/use-plans'
 
@@ -17,7 +17,7 @@ const codeExamples = [
     code: `import type { MetarDto } from './types'
 
 const res = await fetch(
-  \`https://api.preflightapi.io${API_BASE_PATH}/metars/KJFK\`,
+  \`${API_BASE_URL}/metars/KJFK\`,
   {
     headers: {
       'Ocp-Apim-Subscription-Key': 'your-api-key',
@@ -37,7 +37,7 @@ console.log(metar.flightCategory) // "VFR"`,
 import type { MetarDto } from './types'
 
 const client = axios.create({
-  baseURL: 'https://api.preflightapi.io${API_BASE_PATH}',
+  baseURL: '${API_BASE_URL}',
   headers: {
     'Ocp-Apim-Subscription-Key': 'your-api-key',
   },
@@ -61,7 +61,7 @@ export function useMetar(stationId: string) {
     queryKey: ['metar', stationId],
     queryFn: async (): Promise<MetarDto> => {
       const res = await fetch(
-        \`https://api.preflightapi.io${API_BASE_PATH}/metars/\${stationId}\`,
+        \`${API_BASE_URL}/metars/\${stationId}\`,
         {
           headers: {
             'Ocp-Apim-Subscription-Key': 'your-api-key',
@@ -83,7 +83,7 @@ import type { MetarDto } from '../types'
 
 export const weatherApi = createApi({
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://api.preflightapi.io${API_BASE_PATH}',
+    baseUrl: '${API_BASE_URL}',
     prepareHeaders: (headers) => {
       headers.set(
         'Ocp-Apim-Subscription-Key',
@@ -178,18 +178,15 @@ export function HeroSection() {
           <div>
             <ApiStatusBadge />
             <h1 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-              US Aviation Data,{' '}
+              US Aviation Data.{' '}
               <span className="text-accent">Developer-Ready.</span>
             </h1>
             <p className="mt-4 text-lg font-medium text-muted-foreground sm:text-xl">
-              40+ endpoints. One API key. Airports, weather, NOTAMs, airspace,
-              obstacles, flight planning.
+                Airports, runways, frequencies, airspace, NOTAMs, obstacles, and more — all with one API key.
+                Your aviation data infrastructure, already built. 
             </p>
             <p className="mt-6 text-base leading-relaxed text-muted-foreground">
-              Built by a pilot and software engineer. Sourced from FAA NASR
-              subscriptions, the NOTAM Management System, NOAA Weather, and more.
-              We handle the parsing and keep everything current so you don&apos;t
-              have to.
+              Built by a pilot and software engineer. All data sourced from the FAA and NOAA.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <Link to={isWaitlistMode ? '/waitlist' : '/sign-up'}>

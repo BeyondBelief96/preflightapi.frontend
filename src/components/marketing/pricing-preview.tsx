@@ -3,6 +3,7 @@ import { Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { usePlans } from '@/hooks/use-plans'
+import { isWaitlistMode } from '@/lib/waitlist'
 
 export function PricingPreview() {
   const { plans } = usePlans()
@@ -59,12 +60,12 @@ export function PricingPreview() {
                 ))}
               </ul>
               <div className="mt-6">
-                <Link to="/sign-up">
+                <Link to={isWaitlistMode ? '/waitlist' : '/sign-up'}>
                   <Button
                     className="w-full"
                     variant={plan.highlighted ? 'default' : 'outline'}
                   >
-                    {plan.cta}
+                    {isWaitlistMode ? 'Join the Waitlist' : plan.cta}
                   </Button>
                 </Link>
               </div>

@@ -14,7 +14,7 @@ const sources = [
     freshness: 'Every 56 days',
   },
   {
-    source: 'FAA ADDS',
+    source: 'FAA Aeronautical Data Delivery System',
     data: '3,000+ airspaces',
     freshness: 'Every 56 days',
   },
