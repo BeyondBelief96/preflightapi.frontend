@@ -1,5 +1,6 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Callout } from '@/components/docs/callout'
 import { CodeBlock } from '@/components/docs/code-block'
 import { API_BASE_URL } from '@/lib/gateway-url'
 import { usePlans } from '@/hooks/use-plans'
@@ -42,7 +43,7 @@ function GettingStartedDocs() {
         <p className="text-muted-foreground">
           Sign up for a free account at{' '}
           <Link to="/sign-up" className="text-accent hover:underline">
-            preflightapi.com/sign-up
+            preflightapi.io/sign-up
           </Link>
           . No credit card required. You'll start on the{' '}
           <strong className="text-foreground">{freeName}</strong> plan, which is
@@ -79,6 +80,17 @@ function GettingStartedDocs() {
             for best practices.
           </p>
         </div>
+        <Callout variant="tip">
+          You can also explore the API without writing code — import our OpenAPI
+          spec into Postman or Insomnia. See the{' '}
+          <Link
+            to="/docs/integrations"
+            className="text-accent hover:underline"
+          >
+            Integrations guide
+          </Link>
+          .
+        </Callout>
       </section>
 
       {/* Step 3 */}
@@ -130,20 +142,20 @@ console.log(data)`}
         <CodeBlock
           language="json"
           code={`{
-  "icaoId": "KJFK",
-  "reportTime": "2026-01-15T14:56:00Z",
-  "rawOb": "KJFK 151456Z 31012KT 10SM FEW250 M04/M18 A3042 RMK AO2 SLP308 T10441183",
-  "temp": -4.4,
-  "dewp": -18.3,
-  "wdir": 310,
-  "wspd": 12,
-  "wgst": null,
-  "visib": 10,
-  "altim": 30.42,
-  "slp": 1030.8,
-  "fltcat": "VFR",
-  "clouds": [
-    { "cover": "FEW", "base": 25000 }
+  "stationId": "KJFK",
+  "observationTime": "2026-01-15T14:56:00Z",
+  "rawText": "KJFK 151456Z 31012KT 10SM FEW250 M04/M18 A3042 RMK AO2 SLP308 T10441183",
+  "tempC": -4.4,
+  "dewpointC": -18.3,
+  "windDirDegrees": "310",
+  "windSpeedKt": 12,
+  "windGustKt": null,
+  "visibilityStatuteMi": "10",
+  "altimInHg": 30.42,
+  "seaLevelPressureMb": 1030.8,
+  "flightCategory": "VFR",
+  "skyCondition": [
+    { "skyCover": "FEW", "cloudBaseFtAgl": 25000 }
   ],
   "wxString": null
 }`}
@@ -163,8 +175,8 @@ console.log(data)`}
           language="json"
           code={`{
   "data": [
-    { "icaoId": "KJFK", "fltcat": "VFR", ... },
-    { "icaoId": "KLGA", "fltcat": "MVFR", ... }
+    { "stationId": "KJFK", "flightCategory": "VFR", ... },
+    { "stationId": "KLGA", "flightCategory": "MVFR", ... }
   ],
   "pagination": {
     "nextCursor": "eyJpZCI6MTAwfQ==",
@@ -307,6 +319,17 @@ console.log(data)`}
             </ul>
           </div>
         </div>
+
+        <Callout variant="tip">
+          Check out our{' '}
+          <Link
+            to="/docs/integrations"
+            className="text-accent hover:underline"
+          >
+            Integrations guide
+          </Link>{' '}
+          for ready-made patterns using TanStack Query, RTK Query, and more.
+        </Callout>
       </section>
 
       {/* Need Help */}

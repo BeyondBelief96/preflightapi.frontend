@@ -1,6 +1,7 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { Link, createFileRoute } from '@tanstack/react-router'
 import { ExternalLink } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Callout } from '@/components/docs/callout'
 import { CodeBlock } from '@/components/docs/code-block'
 import { API_BASE_PATH } from '@/lib/api-metadata'
 import { Button } from '@/components/ui/button'
@@ -30,6 +31,18 @@ function OpenApiDocs() {
           generate typed clients, explore endpoints in tools like Swagger UI, or
           import directly into Postman.
         </p>
+
+        <Callout variant="tip">
+          For framework integration patterns (TanStack Query, RTK Query), see
+          the{' '}
+          <Link
+            to="/docs/integrations"
+            className="text-accent hover:underline"
+          >
+            Integrations guide
+          </Link>
+          .
+        </Callout>
       </div>
 
       {/* Download */}
@@ -50,6 +63,72 @@ function OpenApiDocs() {
             <Button variant="ghost">Download JSON</Button>
           </a>
         </div>
+      </section>
+
+      {/* Import into Postman */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-semibold">Import into Postman</h2>
+        <p className="text-muted-foreground">
+          Import the full API collection into Postman in three steps:
+        </p>
+        <ol className="list-inside list-decimal space-y-2 text-muted-foreground">
+          <li>
+            Open Postman and click{' '}
+            <strong className="text-foreground">Import</strong> in the top left.
+          </li>
+          <li>
+            Select the <strong className="text-foreground">Link</strong> tab and
+            paste:{' '}
+            <a
+              href="/api/openapi"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-accent hover:underline"
+            >
+              https://preflightapi.io/api/openapi
+            </a>
+          </li>
+          <li>
+            After import, go to the collection's{' '}
+            <strong className="text-foreground">Variables</strong> tab and set{' '}
+            <code>Ocp-Apim-Subscription-Key</code> to your API key. All
+            requests in the collection will use it automatically.
+          </li>
+        </ol>
+      </section>
+
+      {/* Import into Insomnia */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-semibold">Import into Insomnia</h2>
+        <p className="text-muted-foreground">
+          Import the API into Insomnia in three steps:
+        </p>
+        <ol className="list-inside list-decimal space-y-2 text-muted-foreground">
+          <li>
+            Open Insomnia and go to{' '}
+            <strong className="text-foreground">
+              File &rarr; Import &rarr; From URL
+            </strong>
+            .
+          </li>
+          <li>
+            Paste the spec URL:{' '}
+            <a
+              href="/api/openapi"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-accent hover:underline"
+            >
+              https://preflightapi.io/api/openapi
+            </a>
+          </li>
+          <li>
+            Create an{' '}
+            <strong className="text-foreground">environment variable</strong>{' '}
+            for your API key and reference it as a header in each request, or
+            set the header at the folder level.
+          </li>
+        </ol>
       </section>
 
       {/* Type Generation */}
@@ -91,7 +170,7 @@ function OpenApiDocs() {
             <CodeBlock
               language="bash"
               code={`# From the live spec URL
-npx openapi-typescript https://preflightapi.com/api/openapi -o src/types/api.d.ts
+npx openapi-typescript https://preflightapi.io/api/openapi -o src/types/api.d.ts
 
 # Or from a local file
 npx openapi-typescript ./preflightapi_openapi.json -o src/types/api.d.ts`}
@@ -103,11 +182,11 @@ npx openapi-typescript ./preflightapi_openapi.json -o src/types/api.d.ts`}
               code={`import type { paths, components } from './types/api'
 
 // Extract response types
-type Metar = components['schemas']['Metar']
-type Airport = components['schemas']['Airport']
+type Metar = components['schemas']['MetarDto']
+type Airport = components['schemas']['AirportDto']
 
 // Extract path parameters
-type MetarParams = paths['${API_BASE_PATH}/metars/{icaoId}']['get']['parameters']`}
+type MetarParams = paths['${API_BASE_PATH}/metars/{icaoCodeOrIdent}']['get']['parameters']`}
             />
           </TabsContent>
         </Tabs>
@@ -162,13 +241,13 @@ export const api = createClient<paths>({
               code={`import { api } from './lib/api-client'
 
 // Fully typed — path, params, and response are all inferred
-const { data, error } = await api.GET('${API_BASE_PATH}/metars/{icaoId}', {
-  params: { path: { icaoId: 'KJFK' } },
+const { data, error } = await api.GET('${API_BASE_PATH}/metars/{icaoCodeOrIdent}', {
+  params: { path: { icaoCodeOrIdent: 'KJFK' } },
 })
 
 if (data) {
-  console.log(data.rawOb)   // string — autocompleted
-  console.log(data.fltcat)  // string — autocompleted
+  console.log(data.rawText)         // string — autocompleted
+  console.log(data.flightCategory)  // string — autocompleted
 }`}
             />
           </TabsContent>
@@ -210,7 +289,7 @@ import { defineConfig } from 'orval'
 
 export default defineConfig({
   preflight: {
-    input: 'https://preflightapi.com/api/openapi',
+    input: 'https://preflightapi.io/api/openapi',
     output: {
       target: 'src/api/preflight.ts',
       client: 'react-query',
@@ -226,18 +305,18 @@ export default defineConfig({
           <TabsContent value="usage" className="mt-2">
             <CodeBlock
               language="tsx"
-              code={`import { useGetMetar } from './api/preflight'
+              code={`import { useMetarGetMetarForAirport } from './api/preflight'
 
-function MetarDisplay({ icaoId }: { icaoId: string }) {
-  const { data, isLoading, error } = useGetMetar(icaoId)
+function MetarDisplay({ icaoCode }: { icaoCode: string }) {
+  const { data, isLoading, error } = useMetarGetMetarForAirport(icaoCode)
 
   if (isLoading) return <p>Loading...</p>
   if (error) return <p>Error: {error.message}</p>
 
   return (
     <div>
-      <p>{data?.rawOb}</p>
-      <p>Flight category: {data?.fltcat}</p>
+      <p>{data?.rawText}</p>
+      <p>Flight category: {data?.flightCategory}</p>
     </div>
   )
 }`}

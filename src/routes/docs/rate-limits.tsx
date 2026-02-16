@@ -1,5 +1,6 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { usePlans } from '@/hooks/use-plans'
+import { Callout } from '@/components/docs/callout'
 import { CodeBlock } from '@/components/docs/code-block'
 import { API_BASE_URL } from '@/lib/gateway-url'
 import { createPageHead } from '@/lib/seo'
@@ -260,6 +261,18 @@ X-RateLimit-Remaining: 58`}
         <p className="text-sm text-muted-foreground">
           Only GET requests are cached. POST endpoints are never cached.
         </p>
+        <Callout variant="tip">
+          TanStack Query's built-in <code>staleTime</code> pairs naturally with
+          our cache durations. Set <code>staleTime</code> to match the cache
+          window for each data type. See the{' '}
+          <Link
+            to="/docs/integrations"
+            className="text-accent hover:underline"
+          >
+            Integrations guide
+          </Link>{' '}
+          for examples.
+        </Callout>
       </section>
 
       {/* Monitoring Usage */}

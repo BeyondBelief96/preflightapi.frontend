@@ -1,5 +1,6 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Callout } from '@/components/docs/callout'
 import { CodeBlock } from '@/components/docs/code-block'
 import { API_BASE_URL } from '@/lib/gateway-url'
 import { createPageHead } from '@/lib/seo'
@@ -205,6 +206,10 @@ PREFLIGHT_API_KEY=your-subscription-key-here`}
             page.
           </li>
         </ul>
+        <Callout variant="tip">
+          Store your API key in a <code>.env</code> file and load it with{' '}
+          <code>process.env</code>. Never hardcode keys in source files.
+        </Callout>
       </section>
 
       {/* Tier-Based Access Control */}

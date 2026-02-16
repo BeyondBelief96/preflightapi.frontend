@@ -72,6 +72,21 @@ function buildIndex(): Array<SearchItem> {
       href: '/docs/openapi',
       keywords: ['swagger', 'openapi', 'spec', 'json'],
     },
+    {
+      title: 'Integrations',
+      href: '/docs/integrations',
+      keywords: [
+        'integrations',
+        'postman',
+        'insomnia',
+        'tanstack query',
+        'rtk query',
+        'redux',
+        'fetch',
+        'sdk',
+        'client',
+      ],
+    },
   ]
   for (const page of docPages) {
     items.push({

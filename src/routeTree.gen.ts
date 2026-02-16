@@ -20,6 +20,7 @@ import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as MarketingIndexRouteImport } from './routes/_marketing/index'
 import { Route as DocsRateLimitsRouteImport } from './routes/docs/rate-limits'
 import { Route as DocsOpenapiRouteImport } from './routes/docs/openapi'
+import { Route as DocsIntegrationsRouteImport } from './routes/docs/integrations'
 import { Route as DocsGettingStartedRouteImport } from './routes/docs/getting-started'
 import { Route as DocsErrorsRouteImport } from './routes/docs/errors'
 import { Route as DocsDataFreshnessRouteImport } from './routes/docs/data-freshness'
@@ -92,6 +93,11 @@ const DocsRateLimitsRoute = DocsRateLimitsRouteImport.update({
 const DocsOpenapiRoute = DocsOpenapiRouteImport.update({
   id: '/openapi',
   path: '/openapi',
+  getParentRoute: () => DocsRoute,
+} as any)
+const DocsIntegrationsRoute = DocsIntegrationsRouteImport.update({
+  id: '/integrations',
+  path: '/integrations',
   getParentRoute: () => DocsRoute,
 } as any)
 const DocsGettingStartedRoute = DocsGettingStartedRouteImport.update({
@@ -207,6 +213,7 @@ export interface FileRoutesByFullPath {
   '/docs/data-freshness': typeof DocsDataFreshnessRoute
   '/docs/errors': typeof DocsErrorsRoute
   '/docs/getting-started': typeof DocsGettingStartedRoute
+  '/docs/integrations': typeof DocsIntegrationsRoute
   '/docs/openapi': typeof DocsOpenapiRoute
   '/docs/rate-limits': typeof DocsRateLimitsRoute
   '/dashboard/': typeof DashboardIndexRoute
@@ -235,6 +242,7 @@ export interface FileRoutesByTo {
   '/docs/data-freshness': typeof DocsDataFreshnessRoute
   '/docs/errors': typeof DocsErrorsRoute
   '/docs/getting-started': typeof DocsGettingStartedRoute
+  '/docs/integrations': typeof DocsIntegrationsRoute
   '/docs/openapi': typeof DocsOpenapiRoute
   '/docs/rate-limits': typeof DocsRateLimitsRoute
   '/': typeof MarketingIndexRoute
@@ -268,6 +276,7 @@ export interface FileRoutesById {
   '/docs/data-freshness': typeof DocsDataFreshnessRoute
   '/docs/errors': typeof DocsErrorsRoute
   '/docs/getting-started': typeof DocsGettingStartedRoute
+  '/docs/integrations': typeof DocsIntegrationsRoute
   '/docs/openapi': typeof DocsOpenapiRoute
   '/docs/rate-limits': typeof DocsRateLimitsRoute
   '/_marketing/': typeof MarketingIndexRoute
@@ -302,6 +311,7 @@ export interface FileRouteTypes {
     | '/docs/data-freshness'
     | '/docs/errors'
     | '/docs/getting-started'
+    | '/docs/integrations'
     | '/docs/openapi'
     | '/docs/rate-limits'
     | '/dashboard/'
@@ -330,6 +340,7 @@ export interface FileRouteTypes {
     | '/docs/data-freshness'
     | '/docs/errors'
     | '/docs/getting-started'
+    | '/docs/integrations'
     | '/docs/openapi'
     | '/docs/rate-limits'
     | '/'
@@ -362,6 +373,7 @@ export interface FileRouteTypes {
     | '/docs/data-freshness'
     | '/docs/errors'
     | '/docs/getting-started'
+    | '/docs/integrations'
     | '/docs/openapi'
     | '/docs/rate-limits'
     | '/_marketing/'
@@ -465,6 +477,13 @@ declare module '@tanstack/react-router' {
       path: '/openapi'
       fullPath: '/docs/openapi'
       preLoaderRoute: typeof DocsOpenapiRouteImport
+      parentRoute: typeof DocsRoute
+    }
+    '/docs/integrations': {
+      id: '/docs/integrations'
+      path: '/integrations'
+      fullPath: '/docs/integrations'
+      preLoaderRoute: typeof DocsIntegrationsRouteImport
       parentRoute: typeof DocsRoute
     }
     '/docs/getting-started': {
@@ -653,6 +672,7 @@ interface DocsRouteChildren {
   DocsDataFreshnessRoute: typeof DocsDataFreshnessRoute
   DocsErrorsRoute: typeof DocsErrorsRoute
   DocsGettingStartedRoute: typeof DocsGettingStartedRoute
+  DocsIntegrationsRoute: typeof DocsIntegrationsRoute
   DocsOpenapiRoute: typeof DocsOpenapiRoute
   DocsRateLimitsRoute: typeof DocsRateLimitsRoute
   DocsIndexRoute: typeof DocsIndexRoute
@@ -668,6 +688,7 @@ const DocsRouteChildren: DocsRouteChildren = {
   DocsDataFreshnessRoute: DocsDataFreshnessRoute,
   DocsErrorsRoute: DocsErrorsRoute,
   DocsGettingStartedRoute: DocsGettingStartedRoute,
+  DocsIntegrationsRoute: DocsIntegrationsRoute,
   DocsOpenapiRoute: DocsOpenapiRoute,
   DocsRateLimitsRoute: DocsRateLimitsRoute,
   DocsIndexRoute: DocsIndexRoute,

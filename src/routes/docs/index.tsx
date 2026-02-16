@@ -10,12 +10,14 @@ import {
   Key,
   Layers,
   Plane,
+  Plug,
   Radio,
   Route as RouteIcon,
   TriangleAlert,
   Zap,
 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
+import { Callout } from '@/components/docs/callout'
 import { CodeBlock } from '@/components/docs/code-block'
 import { API_BASE_URL } from '@/lib/gateway-url'
 import { API_BASE_PATH, API_VERSION } from '@/lib/api-metadata'
@@ -307,6 +309,13 @@ function DocsIndex() {
           <Database className="h-4 w-4" />
           Data Models
         </Link>
+        <Link
+          to="/docs/integrations"
+          className="inline-flex items-center gap-2 rounded-lg bg-muted px-4 py-2 text-sm font-medium transition-colors hover:bg-muted/80"
+        >
+          <Plug className="h-4 w-4" />
+          Integrations
+        </Link>
       </div>
 
       {/* Base URL info */}
@@ -328,6 +337,15 @@ function DocsIndex() {
             for details.
           </p>
         </div>
+
+        <Callout variant="note">
+          Want to explore the API interactively? Import our OpenAPI spec into
+          Postman, Insomnia, or any OpenAPI-compatible tool. Download it at{' '}
+          <Link to="/docs/openapi" className="text-accent hover:underline">
+            /api/openapi
+          </Link>
+          .
+        </Callout>
       </section>
 
       {/* API Conventions */}
