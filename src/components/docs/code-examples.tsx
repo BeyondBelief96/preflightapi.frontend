@@ -1,11 +1,7 @@
 import { CodeBlock } from './code-block'
 import type { ParsedEndpoint } from '@/lib/docs/types'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import {
-  generateCurl,
-  generateJavaScript,
-  generatePython,
-} from '@/lib/docs/code-examples'
+import { generateCurl, generateTypeScript } from '@/lib/docs/code-examples'
 
 interface CodeExamplesProps {
   endpoint: ParsedEndpoint
@@ -13,8 +9,7 @@ interface CodeExamplesProps {
 
 export function CodeExamples({ endpoint }: CodeExamplesProps) {
   const curl = generateCurl(endpoint)
-  const js = generateJavaScript(endpoint)
-  const python = generatePython(endpoint)
+  const ts = generateTypeScript(endpoint)
 
   return (
     <Tabs defaultValue="curl" className="w-full">
@@ -26,26 +21,17 @@ export function CodeExamples({ endpoint }: CodeExamplesProps) {
           cURL
         </TabsTrigger>
         <TabsTrigger
-          value="javascript"
+          value="typescript"
           className="rounded-none border-b-2 border-transparent px-3 py-1.5 text-xs data-[state=active]:border-accent data-[state=active]:bg-transparent"
         >
-          JavaScript
-        </TabsTrigger>
-        <TabsTrigger
-          value="python"
-          className="rounded-none border-b-2 border-transparent px-3 py-1.5 text-xs data-[state=active]:border-accent data-[state=active]:bg-transparent"
-        >
-          Python
+          TypeScript
         </TabsTrigger>
       </TabsList>
       <TabsContent value="curl" className="mt-2">
         <CodeBlock code={curl} language="bash" />
       </TabsContent>
-      <TabsContent value="javascript" className="mt-2">
-        <CodeBlock code={js} language="javascript" />
-      </TabsContent>
-      <TabsContent value="python" className="mt-2">
-        <CodeBlock code={python} language="python" />
+      <TabsContent value="typescript" className="mt-2">
+        <CodeBlock code={ts} language="typescript" />
       </TabsContent>
     </Tabs>
   )

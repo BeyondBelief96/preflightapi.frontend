@@ -559,7 +559,7 @@ function ErrorsDocs() {
           language="typescript"
           code={`async function fetchMetar(icaoCode: string): Promise<Metar | null> {
   const response = await fetch(
-    \`https://api.preflightapi.com${API_BASE_PATH}/metars/\${icaoCode}\`,
+    \`https://api.preflightapi.io${API_BASE_PATH}/metars/\${icaoCode}\`,
     {
       headers: {
         'Ocp-Apim-Subscription-Key': process.env.PREFLIGHT_API_KEY!,

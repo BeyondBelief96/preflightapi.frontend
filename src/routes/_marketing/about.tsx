@@ -231,7 +231,7 @@ function AboutPage() {
               },
               {
                 source: 'FAA NASR Subscription',
-                data: 'Airports, runways, frequencies, obstacles — updated every 28 days',
+                data: 'Airports, runways, frequencies — updated every 28 days',
               },
               {
                 source: 'FAA ArcGIS Services',
@@ -247,7 +247,7 @@ function AboutPage() {
               },
               {
                 source: 'FAA Digital Obstacle File',
-                data: '625,000+ obstacles including towers, buildings, cranes, and terrain',
+                data: '625,000+ obstacles including towers, buildings, cranes, and terrain — updated daily',
               },
             ].map((item) => (
               <div key={item.source} className="rounded-xl border bg-card p-5">

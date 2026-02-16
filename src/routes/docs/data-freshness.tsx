@@ -6,6 +6,7 @@ import {
   SYNC_JOBS_28,
   SYNC_JOBS_56,
   SYNC_JOBS_NOTAMS,
+  SYNC_JOBS_OBSTACLES,
   formatLocalDateTime,
   formatUtcHourAsLocal,
   getNextSyncDate,
@@ -121,8 +122,16 @@ function DataFreshnessDocs() {
           </li>
           <li>
             <strong className="text-foreground">56-day charting cycle</strong> —
-            Airspace boundaries, special use airspace, chart supplements, and
-            obstacle data follow the FAA's 56-day charting publication schedule.
+            Airspace boundaries, special use airspace, and chart supplements
+            follow the FAA's 56-day charting publication schedule.
+          </li>
+          <li>
+            <strong className="text-foreground">
+              Daily obstacle updates
+            </strong>{' '}
+            — Obstacle data is sourced from the FAA Digital Obstacle File (DOF).
+            A full load runs each 56-day cycle, with daily incremental changes
+            applied in between.
           </li>
         </ul>
         <p className="text-muted-foreground">
@@ -161,6 +170,17 @@ function DataFreshnessDocs() {
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold">56-Day Cycle (Charting)</h2>
         <SyncJobList jobs={SYNC_JOBS_56} isContinuous={false} />
+      </section>
+
+      {/* Obstacles (Daily) */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-semibold">Obstacles (Daily)</h2>
+        <p className="text-muted-foreground">
+          Obstacle data is sourced from the FAA Digital Obstacle File (DOF). A
+          full bulk load runs each 56-day publication cycle, and a daily change
+          file picks up any additions, modifications, or removals in between.
+        </p>
+        <SyncJobList jobs={SYNC_JOBS_OBSTACLES} isContinuous={true} />
       </section>
 
       {/* NOTAMs */}
@@ -231,12 +251,19 @@ function DataFreshnessDocs() {
               </tr>
               <tr className="border-b">
                 <td className="py-3 font-medium">
-                  Airspace, SUA, Chart Supplements, Obstacles
+                  Airspace, SUA, Chart Supplements
                 </td>
                 <td className="py-3 text-muted-foreground">Every 56 days</td>
                 <td className="py-3 text-muted-foreground">
                   FAA Charting / ArcGIS
                 </td>
+              </tr>
+              <tr className="border-b">
+                <td className="py-3 font-medium">Obstacles</td>
+                <td className="py-3 text-muted-foreground">
+                  Every 56 days (full load) + daily changes
+                </td>
+                <td className="py-3 text-muted-foreground">FAA DOF</td>
               </tr>
               <tr className="border-b">
                 <td className="py-3 font-medium">NOTAMs</td>

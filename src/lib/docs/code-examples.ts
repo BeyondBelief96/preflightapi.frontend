@@ -186,57 +186,28 @@ export function generateCurl(endpoint: ParsedEndpoint): string {
   return lines.join(' \\\n')
 }
 
-export function generateJavaScript(endpoint: ParsedEndpoint): string {
+export function generateTypeScript(endpoint: ParsedEndpoint): string {
   const url = buildUrl(endpoint)
   const body = getExampleBody(endpoint)
 
-  let code = `const response = await fetch(\n  "${url}",\n  {\n`
+  let code = 'const response: Response = await fetch(\n'
+  code += `  "${url}",\n  {\n`
   code += `    method: "${endpoint.method}",\n`
   code += '    headers: {\n'
-  code += '      "Ocp-Apim-Subscription-Key": "YOUR_API_KEY"'
+  code += '      "Ocp-Apim-Subscription-Key": process.env.PREFLIGHT_API_KEY!'
 
   if (body) {
     code += ',\n      "Content-Type": "application/json"'
   }
 
-  code += '\n    }'
+  code += ',\n    }'
 
   if (body) {
     code += `,\n    body: JSON.stringify(${body})`
   }
 
-  code += '\n  }\n)\n\n'
-  code += 'const data = await response.json()\nconsole.log(data)'
-
-  return code
-}
-
-export function generatePython(endpoint: ParsedEndpoint): string {
-  const url = buildUrl(endpoint)
-  const body = getExampleBody(endpoint)
-  const methodLower = endpoint.method.toLowerCase()
-
-  let code = 'import requests\n\n'
-
-  code += `response = requests.${methodLower}(\n`
-  code += `    "${url}",\n`
-
-  if (body) {
-    code += '    headers={\n'
-    code += '        "Ocp-Apim-Subscription-Key": "YOUR_API_KEY",\n'
-    code += '        "Content-Type": "application/json"\n'
-    code += '    },\n'
-    code += `    json=${body
-      .replace(/"/g, "'")
-      .replace(/: true/g, ': True')
-      .replace(/: false/g, ': False')
-      .replace(/: null/g, ': None')}\n`
-  } else {
-    code += '    headers={"Ocp-Apim-Subscription-Key": "YOUR_API_KEY"}\n'
-  }
-
-  code += ')\n\n'
-  code += 'data = response.json()\nprint(data)'
+  code += ',\n  },\n)\n\n'
+  code += 'const data: unknown = await response.json()\nconsole.log(data)'
 
   return code
 }

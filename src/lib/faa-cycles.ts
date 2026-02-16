@@ -81,11 +81,22 @@ export const SYNC_JOBS_56: Array<SyncJob> = [
     data: 'FAA chart supplement PDFs (stored in Azure Blob Storage)',
     cycleDays: 56,
   },
+]
+
+export const SYNC_JOBS_OBSTACLES: Array<SyncJob> = [
   {
-    name: 'Obstacles',
+    name: 'Obstacle Full Load',
     utcHour: 6,
-    data: 'Obstacle data (from FAA NASR)',
+    data: 'Full reload of all ~625K obstacles from the FAA Digital Obstacle File (DOF)',
     cycleDays: 56,
+    schedule: 'Every 56 days at 06:00 UTC',
+  },
+  {
+    name: 'Obstacle Daily Change',
+    utcHour: 7,
+    data: 'Incremental obstacle updates — additions, changes, and removals (from FAA DOF)',
+    cycleDays: null,
+    schedule: 'Daily at 07:00 UTC',
   },
 ]
 

@@ -9,6 +9,7 @@ import { WhySection } from '@/components/marketing/why-section'
 import { PricingPreview } from '@/components/marketing/pricing-preview'
 import { CtaSection } from '@/components/marketing/cta-section'
 import { DisclaimerBanner } from '@/components/marketing/disclaimer-banner'
+import { FadeIn } from '@/components/marketing/fade-in'
 
 export const Route = createFileRoute('/_marketing/')({
   head: () =>
@@ -25,13 +26,27 @@ function LandingPage() {
   return (
     <div>
       <HeroSection />
-      <StatsBar />
-      <DataPipelineSection />
-      <FeaturesGrid />
-      <EndpointShowcase />
-      <WhySection />
-      <PricingPreview />
-      <CtaSection />
+      <FadeIn>
+        <StatsBar />
+      </FadeIn>
+      <FadeIn>
+        <DataPipelineSection />
+      </FadeIn>
+      <FadeIn>
+        <FeaturesGrid />
+      </FadeIn>
+      <FadeIn>
+        <EndpointShowcase />
+      </FadeIn>
+      <FadeIn>
+        <WhySection />
+      </FadeIn>
+      <FadeIn>
+        <PricingPreview />
+      </FadeIn>
+      <FadeIn>
+        <CtaSection />
+      </FadeIn>
       <DisclaimerBanner />
     </div>
   )

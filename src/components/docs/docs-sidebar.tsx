@@ -16,6 +16,7 @@ const sections = [
       { label: 'Error Handling', href: '/docs/errors' },
       { label: 'Data Freshness', href: '/docs/data-freshness' },
       { label: 'OpenAPI Spec', href: '/docs/openapi' },
+      { label: 'Integrations', href: '/docs/integrations' },
     ],
   },
   {

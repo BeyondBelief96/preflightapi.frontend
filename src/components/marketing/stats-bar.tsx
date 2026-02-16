@@ -11,7 +11,7 @@ const sources = [
   {
     source: 'FAA DOF',
     data: '625,000+ obstacles',
-    freshness: 'Every 56 days',
+    freshness: 'Updated daily',
   },
   {
     source: 'FAA Aeronautical Data Delivery System',

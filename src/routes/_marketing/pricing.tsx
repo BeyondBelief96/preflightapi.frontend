@@ -51,20 +51,13 @@ const staticComparisonFeatures = [
         commercial: true,
         atp: true,
       },
-      {
-        name: 'G-AIRMETs (graphical weather areas)',
-        student: false,
-        private: true,
-        commercial: true,
-        atp: true,
-      },
     ],
   },
   {
     category: 'Airport & Airspace',
     features: [
       {
-        name: 'Airport search & details (19,600+ US airports)',
+        name: 'Airport information (19,600+ US airports)',
         student: true,
         private: true,
         commercial: true,
@@ -81,20 +74,6 @@ const staticComparisonFeatures = [
         name: 'Communication frequencies',
         student: true,
         private: true,
-        commercial: true,
-        atp: true,
-      },
-      {
-        name: 'Airport diagram PDFs',
-        student: false,
-        private: false,
-        commercial: true,
-        atp: true,
-      },
-      {
-        name: 'Chart supplement (A/FD) PDFs',
-        student: false,
-        private: false,
         commercial: true,
         atp: true,
       },
@@ -145,6 +124,20 @@ const staticComparisonFeatures = [
         commercial: true,
         atp: true,
       },
+      {
+        name: 'Airport diagram PDFs',
+        student: false,
+        private: false,
+        commercial: true,
+        atp: true,
+      },
+      {
+        name: 'Chart supplement (A/FD) PDFs',
+        student: false,
+        private: false,
+        commercial: true,
+        atp: true,
+      },
     ],
   },
   {
@@ -174,7 +167,7 @@ const staticComparisonFeatures = [
     ],
   },
   {
-    category: 'Performance Calculators',
+    category: 'E6B Calculator Utilities',
     features: [
       {
         name: 'Crosswind calculator (from live METAR)',
