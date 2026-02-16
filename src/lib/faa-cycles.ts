@@ -89,6 +89,7 @@ export const SYNC_JOBS_OBSTACLES: Array<SyncJob> = [
     utcHour: 6,
     data: 'Full reload of all ~625K obstacles from the FAA Digital Obstacle File (DOF)',
     cycleDays: 56,
+    schedule: 'Every 56 days at 06:00 UTC',
   },
   {
     name: 'Obstacle Daily Change',
