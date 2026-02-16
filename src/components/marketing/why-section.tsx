@@ -4,21 +4,21 @@ import { Layers, RefreshCw, Zap } from 'lucide-react'
 const reasons = [
   {
     icon: Layers,
-    title: 'Seven sources, one key',
+    title: 'One API key, all the FAA data you need',
     description:
-      'NASR, DOF, d-TPPs, d-CS, ADDS, NMS, aviationweather.gov. One API key for all of it.',
+      'Weather, airports, airspace, NOTAMs, obstacles, charts — all behind a single API key.',
   },
   {
     icon: RefreshCw,
-    title: 'Always current',
+    title: 'Data stays current automatically',
     description:
-      'Weather refreshes every 5 minutes. NOTAMs every 3. Airport and airspace data syncs every FAA publication cycle. You never think about it.',
+      'Real-time weather information, NOTAM updates every 3 minutes, airport and airspace data syncs every FAA publication cycle. You never think about it.',
   },
   {
     icon: Zap,
-    title: 'Minutes to first call',
+    title: 'Get building in minutes',
     description:
-      'Sign up, get a key, hit an endpoint. No contracts, no FAA approval process, no onboarding calls.',
+      'Sign up, get a key, start building in minutes.',
   },
 ]
 
