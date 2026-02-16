@@ -12,6 +12,7 @@ import { usePlans } from '@/hooks/use-plans'
 import { PlanOverviewCard } from '@/components/dashboard/plan-overview-card'
 import { UsageStatsCards } from '@/components/dashboard/usage-stats-card'
 import { QuickActions } from '@/components/dashboard/quick-actions'
+import { AnalyticsSection } from '@/components/dashboard/analytics/analytics-section'
 
 export const Route = createFileRoute('/dashboard/')({
   head: () =>
@@ -200,6 +201,14 @@ function DashboardOverview() {
         isCanceling={isCanceling}
         cancelDate={cancelDate}
       />
+
+      {activeSubscription?.id && (
+        <AnalyticsSection
+          subscriptionId={activeSubscription.id}
+          monthlyReport={monthlyUsageQuery.data}
+          isMonthlyLoading={monthlyUsageQuery.isLoading}
+        />
+      )}
 
       <QuickActions />
     </div>

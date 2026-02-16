@@ -1,4 +1,5 @@
 import { createServerFn } from '@tanstack/react-start'
+import { z } from 'zod'
 import { apimFetch } from './apim-client'
 import { logAnalyticsQuery } from './log-analytics-client'
 import { getApimProductIds, planIdFromProductId } from './apim-products'
@@ -6,10 +7,20 @@ import { getTierConfig } from './tier-config'
 import { requireAuth, requireOwnership } from './auth'
 import { createLogger } from './logger'
 import { env } from '@/env'
-import type { ApimUsageReport } from '@/types/plans'
+import type {
+  ApimUsageReport,
+  DailyUsagePoint,
+  EndpointBreakdownItem,
+} from '@/types/plans'
 import type { SubscriptionListResponse } from '@/types/apim'
 
 const log = createLogger('apim')
+
+// Strict schemas to prevent KQL injection via string interpolation
+const isoDateSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Invalid date')
+const subscriptionIdSchema = z
+  .string()
+  .regex(/^[\w-]+$/, 'Invalid subscription ID')
 
 // --- User Management ---
 
@@ -178,8 +189,11 @@ const ZERO_REPORT: ApimUsageReport = {
 
 export const getUsageAnalytics = createServerFn({ method: 'GET' })
   .inputValidator(
-    (input: { subscriptionId: string; fromDate: string; toDate: string }) =>
-      input,
+    z.object({
+      subscriptionId: subscriptionIdSchema,
+      fromDate: isoDateSchema,
+      toDate: isoDateSchema,
+    }).parse,
   )
   .handler(async ({ data }) => {
     const userId = await requireAuth()
@@ -241,6 +255,103 @@ ApiManagementGatewayLogs
         'Failed to query Log Analytics for usage data',
       )
       return ZERO_REPORT
+    }
+  })
+
+// --- Daily Usage Trend (via Azure Monitor Log Analytics) ---
+
+export const getDailyUsageTrend = createServerFn({ method: 'GET' })
+  .inputValidator(z.object({ subscriptionId: subscriptionIdSchema }).parse)
+  .handler(async ({ data }): Promise<DailyUsagePoint[]> => {
+    const userId = await requireAuth()
+    requireOwnership(userId, data.subscriptionId)
+
+    if (!env.APIM_LOG_ANALYTICS_WORKSPACE_ID) {
+      log.warn(
+        'LOG_ANALYTICS_WORKSPACE_ID not configured — returning empty trend',
+      )
+      return []
+    }
+
+    const kql = `
+ApiManagementGatewayLogs
+| where TimeGenerated >= ago(30d)
+  and ApimSubscriptionId == '${data.subscriptionId}'
+| summarize calls = count() by bin(TimeGenerated, 1d)
+| order by TimeGenerated asc
+`.trim()
+
+    try {
+      const result = await logAnalyticsQuery(kql)
+
+      const table = result.tables[0]
+      if (!table || table.rows.length === 0) {
+        return []
+      }
+
+      const columns = table.columns.map((c) => c.name)
+      const dateIdx = columns.indexOf('TimeGenerated')
+      const callsIdx = columns.indexOf('calls')
+
+      return table.rows.map((row) => ({
+        date: String(row[dateIdx]).split('T')[0],
+        calls: Number(row[callsIdx]) || 0,
+      }))
+    } catch (err) {
+      log.error(
+        { err, subscriptionId: data.subscriptionId },
+        'Failed to query Log Analytics for daily trend',
+      )
+      return []
+    }
+  })
+
+// --- Endpoint Breakdown (via Azure Monitor Log Analytics) ---
+
+export const getEndpointBreakdown = createServerFn({ method: 'GET' })
+  .inputValidator(z.object({ subscriptionId: subscriptionIdSchema }).parse)
+  .handler(async ({ data }): Promise<EndpointBreakdownItem[]> => {
+    const userId = await requireAuth()
+    requireOwnership(userId, data.subscriptionId)
+
+    if (!env.APIM_LOG_ANALYTICS_WORKSPACE_ID) {
+      log.warn(
+        'LOG_ANALYTICS_WORKSPACE_ID not configured — returning empty breakdown',
+      )
+      return []
+    }
+
+    const kql = `
+ApiManagementGatewayLogs
+| where TimeGenerated >= ago(30d)
+  and ApimSubscriptionId == '${data.subscriptionId}'
+  and isnotempty(OperationId)
+| summarize calls = count() by OperationId
+| top 10 by calls desc
+`.trim()
+
+    try {
+      const result = await logAnalyticsQuery(kql)
+
+      const table = result.tables[0]
+      if (!table || table.rows.length === 0) {
+        return []
+      }
+
+      const columns = table.columns.map((c) => c.name)
+      const endpointIdx = columns.indexOf('OperationId')
+      const callsIdx = columns.indexOf('calls')
+
+      return table.rows.map((row) => ({
+        endpoint: String(row[endpointIdx]),
+        calls: Number(row[callsIdx]) || 0,
+      }))
+    } catch (err) {
+      log.error(
+        { err, subscriptionId: data.subscriptionId },
+        'Failed to query Log Analytics for endpoint breakdown',
+      )
+      return []
     }
   })
 

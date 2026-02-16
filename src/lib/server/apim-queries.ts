@@ -7,6 +7,10 @@ export const apimKeys = {
     [...apimKeys.all, 'keys', subscriptionId] as const,
   usage: (subscriptionId: string, period: string) =>
     [...apimKeys.all, 'usage', subscriptionId, period] as const,
+  dailyTrend: (subscriptionId: string) =>
+    [...apimKeys.all, 'daily-trend', subscriptionId] as const,
+  endpointBreakdown: (subscriptionId: string) =>
+    [...apimKeys.all, 'endpoint-breakdown', subscriptionId] as const,
   tierConfig: () => [...apimKeys.all, 'tier-config'] as const,
 }
 

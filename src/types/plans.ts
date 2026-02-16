@@ -48,6 +48,16 @@ export interface ApimUsageReport {
   apiTimeMax: number
 }
 
+export interface DailyUsagePoint {
+  date: string // e.g. '2026-02-01'
+  calls: number
+}
+
+export interface EndpointBreakdownItem {
+  endpoint: string // APIM OperationId, e.g. 'get-metar'
+  calls: number
+}
+
 export interface StripeSubscriptionStatus {
   status: string
   planId: PlanId
