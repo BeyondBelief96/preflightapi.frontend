@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { codeToHtml } from 'shiki'
-import { API_BASE_PATH } from '@/lib/api-metadata'
+import { API_BASE_URL } from '@/lib/gateway-url'
 
 /* ── Layout constants ─────────────────────────────────── */
 
@@ -205,8 +205,8 @@ const pulses = [
 
 /* ── Fetch snippet ────────────────────────────────────── */
 
-const fetchSnippet = `const metar = await fetch(
-  \`https://api.preflightapi.io${API_BASE_PATH}/metars/KJFK\`,
+const fetchSnippet = `const airport = await fetch(
+  \`${API_BASE_URL}/airports/KJFK\`,
   { headers: { 'Ocp-Apim-Subscription-Key': key } },
 ).then(r => r.json())`
 

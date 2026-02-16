@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { codeToHtml } from 'shiki'
 import { ApiStatusBadge } from '@/components/marketing/api-status-badge'
 import { Button } from '@/components/ui/button'
-import { API_BASE_PATH } from '@/lib/api-metadata'
+import { API_BASE_URL } from '@/lib/gateway-url'
 import { isWaitlistMode } from '@/lib/waitlist'
 import { usePlans } from '@/hooks/use-plans'
 
@@ -17,7 +17,7 @@ const codeExamples = [
     code: `import type { MetarDto } from './types'
 
 const res = await fetch(
-  \`https://api.preflightapi.io${API_BASE_PATH}/metars/KJFK\`,
+  \`${API_BASE_URL}/metars/KJFK\`,
   {
     headers: {
       'Ocp-Apim-Subscription-Key': 'your-api-key',
@@ -37,7 +37,7 @@ console.log(metar.flightCategory) // "VFR"`,
 import type { MetarDto } from './types'
 
 const client = axios.create({
-  baseURL: 'https://api.preflightapi.io${API_BASE_PATH}',
+  baseURL: '${API_BASE_URL}',
   headers: {
     'Ocp-Apim-Subscription-Key': 'your-api-key',
   },
@@ -61,7 +61,7 @@ export function useMetar(stationId: string) {
     queryKey: ['metar', stationId],
     queryFn: async (): Promise<MetarDto> => {
       const res = await fetch(
-        \`https://api.preflightapi.io${API_BASE_PATH}/metars/\${stationId}\`,
+        \`${API_BASE_URL}/metars/\${stationId}\`,
         {
           headers: {
             'Ocp-Apim-Subscription-Key': 'your-api-key',
@@ -83,7 +83,7 @@ import type { MetarDto } from '../types'
 
 export const weatherApi = createApi({
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://api.preflightapi.io${API_BASE_PATH}',
+    baseUrl: '${API_BASE_URL}',
     prepareHeaders: (headers) => {
       headers.set(
         'Ocp-Apim-Subscription-Key',

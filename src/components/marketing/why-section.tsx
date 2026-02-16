@@ -6,7 +6,7 @@ const reasons = [
     icon: Layers,
     title: 'Seven sources, one key',
     description:
-      'NASR, DOF, d-TPPs, DAFD, ArcGIS, NMS, aviationweather.gov. One API key for all of it.',
+      'NASR, DOF, d-TPPs, d-CS, ADDS, NMS, aviationweather.gov. One API key for all of it.',
   },
   {
     icon: RefreshCw,
