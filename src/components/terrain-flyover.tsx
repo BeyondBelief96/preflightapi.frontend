@@ -10,8 +10,8 @@ import {
   WebGLRenderer,
 } from 'three'
 
-const PRIMARY_HEX = '#4a88e6'
-const ACCENT_HEX = '#4ab8e6'
+const PRIMARY_HEX = '#37A4DC'
+const ACCENT_HEX = '#5bbde8'
 
 function isMobile() {
   return window.innerWidth < 768 || /Mobi|Android/i.test(navigator.userAgent)

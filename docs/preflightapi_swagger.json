@@ -79,6 +79,94 @@
         }
       }
     },
+    "/api/v1/airports/nearby": {
+      "get": {
+        "tags": [
+          "Airports"
+        ],
+        "summary": "Searches for airports near a geographic point",
+        "description": "Useful for finding diversion airports, fuel stops, or nearby facilities.\n\n``` GET /api/v1/airports/nearby?lat=32.897&lon=-97.038&radiusNm=30 ```",
+        "operationId": "Airport_SearchNearby",
+        "parameters": [
+          {
+            "name": "lat",
+            "in": "query",
+            "description": "Latitude in decimal degrees (-90 to 90)",
+            "schema": {
+              "type": "number",
+              "format": "decimal"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "lon",
+            "in": "query",
+            "description": "Longitude in decimal degrees (-180 to 180)",
+            "schema": {
+              "type": "number",
+              "format": "decimal"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "radiusNm",
+            "in": "query",
+            "description": "Search radius in nautical miles (default 30, max 500)",
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "default": 30
+            },
+            "x-position": 3
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1
+            },
+            "x-position": 5
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the nearby airports",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfAirportDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "If coordinates or radius are invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/airports/{icaoCodeOrIdent}": {
       "get": {
         "tags": [
@@ -220,13 +308,14 @@
           "Airport Diagrams"
         ],
         "summary": "Gets time-limited pre-signed URLs for all available airport diagram PDFs.\nThe URLs expire after a limited period; request new URLs if they have expired.",
+        "description": "Returns the airport's ICAO code, name, and a list of diagram URLs.\n\n``` GET /api/v1/airport-diagrams/KDFW GET /api/v1/airport-diagrams/DFW ```",
         "operationId": "AirportDiagram_GetAirportDiagrams",
         "parameters": [
           {
             "name": "icaoCodeOrIdent",
             "in": "path",
             "required": true,
-            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW)",
+            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW). Case-insensitive.",
             "schema": {
               "type": "string"
             },
@@ -245,7 +334,7 @@
             }
           },
           "404": {
-            "description": "If no airport diagrams are found",
+            "description": "If no airport diagrams are found for the given identifier",
             "content": {
               "application/json": {
                 "schema": {
@@ -262,13 +351,14 @@
         "tags": [
           "Airspace"
         ],
-        "summary": "Gets airspaces filtered by airspace classes",
+        "summary": "Gets controlled airspaces filtered by airspace class (B, C, or D).",
+        "description": "``` GET /api/v1/airspaces/by-classes?classes=B — all Class B airspaces GET /api/v1/airspaces/by-classes?classes=B,C,D — Class B, C, and D airspaces ```",
         "operationId": "Airspace_GetByClasses",
         "parameters": [
           {
             "name": "classes",
             "in": "query",
-            "description": "Comma-separated airspace classes (e.g., B,C,D)",
+            "description": "Comma-separated airspace classes: B, C, or D",
             "schema": {
               "type": "string"
             },
@@ -327,13 +417,14 @@
         "tags": [
           "Airspace"
         ],
-        "summary": "Gets airspaces filtered by city names",
+        "summary": "Gets controlled airspaces filtered by city name.",
+        "description": "``` GET /api/v1/airspaces/by-cities?cities=Dallas — airspaces for Dallas GET /api/v1/airspaces/by-cities?cities=Dallas,Houston — multiple cities ```",
         "operationId": "Airspace_GetByCity",
         "parameters": [
           {
             "name": "cities",
             "in": "query",
-            "description": "Comma-separated city names",
+            "description": "Comma-separated city names (e.g., Dallas or Dallas,Houston)",
             "schema": {
               "type": "string"
             },
@@ -392,13 +483,14 @@
         "tags": [
           "Airspace"
         ],
-        "summary": "Gets airspaces filtered by state codes",
+        "summary": "Gets controlled airspaces filtered by two-letter state code.",
+        "description": "``` GET /api/v1/airspaces/by-states?states=TX — airspaces in Texas GET /api/v1/airspaces/by-states?states=TX,OK — airspaces in Texas and Oklahoma ```",
         "operationId": "Airspace_GetByState",
         "parameters": [
           {
             "name": "states",
             "in": "query",
-            "description": "Comma-separated state codes (e.g., TX,OK)",
+            "description": "Comma-separated two-letter state codes (e.g., TX or TX,OK)",
             "schema": {
               "type": "string"
             },
@@ -457,13 +549,14 @@
         "tags": [
           "Airspace"
         ],
-        "summary": "Gets special use airspaces filtered by type codes",
+        "summary": "Gets special use airspaces filtered by type code.",
+        "description": "**Type Codes**\n\n- `R` — Restricted\n\n- `P` — Prohibited\n\n- `W` — Warning\n\n- `A` — Alert\n\n- `M` — MOA (Military Operations Area)\n\n``` GET /api/v1/airspaces/special-use/by-type-codes?typeCodes=R,P — restricted and prohibited GET /api/v1/airspaces/special-use/by-type-codes?typeCodes=M — MOAs only ```",
         "operationId": "Airspace_GetByTypeCode",
         "parameters": [
           {
             "name": "typeCodes",
             "in": "query",
-            "description": "Comma-separated type codes (e.g., R,P,W for restricted, prohibited, warning)",
+            "description": "Comma-separated type codes: R (restricted), P (prohibited), W (warning), A (alert), M (MOA)",
             "schema": {
               "type": "string"
             },
@@ -569,12 +662,13 @@
           "Airspace"
         ],
         "summary": "Gets controlled airspaces by their global IDs. This endpoint is designed to be used with the\nAirspaceGlobalIds returned by the navigation log endpoint (POST /api/v1/navlog/calculate)\nto retrieve full details for airspaces along a planned route.",
+        "description": "``` GET /api/v1/airspaces/by-global-ids?globalIds={guid1},{guid2} ```",
         "operationId": "Airspace_GetByGlobalIds",
         "parameters": [
           {
             "name": "globalIds",
             "in": "query",
-            "description": "Comma-separated global IDs (e.g., from the navlog response's AirspaceGlobalIds)",
+            "description": "Comma-separated global IDs (GUIDs from the navlog response's AirspaceGlobalIds field)",
             "schema": {
               "type": "string"
             },
@@ -614,12 +708,13 @@
           "Airspace"
         ],
         "summary": "Gets special use airspaces by their global IDs. This endpoint is designed to be used with the\nSpecialUseAirspaceGlobalIds returned by the navigation log endpoint (POST /api/v1/navlog/calculate)\nto retrieve full details for special use airspaces along a planned route.",
+        "description": "``` GET /api/v1/airspaces/special-use/by-global-ids?globalIds={guid1},{guid2} ```",
         "operationId": "Airspace_GetSpecialUseByGlobalIds",
         "parameters": [
           {
             "name": "globalIds",
             "in": "query",
-            "description": "Comma-separated global IDs (e.g., from the navlog response's SpecialUseAirspaceGlobalIds)",
+            "description": "Comma-separated global IDs (GUIDs from the navlog response's SpecialUseAirspaceGlobalIds field)",
             "schema": {
               "type": "string"
             },
@@ -653,19 +748,75 @@
         }
       }
     },
+    "/api/v1/briefing/route": {
+      "post": {
+        "tags": [
+          "Briefing"
+        ],
+        "summary": "Generates a composite weather briefing for a flight route. Accepts a list of waypoints\n(airport identifiers or lat/lon coordinates) and returns all weather products affecting\nthe route corridor: METARs and TAFs for airports along the route, PIREPs within the\ncorridor, SIGMETs and G-AIRMETs intersecting the route, and active NOTAMs.",
+        "description": "Each waypoint is either an airport identifier (ICAO or FAA) or a lat/lon coordinate. At least two waypoints are required. The corridor width controls how far from the route centerline to search for PIREPs, airports, and NOTAMs (default 25 NM each side).\n\n**Airport-only route**\n\n``` { \"waypoints\": [ { \"airportIdentifier\": \"KDFW\" }, { \"airportIdentifier\": \"KAUS\" } ] } ```\n\n**Mixed route with coordinate waypoints and custom corridor**\n\n``` { \"waypoints\": [ { \"airportIdentifier\": \"KDFW\" }, { \"latitude\": 31.5, \"longitude\": -97.2 }, { \"airportIdentifier\": \"KAUS\" } ], \"corridorWidthNm\": 30 } ```\n\n**Response Contents**\n\n- `Metars` — latest METARs for airports within the corridor\n\n- `Tafs` — current TAFs for airports within the corridor\n\n- `Pireps` — pilot reports within the corridor\n\n- `Sigmets` — active SIGMETs whose boundaries intersect the route\n\n- `GAirmets` — active G-AIRMETs whose boundaries intersect the route\n\n- `Notams` — active NOTAMs for airports along the route",
+        "operationId": "Briefing_GetRouteBriefing",
+        "requestBody": {
+          "x-name": "request",
+          "description": "Route definition containing Waypoints (minimum 2, each with AirportIdentifier\nor Latitude/Longitude) and optional CorridorWidthNm (default 25).",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RouteBriefingRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the route weather briefing",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RouteBriefingResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "If the request is invalid (fewer than 2 waypoints, invalid coordinates, etc.)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "If an airport waypoint is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/chart-supplements/{icaoCodeOrIdent}": {
       "get": {
         "tags": [
           "Chart Supplements"
         ],
         "summary": "Gets time-limited pre-signed URLs for all chart supplement pages for an airport.\nMulti-page supplements will have one URL per page. The URLs expire after a limited period;\nrequest new URLs if they have expired.",
+        "description": "Returns the airport's ICAO code, name, and a list of page URLs.\n\n``` GET /api/v1/chart-supplements/KDFW GET /api/v1/chart-supplements/DFW ```",
         "operationId": "ChartSupplement_GetChartSupplements",
         "parameters": [
           {
             "name": "icaoCodeOrIdent",
             "in": "path",
             "required": true,
-            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW)",
+            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW). Case-insensitive.",
             "schema": {
               "type": "string"
             },
@@ -684,7 +835,7 @@
             }
           },
           "404": {
-            "description": "If no chart supplements are found",
+            "description": "If no chart supplements are found for the given identifier",
             "content": {
               "application/json": {
                 "schema": {
@@ -702,13 +853,14 @@
           "Communication Frequencies"
         ],
         "summary": "Gets all communication frequencies for a serviced facility (airport or ATC facility).\nReturns frequencies including their intended use (e.g., TWR, GND, ATIS, APP, DEP),\ncall signs, operating hours, and sectorization details.",
+        "description": "The facility identifier is the FAA airport code — typically the ICAO code without the leading \"K\" prefix (e.g., `DFW` not `KDFW`). This corresponds to the `ArptId` field returned by the Airports endpoint.\n\n``` GET /api/v1/communication-frequencies/DFW GET /api/v1/communication-frequencies/AUS ```",
         "operationId": "CommunicationFrequency_GetFrequenciesByServicedFacility",
         "parameters": [
           {
             "name": "servicedFacility",
             "in": "path",
             "required": true,
-            "description": "FAA facility identifier — typically the FAA airport code without the \"K\" prefix (e.g., DFW, AUS). Use the airport's ArptId field from the Airports endpoint.",
+            "description": "FAA facility identifier — the FAA airport code without the \"K\" prefix (e.g., DFW, AUS). Use the ArptId field from the Airports endpoint.",
             "schema": {
               "type": "string"
             },
@@ -1244,7 +1396,8 @@
         "tags": [
           "Weather - G-AIRMETs"
         ],
-        "summary": "Gets G-AIRMETs filtered by product type",
+        "summary": "Gets G-AIRMETs filtered by product type.",
+        "description": "**Product Types**\n\n- `SIERRA` — IFR conditions and mountain obscuration\n\n- `TANGO` — turbulence, low-level wind shear, and strong surface winds\n\n- `ZULU` — icing and freezing level\n\n``` GET /api/v1/g-airmets/product/SIERRA GET /api/v1/g-airmets/product/ZULU ```",
         "operationId": "GAirmet_GetGAirmetsByProduct",
         "parameters": [
           {
@@ -1310,7 +1463,8 @@
         "tags": [
           "Weather - G-AIRMETs"
         ],
-        "summary": "Gets G-AIRMETs filtered by hazard type",
+        "summary": "Gets G-AIRMETs filtered by hazard type.",
+        "description": "**Hazard Types**\n\n- `IFR` — IFR conditions (ceiling below 1000 ft and/or visibility below 3 SM)\n\n- `MT_OBSC` — mountain obscuration\n\n- `TURB_LO` — low-level turbulence (below FL180)\n\n- `TURB_HI` — high-level turbulence (FL180 and above)\n\n- `LLWS` — low-level wind shear\n\n- `SFC_WIND` — strong surface winds (30 kt or greater)\n\n- `ICE` — icing\n\n- `FZLVL` — freezing level\n\n- `M_FZLVL` — multiple freezing levels\n\n``` GET /api/v1/g-airmets/hazard/ICE GET /api/v1/g-airmets/hazard/TURB_LO ```",
         "operationId": "GAirmet_GetGAirmetsByHazardType",
         "parameters": [
           {
@@ -1371,19 +1525,97 @@
         }
       }
     },
+    "/api/v1/g-airmets/affecting": {
+      "get": {
+        "tags": [
+          "Weather - G-AIRMETs"
+        ],
+        "summary": "Finds G-AIRMETs whose geographic boundary contains the given point. Returns advisories\nthat affect a specific location, answering \"what G-AIRMETs are active at this position?\"",
+        "description": "``` GET /api/v1/g-airmets/affecting?lat=32.897&lon=-97.038 ```",
+        "operationId": "GAirmet_SearchAffecting",
+        "parameters": [
+          {
+            "name": "lat",
+            "in": "query",
+            "description": "Latitude in decimal degrees (-90 to 90)",
+            "schema": {
+              "type": "number",
+              "format": "decimal"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "lon",
+            "in": "query",
+            "description": "Longitude in decimal degrees (-180 to 180)",
+            "schema": {
+              "type": "number",
+              "format": "decimal"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1
+            },
+            "x-position": 4
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the G-AIRMETs found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfGAirmetDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "If coordinates are invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/metars/{icaoCodeOrIdent}": {
       "get": {
         "tags": [
           "Weather - METARs"
         ],
         "summary": "Gets the most recent METAR observation for a specific airport.\nReturns decoded weather data including wind, visibility, sky conditions, temperature, and flight category.",
+        "description": "``` GET /api/v1/metars/KDFW — by ICAO code GET /api/v1/metars/DFW — by FAA identifier ```",
         "operationId": "Metar_GetMetarForAirport",
         "parameters": [
           {
             "name": "icaoCodeOrIdent",
             "in": "path",
             "required": true,
-            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW)",
+            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW). Case-insensitive.",
             "schema": {
               "type": "string"
             },
@@ -1403,6 +1635,52 @@
           },
           "404": {
             "description": "If no METAR is found for the airport",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/metars/batch": {
+      "get": {
+        "tags": [
+          "Weather - METARs"
+        ],
+        "summary": "Gets the most recent METAR observations for multiple airports in a single request.\nAccepts ICAO codes or FAA identifiers. Identifiers that don't resolve to a METAR are silently skipped.",
+        "description": "Both ICAO codes and FAA identifiers can be mixed in the same request. Maximum 100 identifiers per request.\n\n``` GET /api/v1/metars/batch?ids=KDFW,KAUS,KHOU GET /api/v1/metars/batch?ids=DFW,AUS ```",
+        "operationId": "Metar_GetMetarsBatch",
+        "parameters": [
+          {
+            "name": "ids",
+            "in": "query",
+            "description": "Comma-separated ICAO codes or FAA identifiers (e.g., KDFW,KAUS,KHOU). Maximum 100.",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the METAR observations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MetarDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "If the ids parameter is empty or exceeds 100 identifiers",
             "content": {
               "application/json": {
                 "schema": {
@@ -1644,6 +1922,63 @@
           },
           "503": {
             "description": "The winds aloft data source is temporarily unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/notams/number/{notamNumber}": {
+      "get": {
+        "tags": [
+          "NOTAMs"
+        ],
+        "summary": "Gets NOTAMs by NOTAM number in various formats.",
+        "description": "Searches the database for NOTAMs matching the given number. Unlike most NOTAM endpoints, this does *not* filter out cancelled or expired NOTAMs — so results may include recently expired or cancelled NOTAMs that have not yet been purged. This is *not* a historical archive; the database periodically purges stale NOTAMs.\n\n**Supported Input Formats**\n\n- **Bare number** — `3997`\n\n- **Number/year** — `3997/2025` or `3997/25`\n\n- **Month-prefix** — `03/420`\n\n- **Domestic** — `BNA 420`, `BNA 03/420`, `!BNA 03/420`\n\n- **FDC** — `FDC 4/3997`, `!FDC 4/3997`\n\n- **ICAO** — `A1234/25`\n\n**Disambiguation**\n\nBare numbers (e.g., `3997`) may match multiple NOTAMs across different accounts or years. Include the year, account ID, or full domestic format to narrow results.\n\n**Examples**\n\n``` GET /api/v1/notams/number/3997 — bare number (may return multiple matches) GET /api/v1/notams/number/3997%2F2025 — number with year (%2F = /) GET /api/v1/notams/number/BNA%20420 — domestic format (%20 = space) GET /api/v1/notams/number/A1234%2F25 — ICAO format ```",
+        "operationId": "Notam_GetNotamsByNumber",
+        "parameters": [
+          {
+            "name": "notamNumber",
+            "in": "path",
+            "required": true,
+            "description": "NOTAM number in any supported format (URL-encoded)",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the matching NOTAMs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NotamDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "If the input cannot be parsed or is invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "If no NOTAMs match the given number",
             "content": {
               "application/json": {
                 "schema": {
@@ -2061,7 +2396,7 @@
           "NOTAMs"
         ],
         "summary": "Gets a single NOTAM by its NMS ID.",
-        "description": "Retrieves a specific NOTAM by its FAA NMS identifier. Unlike other NOTAM endpoints, this does *not* filter out cancelled or expired NOTAMs — it returns the NOTAM regardless of its current status, which is useful for looking up referenced or historical NOTAMs.\n\n**Example**\n\n``` GET /api/v1/notams/id/1757609538792382 ```",
+        "description": "Retrieves a specific NOTAM by its FAA NMS identifier. Unlike most NOTAM endpoints, this does *not* filter out cancelled or expired NOTAMs — so the result may be a recently expired or cancelled NOTAM that has not yet been purged. This is *not* a historical archive; the database periodically purges stale NOTAMs.\n\n**Example**\n\n``` GET /api/v1/notams/id/1757609538792382 ```",
         "operationId": "Notam_GetNotamByNmsId",
         "parameters": [
           {
@@ -2124,7 +2459,8 @@
         "tags": [
           "Obstacles"
         ],
-        "summary": "Searches for obstacles near an airport",
+        "summary": "Searches for obstacles near an airport. Looks up the airport coordinates, then finds\nobstacles within the specified radius. Use minHeightAgl to filter out low obstacles.",
+        "description": "``` GET /api/v1/obstacles/airport/KDFW — default 10 NM radius GET /api/v1/obstacles/airport/DFW?radiusNm=5&minHeightAgl=200 — towers 200+ ft AGL within 5 NM ```",
         "operationId": "Obstacle_SearchNearAirport",
         "parameters": [
           {
@@ -2140,7 +2476,7 @@
           {
             "name": "radiusNm",
             "in": "query",
-            "description": "Search radius in nautical miles (default 10)",
+            "description": "Search radius in nautical miles (default 10, must be greater than 0)",
             "schema": {
               "type": "number",
               "format": "double",
@@ -2151,7 +2487,7 @@
           {
             "name": "minHeightAgl",
             "in": "query",
-            "description": "Optional minimum height AGL in feet to filter results",
+            "description": "Optional minimum height AGL in feet — only return obstacles at or above this height",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -2222,7 +2558,8 @@
         "tags": [
           "Obstacles"
         ],
-        "summary": "Searches for obstacles near a geographic point",
+        "summary": "Searches for obstacles near a geographic point.",
+        "description": "``` GET /api/v1/obstacles/search?lat=32.897&lon=-97.038 — default 5 NM radius GET /api/v1/obstacles/search?lat=32.897&lon=-97.038&radiusNm=10&minHeightAgl=500 — tall obstacles within 10 NM ```",
         "operationId": "Obstacle_SearchNearby",
         "parameters": [
           {
@@ -2248,7 +2585,7 @@
           {
             "name": "radiusNm",
             "in": "query",
-            "description": "Search radius in nautical miles (default 5)",
+            "description": "Search radius in nautical miles (default 5, must be greater than 0)",
             "schema": {
               "type": "number",
               "format": "double",
@@ -2259,7 +2596,7 @@
           {
             "name": "minHeightAgl",
             "in": "query",
-            "description": "Optional minimum height AGL in feet to filter results",
+            "description": "Optional minimum height AGL in feet — only return obstacles at or above this height",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -2320,7 +2657,8 @@
         "tags": [
           "Obstacles"
         ],
-        "summary": "Gets obstacles in a specific state",
+        "summary": "Gets obstacles in a specific state.",
+        "description": "``` GET /api/v1/obstacles/state/TX — all obstacles in Texas GET /api/v1/obstacles/state/TX?minHeightAgl=1000 — obstacles 1000+ ft AGL in Texas ```",
         "operationId": "Obstacle_GetByState",
         "parameters": [
           {
@@ -2336,7 +2674,7 @@
           {
             "name": "minHeightAgl",
             "in": "query",
-            "description": "Optional minimum height AGL in feet to filter results",
+            "description": "Optional minimum height AGL in feet — only return obstacles at or above this height",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -2397,14 +2735,15 @@
         "tags": [
           "Obstacles"
         ],
-        "summary": "Gets an obstacle by its OAS number",
+        "summary": "Gets a single obstacle by its OAS (Obstacle Assessment Surface) number.",
+        "description": "``` GET /api/v1/obstacles/12-345678 ```",
         "operationId": "Obstacle_GetByOasNumber",
         "parameters": [
           {
             "name": "oasNumber",
             "in": "path",
             "required": true,
-            "description": "Obstacle Assessment Surface number",
+            "description": "Obstacle Assessment Surface number (e.g., 12-345678)",
             "schema": {
               "type": "string"
             },
@@ -2491,13 +2830,14 @@
         "tags": [
           "Obstacles"
         ],
-        "summary": "Gets obstacles within a geographic bounding box",
+        "summary": "Gets obstacles within a geographic bounding box.",
+        "description": "**Note:** The bounding box must not cross the antimeridian (i.e., `minLon` must be less than `maxLon`). Antimeridian-crossing queries are not supported.\n\n``` GET /api/v1/obstacles/bbox?minLat=32.5&maxLat=33.5&minLon=-97.5&maxLon=-96.5 GET /api/v1/obstacles/bbox?minLat=32.5&maxLat=33.5&minLon=-97.5&maxLon=-96.5&minHeightAgl=500 ```",
         "operationId": "Obstacle_GetByBoundingBox",
         "parameters": [
           {
             "name": "minLat",
             "in": "query",
-            "description": "Minimum latitude (-90 to 90)",
+            "description": "Southwest corner latitude (-90 to 90)",
             "schema": {
               "type": "number",
               "format": "decimal"
@@ -2507,7 +2847,7 @@
           {
             "name": "maxLat",
             "in": "query",
-            "description": "Maximum latitude (-90 to 90)",
+            "description": "Northeast corner latitude (-90 to 90, must be greater than minLat)",
             "schema": {
               "type": "number",
               "format": "decimal"
@@ -2517,7 +2857,7 @@
           {
             "name": "minLon",
             "in": "query",
-            "description": "Minimum longitude (-180 to 180)",
+            "description": "Southwest corner longitude (-180 to 180)",
             "schema": {
               "type": "number",
               "format": "decimal"
@@ -2527,7 +2867,7 @@
           {
             "name": "maxLon",
             "in": "query",
-            "description": "Maximum longitude (-180 to 180)",
+            "description": "Northeast corner longitude (-180 to 180, must be greater than minLon)",
             "schema": {
               "type": "number",
               "format": "decimal"
@@ -2537,7 +2877,7 @@
           {
             "name": "minHeightAgl",
             "in": "query",
-            "description": "Optional minimum height AGL in feet to filter results",
+            "description": "Optional minimum height AGL in feet — only return obstacles at or above this height",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -2581,7 +2921,7 @@
             }
           },
           "400": {
-            "description": "If coordinates are invalid or minLat >= maxLat",
+            "description": "If coordinates are invalid, minLat >= maxLat, or the box crosses the antimeridian",
             "content": {
               "application/json": {
                 "schema": {
@@ -2632,6 +2972,182 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PaginatedResponseOfPirepDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/pireps/nearby": {
+      "get": {
+        "tags": [
+          "Weather - PIREPs"
+        ],
+        "summary": "Searches for PIREPs near a geographic point. Returns pilot reports within the specified\nradius of the given coordinates, useful for checking conditions along a flight route.",
+        "description": "``` GET /api/v1/pireps/nearby?lat=32.897&lon=-97.038 — default 50 NM radius GET /api/v1/pireps/nearby?lat=32.897&lon=-97.038&radiusNm=100 — custom radius ```",
+        "operationId": "Pirep_SearchNearby",
+        "parameters": [
+          {
+            "name": "lat",
+            "in": "query",
+            "description": "Latitude in decimal degrees (-90 to 90)",
+            "schema": {
+              "type": "number",
+              "format": "decimal"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "lon",
+            "in": "query",
+            "description": "Longitude in decimal degrees (-180 to 180)",
+            "schema": {
+              "type": "number",
+              "format": "decimal"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "radiusNm",
+            "in": "query",
+            "description": "Search radius in nautical miles (default 50, max 500)",
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "default": 50
+            },
+            "x-position": 3
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1
+            },
+            "x-position": 5
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the PIREPs found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfPirepDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "If coordinates or radius are invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/pireps/airport/{icaoCodeOrIdent}": {
+      "get": {
+        "tags": [
+          "Weather - PIREPs"
+        ],
+        "summary": "Searches for PIREPs near an airport. Looks up the airport coordinates by ICAO code or\nFAA identifier, then returns pilot reports within the specified radius.",
+        "description": "``` GET /api/v1/pireps/airport/KDFW — default 50 NM radius GET /api/v1/pireps/airport/DFW?radiusNm=100 — custom radius with FAA identifier ```",
+        "operationId": "Pirep_SearchNearAirport",
+        "parameters": [
+          {
+            "name": "icaoCodeOrIdent",
+            "in": "path",
+            "required": true,
+            "description": "ICAO code (e.g., KDFW) or FAA identifier (e.g., DFW)",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "radiusNm",
+            "in": "query",
+            "description": "Search radius in nautical miles (default 50, max 500)",
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "default": 50
+            },
+            "x-position": 2
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1
+            },
+            "x-position": 4
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the PIREPs found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfPirepDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "If the radius is invalid or the airport has no coordinates on record",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "If the airport is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
                 }
               }
             }
@@ -2691,7 +3207,8 @@
         "tags": [
           "Weather - Domestic SIGMETs"
         ],
-        "summary": "Gets SIGMETs filtered by hazard type",
+        "summary": "Gets SIGMETs filtered by hazard type.",
+        "description": "**Hazard Types**\n\n- `CONVECTIVE` — thunderstorms and convective activity\n\n- `ICE` — severe icing\n\n- `TURB` — severe turbulence\n\n- `IFR` — widespread IFR conditions\n\n- `MTN_OBSCN` — mountain obscuration\n\n``` GET /api/v1/sigmets/hazard/CONVECTIVE GET /api/v1/sigmets/hazard/TURB ```",
         "operationId": "Sigmet_GetSigmetsByHazardType",
         "parameters": [
           {
@@ -2752,19 +3269,240 @@
         }
       }
     },
+    "/api/v1/sigmets/affecting": {
+      "get": {
+        "tags": [
+          "Weather - Domestic SIGMETs"
+        ],
+        "summary": "Finds SIGMETs whose geographic boundary contains the given point. Returns advisories\nthat affect a specific location, answering \"what SIGMETs are active at this position?\"",
+        "description": "``` GET /api/v1/sigmets/affecting?lat=32.897&lon=-97.038 ```",
+        "operationId": "Sigmet_SearchAffecting",
+        "parameters": [
+          {
+            "name": "lat",
+            "in": "query",
+            "description": "Latitude in decimal degrees (-90 to 90)",
+            "schema": {
+              "type": "number",
+              "format": "decimal"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "lon",
+            "in": "query",
+            "description": "Longitude in decimal degrees (-180 to 180)",
+            "schema": {
+              "type": "number",
+              "format": "decimal"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1
+            },
+            "x-position": 4
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the SIGMETs found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfSigmetDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "If coordinates are invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sigmets/by-area": {
+      "get": {
+        "tags": [
+          "Weather - Domestic SIGMETs"
+        ],
+        "summary": "Finds SIGMETs that intersect a geographic bounding box. Returns advisories whose\nboundary overlaps the specified area, useful for checking conditions across a flight route.",
+        "description": "**Note:** The bounding box must not cross the antimeridian (i.e., `minLon` must be less than `maxLon`). Antimeridian-crossing queries are not supported. This endpoint covers domestic US SIGMETs within the contiguous United States.\n\n``` GET /api/v1/sigmets/by-area?minLat=30&maxLat=35&minLon=-100&maxLon=-95 ```",
+        "operationId": "Sigmet_SearchByArea",
+        "parameters": [
+          {
+            "name": "minLat",
+            "in": "query",
+            "description": "Minimum latitude (-90 to 90)",
+            "schema": {
+              "type": "number",
+              "format": "decimal"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "maxLat",
+            "in": "query",
+            "description": "Maximum latitude (-90 to 90)",
+            "schema": {
+              "type": "number",
+              "format": "decimal"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "minLon",
+            "in": "query",
+            "description": "Minimum longitude (-180 to 180)",
+            "schema": {
+              "type": "number",
+              "format": "decimal"
+            },
+            "x-position": 3
+          },
+          {
+            "name": "maxLon",
+            "in": "query",
+            "description": "Maximum longitude (-180 to 180)",
+            "schema": {
+              "type": "number",
+              "format": "decimal"
+            },
+            "x-position": 4
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1
+            },
+            "x-position": 6
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the SIGMETs found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponseOfSigmetDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "If coordinates are invalid or the bounding box crosses the antimeridian",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tafs/batch": {
+      "get": {
+        "tags": [
+          "Weather - TAFs"
+        ],
+        "summary": "Gets the current TAFs for multiple airports in a single request.\nAccepts ICAO codes or FAA identifiers. Identifiers that don't resolve to a TAF are silently skipped.",
+        "description": "Both ICAO codes and FAA identifiers can be mixed in the same request. Maximum 100 identifiers per request.\n\n``` GET /api/v1/tafs/batch?ids=KDFW,KAUS,KHOU GET /api/v1/tafs/batch?ids=DFW,AUS ```",
+        "operationId": "Taf_GetTafsBatch",
+        "parameters": [
+          {
+            "name": "ids",
+            "in": "query",
+            "description": "Comma-separated ICAO codes or FAA identifiers (e.g., KDFW,KAUS,KHOU). Maximum 100.",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the TAFs with all forecast periods",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TafDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "If the ids parameter is empty or exceeds 100 identifiers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/tafs/{icaoCodeOrIdent}": {
       "get": {
         "tags": [
           "Weather - TAFs"
         ],
         "summary": "Gets the current TAF for a specific airport, including all forecast periods with expected\nweather conditions (wind, visibility, sky cover, precipitation, turbulence, and icing).",
+        "description": "``` GET /api/v1/tafs/KDFW — by ICAO code GET /api/v1/tafs/DFW — by FAA identifier ```",
         "operationId": "Taf_GetTafByIcaoCodeOrIdent",
         "parameters": [
           {
             "name": "icaoCodeOrIdent",
             "in": "path",
             "required": true,
-            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW)",
+            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW). Case-insensitive.",
             "schema": {
               "type": "string"
             },
@@ -4972,6 +5710,1555 @@
           }
         }
       },
+      "RouteBriefingResponse": {
+        "type": "object",
+        "description": "Composite weather briefing for a flight route, containing all weather products\naffecting the route corridor.",
+        "additionalProperties": false,
+        "properties": {
+          "route": {
+            "type": "string",
+            "description": "Route description (e.g., \"KDFW -> KAUS\")."
+          },
+          "corridorWidthNm": {
+            "type": "number",
+            "description": "Corridor width in nautical miles used for the search.",
+            "format": "double"
+          },
+          "generatedAt": {
+            "type": "string",
+            "description": "UTC timestamp when the briefing was generated.",
+            "format": "date-time"
+          },
+          "metars": {
+            "type": "array",
+            "description": "METARs for airports found along the route corridor.",
+            "items": {
+              "$ref": "#/components/schemas/MetarDto"
+            }
+          },
+          "tafs": {
+            "type": "array",
+            "description": "TAFs for airports found along the route corridor.",
+            "items": {
+              "$ref": "#/components/schemas/TafDto"
+            }
+          },
+          "pireps": {
+            "type": "array",
+            "description": "PIREPs within the route corridor.",
+            "items": {
+              "$ref": "#/components/schemas/PirepDto"
+            }
+          },
+          "sigmets": {
+            "type": "array",
+            "description": "SIGMETs whose boundaries intersect the route.",
+            "items": {
+              "$ref": "#/components/schemas/SigmetDto"
+            }
+          },
+          "gAirmets": {
+            "type": "array",
+            "description": "G-AIRMETs whose boundaries intersect the route.",
+            "items": {
+              "$ref": "#/components/schemas/GAirmetDto"
+            }
+          },
+          "notams": {
+            "type": "array",
+            "description": "Active NOTAMs within the route corridor.",
+            "items": {
+              "$ref": "#/components/schemas/NotamDto"
+            }
+          },
+          "summary": {
+            "description": "Summary counts for each weather product category.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/RouteBriefingSummary"
+              }
+            ]
+          }
+        }
+      },
+      "MetarDto": {
+        "type": "object",
+        "description": "METAR (Meteorological Aerodrome Report) observation data for an airport.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Database identifier.",
+            "format": "int32"
+          },
+          "rawText": {
+            "type": "string",
+            "description": "Raw METAR text string as received from the source.",
+            "nullable": true
+          },
+          "stationId": {
+            "type": "string",
+            "description": "ICAO station identifier (e.g., KDFW).",
+            "nullable": true
+          },
+          "observationTime": {
+            "type": "string",
+            "description": "Observation time in ISO 8601 format.",
+            "nullable": true
+          },
+          "latitude": {
+            "type": "number",
+            "description": "Station latitude in decimal degrees.",
+            "format": "float",
+            "nullable": true
+          },
+          "longitude": {
+            "type": "number",
+            "description": "Station longitude in decimal degrees.",
+            "format": "float",
+            "nullable": true
+          },
+          "tempC": {
+            "type": "number",
+            "description": "Temperature in degrees Celsius.",
+            "format": "float",
+            "nullable": true
+          },
+          "dewpointC": {
+            "type": "number",
+            "description": "Dewpoint temperature in degrees Celsius.",
+            "format": "float",
+            "nullable": true
+          },
+          "windDirDegrees": {
+            "type": "string",
+            "description": "Wind direction in degrees true, or \"VRB\" for variable.",
+            "nullable": true
+          },
+          "windSpeedKt": {
+            "type": "integer",
+            "description": "Wind speed in knots.",
+            "format": "int32",
+            "nullable": true
+          },
+          "windGustKt": {
+            "type": "integer",
+            "description": "Wind gust speed in knots.",
+            "format": "int32",
+            "nullable": true
+          },
+          "visibilityStatuteMi": {
+            "type": "string",
+            "description": "Visibility in statute miles.",
+            "nullable": true
+          },
+          "altimInHg": {
+            "type": "number",
+            "description": "Altimeter setting in inches of mercury.",
+            "format": "float",
+            "nullable": true
+          },
+          "seaLevelPressureMb": {
+            "type": "number",
+            "description": "Sea level pressure in millibars.",
+            "format": "float",
+            "nullable": true
+          },
+          "qualityControlFlags": {
+            "description": "Quality control flags for the observation.",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/MetarQualityControlFlagsDto"
+              }
+            ]
+          },
+          "wxString": {
+            "type": "string",
+            "description": "Present weather string (e.g., \"-RA\" for light rain).",
+            "nullable": true
+          },
+          "skyCondition": {
+            "type": "array",
+            "description": "Sky condition layers (cloud cover and bases).",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/MetarSkyConditionDto"
+            }
+          },
+          "flightCategory": {
+            "type": "string",
+            "description": "Flight category: VFR, MVFR, IFR, or LIFR.",
+            "nullable": true
+          }
+        }
+      },
+      "MetarQualityControlFlagsDto": {
+        "type": "object",
+        "description": "Quality control flags indicating METAR observation characteristics.",
+        "additionalProperties": false,
+        "properties": {
+          "corrected": {
+            "type": "string",
+            "description": "Indicates a corrected observation.",
+            "nullable": true
+          },
+          "auto": {
+            "type": "string",
+            "description": "Indicates an automated observation.",
+            "nullable": true
+          },
+          "autoStation": {
+            "type": "string",
+            "description": "Indicates an automated station type.",
+            "nullable": true
+          },
+          "maintenanceIndicatorOn": {
+            "type": "string",
+            "description": "Maintenance indicator is on.",
+            "nullable": true
+          },
+          "noSignal": {
+            "type": "string",
+            "description": "No signal received.",
+            "nullable": true
+          },
+          "lightningSensorOff": {
+            "type": "string",
+            "description": "Lightning sensor is off.",
+            "nullable": true
+          },
+          "freezingRainSensorOff": {
+            "type": "string",
+            "description": "Freezing rain sensor is off.",
+            "nullable": true
+          },
+          "presentWeatherSensorOff": {
+            "type": "string",
+            "description": "Present weather sensor is off.",
+            "nullable": true
+          }
+        }
+      },
+      "MetarSkyConditionDto": {
+        "type": "object",
+        "description": "A single sky condition layer in a METAR observation.",
+        "additionalProperties": false,
+        "properties": {
+          "skyCover": {
+            "type": "string",
+            "description": "Sky cover type: SKC, CLR, FEW, SCT, BKN, or OVC."
+          },
+          "cloudBaseFtAgl": {
+            "type": "integer",
+            "description": "Cloud base height in feet AGL.",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "TafDto": {
+        "type": "object",
+        "description": "TAF (Terminal Aerodrome Forecast) data for an airport.",
+        "additionalProperties": false,
+        "properties": {
+          "rawText": {
+            "type": "string",
+            "description": "Raw TAF text string as received from the source.",
+            "nullable": true
+          },
+          "stationId": {
+            "type": "string",
+            "description": "ICAO station identifier (e.g., KDFW).",
+            "nullable": true
+          },
+          "issueTime": {
+            "type": "string",
+            "description": "Time the TAF was issued in ISO 8601 format.",
+            "nullable": true
+          },
+          "bulletinTime": {
+            "type": "string",
+            "description": "Bulletin time in ISO 8601 format.",
+            "nullable": true
+          },
+          "validTimeFrom": {
+            "type": "string",
+            "description": "Start of the TAF valid period in ISO 8601 format.",
+            "nullable": true
+          },
+          "validTimeTo": {
+            "type": "string",
+            "description": "End of the TAF valid period in ISO 8601 format.",
+            "nullable": true
+          },
+          "remarks": {
+            "type": "string",
+            "description": "TAF remarks.",
+            "nullable": true
+          },
+          "latitude": {
+            "type": "number",
+            "description": "Station latitude in decimal degrees.",
+            "format": "float",
+            "nullable": true
+          },
+          "longitude": {
+            "type": "number",
+            "description": "Station longitude in decimal degrees.",
+            "format": "float",
+            "nullable": true
+          },
+          "elevationM": {
+            "type": "number",
+            "description": "Station elevation in meters.",
+            "format": "float",
+            "nullable": true
+          },
+          "forecast": {
+            "type": "array",
+            "description": "Forecast periods within the TAF.",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/TafForecast"
+            }
+          }
+        }
+      },
+      "TafForecast": {
+        "type": "object",
+        "description": "A single forecast period within a TAF. Each TAF contains one or more forecast periods\ncovering different time ranges, with optional change indicators (TEMPO, BECMG, FM, PROB).",
+        "additionalProperties": false,
+        "properties": {
+          "fcstTimeFrom": {
+            "type": "string",
+            "description": "Start of this forecast period in ISO 8601 format (UTC).",
+            "nullable": true
+          },
+          "fcstTimeTo": {
+            "type": "string",
+            "description": "End of this forecast period in ISO 8601 format (UTC).",
+            "nullable": true
+          },
+          "changeIndicator": {
+            "type": "string",
+            "description": "Change indicator: FM (from), BECMG (becoming), TEMPO (temporary), or PROB (probability). Null for the base forecast.",
+            "nullable": true
+          },
+          "timeBecoming": {
+            "type": "string",
+            "description": "Time at which a BECMG (becoming) change completes, in ISO 8601 format (UTC).",
+            "nullable": true
+          },
+          "probability": {
+            "type": "integer",
+            "description": "Probability percentage (e.g., 30 or 40) for PROB-type forecast periods.",
+            "format": "int32",
+            "nullable": true
+          },
+          "windDirDegrees": {
+            "type": "string",
+            "description": "Forecast wind direction in degrees true, or \"VRB\" for variable winds.",
+            "nullable": true
+          },
+          "windSpeedKt": {
+            "type": "integer",
+            "description": "Forecast wind speed in knots.",
+            "format": "int32",
+            "nullable": true
+          },
+          "windGustKt": {
+            "type": "integer",
+            "description": "Forecast wind gust speed in knots.",
+            "format": "int32",
+            "nullable": true
+          },
+          "windShearHgtFtAgl": {
+            "type": "integer",
+            "description": "Low-level wind shear height in feet AGL.",
+            "nullable": true
+          },
+          "windShearDirDegrees": {
+            "type": "integer",
+            "description": "Low-level wind shear direction in degrees true.",
+            "nullable": true
+          },
+          "windShearSpeedKt": {
+            "type": "integer",
+            "description": "Low-level wind shear speed in knots.",
+            "format": "int32",
+            "nullable": true
+          },
+          "visibilityStatuteMi": {
+            "type": "string",
+            "description": "Forecast visibility in statute miles. May contain \"6+\" for visibility greater than 6 miles.",
+            "nullable": true
+          },
+          "altimInHg": {
+            "type": "number",
+            "description": "Forecast altimeter setting in inches of mercury.",
+            "format": "float",
+            "nullable": true
+          },
+          "vertVisFt": {
+            "type": "integer",
+            "description": "Vertical visibility in feet, reported when the sky is obscured.",
+            "nullable": true
+          },
+          "wxString": {
+            "type": "string",
+            "description": "Forecast weather phenomena string (e.g., \"-RA\" for light rain, \"+TSRA\" for heavy thunderstorms with rain).",
+            "nullable": true
+          },
+          "notDecoded": {
+            "type": "string",
+            "description": "Portion of the TAF text that could not be decoded by the parser.",
+            "nullable": true
+          },
+          "skyConditions": {
+            "type": "array",
+            "description": "Forecast sky condition layers (cloud cover and bases) for this period.",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/TafSkyCondition"
+            }
+          },
+          "turbulenceConditions": {
+            "type": "array",
+            "description": "Forecast turbulence conditions for this period.",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/TafTurbulenceCondition"
+            }
+          },
+          "icingConditions": {
+            "type": "array",
+            "description": "Forecast icing conditions for this period.",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/TafIcingCondition"
+            }
+          },
+          "temperature": {
+            "type": "array",
+            "description": "Forecast temperature data for this period.",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/TafTemperature"
+            }
+          }
+        }
+      },
+      "TafSkyCondition": {
+        "type": "object",
+        "description": "A single sky condition layer in a TAF forecast period.",
+        "additionalProperties": false,
+        "properties": {
+          "skyCover": {
+            "type": "string",
+            "description": "Sky cover type: SKC (sky clear), CLR (clear), FEW (few), SCT (scattered), BKN (broken), or OVC (overcast)."
+          },
+          "cloudBaseFtAgl": {
+            "type": "integer",
+            "description": "Cloud base height in feet AGL. Null for SKC or CLR.",
+            "format": "int32",
+            "nullable": true
+          },
+          "cloudType": {
+            "type": "string",
+            "description": "Cloud type modifier (e.g., CB for cumulonimbus, TCU for towering cumulus).",
+            "nullable": true
+          }
+        }
+      },
+      "TafTurbulenceCondition": {
+        "type": "object",
+        "description": "Forecast turbulence condition within a TAF forecast period.",
+        "additionalProperties": false,
+        "properties": {
+          "turbulenceIntensity": {
+            "type": "string",
+            "description": "Turbulence intensity code: 0 (none), 1 (light), 2 (moderate occasional), 3 (moderate frequent), 4 (severe), 5 (extreme), or X (mountain wave).",
+            "nullable": true
+          },
+          "turbulenceMinAltFtAgl": {
+            "type": "integer",
+            "description": "Bottom of the turbulence layer in feet AGL.",
+            "format": "int32",
+            "nullable": true
+          },
+          "turbulenceMaxAltFtAgl": {
+            "type": "integer",
+            "description": "Top of the turbulence layer in feet AGL.",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "TafIcingCondition": {
+        "type": "object",
+        "description": "Forecast icing condition within a TAF forecast period.",
+        "additionalProperties": false,
+        "properties": {
+          "icingIntensity": {
+            "type": "string",
+            "description": "Icing intensity code: 0 (none), 1 (light), 2 (light in clouds), 3 (light in precipitation), 4 (moderate), 5 (moderate in clouds), 6 (moderate in precipitation), 7 (severe), 8 (severe in clouds), 9 (severe in precipitation).",
+            "nullable": true
+          },
+          "icingMinAltFtAgl": {
+            "type": "integer",
+            "description": "Bottom of the icing layer in feet AGL.",
+            "format": "int32",
+            "nullable": true
+          },
+          "icingMaxAltFtAgl": {
+            "type": "integer",
+            "description": "Top of the icing layer in feet AGL.",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "TafTemperature": {
+        "type": "object",
+        "description": "Forecast temperature data within a TAF forecast period.",
+        "additionalProperties": false,
+        "properties": {
+          "validTime": {
+            "type": "string",
+            "description": "Valid time for this temperature forecast in ISO 8601 format (UTC).",
+            "nullable": true
+          },
+          "sfcTempC": {
+            "type": "number",
+            "description": "Forecast surface temperature in degrees Celsius.",
+            "format": "float",
+            "nullable": true
+          },
+          "maxTempC": {
+            "type": "string",
+            "description": "Forecast maximum temperature in degrees Celsius.",
+            "nullable": true
+          },
+          "minTempC": {
+            "type": "string",
+            "description": "Forecast minimum temperature in degrees Celsius.",
+            "nullable": true
+          }
+        }
+      },
+      "PirepDto": {
+        "type": "object",
+        "description": "PIREP (Pilot Report) data including turbulence, icing, and sky conditions.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Database identifier.",
+            "format": "int32"
+          },
+          "rawText": {
+            "type": "string",
+            "description": "Raw PIREP text string.",
+            "nullable": true
+          },
+          "receiptTime": {
+            "type": "string",
+            "description": "Time the PIREP was received.",
+            "nullable": true
+          },
+          "observationTime": {
+            "type": "string",
+            "description": "Time of the pilot observation.",
+            "nullable": true
+          },
+          "qualityControlFlags": {
+            "description": "Quality control flags for the report.",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PirepQualityControlFlags"
+              }
+            ]
+          },
+          "aircraftRef": {
+            "type": "string",
+            "description": "Aircraft type that filed the report.",
+            "nullable": true
+          },
+          "latitude": {
+            "type": "number",
+            "description": "Latitude of the report in decimal degrees.",
+            "format": "float",
+            "nullable": true
+          },
+          "longitude": {
+            "type": "number",
+            "description": "Longitude of the report in decimal degrees.",
+            "format": "float",
+            "nullable": true
+          },
+          "altitudeFtMsl": {
+            "type": "integer",
+            "description": "Altitude of the report in feet MSL.",
+            "format": "int32",
+            "nullable": true
+          },
+          "skyConditions": {
+            "type": "array",
+            "description": "Reported sky conditions.",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/PirepSkyCondition"
+            }
+          },
+          "turbulenceConditions": {
+            "type": "array",
+            "description": "Reported turbulence conditions.",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/PirepTurbulenceCondition"
+            }
+          },
+          "icingConditions": {
+            "type": "array",
+            "description": "Reported icing conditions.",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/PirepIcingCondition"
+            }
+          },
+          "visibilityStatuteMi": {
+            "type": "integer",
+            "description": "Flight visibility in statute miles.",
+            "format": "int32",
+            "nullable": true
+          },
+          "wxString": {
+            "type": "string",
+            "description": "Present weather string.",
+            "nullable": true
+          },
+          "tempC": {
+            "type": "number",
+            "description": "Temperature in degrees Celsius.",
+            "format": "float",
+            "nullable": true
+          },
+          "windDirDegrees": {
+            "type": "integer",
+            "description": "Wind direction in degrees true.",
+            "format": "int32",
+            "nullable": true
+          },
+          "windSpeedKt": {
+            "type": "integer",
+            "description": "Wind speed in knots.",
+            "format": "int32",
+            "nullable": true
+          },
+          "vertGustKt": {
+            "type": "integer",
+            "description": "Vertical gust speed in knots.",
+            "format": "int32",
+            "nullable": true
+          },
+          "reportType": {
+            "type": "string",
+            "description": "Report type: UA (routine) or UUA (urgent).",
+            "nullable": true
+          }
+        }
+      },
+      "PirepQualityControlFlags": {
+        "type": "object",
+        "description": "Quality control flags indicating potential data issues with a PIREP.",
+        "additionalProperties": false,
+        "properties": {
+          "midPointAssumed": {
+            "type": "string",
+            "description": "The report location was assumed to be the midpoint of the route.",
+            "nullable": true
+          },
+          "noTimeStamp": {
+            "type": "string",
+            "description": "The report had no timestamp and was assigned one by the system.",
+            "nullable": true
+          },
+          "fltLvlRange": {
+            "type": "string",
+            "description": "The flight level was reported as a range rather than a single altitude.",
+            "nullable": true
+          },
+          "aboveGroundLevelIndicated": {
+            "type": "string",
+            "description": "The altitude was indicated as AGL rather than the standard MSL.",
+            "nullable": true
+          },
+          "noFltLvl": {
+            "type": "string",
+            "description": "No flight level was reported.",
+            "nullable": true
+          },
+          "badLocation": {
+            "type": "string",
+            "description": "The reported location could not be reliably decoded.",
+            "nullable": true
+          }
+        }
+      },
+      "PirepSkyCondition": {
+        "type": "object",
+        "description": "A sky condition layer reported by a pilot in a PIREP.",
+        "additionalProperties": false,
+        "properties": {
+          "skyCover": {
+            "type": "string",
+            "description": "Sky cover type: SKC (sky clear), CLR (clear), FEW (few), SCT (scattered), BKN (broken), OVC (overcast), or OVX (obscured)."
+          },
+          "cloudBaseFtMsl": {
+            "type": "integer",
+            "description": "Cloud base altitude in feet MSL (note: PIREP altitudes are MSL, unlike TAF/METAR which use AGL).",
+            "format": "int32",
+            "nullable": true
+          },
+          "cloudTopFtMsl": {
+            "type": "integer",
+            "description": "Cloud top altitude in feet MSL.",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "PirepTurbulenceCondition": {
+        "type": "object",
+        "description": "A turbulence condition reported by a pilot in a PIREP.",
+        "additionalProperties": false,
+        "properties": {
+          "turbulenceType": {
+            "type": "string",
+            "description": "Turbulence type: CAT (clear air), CHOP (chop), LLWS (low-level wind shear), or MWAVE (mountain wave).",
+            "nullable": true
+          },
+          "turbulenceIntensity": {
+            "type": "string",
+            "description": "Turbulence intensity: NEG (none), SMTH-LGT (smooth to light), LGT (light), LGT-MOD (light to moderate), MOD (moderate), MOD-SEV (moderate to severe), SEV (severe), SEV-EXTM (severe to extreme), or EXTM (extreme).",
+            "nullable": true
+          },
+          "turbulenceBaseFtMsl": {
+            "type": "integer",
+            "description": "Bottom of the turbulence layer in feet MSL.",
+            "format": "int32",
+            "nullable": true
+          },
+          "turbulenceTopFtMsl": {
+            "type": "integer",
+            "description": "Top of the turbulence layer in feet MSL.",
+            "format": "int32",
+            "nullable": true
+          },
+          "turbulenceFreq": {
+            "type": "string",
+            "description": "Turbulence frequency: ISOL (isolated), OCNL (occasional), or CONT (continuous).",
+            "nullable": true
+          }
+        }
+      },
+      "PirepIcingCondition": {
+        "type": "object",
+        "description": "An icing condition reported by a pilot in a PIREP.",
+        "additionalProperties": false,
+        "properties": {
+          "icingType": {
+            "type": "string",
+            "description": "Icing type: RIME (rime ice), CLEAR (clear ice), or MIXED (mixed rime and clear).",
+            "nullable": true
+          },
+          "icingIntensity": {
+            "type": "string",
+            "description": "Icing intensity: NEG (none), NEGclr (none, clear of clouds), TRC (trace), TRC-LGT (trace to light), LGT (light), LGT-MOD (light to moderate), MOD (moderate), MOD-SEV (moderate to severe), HVY (heavy/severe), or SEV (severe).",
+            "nullable": true
+          },
+          "icingBaseFtMsl": {
+            "type": "integer",
+            "description": "Bottom of the icing layer in feet MSL.",
+            "format": "int32",
+            "nullable": true
+          },
+          "icingTopFtMsl": {
+            "type": "integer",
+            "description": "Top of the icing layer in feet MSL.",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "SigmetDto": {
+        "type": "object",
+        "description": "Domestic SIGMET advisory data including hazard information and affected area.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Database identifier.",
+            "format": "int32"
+          },
+          "rawText": {
+            "type": "string",
+            "description": "Raw SIGMET text.",
+            "nullable": true
+          },
+          "validTimeFrom": {
+            "type": "string",
+            "description": "Start of the valid period in ISO 8601 format.",
+            "nullable": true
+          },
+          "validTimeTo": {
+            "type": "string",
+            "description": "End of the valid period in ISO 8601 format.",
+            "nullable": true
+          },
+          "altitude": {
+            "description": "Altitude range of the advisory.",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/SigmetAltitude"
+              }
+            ]
+          },
+          "movementDirDegrees": {
+            "type": "integer",
+            "description": "Movement direction in degrees true.",
+            "format": "int32",
+            "nullable": true
+          },
+          "movementSpeedKt": {
+            "type": "integer",
+            "description": "Movement speed in knots.",
+            "format": "int32",
+            "nullable": true
+          },
+          "hazard": {
+            "description": "Hazard type and severity information.",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/SigmetHazardDto"
+              }
+            ]
+          },
+          "sigmetType": {
+            "type": "string",
+            "description": "Advisory type: SIGMET or OUTLOOK.",
+            "nullable": true
+          },
+          "areas": {
+            "type": "array",
+            "description": "Geographic areas affected by the advisory.",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/SigmetArea"
+            }
+          }
+        }
+      },
+      "SigmetAltitude": {
+        "type": "object",
+        "description": "Altitude range for a SIGMET advisory.",
+        "additionalProperties": false,
+        "properties": {
+          "minFtMsl": {
+            "type": "integer",
+            "description": "Minimum altitude in feet MSL for the advisory area.",
+            "format": "int32",
+            "nullable": true
+          },
+          "maxFtMsl": {
+            "type": "integer",
+            "description": "Maximum altitude in feet MSL for the advisory area.",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "SigmetHazardDto": {
+        "type": "object",
+        "description": "Hazard type and severity information for a SIGMET advisory.",
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "description": "The weather hazard type: CONVECTIVE (thunderstorms/convection), ICE (icing), TURB (turbulence), IFR (instrument flight rules conditions), or MTN_OBSCN (mountain obscuration).",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/SigmetHazardType"
+              }
+            ]
+          },
+          "severity": {
+            "type": "string",
+            "description": "Hazard severity. SIGMETs use MOD-SEV (moderate to severe) or SEV (severe). Convective SIGMETs do not have a severity value.",
+            "nullable": true
+          }
+        }
+      },
+      "SigmetHazardType": {
+        "type": "string",
+        "description": "SIGMET hazard types",
+        "x-enumNames": [
+          "CONVECTIVE",
+          "ICE",
+          "TURB",
+          "IFR",
+          "MTN_OBSCN"
+        ],
+        "enum": [
+          "CONVECTIVE",
+          "ICE",
+          "TURB",
+          "IFR",
+          "MTN_OBSCN"
+        ]
+      },
+      "SigmetArea": {
+        "type": "object",
+        "description": "Geographic area affected by a SIGMET, defined as a polygon of lat/lon points.",
+        "additionalProperties": false,
+        "properties": {
+          "numPoints": {
+            "type": "integer",
+            "description": "Number of points defining the polygon boundary.",
+            "format": "int32"
+          },
+          "points": {
+            "type": "array",
+            "description": "Ordered list of lat/lon points forming the polygon boundary of the affected area.",
+            "items": {
+              "$ref": "#/components/schemas/SigmetPoint"
+            }
+          }
+        }
+      },
+      "SigmetPoint": {
+        "type": "object",
+        "description": "A geographic coordinate point forming part of a SIGMET area boundary polygon.",
+        "additionalProperties": false,
+        "properties": {
+          "longitude": {
+            "type": "number",
+            "description": "Longitude in decimal degrees.",
+            "format": "float"
+          },
+          "latitude": {
+            "type": "number",
+            "description": "Latitude in decimal degrees.",
+            "format": "float"
+          }
+        }
+      },
+      "GAirmetDto": {
+        "type": "object",
+        "description": "G-AIRMET (Graphical AIRMET) advisory data with hazard, altitude, and area information.",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Database identifier.",
+            "format": "int32"
+          },
+          "receiptTime": {
+            "type": "string",
+            "description": "Time the advisory was received.",
+            "format": "date-time"
+          },
+          "issueTime": {
+            "type": "string",
+            "description": "Time the advisory was issued.",
+            "format": "date-time"
+          },
+          "expireTime": {
+            "type": "string",
+            "description": "Time the advisory expires.",
+            "format": "date-time"
+          },
+          "validTime": {
+            "type": "string",
+            "description": "Time the advisory is valid for.",
+            "format": "date-time"
+          },
+          "product": {
+            "description": "Product type: SIERRA, TANGO, or ZULU.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/GAirmetProduct"
+              }
+            ]
+          },
+          "tag": {
+            "type": "string",
+            "description": "Identifying tag for the advisory.",
+            "nullable": true
+          },
+          "forecastHour": {
+            "type": "integer",
+            "description": "Forecast hour offset.",
+            "format": "int32"
+          },
+          "hazard": {
+            "description": "Hazard type (e.g., ICE, TURB_LO, IFR).",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/GAirmetHazardType"
+              }
+            ]
+          },
+          "hazardSeverity": {
+            "type": "string",
+            "description": "Hazard severity description.",
+            "nullable": true
+          },
+          "geometryType": {
+            "type": "string",
+            "description": "Geometry type of the affected area.",
+            "nullable": true
+          },
+          "dueTo": {
+            "type": "string",
+            "description": "Cause of the hazard.",
+            "nullable": true
+          },
+          "altitudes": {
+            "type": "array",
+            "description": "Altitude ranges for the advisory.",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/GAirmetAltitude"
+            }
+          },
+          "area": {
+            "description": "Geographic area affected by the advisory.",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/GAirmetArea"
+              }
+            ]
+          }
+        }
+      },
+      "GAirmetProduct": {
+        "type": "string",
+        "description": "G-AIRMET product types",
+        "x-enumNames": [
+          "SIERRA",
+          "TANGO",
+          "ZULU"
+        ],
+        "enum": [
+          "SIERRA",
+          "TANGO",
+          "ZULU"
+        ]
+      },
+      "GAirmetHazardType": {
+        "type": "string",
+        "description": "G-AIRMET hazard types",
+        "x-enumNames": [
+          "MT_OBSC",
+          "IFR",
+          "TURB_LO",
+          "TURB_HI",
+          "LLWS",
+          "SFC_WIND",
+          "ICE",
+          "FZLVL",
+          "M_FZLVL"
+        ],
+        "enum": [
+          "MT_OBSC",
+          "IFR",
+          "TURB_LO",
+          "TURB_HI",
+          "LLWS",
+          "SFC_WIND",
+          "ICE",
+          "FZLVL",
+          "M_FZLVL"
+        ]
+      },
+      "GAirmetAltitude": {
+        "type": "object",
+        "description": "Represents altitude information for a G-AIRMET",
+        "additionalProperties": false,
+        "properties": {
+          "minFtMsl": {
+            "type": "string",
+            "description": "Minimum altitude in feet MSL. Can be a number, \"SFC\" for surface, or \"FZL\" for freezing level",
+            "nullable": true
+          },
+          "maxFtMsl": {
+            "type": "string",
+            "description": "Maximum altitude in feet MSL",
+            "nullable": true
+          },
+          "levelFtMsl": {
+            "type": "string",
+            "description": "Single level altitude in feet MSL (used for freezing level lines)",
+            "nullable": true
+          },
+          "fzlAltitude": {
+            "description": "Freezing level altitude range (when min_ft_msl is \"FZL\")",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/GAirmetFzlAltitude"
+              }
+            ]
+          }
+        }
+      },
+      "GAirmetFzlAltitude": {
+        "type": "object",
+        "description": "Represents freezing level altitude range",
+        "additionalProperties": false,
+        "properties": {
+          "minFtMsl": {
+            "type": "string",
+            "description": "Minimum freezing level in feet MSL",
+            "nullable": true
+          },
+          "maxFtMsl": {
+            "type": "string",
+            "description": "Maximum freezing level in feet MSL",
+            "nullable": true
+          }
+        }
+      },
+      "GAirmetArea": {
+        "type": "object",
+        "description": "Geographic area affected by a G-AIRMET, defined as a polygon of lat/lon points.",
+        "additionalProperties": false,
+        "properties": {
+          "numPoints": {
+            "type": "integer",
+            "description": "Number of points defining the polygon boundary.",
+            "format": "int32"
+          },
+          "points": {
+            "type": "array",
+            "description": "Ordered list of lat/lon points forming the polygon boundary of the affected area.",
+            "items": {
+              "$ref": "#/components/schemas/GAirmetPoint"
+            }
+          }
+        }
+      },
+      "GAirmetPoint": {
+        "type": "object",
+        "description": "A geographic coordinate point forming part of a G-AIRMET area boundary polygon.",
+        "additionalProperties": false,
+        "properties": {
+          "longitude": {
+            "type": "number",
+            "description": "Longitude in decimal degrees.",
+            "format": "double"
+          },
+          "latitude": {
+            "type": "number",
+            "description": "Latitude in decimal degrees.",
+            "format": "double"
+          }
+        }
+      },
+      "NotamDto": {
+        "type": "object",
+        "description": "Represents a NOTAM as a GeoJSON Feature from the NMS API.\nSee nms-api.yaml NmsNotamData schema for full specification.",
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "GeoJSON type, always \"Feature\"."
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique NOTAM feature identifier.",
+            "nullable": true
+          },
+          "geometry": {
+            "description": "GeoJSON geometry representing the NOTAM's geographic location or affected area (Point, Polygon, or GeometryCollection).",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/NotamGeometryDto"
+              }
+            ]
+          },
+          "properties": {
+            "description": "NOTAM properties containing the core NOTAM data, detail fields, and translations.",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/NotamPropertiesDto"
+              }
+            ]
+          }
+        }
+      },
+      "NotamGeometryDto": {
+        "type": "object",
+        "description": "GeoJSON geometry - can be Point, Polygon, or GeometryCollection",
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "coordinates": {
+            "description": "For Point: [lon, lat] array\nFor Polygon: array of coordinate rings\nFor GeometryCollection: null (use Geometries instead)",
+            "nullable": true
+          },
+          "geometries": {
+            "type": "array",
+            "description": "For GeometryCollection type - contains child geometries",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/NotamGeometryDto"
+            }
+          }
+        }
+      },
+      "NotamPropertiesDto": {
+        "type": "object",
+        "description": "Properties of a NOTAM GeoJSON Feature containing the core NOTAM data.",
+        "additionalProperties": false,
+        "properties": {
+          "coreNOTAMData": {
+            "description": "Core NOTAM data including the event metadata, detail fields, and translations.",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CoreNotamDataDto"
+              }
+            ]
+          }
+        }
+      },
+      "CoreNotamDataDto": {
+        "type": "object",
+        "description": "Core NOTAM data structure containing event metadata, the NOTAM detail, and any translations.",
+        "additionalProperties": false,
+        "properties": {
+          "notamEvent": {
+            "description": "NOTAM event metadata (encoding format and scenario).",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/NotamEventDto"
+              }
+            ]
+          },
+          "notam": {
+            "description": "The NOTAM detail fields including identifier, text, effective dates, location, and classification.",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/NotamDetailDto"
+              }
+            ]
+          },
+          "notamTranslation": {
+            "type": "array",
+            "description": "NOTAM text translations in various formats (plain English, domestic format, ICAO format).",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/NotamTranslationDto"
+            }
+          }
+        }
+      },
+      "NotamEventDto": {
+        "type": "object",
+        "description": "NOTAM event metadata",
+        "additionalProperties": false,
+        "properties": {
+          "encoding": {
+            "type": "string",
+            "nullable": true
+          },
+          "scenario": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "NotamDetailDto": {
+        "type": "object",
+        "description": "Core NOTAM detail fields per NMS API specification.\nClassification values: INTERNATIONAL, MILITARY, LOCAL_MILITARY, DOMESTIC, FDC\nFeature values: RWY, TWY, APRON, AD, OBST, NAV, COM, SVC, AIRSPACE, ODP, SID, STAR, CHART, DATA, DVA, IAP, VFP, ROUTE, SPECIAL, SECURITY\nSeries values: A, B, C, D, E, G, H, I, J, K, N, R, V, Z",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique 16-digit NMS identifier",
+            "nullable": true
+          },
+          "number": {
+            "type": "string",
+            "description": "NOTAM number as returned by the NMS API. Typically a bare sequence number (e.g., \"420\", \"3997\")\nbut may include a month prefix (e.g., \"01/123\") for domestic NOTAMs or a series prefix\n(e.g., \"A1234/25\") for ICAO NOTAMs. Stored as-is from the source; the denormalized\nnotam_number column on the entity strips any month prefix for indexed search.",
+            "nullable": true
+          },
+          "series": {
+            "type": "string",
+            "description": "ICAO series code (A, B, C, D, E, G, H, I, J, K, N, R, V, Z)",
+            "nullable": true
+          },
+          "year": {
+            "type": "string",
+            "description": "4-digit NOTAM year (e.g., \"2025\"). Denormalized to the notam_year entity column for indexed search.",
+            "nullable": true
+          },
+          "type": {
+            "type": "string",
+            "description": "NOTAM type (N=New, R=Replace, C=Cancel)",
+            "nullable": true
+          },
+          "issued": {
+            "type": "string",
+            "description": "Issuance timestamp (ISO 8601)",
+            "nullable": true
+          },
+          "affectedFir": {
+            "type": "string",
+            "description": "Affected FIR/ARTCC (e.g., \"ZTL\")",
+            "nullable": true
+          },
+          "selectionCode": {
+            "type": "string",
+            "description": "Q-code selection code (e.g., \"QXXX\")",
+            "nullable": true
+          },
+          "traffic": {
+            "type": "string",
+            "description": "Traffic type (I=IFR, V=VFR, IV=Both)",
+            "nullable": true
+          },
+          "purpose": {
+            "type": "string",
+            "description": "Purpose code (e.g., \"BO\")",
+            "nullable": true
+          },
+          "scope": {
+            "type": "string",
+            "description": "Scope (A=Aerodrome, E=En-route, W=Navigation warning)",
+            "nullable": true
+          },
+          "minimumFl": {
+            "type": "string",
+            "description": "Minimum flight level (e.g., \"000\")",
+            "nullable": true
+          },
+          "maximumFl": {
+            "type": "string",
+            "description": "Maximum flight level (e.g., \"999\")",
+            "nullable": true
+          },
+          "location": {
+            "type": "string",
+            "description": "Domestic location identifier (e.g., \"CLT\")",
+            "nullable": true
+          },
+          "icaoLocation": {
+            "type": "string",
+            "description": "ICAO location identifier (e.g., \"KCLT\")",
+            "nullable": true
+          },
+          "airportName": {
+            "type": "string",
+            "description": "Airport/facility name (AIXM-only, e.g., \"JOHN C TUNE\"). Null for GeoJSON-sourced NOTAMs.",
+            "nullable": true
+          },
+          "effectiveStart": {
+            "type": "string",
+            "description": "Effective start timestamp (ISO 8601)",
+            "nullable": true
+          },
+          "effectiveEnd": {
+            "type": "string",
+            "description": "Effective end timestamp (ISO 8601)",
+            "nullable": true
+          },
+          "estimated": {
+            "type": "string",
+            "description": "Whether end time is estimated (\"true\"/\"false\")",
+            "nullable": true
+          },
+          "text": {
+            "type": "string",
+            "description": "NOTAM text content",
+            "nullable": true
+          },
+          "classification": {
+            "type": "string",
+            "description": "Classification: INTERNATIONAL, MILITARY, LOCAL_MILITARY, DOMESTIC, FDC",
+            "nullable": true
+          },
+          "cancelationDate": {
+            "type": "string",
+            "description": "Cancellation date timestamp (ISO 8601)",
+            "nullable": true
+          },
+          "accountId": {
+            "type": "string",
+            "description": "Accountability ID — the issuing office code (e.g., \"BNA\", \"FDC\", \"CLT\").\n3-4 characters for domestic NOTAMs, up to 8 characters for AFTN.\nDenormalized to the account_id entity column for indexed search.",
+            "nullable": true
+          },
+          "originId": {
+            "type": "string",
+            "description": "Origin identifier from FAA FNSE extension",
+            "nullable": true
+          },
+          "lastUpdated": {
+            "type": "string",
+            "description": "Last updated timestamp (ISO 8601)",
+            "nullable": true
+          },
+          "schedule": {
+            "type": "string",
+            "description": "Schedule string (e.g., \"Daily:1200-1230~DLY 1200-1230\")",
+            "nullable": true
+          },
+          "lowerLimit": {
+            "type": "string",
+            "description": "Lower altitude limit (e.g., \"SFC\", \"3000FT\")",
+            "nullable": true
+          },
+          "upperLimit": {
+            "type": "string",
+            "description": "Upper altitude limit (e.g., \"280M\", \"FL180\")",
+            "nullable": true
+          },
+          "coordinates": {
+            "type": "string",
+            "description": "ICAO coordinates string (e.g., \"3939N04302E\")",
+            "nullable": true
+          },
+          "radius": {
+            "type": "string",
+            "description": "Radius in nautical miles",
+            "nullable": true
+          }
+        }
+      },
+      "NotamTranslationDto": {
+        "type": "object",
+        "description": "NOTAM translation in various formats.\nType values: LOCAL_FORMAT, ICAO",
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Translation type: LOCAL_FORMAT or ICAO",
+            "nullable": true
+          },
+          "simpleText": {
+            "type": "string",
+            "description": "Simple text translation (plain English)",
+            "nullable": true
+          },
+          "domestic_message": {
+            "type": "string",
+            "description": "Domestic format message (for LOCAL_FORMAT type)",
+            "nullable": true
+          },
+          "icao_message": {
+            "type": "string",
+            "description": "ICAO format message (for ICAO type)",
+            "nullable": true
+          },
+          "formattedText": {
+            "type": "string",
+            "description": "Formatted text (HTML or rich text)",
+            "nullable": true
+          }
+        }
+      },
+      "RouteBriefingSummary": {
+        "type": "object",
+        "description": "Count summary for a route briefing response.",
+        "additionalProperties": false,
+        "properties": {
+          "metarCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "tafCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pirepCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sigmetCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "gAirmetCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "notamCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "RouteBriefingRequest": {
+        "type": "object",
+        "description": "Request for a composite route weather briefing along a flight path.",
+        "additionalProperties": false,
+        "properties": {
+          "waypoints": {
+            "type": "array",
+            "description": "Ordered list of waypoints defining the flight route. Each waypoint is either an\nairport identifier (ICAO code or FAA identifier) or a lat/lon coordinate pair.\nAt least two waypoints are required to define a route.",
+            "items": {
+              "$ref": "#/components/schemas/BriefingWaypoint"
+            }
+          },
+          "corridorWidthNm": {
+            "type": "number",
+            "description": "Corridor width in nautical miles on each side of the route centerline.\nUsed for PIREPs, NOTAMs, and airport searches. Default is 25 NM.",
+            "format": "double"
+          }
+        }
+      },
+      "BriefingWaypoint": {
+        "type": "object",
+        "description": "A single waypoint in a briefing route. Specify either an airport identifier\nor latitude/longitude coordinates.",
+        "additionalProperties": false,
+        "properties": {
+          "airportIdentifier": {
+            "type": "string",
+            "description": "Airport ICAO code (e.g., KDFW) or FAA identifier (e.g., DFW).\nIf provided, latitude and longitude are ignored and looked up from the database.",
+            "nullable": true
+          },
+          "latitude": {
+            "type": "number",
+            "description": "Latitude in decimal degrees (-90 to 90). Required when AirportIdentifier is null.",
+            "format": "decimal",
+            "nullable": true
+          },
+          "longitude": {
+            "type": "number",
+            "description": "Longitude in decimal degrees (-180 to 180). Required when AirportIdentifier is null.",
+            "format": "decimal",
+            "nullable": true
+          },
+          "isAirport": {
+            "type": "boolean",
+            "description": "Whether this waypoint specifies an airport identifier."
+          }
+        }
+      },
       "ChartSupplementsResponseDto": {
         "type": "object",
         "description": "Airport information with all available chart supplement (formerly Airport/Facility Directory) pages.\nChart supplements contain detailed airport information including runway data, lighting, services,\nNOTAMs, and other operational details published by the FAA. The PDF URLs are time-limited pre-signed URLs.",
@@ -5663,397 +7950,6 @@
           }
         }
       },
-      "GAirmetDto": {
-        "type": "object",
-        "description": "G-AIRMET (Graphical AIRMET) advisory data with hazard, altitude, and area information.",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "integer",
-            "description": "Database identifier.",
-            "format": "int32"
-          },
-          "receiptTime": {
-            "type": "string",
-            "description": "Time the advisory was received.",
-            "format": "date-time"
-          },
-          "issueTime": {
-            "type": "string",
-            "description": "Time the advisory was issued.",
-            "format": "date-time"
-          },
-          "expireTime": {
-            "type": "string",
-            "description": "Time the advisory expires.",
-            "format": "date-time"
-          },
-          "validTime": {
-            "type": "string",
-            "description": "Time the advisory is valid for.",
-            "format": "date-time"
-          },
-          "product": {
-            "description": "Product type: SIERRA, TANGO, or ZULU.",
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/GAirmetProduct"
-              }
-            ]
-          },
-          "tag": {
-            "type": "string",
-            "description": "Identifying tag for the advisory.",
-            "nullable": true
-          },
-          "forecastHour": {
-            "type": "integer",
-            "description": "Forecast hour offset.",
-            "format": "int32"
-          },
-          "hazard": {
-            "description": "Hazard type (e.g., ICE, TURB_LO, IFR).",
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/GAirmetHazardType"
-              }
-            ]
-          },
-          "hazardSeverity": {
-            "type": "string",
-            "description": "Hazard severity description.",
-            "nullable": true
-          },
-          "geometryType": {
-            "type": "string",
-            "description": "Geometry type of the affected area.",
-            "nullable": true
-          },
-          "dueTo": {
-            "type": "string",
-            "description": "Cause of the hazard.",
-            "nullable": true
-          },
-          "altitudes": {
-            "type": "array",
-            "description": "Altitude ranges for the advisory.",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/GAirmetAltitude"
-            }
-          },
-          "area": {
-            "description": "Geographic area affected by the advisory.",
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/GAirmetArea"
-              }
-            ]
-          }
-        }
-      },
-      "GAirmetProduct": {
-        "type": "string",
-        "description": "G-AIRMET product types",
-        "x-enumNames": [
-          "SIERRA",
-          "TANGO",
-          "ZULU"
-        ],
-        "enum": [
-          "SIERRA",
-          "TANGO",
-          "ZULU"
-        ]
-      },
-      "GAirmetHazardType": {
-        "type": "string",
-        "description": "G-AIRMET hazard types",
-        "x-enumNames": [
-          "MT_OBSC",
-          "IFR",
-          "TURB_LO",
-          "TURB_HI",
-          "LLWS",
-          "SFC_WIND",
-          "ICE",
-          "FZLVL",
-          "M_FZLVL"
-        ],
-        "enum": [
-          "MT_OBSC",
-          "IFR",
-          "TURB_LO",
-          "TURB_HI",
-          "LLWS",
-          "SFC_WIND",
-          "ICE",
-          "FZLVL",
-          "M_FZLVL"
-        ]
-      },
-      "GAirmetAltitude": {
-        "type": "object",
-        "description": "Represents altitude information for a G-AIRMET",
-        "additionalProperties": false,
-        "properties": {
-          "minFtMsl": {
-            "type": "string",
-            "description": "Minimum altitude in feet MSL. Can be a number, \"SFC\" for surface, or \"FZL\" for freezing level",
-            "nullable": true
-          },
-          "maxFtMsl": {
-            "type": "string",
-            "description": "Maximum altitude in feet MSL",
-            "nullable": true
-          },
-          "levelFtMsl": {
-            "type": "string",
-            "description": "Single level altitude in feet MSL (used for freezing level lines)",
-            "nullable": true
-          },
-          "fzlAltitude": {
-            "description": "Freezing level altitude range (when min_ft_msl is \"FZL\")",
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/GAirmetFzlAltitude"
-              }
-            ]
-          }
-        }
-      },
-      "GAirmetFzlAltitude": {
-        "type": "object",
-        "description": "Represents freezing level altitude range",
-        "additionalProperties": false,
-        "properties": {
-          "minFtMsl": {
-            "type": "string",
-            "description": "Minimum freezing level in feet MSL",
-            "nullable": true
-          },
-          "maxFtMsl": {
-            "type": "string",
-            "description": "Maximum freezing level in feet MSL",
-            "nullable": true
-          }
-        }
-      },
-      "GAirmetArea": {
-        "type": "object",
-        "description": "Geographic area affected by a G-AIRMET, defined as a polygon of lat/lon points.",
-        "additionalProperties": false,
-        "properties": {
-          "numPoints": {
-            "type": "integer",
-            "description": "Number of points defining the polygon boundary.",
-            "format": "int32"
-          },
-          "points": {
-            "type": "array",
-            "description": "Ordered list of lat/lon points forming the polygon boundary of the affected area.",
-            "items": {
-              "$ref": "#/components/schemas/GAirmetPoint"
-            }
-          }
-        }
-      },
-      "GAirmetPoint": {
-        "type": "object",
-        "description": "A geographic coordinate point forming part of a G-AIRMET area boundary polygon.",
-        "additionalProperties": false,
-        "properties": {
-          "longitude": {
-            "type": "number",
-            "description": "Longitude in decimal degrees.",
-            "format": "double"
-          },
-          "latitude": {
-            "type": "number",
-            "description": "Latitude in decimal degrees.",
-            "format": "double"
-          }
-        }
-      },
-      "MetarDto": {
-        "type": "object",
-        "description": "METAR (Meteorological Aerodrome Report) observation data for an airport.",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "integer",
-            "description": "Database identifier.",
-            "format": "int32"
-          },
-          "rawText": {
-            "type": "string",
-            "description": "Raw METAR text string as received from the source.",
-            "nullable": true
-          },
-          "stationId": {
-            "type": "string",
-            "description": "ICAO station identifier (e.g., KDFW).",
-            "nullable": true
-          },
-          "observationTime": {
-            "type": "string",
-            "description": "Observation time in ISO 8601 format.",
-            "nullable": true
-          },
-          "latitude": {
-            "type": "number",
-            "description": "Station latitude in decimal degrees.",
-            "format": "float",
-            "nullable": true
-          },
-          "longitude": {
-            "type": "number",
-            "description": "Station longitude in decimal degrees.",
-            "format": "float",
-            "nullable": true
-          },
-          "tempC": {
-            "type": "number",
-            "description": "Temperature in degrees Celsius.",
-            "format": "float",
-            "nullable": true
-          },
-          "dewpointC": {
-            "type": "number",
-            "description": "Dewpoint temperature in degrees Celsius.",
-            "format": "float",
-            "nullable": true
-          },
-          "windDirDegrees": {
-            "type": "string",
-            "description": "Wind direction in degrees true, or \"VRB\" for variable.",
-            "nullable": true
-          },
-          "windSpeedKt": {
-            "type": "integer",
-            "description": "Wind speed in knots.",
-            "format": "int32",
-            "nullable": true
-          },
-          "windGustKt": {
-            "type": "integer",
-            "description": "Wind gust speed in knots.",
-            "format": "int32",
-            "nullable": true
-          },
-          "visibilityStatuteMi": {
-            "type": "string",
-            "description": "Visibility in statute miles.",
-            "nullable": true
-          },
-          "altimInHg": {
-            "type": "number",
-            "description": "Altimeter setting in inches of mercury.",
-            "format": "float",
-            "nullable": true
-          },
-          "seaLevelPressureMb": {
-            "type": "number",
-            "description": "Sea level pressure in millibars.",
-            "format": "float",
-            "nullable": true
-          },
-          "qualityControlFlags": {
-            "description": "Quality control flags for the observation.",
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/MetarQualityControlFlagsDto"
-              }
-            ]
-          },
-          "wxString": {
-            "type": "string",
-            "description": "Present weather string (e.g., \"-RA\" for light rain).",
-            "nullable": true
-          },
-          "skyCondition": {
-            "type": "array",
-            "description": "Sky condition layers (cloud cover and bases).",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/MetarSkyConditionDto"
-            }
-          },
-          "flightCategory": {
-            "type": "string",
-            "description": "Flight category: VFR, MVFR, IFR, or LIFR.",
-            "nullable": true
-          }
-        }
-      },
-      "MetarQualityControlFlagsDto": {
-        "type": "object",
-        "description": "Quality control flags indicating METAR observation characteristics.",
-        "additionalProperties": false,
-        "properties": {
-          "corrected": {
-            "type": "string",
-            "description": "Indicates a corrected observation.",
-            "nullable": true
-          },
-          "auto": {
-            "type": "string",
-            "description": "Indicates an automated observation.",
-            "nullable": true
-          },
-          "autoStation": {
-            "type": "string",
-            "description": "Indicates an automated station type.",
-            "nullable": true
-          },
-          "maintenanceIndicatorOn": {
-            "type": "string",
-            "description": "Maintenance indicator is on.",
-            "nullable": true
-          },
-          "noSignal": {
-            "type": "string",
-            "description": "No signal received.",
-            "nullable": true
-          },
-          "lightningSensorOff": {
-            "type": "string",
-            "description": "Lightning sensor is off.",
-            "nullable": true
-          },
-          "freezingRainSensorOff": {
-            "type": "string",
-            "description": "Freezing rain sensor is off.",
-            "nullable": true
-          },
-          "presentWeatherSensorOff": {
-            "type": "string",
-            "description": "Present weather sensor is off.",
-            "nullable": true
-          }
-        }
-      },
-      "MetarSkyConditionDto": {
-        "type": "object",
-        "description": "A single sky condition layer in a METAR observation.",
-        "additionalProperties": false,
-        "properties": {
-          "skyCover": {
-            "type": "string",
-            "description": "Sky cover type: SKC, CLR, FEW, SCT, BKN, or OVC."
-          },
-          "cloudBaseFtAgl": {
-            "type": "integer",
-            "description": "Cloud base height in feet AGL.",
-            "format": "int32",
-            "nullable": true
-          }
-        }
-      },
       "PaginatedResponseOfMetarDto": {
         "type": "object",
         "description": "Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the\npagination.nextCursor value as the cursor query parameter in your next request.\nContinue until pagination.hasMore is false.",
@@ -6543,305 +8439,6 @@
           }
         }
       },
-      "NotamDto": {
-        "type": "object",
-        "description": "Represents a NOTAM as a GeoJSON Feature from the NMS API.\nSee nms-api.yaml NmsNotamData schema for full specification.",
-        "additionalProperties": false,
-        "properties": {
-          "type": {
-            "type": "string",
-            "description": "GeoJSON type, always \"Feature\"."
-          },
-          "id": {
-            "type": "string",
-            "description": "Unique NOTAM feature identifier.",
-            "nullable": true
-          },
-          "geometry": {
-            "description": "GeoJSON geometry representing the NOTAM's geographic location or affected area (Point, Polygon, or GeometryCollection).",
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/NotamGeometryDto"
-              }
-            ]
-          },
-          "properties": {
-            "description": "NOTAM properties containing the core NOTAM data, detail fields, and translations.",
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/NotamPropertiesDto"
-              }
-            ]
-          }
-        }
-      },
-      "NotamGeometryDto": {
-        "type": "object",
-        "description": "GeoJSON geometry - can be Point, Polygon, or GeometryCollection",
-        "additionalProperties": false,
-        "properties": {
-          "type": {
-            "type": "string"
-          },
-          "coordinates": {
-            "description": "For Point: [lon, lat] array\nFor Polygon: array of coordinate rings\nFor GeometryCollection: null (use Geometries instead)",
-            "nullable": true
-          },
-          "geometries": {
-            "type": "array",
-            "description": "For GeometryCollection type - contains child geometries",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/NotamGeometryDto"
-            }
-          }
-        }
-      },
-      "NotamPropertiesDto": {
-        "type": "object",
-        "description": "Properties of a NOTAM GeoJSON Feature containing the core NOTAM data.",
-        "additionalProperties": false,
-        "properties": {
-          "coreNOTAMData": {
-            "description": "Core NOTAM data including the event metadata, detail fields, and translations.",
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/CoreNotamDataDto"
-              }
-            ]
-          }
-        }
-      },
-      "CoreNotamDataDto": {
-        "type": "object",
-        "description": "Core NOTAM data structure containing event metadata, the NOTAM detail, and any translations.",
-        "additionalProperties": false,
-        "properties": {
-          "notamEvent": {
-            "description": "NOTAM event metadata (encoding format and scenario).",
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/NotamEventDto"
-              }
-            ]
-          },
-          "notam": {
-            "description": "The NOTAM detail fields including identifier, text, effective dates, location, and classification.",
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/NotamDetailDto"
-              }
-            ]
-          },
-          "notamTranslation": {
-            "type": "array",
-            "description": "NOTAM text translations in various formats (plain English, domestic format, ICAO format).",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/NotamTranslationDto"
-            }
-          }
-        }
-      },
-      "NotamEventDto": {
-        "type": "object",
-        "description": "NOTAM event metadata",
-        "additionalProperties": false,
-        "properties": {
-          "encoding": {
-            "type": "string",
-            "nullable": true
-          },
-          "scenario": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "NotamDetailDto": {
-        "type": "object",
-        "description": "Core NOTAM detail fields per NMS API specification.\nClassification values: INTERNATIONAL, MILITARY, LOCAL_MILITARY, DOMESTIC, FDC\nFeature values: RWY, TWY, APRON, AD, OBST, NAV, COM, SVC, AIRSPACE, ODP, SID, STAR, CHART, DATA, DVA, IAP, VFP, ROUTE, SPECIAL, SECURITY\nSeries values: A, B, C, D, E, G, H, I, J, K, N, R, V, Z",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "Unique 16-digit NMS identifier",
-            "nullable": true
-          },
-          "number": {
-            "type": "string",
-            "description": "NOTAM number (e.g., \"01/123\", \"A1234/25\")",
-            "nullable": true
-          },
-          "series": {
-            "type": "string",
-            "description": "ICAO series code (A, B, C, D, E, G, H, I, J, K, N, R, V, Z)",
-            "nullable": true
-          },
-          "year": {
-            "type": "string",
-            "description": "NOTAM year",
-            "nullable": true
-          },
-          "type": {
-            "type": "string",
-            "description": "NOTAM type (N=New, R=Replace, C=Cancel)",
-            "nullable": true
-          },
-          "issued": {
-            "type": "string",
-            "description": "Issuance timestamp (ISO 8601)",
-            "nullable": true
-          },
-          "affectedFir": {
-            "type": "string",
-            "description": "Affected FIR/ARTCC (e.g., \"ZTL\")",
-            "nullable": true
-          },
-          "selectionCode": {
-            "type": "string",
-            "description": "Q-code selection code (e.g., \"QXXX\")",
-            "nullable": true
-          },
-          "traffic": {
-            "type": "string",
-            "description": "Traffic type (I=IFR, V=VFR, IV=Both)",
-            "nullable": true
-          },
-          "purpose": {
-            "type": "string",
-            "description": "Purpose code (e.g., \"BO\")",
-            "nullable": true
-          },
-          "scope": {
-            "type": "string",
-            "description": "Scope (A=Aerodrome, E=En-route, W=Navigation warning)",
-            "nullable": true
-          },
-          "minimumFl": {
-            "type": "string",
-            "description": "Minimum flight level (e.g., \"000\")",
-            "nullable": true
-          },
-          "maximumFl": {
-            "type": "string",
-            "description": "Maximum flight level (e.g., \"999\")",
-            "nullable": true
-          },
-          "location": {
-            "type": "string",
-            "description": "Domestic location identifier (e.g., \"CLT\")",
-            "nullable": true
-          },
-          "icaoLocation": {
-            "type": "string",
-            "description": "ICAO location identifier (e.g., \"KCLT\")",
-            "nullable": true
-          },
-          "effectiveStart": {
-            "type": "string",
-            "description": "Effective start timestamp (ISO 8601)",
-            "nullable": true
-          },
-          "effectiveEnd": {
-            "type": "string",
-            "description": "Effective end timestamp (ISO 8601)",
-            "nullable": true
-          },
-          "estimated": {
-            "type": "string",
-            "description": "Whether end time is estimated (\"true\"/\"false\")",
-            "nullable": true
-          },
-          "text": {
-            "type": "string",
-            "description": "NOTAM text content",
-            "nullable": true
-          },
-          "classification": {
-            "type": "string",
-            "description": "Classification: INTERNATIONAL, MILITARY, LOCAL_MILITARY, DOMESTIC, FDC",
-            "nullable": true
-          },
-          "cancelationDate": {
-            "type": "string",
-            "description": "Cancellation date timestamp (ISO 8601)",
-            "nullable": true
-          },
-          "accountId": {
-            "type": "string",
-            "description": "Accountability ID (3-4 char domestic or 8 char AFTN)",
-            "nullable": true
-          },
-          "lastUpdated": {
-            "type": "string",
-            "description": "Last updated timestamp (ISO 8601)",
-            "nullable": true
-          },
-          "schedule": {
-            "type": "string",
-            "description": "Schedule string (e.g., \"Daily:1200-1230~DLY 1200-1230\")",
-            "nullable": true
-          },
-          "lowerLimit": {
-            "type": "string",
-            "description": "Lower altitude limit (e.g., \"SFC\", \"3000FT\")",
-            "nullable": true
-          },
-          "upperLimit": {
-            "type": "string",
-            "description": "Upper altitude limit (e.g., \"280M\", \"FL180\")",
-            "nullable": true
-          },
-          "coordinates": {
-            "type": "string",
-            "description": "ICAO coordinates string (e.g., \"3939N04302E\")",
-            "nullable": true
-          },
-          "radius": {
-            "type": "string",
-            "description": "Radius in nautical miles",
-            "nullable": true
-          }
-        }
-      },
-      "NotamTranslationDto": {
-        "type": "object",
-        "description": "NOTAM translation in various formats.\nType values: LOCAL_FORMAT, ICAO",
-        "additionalProperties": false,
-        "properties": {
-          "type": {
-            "type": "string",
-            "description": "Translation type: LOCAL_FORMAT or ICAO",
-            "nullable": true
-          },
-          "simpleText": {
-            "type": "string",
-            "description": "Simple text translation (plain English)",
-            "nullable": true
-          },
-          "domestic_message": {
-            "type": "string",
-            "description": "Domestic format message (for LOCAL_FORMAT type)",
-            "nullable": true
-          },
-          "icao_message": {
-            "type": "string",
-            "description": "ICAO format message (for ICAO type)",
-            "nullable": true
-          },
-          "formattedText": {
-            "type": "string",
-            "description": "Formatted text (HTML or rich text)",
-            "nullable": true
-          }
-        }
-      },
       "NotamQueryByRouteRequest": {
         "type": "object",
         "description": "Request DTO for querying NOTAMs along a flight route",
@@ -7237,252 +8834,6 @@
           }
         }
       },
-      "PirepDto": {
-        "type": "object",
-        "description": "PIREP (Pilot Report) data including turbulence, icing, and sky conditions.",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "integer",
-            "description": "Database identifier.",
-            "format": "int32"
-          },
-          "rawText": {
-            "type": "string",
-            "description": "Raw PIREP text string.",
-            "nullable": true
-          },
-          "receiptTime": {
-            "type": "string",
-            "description": "Time the PIREP was received.",
-            "nullable": true
-          },
-          "observationTime": {
-            "type": "string",
-            "description": "Time of the pilot observation.",
-            "nullable": true
-          },
-          "qualityControlFlags": {
-            "description": "Quality control flags for the report.",
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/PirepQualityControlFlags"
-              }
-            ]
-          },
-          "aircraftRef": {
-            "type": "string",
-            "description": "Aircraft type that filed the report.",
-            "nullable": true
-          },
-          "latitude": {
-            "type": "number",
-            "description": "Latitude of the report in decimal degrees.",
-            "format": "float",
-            "nullable": true
-          },
-          "longitude": {
-            "type": "number",
-            "description": "Longitude of the report in decimal degrees.",
-            "format": "float",
-            "nullable": true
-          },
-          "altitudeFtMsl": {
-            "type": "integer",
-            "description": "Altitude of the report in feet MSL.",
-            "format": "int32",
-            "nullable": true
-          },
-          "skyConditions": {
-            "type": "array",
-            "description": "Reported sky conditions.",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/PirepSkyCondition"
-            }
-          },
-          "turbulenceConditions": {
-            "type": "array",
-            "description": "Reported turbulence conditions.",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/PirepTurbulenceCondition"
-            }
-          },
-          "icingConditions": {
-            "type": "array",
-            "description": "Reported icing conditions.",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/PirepIcingCondition"
-            }
-          },
-          "visibilityStatuteMi": {
-            "type": "integer",
-            "description": "Flight visibility in statute miles.",
-            "format": "int32",
-            "nullable": true
-          },
-          "wxString": {
-            "type": "string",
-            "description": "Present weather string.",
-            "nullable": true
-          },
-          "tempC": {
-            "type": "number",
-            "description": "Temperature in degrees Celsius.",
-            "format": "float",
-            "nullable": true
-          },
-          "windDirDegrees": {
-            "type": "integer",
-            "description": "Wind direction in degrees true.",
-            "format": "int32",
-            "nullable": true
-          },
-          "windSpeedKt": {
-            "type": "integer",
-            "description": "Wind speed in knots.",
-            "format": "int32",
-            "nullable": true
-          },
-          "vertGustKt": {
-            "type": "integer",
-            "description": "Vertical gust speed in knots.",
-            "format": "int32",
-            "nullable": true
-          },
-          "reportType": {
-            "type": "string",
-            "description": "Report type: UA (routine) or UUA (urgent).",
-            "nullable": true
-          }
-        }
-      },
-      "PirepQualityControlFlags": {
-        "type": "object",
-        "description": "Quality control flags indicating potential data issues with a PIREP.",
-        "additionalProperties": false,
-        "properties": {
-          "midPointAssumed": {
-            "type": "string",
-            "description": "The report location was assumed to be the midpoint of the route.",
-            "nullable": true
-          },
-          "noTimeStamp": {
-            "type": "string",
-            "description": "The report had no timestamp and was assigned one by the system.",
-            "nullable": true
-          },
-          "fltLvlRange": {
-            "type": "string",
-            "description": "The flight level was reported as a range rather than a single altitude.",
-            "nullable": true
-          },
-          "aboveGroundLevelIndicated": {
-            "type": "string",
-            "description": "The altitude was indicated as AGL rather than the standard MSL.",
-            "nullable": true
-          },
-          "noFltLvl": {
-            "type": "string",
-            "description": "No flight level was reported.",
-            "nullable": true
-          },
-          "badLocation": {
-            "type": "string",
-            "description": "The reported location could not be reliably decoded.",
-            "nullable": true
-          }
-        }
-      },
-      "PirepSkyCondition": {
-        "type": "object",
-        "description": "A sky condition layer reported by a pilot in a PIREP.",
-        "additionalProperties": false,
-        "properties": {
-          "skyCover": {
-            "type": "string",
-            "description": "Sky cover type: SKC (sky clear), CLR (clear), FEW (few), SCT (scattered), BKN (broken), OVC (overcast), or OVX (obscured)."
-          },
-          "cloudBaseFtMsl": {
-            "type": "integer",
-            "description": "Cloud base altitude in feet MSL (note: PIREP altitudes are MSL, unlike TAF/METAR which use AGL).",
-            "format": "int32",
-            "nullable": true
-          },
-          "cloudTopFtMsl": {
-            "type": "integer",
-            "description": "Cloud top altitude in feet MSL.",
-            "format": "int32",
-            "nullable": true
-          }
-        }
-      },
-      "PirepTurbulenceCondition": {
-        "type": "object",
-        "description": "A turbulence condition reported by a pilot in a PIREP.",
-        "additionalProperties": false,
-        "properties": {
-          "turbulenceType": {
-            "type": "string",
-            "description": "Turbulence type: CAT (clear air), CHOP (chop), LLWS (low-level wind shear), or MWAVE (mountain wave).",
-            "nullable": true
-          },
-          "turbulenceIntensity": {
-            "type": "string",
-            "description": "Turbulence intensity: NEG (none), SMTH-LGT (smooth to light), LGT (light), LGT-MOD (light to moderate), MOD (moderate), MOD-SEV (moderate to severe), SEV (severe), SEV-EXTM (severe to extreme), or EXTM (extreme).",
-            "nullable": true
-          },
-          "turbulenceBaseFtMsl": {
-            "type": "integer",
-            "description": "Bottom of the turbulence layer in feet MSL.",
-            "format": "int32",
-            "nullable": true
-          },
-          "turbulenceTopFtMsl": {
-            "type": "integer",
-            "description": "Top of the turbulence layer in feet MSL.",
-            "format": "int32",
-            "nullable": true
-          },
-          "turbulenceFreq": {
-            "type": "string",
-            "description": "Turbulence frequency: ISOL (isolated), OCNL (occasional), or CONT (continuous).",
-            "nullable": true
-          }
-        }
-      },
-      "PirepIcingCondition": {
-        "type": "object",
-        "description": "An icing condition reported by a pilot in a PIREP.",
-        "additionalProperties": false,
-        "properties": {
-          "icingType": {
-            "type": "string",
-            "description": "Icing type: RIME (rime ice), CLEAR (clear ice), or MIXED (mixed rime and clear).",
-            "nullable": true
-          },
-          "icingIntensity": {
-            "type": "string",
-            "description": "Icing intensity: NEG (none), NEGclr (none, clear of clouds), TRC (trace), TRC-LGT (trace to light), LGT (light), LGT-MOD (light to moderate), MOD (moderate), MOD-SEV (moderate to severe), HVY (heavy/severe), or SEV (severe).",
-            "nullable": true
-          },
-          "icingBaseFtMsl": {
-            "type": "integer",
-            "description": "Bottom of the icing layer in feet MSL.",
-            "format": "int32",
-            "nullable": true
-          },
-          "icingTopFtMsl": {
-            "type": "integer",
-            "description": "Top of the icing layer in feet MSL.",
-            "format": "int32",
-            "nullable": true
-          }
-        }
-      },
       "PaginatedResponseOfSigmetDto": {
         "type": "object",
         "description": "Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the\npagination.nextCursor value as the cursor query parameter in your next request.\nContinue until pagination.hasMore is false.",
@@ -7504,460 +8855,6 @@
             ]
           }
         }
-      },
-      "SigmetDto": {
-        "type": "object",
-        "description": "Domestic SIGMET advisory data including hazard information and affected area.",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "integer",
-            "description": "Database identifier.",
-            "format": "int32"
-          },
-          "rawText": {
-            "type": "string",
-            "description": "Raw SIGMET text.",
-            "nullable": true
-          },
-          "validTimeFrom": {
-            "type": "string",
-            "description": "Start of the valid period in ISO 8601 format.",
-            "nullable": true
-          },
-          "validTimeTo": {
-            "type": "string",
-            "description": "End of the valid period in ISO 8601 format.",
-            "nullable": true
-          },
-          "altitude": {
-            "description": "Altitude range of the advisory.",
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/SigmetAltitude"
-              }
-            ]
-          },
-          "movementDirDegrees": {
-            "type": "integer",
-            "description": "Movement direction in degrees true.",
-            "format": "int32",
-            "nullable": true
-          },
-          "movementSpeedKt": {
-            "type": "integer",
-            "description": "Movement speed in knots.",
-            "format": "int32",
-            "nullable": true
-          },
-          "hazard": {
-            "description": "Hazard type and severity information.",
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/SigmetHazardDto"
-              }
-            ]
-          },
-          "sigmetType": {
-            "type": "string",
-            "description": "Advisory type: SIGMET or OUTLOOK.",
-            "nullable": true
-          },
-          "areas": {
-            "type": "array",
-            "description": "Geographic areas affected by the advisory.",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/SigmetArea"
-            }
-          }
-        }
-      },
-      "SigmetAltitude": {
-        "type": "object",
-        "description": "Altitude range for a SIGMET advisory.",
-        "additionalProperties": false,
-        "properties": {
-          "minFtMsl": {
-            "type": "integer",
-            "description": "Minimum altitude in feet MSL for the advisory area.",
-            "format": "int32",
-            "nullable": true
-          },
-          "maxFtMsl": {
-            "type": "integer",
-            "description": "Maximum altitude in feet MSL for the advisory area.",
-            "format": "int32",
-            "nullable": true
-          }
-        }
-      },
-      "SigmetHazardDto": {
-        "type": "object",
-        "description": "Hazard type and severity information for a SIGMET advisory.",
-        "additionalProperties": false,
-        "properties": {
-          "type": {
-            "description": "The weather hazard type: CONVECTIVE (thunderstorms/convection), ICE (icing), TURB (turbulence), IFR (instrument flight rules conditions), or MTN_OBSCN (mountain obscuration).",
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/SigmetHazardType"
-              }
-            ]
-          },
-          "severity": {
-            "type": "string",
-            "description": "Hazard severity. SIGMETs use MOD-SEV (moderate to severe) or SEV (severe). Convective SIGMETs do not have a severity value.",
-            "nullable": true
-          }
-        }
-      },
-      "SigmetHazardType": {
-        "type": "string",
-        "description": "SIGMET hazard types",
-        "x-enumNames": [
-          "CONVECTIVE",
-          "ICE",
-          "TURB",
-          "IFR",
-          "MTN_OBSCN"
-        ],
-        "enum": [
-          "CONVECTIVE",
-          "ICE",
-          "TURB",
-          "IFR",
-          "MTN_OBSCN"
-        ]
-      },
-      "SigmetArea": {
-        "type": "object",
-        "description": "Geographic area affected by a SIGMET, defined as a polygon of lat/lon points.",
-        "additionalProperties": false,
-        "properties": {
-          "numPoints": {
-            "type": "integer",
-            "description": "Number of points defining the polygon boundary.",
-            "format": "int32"
-          },
-          "points": {
-            "type": "array",
-            "description": "Ordered list of lat/lon points forming the polygon boundary of the affected area.",
-            "items": {
-              "$ref": "#/components/schemas/SigmetPoint"
-            }
-          }
-        }
-      },
-      "SigmetPoint": {
-        "type": "object",
-        "description": "A geographic coordinate point forming part of a SIGMET area boundary polygon.",
-        "additionalProperties": false,
-        "properties": {
-          "longitude": {
-            "type": "number",
-            "description": "Longitude in decimal degrees.",
-            "format": "float"
-          },
-          "latitude": {
-            "type": "number",
-            "description": "Latitude in decimal degrees.",
-            "format": "float"
-          }
-        }
-      },
-      "TafDto": {
-        "type": "object",
-        "description": "TAF (Terminal Aerodrome Forecast) data for an airport.",
-        "additionalProperties": false,
-        "properties": {
-          "rawText": {
-            "type": "string",
-            "description": "Raw TAF text string as received from the source.",
-            "nullable": true
-          },
-          "stationId": {
-            "type": "string",
-            "description": "ICAO station identifier (e.g., KDFW).",
-            "nullable": true
-          },
-          "issueTime": {
-            "type": "string",
-            "description": "Time the TAF was issued in ISO 8601 format.",
-            "nullable": true
-          },
-          "bulletinTime": {
-            "type": "string",
-            "description": "Bulletin time in ISO 8601 format.",
-            "nullable": true
-          },
-          "validTimeFrom": {
-            "type": "string",
-            "description": "Start of the TAF valid period in ISO 8601 format.",
-            "nullable": true
-          },
-          "validTimeTo": {
-            "type": "string",
-            "description": "End of the TAF valid period in ISO 8601 format.",
-            "nullable": true
-          },
-          "remarks": {
-            "type": "string",
-            "description": "TAF remarks.",
-            "nullable": true
-          },
-          "latitude": {
-            "type": "number",
-            "description": "Station latitude in decimal degrees.",
-            "format": "float",
-            "nullable": true
-          },
-          "longitude": {
-            "type": "number",
-            "description": "Station longitude in decimal degrees.",
-            "format": "float",
-            "nullable": true
-          },
-          "elevationM": {
-            "type": "number",
-            "description": "Station elevation in meters.",
-            "format": "float",
-            "nullable": true
-          },
-          "forecast": {
-            "type": "array",
-            "description": "Forecast periods within the TAF.",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/TafForecast"
-            }
-          }
-        }
-      },
-      "TafForecast": {
-        "type": "object",
-        "description": "A single forecast period within a TAF. Each TAF contains one or more forecast periods\ncovering different time ranges, with optional change indicators (TEMPO, BECMG, FM, PROB).",
-        "additionalProperties": false,
-        "properties": {
-          "fcstTimeFrom": {
-            "type": "string",
-            "description": "Start of this forecast period in ISO 8601 format (UTC).",
-            "nullable": true
-          },
-          "fcstTimeTo": {
-            "type": "string",
-            "description": "End of this forecast period in ISO 8601 format (UTC).",
-            "nullable": true
-          },
-          "changeIndicator": {
-            "type": "string",
-            "description": "Change indicator: FM (from), BECMG (becoming), TEMPO (temporary), or PROB (probability). Null for the base forecast.",
-            "nullable": true
-          },
-          "timeBecoming": {
-            "type": "string",
-            "description": "Time at which a BECMG (becoming) change completes, in ISO 8601 format (UTC).",
-            "nullable": true
-          },
-          "probability": {
-            "type": "integer",
-            "description": "Probability percentage (e.g., 30 or 40) for PROB-type forecast periods.",
-            "format": "int32",
-            "nullable": true
-          },
-          "windDirDegrees": {
-            "type": "string",
-            "description": "Forecast wind direction in degrees true, or \"VRB\" for variable winds.",
-            "nullable": true
-          },
-          "windSpeedKt": {
-            "type": "integer",
-            "description": "Forecast wind speed in knots.",
-            "format": "int32",
-            "nullable": true
-          },
-          "windGustKt": {
-            "type": "integer",
-            "description": "Forecast wind gust speed in knots.",
-            "format": "int32",
-            "nullable": true
-          },
-          "windShearHgtFtAgl": {
-            "type": "integer",
-            "description": "Low-level wind shear height in feet AGL.",
-            "nullable": true
-          },
-          "windShearDirDegrees": {
-            "type": "integer",
-            "description": "Low-level wind shear direction in degrees true.",
-            "nullable": true
-          },
-          "windShearSpeedKt": {
-            "type": "integer",
-            "description": "Low-level wind shear speed in knots.",
-            "format": "int32",
-            "nullable": true
-          },
-          "visibilityStatuteMi": {
-            "type": "string",
-            "description": "Forecast visibility in statute miles. May contain \"6+\" for visibility greater than 6 miles.",
-            "nullable": true
-          },
-          "altimInHg": {
-            "type": "number",
-            "description": "Forecast altimeter setting in inches of mercury.",
-            "format": "float",
-            "nullable": true
-          },
-          "vertVisFt": {
-            "type": "integer",
-            "description": "Vertical visibility in feet, reported when the sky is obscured.",
-            "nullable": true
-          },
-          "wxString": {
-            "type": "string",
-            "description": "Forecast weather phenomena string (e.g., \"-RA\" for light rain, \"+TSRA\" for heavy thunderstorms with rain).",
-            "nullable": true
-          },
-          "notDecoded": {
-            "type": "string",
-            "description": "Portion of the TAF text that could not be decoded by the parser.",
-            "nullable": true
-          },
-          "skyConditions": {
-            "type": "array",
-            "description": "Forecast sky condition layers (cloud cover and bases) for this period.",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/TafSkyCondition"
-            }
-          },
-          "turbulenceConditions": {
-            "type": "array",
-            "description": "Forecast turbulence conditions for this period.",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/TafTurbulenceCondition"
-            }
-          },
-          "icingConditions": {
-            "type": "array",
-            "description": "Forecast icing conditions for this period.",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/TafIcingCondition"
-            }
-          },
-          "temperature": {
-            "type": "array",
-            "description": "Forecast temperature data for this period.",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/TafTemperature"
-            }
-          }
-        }
-      },
-      "TafSkyCondition": {
-        "type": "object",
-        "description": "A single sky condition layer in a TAF forecast period.",
-        "additionalProperties": false,
-        "properties": {
-          "skyCover": {
-            "type": "string",
-            "description": "Sky cover type: SKC (sky clear), CLR (clear), FEW (few), SCT (scattered), BKN (broken), or OVC (overcast)."
-          },
-          "cloudBaseFtAgl": {
-            "type": "integer",
-            "description": "Cloud base height in feet AGL. Null for SKC or CLR.",
-            "format": "int32",
-            "nullable": true
-          },
-          "cloudType": {
-            "type": "string",
-            "description": "Cloud type modifier (e.g., CB for cumulonimbus, TCU for towering cumulus).",
-            "nullable": true
-          }
-        }
-      },
-      "TafTurbulenceCondition": {
-        "type": "object",
-        "description": "Forecast turbulence condition within a TAF forecast period.",
-        "additionalProperties": false,
-        "properties": {
-          "turbulenceIntensity": {
-            "type": "string",
-            "description": "Turbulence intensity code: 0 (none), 1 (light), 2 (moderate occasional), 3 (moderate frequent), 4 (severe), 5 (extreme), or X (mountain wave).",
-            "nullable": true
-          },
-          "turbulenceMinAltFtAgl": {
-            "type": "integer",
-            "description": "Bottom of the turbulence layer in feet AGL.",
-            "format": "int32",
-            "nullable": true
-          },
-          "turbulenceMaxAltFtAgl": {
-            "type": "integer",
-            "description": "Top of the turbulence layer in feet AGL.",
-            "format": "int32",
-            "nullable": true
-          }
-        }
-      },
-      "TafIcingCondition": {
-        "type": "object",
-        "description": "Forecast icing condition within a TAF forecast period.",
-        "additionalProperties": false,
-        "properties": {
-          "icingIntensity": {
-            "type": "string",
-            "description": "Icing intensity code: 0 (none), 1 (light), 2 (light in clouds), 3 (light in precipitation), 4 (moderate), 5 (moderate in clouds), 6 (moderate in precipitation), 7 (severe), 8 (severe in clouds), 9 (severe in precipitation).",
-            "nullable": true
-          },
-          "icingMinAltFtAgl": {
-            "type": "integer",
-            "description": "Bottom of the icing layer in feet AGL.",
-            "format": "int32",
-            "nullable": true
-          },
-          "icingMaxAltFtAgl": {
-            "type": "integer",
-            "description": "Top of the icing layer in feet AGL.",
-            "format": "int32",
-            "nullable": true
-          }
-        }
-      },
-      "TafTemperature": {
-        "type": "object",
-        "description": "Forecast temperature data within a TAF forecast period.",
-        "additionalProperties": false,
-        "properties": {
-          "validTime": {
-            "type": "string",
-            "description": "Valid time for this temperature forecast in ISO 8601 format (UTC).",
-            "nullable": true
-          },
-          "sfcTempC": {
-            "type": "number",
-            "description": "Forecast surface temperature in degrees Celsius.",
-            "format": "float",
-            "nullable": true
-          },
-          "maxTempC": {
-            "type": "string",
-            "description": "Forecast maximum temperature in degrees Celsius.",
-            "nullable": true
-          },
-          "minTempC": {
-            "type": "string",
-            "description": "Forecast minimum temperature in degrees Celsius.",
-            "nullable": true
-          }
-        }
       }
     }
   },
@@ -7973,6 +8870,10 @@
     {
       "name": "Airspace",
       "description": "Provides access to controlled airspace (Class B, C, D) and special use airspace (restricted, prohibited, warning, MOA, alert) data sourced from FAA ArcGIS services. Each airspace includes boundary geometry (GeoJSON), altitude limits, and classification. Airspace GlobalIds are returned by the navigation log endpoint for airspaces along a planned route — use the by-global-ids endpoints to retrieve full details for those airspaces."
+    },
+    {
+      "name": "Briefing",
+      "description": "Provides composite weather briefings for flight routes — a single endpoint that returns METARs, TAFs, PIREPs, SIGMETs, G-AIRMETs, and NOTAMs for all airports and airspace along a planned route of flight."
     },
     {
       "name": "Chart Supplements",
@@ -8000,7 +8901,7 @@
     },
     {
       "name": "NOTAMs",
-      "description": "Provides access to NOTAMs (Notices to Air Missions) from the FAA NOTAM Management System (NMS). NOTAMs contain time-critical aeronautical information about airport closures, airspace restrictions, runway conditions, navigation aid outages, and other flight safety hazards. Query by airport identifier, geographic radius, along a flight route, or search across all active NOTAMs. Each NOTAM is returned as a GeoJSON Feature with geographic geometry and detailed properties including effective dates, classification, text content, and plain-English translations.\n\nNOTAM data is synced from the FAA NMS system every 3 minutes via background delta sync, with a full refresh daily. Expired NOTAMs (effective end in the past) and cancelled NOTAMs (cancellation date in the past) are automatically excluded from query results (except `GET id/{nmsId}`, which returns any NOTAM regardless of status). Permanent NOTAMs (no expiration date) remain active indefinitely until manually cancelled."
+      "description": "Provides access to NOTAMs (Notices to Air Missions) from the FAA NOTAM Management System (NMS). NOTAMs contain time-critical aeronautical information about airport closures, airspace restrictions, runway conditions, navigation aid outages, and other flight safety hazards. Query by airport identifier, geographic radius, along a flight route, by NOTAM number, or search across all active NOTAMs. Each NOTAM is returned as a GeoJSON Feature with geographic geometry and detailed properties including effective dates, classification, text content, and plain-English translations.\n\nNOTAM data is synced from the FAA NMS system every 3 minutes via background delta sync, with a full refresh daily. Expired and cancelled NOTAMs are periodically purged from the database. Most endpoints automatically exclude expired and cancelled NOTAMs that have not yet been purged. The `GET id/{nmsId}` and `GET number/{notamNumber}` endpoints skip this filter, so they may return recently expired or cancelled NOTAMs that are still awaiting purge. Permanent NOTAMs (no expiration date) remain active indefinitely until manually cancelled."
     },
     {
       "name": "Obstacles",

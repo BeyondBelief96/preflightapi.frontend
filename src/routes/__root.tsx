@@ -59,7 +59,22 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       },
       {
         rel: 'stylesheet',
-        href: 'https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap',
+        href: 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Geist+Mono:wght@100..900&display=swap',
+      },
+      {
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '512x512',
+        href: '/favicon512.png',
+      },
+      {
+        rel: 'apple-touch-icon',
+        sizes: '512x512',
+        href: '/favicon512.png',
+      },
+      {
+        rel: 'manifest',
+        href: '/manifest.json',
       },
     ],
   }),
@@ -77,7 +92,7 @@ const jsonLd = JSON.stringify({
       '@type': 'Organization',
       name: 'PreflightAPI',
       url: 'https://preflightapi.io',
-      logo: 'https://preflightapi.io/logo.png',
+      logo: 'https://preflightapi.io/preflight_logo_with_text_1.png',
       contactPoint: {
         '@type': 'ContactPoint',
         email: 'support@preflightapi.io',

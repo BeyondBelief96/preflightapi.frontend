@@ -10,7 +10,7 @@ interface PageHeadOptions {
 
 export function createPageHead(options: PageHeadOptions) {
   const fullTitle = `${options.title} | ${SITE_CONFIG.name}`
-  const ogImage = `${SITE_CONFIG.url}${options.ogImage ?? '/logo.png'}`
+  const ogImage = `${SITE_CONFIG.url}${options.ogImage ?? '/preflight_logo_with_text_1.png'}`
   const url = options.path ? `${SITE_CONFIG.url}${options.path}` : undefined
 
   return {
