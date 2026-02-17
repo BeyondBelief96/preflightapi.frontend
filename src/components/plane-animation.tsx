@@ -19,8 +19,6 @@ export function LogoIcon({
   className = 'h-8',
 }: {
   className?: string
-  iconClassName?: string
-  rounded?: string
 }) {
   return (
     <img

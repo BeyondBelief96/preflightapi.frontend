@@ -3,9 +3,9 @@
   "name": "PreflightAPI - Aviation Data API",
   "icons": [
     {
-      "src": "favicon128.jpg",
-      "sizes": "128x128",
-      "type": "image/jpeg"
+      "src": "preflight_api_logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
     },
     {
       "src": "favicon512.png",
