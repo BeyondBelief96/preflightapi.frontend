@@ -24,7 +24,7 @@ export function AnimatedBackdrop({ subtle }: { subtle?: boolean }) {
         className="absolute inset-0"
         style={{
           background:
-            'radial-gradient(ellipse at 50% 50%, transparent 40%, oklch(0.14 0.025 245) 100%)',
+            'radial-gradient(ellipse at 50% 50%, transparent 40%, var(--background) 100%)',
           opacity: 0.6,
         }}
       />

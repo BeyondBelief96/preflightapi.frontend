@@ -50,7 +50,8 @@
       "WebFetch(domain:ui.shadcn.com)",
       "Bash(pnpm dlx:*)",
       "Bash(git stash:*)",
-      "Bash(npm view:*)"
+      "Bash(npm view:*)",
+      "mcp__ide__executeCode"
     ]
   }
 }

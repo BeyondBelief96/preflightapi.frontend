@@ -26,6 +26,28 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/airports/nearby": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Searches for airports near a geographic point
+         * @description Useful for finding diversion airports, fuel stops, or nearby facilities.
+         *
+         *     ``` GET /api/v1/airports/nearby?lat=32.897&lon=-97.038&radiusNm=30 ```
+         */
+        get: operations["Airport_SearchNearby"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/airports/{icaoCodeOrIdent}": {
         parameters: {
             query?: never;
@@ -232,6 +254,28 @@ export interface paths {
         get: operations["Airspace_GetSpecialUseByGlobalIds"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/briefing/route": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Generates a composite weather briefing for a flight route. Accepts a list of waypoints
+         *     (airport identifiers or lat/lon coordinates) and returns all weather products affecting
+         *     the route corridor: METARs and TAFs for airports along the route, PIREPs within the
+         *     corridor, SIGMETs and G-AIRMETs intersecting the route, and active NOTAMs.
+         */
+        post: operations["Briefing_GetRouteBriefing"];
         delete?: never;
         options?: never;
         head?: never;
@@ -574,6 +618,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/g-airmets/affecting": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Finds G-AIRMETs whose geographic boundary contains the given point. Returns advisories
+         *     that affect a specific location, answering "what G-AIRMETs are active at this position?"
+         */
+        get: operations["GAirmet_SearchAffecting"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/metars/{icaoCodeOrIdent}": {
         parameters: {
             query?: never;
@@ -586,6 +650,26 @@ export interface paths {
          *     Returns decoded weather data including wind, visibility, sky conditions, temperature, and flight category.
          */
         get: operations["Metar_GetMetarForAirport"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/metars/batch": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Gets the most recent METAR observations for multiple airports in a single request.
+         *     Accepts ICAO codes or FAA identifiers. Identifiers that don't resolve to a METAR are silently skipped.
+         */
+        get: operations["Metar_GetMetarsBatch"];
         put?: never;
         post?: never;
         delete?: never;
@@ -732,6 +816,48 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/notams/number/{notamNumber}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Gets NOTAMs by NOTAM number in various formats.
+         * @description Searches the database for NOTAMs matching the given number. Unlike most NOTAM endpoints, this does *not* filter out cancelled or expired NOTAMs — so results may include recently expired or cancelled NOTAMs that have not yet been purged. This is *not* a historical archive; the database periodically purges stale NOTAMs.
+         *
+         *     **Supported Input Formats**
+         *
+         *     - **Bare number** — `3997`
+         *
+         *     - **Number/year** — `3997/2025` or `3997/25`
+         *
+         *     - **Month-prefix** — `03/420`
+         *
+         *     - **Domestic** — `BNA 420`, `BNA 03/420`, `!BNA 03/420`
+         *
+         *     - **FDC** — `FDC 4/3997`, `!FDC 4/3997`
+         *
+         *     - **ICAO** — `A1234/25`
+         *
+         *     **Disambiguation**
+         *
+         *     Bare numbers (e.g., `3997`) may match multiple NOTAMs across different accounts or years. Include the year, account ID, or full domestic format to narrow results.
+         *
+         *     **Examples**
+         *
+         *     ``` GET /api/v1/notams/number/3997 — bare number (may return multiple matches) GET /api/v1/notams/number/3997%2F2025 — number with year (%2F = /) GET /api/v1/notams/number/BNA%20420 — domestic format (%20 = space) GET /api/v1/notams/number/A1234%2F25 — ICAO format ```
+         */
+        get: operations["Notam_GetNotamsByNumber"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/notams/{icaoCodeOrIdent}": {
         parameters: {
             query?: never;
@@ -867,7 +993,7 @@ export interface paths {
         };
         /**
          * Gets a single NOTAM by its NMS ID.
-         * @description Retrieves a specific NOTAM by its FAA NMS identifier. Unlike other NOTAM endpoints, this does *not* filter out cancelled or expired NOTAMs — it returns the NOTAM regardless of its current status, which is useful for looking up referenced or historical NOTAMs.
+         * @description Retrieves a specific NOTAM by its FAA NMS identifier. Unlike most NOTAM endpoints, this does *not* filter out cancelled or expired NOTAMs — so the result may be a recently expired or cancelled NOTAM that has not yet been purged. This is *not* a historical archive; the database periodically purges stale NOTAMs.
          *
          *     **Example**
          *
@@ -1013,6 +1139,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/pireps/nearby": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Searches for PIREPs near a geographic point. Returns pilot reports within the specified
+         *     radius of the given coordinates, useful for checking conditions along a flight route.
+         */
+        get: operations["Pirep_SearchNearby"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/pireps/airport/{icaoCodeOrIdent}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Searches for PIREPs near an airport. Looks up the airport coordinates by ICAO code or
+         *     FAA identifier, then returns pilot reports within the specified radius.
+         */
+        get: operations["Pirep_SearchNearAirport"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/sigmets": {
         parameters: {
             query?: never;
@@ -1042,6 +1208,66 @@ export interface paths {
         };
         /** Gets SIGMETs filtered by hazard type */
         get: operations["Sigmet_GetSigmetsByHazardType"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/sigmets/affecting": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Finds SIGMETs whose geographic boundary contains the given point. Returns advisories
+         *     that affect a specific location, answering "what SIGMETs are active at this position?"
+         */
+        get: operations["Sigmet_SearchAffecting"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/sigmets/by-area": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Finds SIGMETs that intersect a geographic bounding box. Returns advisories whose
+         *     boundary overlaps the specified area, useful for checking conditions across a flight route.
+         */
+        get: operations["Sigmet_SearchByArea"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/tafs/batch": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Gets the current TAFs for multiple airports in a single request.
+         *     Accepts ICAO codes or FAA identifiers. Identifiers that don't resolve to a TAF are silently skipped.
+         */
+        get: operations["Taf_GetTafsBatch"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2075,6 +2301,789 @@ export interface components {
             geometry?: components["schemas"]["GeoJsonGeometry"] | null;
         };
         /**
+         * @description Composite weather briefing for a flight route, containing all weather products
+         *     affecting the route corridor.
+         */
+        RouteBriefingResponse: {
+            /** @description Route description (e.g., "KDFW -> KAUS"). */
+            route?: string;
+            /**
+             * Format: double
+             * @description Corridor width in nautical miles used for the search.
+             */
+            corridorWidthNm?: number;
+            /**
+             * Format: date-time
+             * @description UTC timestamp when the briefing was generated.
+             */
+            generatedAt?: string;
+            /** @description METARs for airports found along the route corridor. */
+            metars?: components["schemas"]["MetarDto"][];
+            /** @description TAFs for airports found along the route corridor. */
+            tafs?: components["schemas"]["TafDto"][];
+            /** @description PIREPs within the route corridor. */
+            pireps?: components["schemas"]["PirepDto"][];
+            /** @description SIGMETs whose boundaries intersect the route. */
+            sigmets?: components["schemas"]["SigmetDto"][];
+            /** @description G-AIRMETs whose boundaries intersect the route. */
+            gAirmets?: components["schemas"]["GAirmetDto"][];
+            /** @description Active NOTAMs within the route corridor. */
+            notams?: components["schemas"]["NotamDto"][];
+            /** @description Summary counts for each weather product category. */
+            summary?: components["schemas"]["RouteBriefingSummary"];
+        };
+        /** @description METAR (Meteorological Aerodrome Report) observation data for an airport. */
+        MetarDto: {
+            /**
+             * Format: int32
+             * @description Database identifier.
+             */
+            id?: number;
+            /** @description Raw METAR text string as received from the source. */
+            rawText?: string | null;
+            /** @description ICAO station identifier (e.g., KDFW). */
+            stationId?: string | null;
+            /** @description Observation time in ISO 8601 format. */
+            observationTime?: string | null;
+            /**
+             * Format: float
+             * @description Station latitude in decimal degrees.
+             */
+            latitude?: number | null;
+            /**
+             * Format: float
+             * @description Station longitude in decimal degrees.
+             */
+            longitude?: number | null;
+            /**
+             * Format: float
+             * @description Temperature in degrees Celsius.
+             */
+            tempC?: number | null;
+            /**
+             * Format: float
+             * @description Dewpoint temperature in degrees Celsius.
+             */
+            dewpointC?: number | null;
+            /** @description Wind direction in degrees true, or "VRB" for variable. */
+            windDirDegrees?: string | null;
+            /**
+             * Format: int32
+             * @description Wind speed in knots.
+             */
+            windSpeedKt?: number | null;
+            /**
+             * Format: int32
+             * @description Wind gust speed in knots.
+             */
+            windGustKt?: number | null;
+            /** @description Visibility in statute miles. */
+            visibilityStatuteMi?: string | null;
+            /**
+             * Format: float
+             * @description Altimeter setting in inches of mercury.
+             */
+            altimInHg?: number | null;
+            /**
+             * Format: float
+             * @description Sea level pressure in millibars.
+             */
+            seaLevelPressureMb?: number | null;
+            /** @description Quality control flags for the observation. */
+            qualityControlFlags?: components["schemas"]["MetarQualityControlFlagsDto"] | null;
+            /** @description Present weather string (e.g., "-RA" for light rain). */
+            wxString?: string | null;
+            /** @description Sky condition layers (cloud cover and bases). */
+            skyCondition?: components["schemas"]["MetarSkyConditionDto"][] | null;
+            /** @description Flight category: VFR, MVFR, IFR, or LIFR. */
+            flightCategory?: string | null;
+        };
+        /** @description Quality control flags indicating METAR observation characteristics. */
+        MetarQualityControlFlagsDto: {
+            /** @description Indicates a corrected observation. */
+            corrected?: string | null;
+            /** @description Indicates an automated observation. */
+            auto?: string | null;
+            /** @description Indicates an automated station type. */
+            autoStation?: string | null;
+            /** @description Maintenance indicator is on. */
+            maintenanceIndicatorOn?: string | null;
+            /** @description No signal received. */
+            noSignal?: string | null;
+            /** @description Lightning sensor is off. */
+            lightningSensorOff?: string | null;
+            /** @description Freezing rain sensor is off. */
+            freezingRainSensorOff?: string | null;
+            /** @description Present weather sensor is off. */
+            presentWeatherSensorOff?: string | null;
+        };
+        /** @description A single sky condition layer in a METAR observation. */
+        MetarSkyConditionDto: {
+            /** @description Sky cover type: SKC, CLR, FEW, SCT, BKN, or OVC. */
+            skyCover?: string;
+            /**
+             * Format: int32
+             * @description Cloud base height in feet AGL.
+             */
+            cloudBaseFtAgl?: number | null;
+        };
+        /** @description TAF (Terminal Aerodrome Forecast) data for an airport. */
+        TafDto: {
+            /** @description Raw TAF text string as received from the source. */
+            rawText?: string | null;
+            /** @description ICAO station identifier (e.g., KDFW). */
+            stationId?: string | null;
+            /** @description Time the TAF was issued in ISO 8601 format. */
+            issueTime?: string | null;
+            /** @description Bulletin time in ISO 8601 format. */
+            bulletinTime?: string | null;
+            /** @description Start of the TAF valid period in ISO 8601 format. */
+            validTimeFrom?: string | null;
+            /** @description End of the TAF valid period in ISO 8601 format. */
+            validTimeTo?: string | null;
+            /** @description TAF remarks. */
+            remarks?: string | null;
+            /**
+             * Format: float
+             * @description Station latitude in decimal degrees.
+             */
+            latitude?: number | null;
+            /**
+             * Format: float
+             * @description Station longitude in decimal degrees.
+             */
+            longitude?: number | null;
+            /**
+             * Format: float
+             * @description Station elevation in meters.
+             */
+            elevationM?: number | null;
+            /** @description Forecast periods within the TAF. */
+            forecast?: components["schemas"]["TafForecast"][] | null;
+        };
+        /**
+         * @description A single forecast period within a TAF. Each TAF contains one or more forecast periods
+         *     covering different time ranges, with optional change indicators (TEMPO, BECMG, FM, PROB).
+         */
+        TafForecast: {
+            /** @description Start of this forecast period in ISO 8601 format (UTC). */
+            fcstTimeFrom?: string | null;
+            /** @description End of this forecast period in ISO 8601 format (UTC). */
+            fcstTimeTo?: string | null;
+            /** @description Change indicator: FM (from), BECMG (becoming), TEMPO (temporary), or PROB (probability). Null for the base forecast. */
+            changeIndicator?: string | null;
+            /** @description Time at which a BECMG (becoming) change completes, in ISO 8601 format (UTC). */
+            timeBecoming?: string | null;
+            /**
+             * Format: int32
+             * @description Probability percentage (e.g., 30 or 40) for PROB-type forecast periods.
+             */
+            probability?: number | null;
+            /** @description Forecast wind direction in degrees true, or "VRB" for variable winds. */
+            windDirDegrees?: string | null;
+            /**
+             * Format: int32
+             * @description Forecast wind speed in knots.
+             */
+            windSpeedKt?: number | null;
+            /**
+             * Format: int32
+             * @description Forecast wind gust speed in knots.
+             */
+            windGustKt?: number | null;
+            /** @description Low-level wind shear height in feet AGL. */
+            windShearHgtFtAgl?: number | null;
+            /** @description Low-level wind shear direction in degrees true. */
+            windShearDirDegrees?: number | null;
+            /**
+             * Format: int32
+             * @description Low-level wind shear speed in knots.
+             */
+            windShearSpeedKt?: number | null;
+            /** @description Forecast visibility in statute miles. May contain "6+" for visibility greater than 6 miles. */
+            visibilityStatuteMi?: string | null;
+            /**
+             * Format: float
+             * @description Forecast altimeter setting in inches of mercury.
+             */
+            altimInHg?: number | null;
+            /** @description Vertical visibility in feet, reported when the sky is obscured. */
+            vertVisFt?: number | null;
+            /** @description Forecast weather phenomena string (e.g., "-RA" for light rain, "+TSRA" for heavy thunderstorms with rain). */
+            wxString?: string | null;
+            /** @description Portion of the TAF text that could not be decoded by the parser. */
+            notDecoded?: string | null;
+            /** @description Forecast sky condition layers (cloud cover and bases) for this period. */
+            skyConditions?: components["schemas"]["TafSkyCondition"][] | null;
+            /** @description Forecast turbulence conditions for this period. */
+            turbulenceConditions?: components["schemas"]["TafTurbulenceCondition"][] | null;
+            /** @description Forecast icing conditions for this period. */
+            icingConditions?: components["schemas"]["TafIcingCondition"][] | null;
+            /** @description Forecast temperature data for this period. */
+            temperature?: components["schemas"]["TafTemperature"][] | null;
+        };
+        /** @description A single sky condition layer in a TAF forecast period. */
+        TafSkyCondition: {
+            /** @description Sky cover type: SKC (sky clear), CLR (clear), FEW (few), SCT (scattered), BKN (broken), or OVC (overcast). */
+            skyCover?: string;
+            /**
+             * Format: int32
+             * @description Cloud base height in feet AGL. Null for SKC or CLR.
+             */
+            cloudBaseFtAgl?: number | null;
+            /** @description Cloud type modifier (e.g., CB for cumulonimbus, TCU for towering cumulus). */
+            cloudType?: string | null;
+        };
+        /** @description Forecast turbulence condition within a TAF forecast period. */
+        TafTurbulenceCondition: {
+            /** @description Turbulence intensity code: 0 (none), 1 (light), 2 (moderate occasional), 3 (moderate frequent), 4 (severe), 5 (extreme), or X (mountain wave). */
+            turbulenceIntensity?: string | null;
+            /**
+             * Format: int32
+             * @description Bottom of the turbulence layer in feet AGL.
+             */
+            turbulenceMinAltFtAgl?: number | null;
+            /**
+             * Format: int32
+             * @description Top of the turbulence layer in feet AGL.
+             */
+            turbulenceMaxAltFtAgl?: number | null;
+        };
+        /** @description Forecast icing condition within a TAF forecast period. */
+        TafIcingCondition: {
+            /** @description Icing intensity code: 0 (none), 1 (light), 2 (light in clouds), 3 (light in precipitation), 4 (moderate), 5 (moderate in clouds), 6 (moderate in precipitation), 7 (severe), 8 (severe in clouds), 9 (severe in precipitation). */
+            icingIntensity?: string | null;
+            /**
+             * Format: int32
+             * @description Bottom of the icing layer in feet AGL.
+             */
+            icingMinAltFtAgl?: number | null;
+            /**
+             * Format: int32
+             * @description Top of the icing layer in feet AGL.
+             */
+            icingMaxAltFtAgl?: number | null;
+        };
+        /** @description Forecast temperature data within a TAF forecast period. */
+        TafTemperature: {
+            /** @description Valid time for this temperature forecast in ISO 8601 format (UTC). */
+            validTime?: string | null;
+            /**
+             * Format: float
+             * @description Forecast surface temperature in degrees Celsius.
+             */
+            sfcTempC?: number | null;
+            /** @description Forecast maximum temperature in degrees Celsius. */
+            maxTempC?: string | null;
+            /** @description Forecast minimum temperature in degrees Celsius. */
+            minTempC?: string | null;
+        };
+        /** @description PIREP (Pilot Report) data including turbulence, icing, and sky conditions. */
+        PirepDto: {
+            /**
+             * Format: int32
+             * @description Database identifier.
+             */
+            id?: number;
+            /** @description Raw PIREP text string. */
+            rawText?: string | null;
+            /** @description Time the PIREP was received. */
+            receiptTime?: string | null;
+            /** @description Time of the pilot observation. */
+            observationTime?: string | null;
+            /** @description Quality control flags for the report. */
+            qualityControlFlags?: components["schemas"]["PirepQualityControlFlags"] | null;
+            /** @description Aircraft type that filed the report. */
+            aircraftRef?: string | null;
+            /**
+             * Format: float
+             * @description Latitude of the report in decimal degrees.
+             */
+            latitude?: number | null;
+            /**
+             * Format: float
+             * @description Longitude of the report in decimal degrees.
+             */
+            longitude?: number | null;
+            /**
+             * Format: int32
+             * @description Altitude of the report in feet MSL.
+             */
+            altitudeFtMsl?: number | null;
+            /** @description Reported sky conditions. */
+            skyConditions?: components["schemas"]["PirepSkyCondition"][] | null;
+            /** @description Reported turbulence conditions. */
+            turbulenceConditions?: components["schemas"]["PirepTurbulenceCondition"][] | null;
+            /** @description Reported icing conditions. */
+            icingConditions?: components["schemas"]["PirepIcingCondition"][] | null;
+            /**
+             * Format: int32
+             * @description Flight visibility in statute miles.
+             */
+            visibilityStatuteMi?: number | null;
+            /** @description Present weather string. */
+            wxString?: string | null;
+            /**
+             * Format: float
+             * @description Temperature in degrees Celsius.
+             */
+            tempC?: number | null;
+            /**
+             * Format: int32
+             * @description Wind direction in degrees true.
+             */
+            windDirDegrees?: number | null;
+            /**
+             * Format: int32
+             * @description Wind speed in knots.
+             */
+            windSpeedKt?: number | null;
+            /**
+             * Format: int32
+             * @description Vertical gust speed in knots.
+             */
+            vertGustKt?: number | null;
+            /** @description Report type: UA (routine) or UUA (urgent). */
+            reportType?: string | null;
+        };
+        /** @description Quality control flags indicating potential data issues with a PIREP. */
+        PirepQualityControlFlags: {
+            /** @description The report location was assumed to be the midpoint of the route. */
+            midPointAssumed?: string | null;
+            /** @description The report had no timestamp and was assigned one by the system. */
+            noTimeStamp?: string | null;
+            /** @description The flight level was reported as a range rather than a single altitude. */
+            fltLvlRange?: string | null;
+            /** @description The altitude was indicated as AGL rather than the standard MSL. */
+            aboveGroundLevelIndicated?: string | null;
+            /** @description No flight level was reported. */
+            noFltLvl?: string | null;
+            /** @description The reported location could not be reliably decoded. */
+            badLocation?: string | null;
+        };
+        /** @description A sky condition layer reported by a pilot in a PIREP. */
+        PirepSkyCondition: {
+            /** @description Sky cover type: SKC (sky clear), CLR (clear), FEW (few), SCT (scattered), BKN (broken), OVC (overcast), or OVX (obscured). */
+            skyCover?: string;
+            /**
+             * Format: int32
+             * @description Cloud base altitude in feet MSL (note: PIREP altitudes are MSL, unlike TAF/METAR which use AGL).
+             */
+            cloudBaseFtMsl?: number | null;
+            /**
+             * Format: int32
+             * @description Cloud top altitude in feet MSL.
+             */
+            cloudTopFtMsl?: number | null;
+        };
+        /** @description A turbulence condition reported by a pilot in a PIREP. */
+        PirepTurbulenceCondition: {
+            /** @description Turbulence type: CAT (clear air), CHOP (chop), LLWS (low-level wind shear), or MWAVE (mountain wave). */
+            turbulenceType?: string | null;
+            /** @description Turbulence intensity: NEG (none), SMTH-LGT (smooth to light), LGT (light), LGT-MOD (light to moderate), MOD (moderate), MOD-SEV (moderate to severe), SEV (severe), SEV-EXTM (severe to extreme), or EXTM (extreme). */
+            turbulenceIntensity?: string | null;
+            /**
+             * Format: int32
+             * @description Bottom of the turbulence layer in feet MSL.
+             */
+            turbulenceBaseFtMsl?: number | null;
+            /**
+             * Format: int32
+             * @description Top of the turbulence layer in feet MSL.
+             */
+            turbulenceTopFtMsl?: number | null;
+            /** @description Turbulence frequency: ISOL (isolated), OCNL (occasional), or CONT (continuous). */
+            turbulenceFreq?: string | null;
+        };
+        /** @description An icing condition reported by a pilot in a PIREP. */
+        PirepIcingCondition: {
+            /** @description Icing type: RIME (rime ice), CLEAR (clear ice), or MIXED (mixed rime and clear). */
+            icingType?: string | null;
+            /** @description Icing intensity: NEG (none), NEGclr (none, clear of clouds), TRC (trace), TRC-LGT (trace to light), LGT (light), LGT-MOD (light to moderate), MOD (moderate), MOD-SEV (moderate to severe), HVY (heavy/severe), or SEV (severe). */
+            icingIntensity?: string | null;
+            /**
+             * Format: int32
+             * @description Bottom of the icing layer in feet MSL.
+             */
+            icingBaseFtMsl?: number | null;
+            /**
+             * Format: int32
+             * @description Top of the icing layer in feet MSL.
+             */
+            icingTopFtMsl?: number | null;
+        };
+        /** @description Domestic SIGMET advisory data including hazard information and affected area. */
+        SigmetDto: {
+            /**
+             * Format: int32
+             * @description Database identifier.
+             */
+            id?: number;
+            /** @description Raw SIGMET text. */
+            rawText?: string | null;
+            /** @description Start of the valid period in ISO 8601 format. */
+            validTimeFrom?: string | null;
+            /** @description End of the valid period in ISO 8601 format. */
+            validTimeTo?: string | null;
+            /** @description Altitude range of the advisory. */
+            altitude?: components["schemas"]["SigmetAltitude"] | null;
+            /**
+             * Format: int32
+             * @description Movement direction in degrees true.
+             */
+            movementDirDegrees?: number | null;
+            /**
+             * Format: int32
+             * @description Movement speed in knots.
+             */
+            movementSpeedKt?: number | null;
+            /** @description Hazard type and severity information. */
+            hazard?: components["schemas"]["SigmetHazardDto"] | null;
+            /** @description Advisory type: SIGMET or OUTLOOK. */
+            sigmetType?: string | null;
+            /** @description Geographic areas affected by the advisory. */
+            areas?: components["schemas"]["SigmetArea"][] | null;
+        };
+        /** @description Altitude range for a SIGMET advisory. */
+        SigmetAltitude: {
+            /**
+             * Format: int32
+             * @description Minimum altitude in feet MSL for the advisory area.
+             */
+            minFtMsl?: number | null;
+            /**
+             * Format: int32
+             * @description Maximum altitude in feet MSL for the advisory area.
+             */
+            maxFtMsl?: number | null;
+        };
+        /** @description Hazard type and severity information for a SIGMET advisory. */
+        SigmetHazardDto: {
+            /** @description The weather hazard type: CONVECTIVE (thunderstorms/convection), ICE (icing), TURB (turbulence), IFR (instrument flight rules conditions), or MTN_OBSCN (mountain obscuration). */
+            type?: components["schemas"]["SigmetHazardType"] | null;
+            /** @description Hazard severity. SIGMETs use MOD-SEV (moderate to severe) or SEV (severe). Convective SIGMETs do not have a severity value. */
+            severity?: string | null;
+        };
+        /**
+         * @description SIGMET hazard types
+         * @enum {string}
+         */
+        SigmetHazardType: "CONVECTIVE" | "ICE" | "TURB" | "IFR" | "MTN_OBSCN";
+        /** @description Geographic area affected by a SIGMET, defined as a polygon of lat/lon points. */
+        SigmetArea: {
+            /**
+             * Format: int32
+             * @description Number of points defining the polygon boundary.
+             */
+            numPoints?: number;
+            /** @description Ordered list of lat/lon points forming the polygon boundary of the affected area. */
+            points?: components["schemas"]["SigmetPoint"][];
+        };
+        /** @description A geographic coordinate point forming part of a SIGMET area boundary polygon. */
+        SigmetPoint: {
+            /**
+             * Format: float
+             * @description Longitude in decimal degrees.
+             */
+            longitude?: number;
+            /**
+             * Format: float
+             * @description Latitude in decimal degrees.
+             */
+            latitude?: number;
+        };
+        /** @description G-AIRMET (Graphical AIRMET) advisory data with hazard, altitude, and area information. */
+        GAirmetDto: {
+            /**
+             * Format: int32
+             * @description Database identifier.
+             */
+            id?: number;
+            /**
+             * Format: date-time
+             * @description Time the advisory was received.
+             */
+            receiptTime?: string;
+            /**
+             * Format: date-time
+             * @description Time the advisory was issued.
+             */
+            issueTime?: string;
+            /**
+             * Format: date-time
+             * @description Time the advisory expires.
+             */
+            expireTime?: string;
+            /**
+             * Format: date-time
+             * @description Time the advisory is valid for.
+             */
+            validTime?: string;
+            /** @description Product type: SIERRA, TANGO, or ZULU. */
+            product?: components["schemas"]["GAirmetProduct"];
+            /** @description Identifying tag for the advisory. */
+            tag?: string | null;
+            /**
+             * Format: int32
+             * @description Forecast hour offset.
+             */
+            forecastHour?: number;
+            /** @description Hazard type (e.g., ICE, TURB_LO, IFR). */
+            hazard?: components["schemas"]["GAirmetHazardType"] | null;
+            /** @description Hazard severity description. */
+            hazardSeverity?: string | null;
+            /** @description Geometry type of the affected area. */
+            geometryType?: string | null;
+            /** @description Cause of the hazard. */
+            dueTo?: string | null;
+            /** @description Altitude ranges for the advisory. */
+            altitudes?: components["schemas"]["GAirmetAltitude"][] | null;
+            /** @description Geographic area affected by the advisory. */
+            area?: components["schemas"]["GAirmetArea"] | null;
+        };
+        /**
+         * @description G-AIRMET product types
+         * @enum {string}
+         */
+        GAirmetProduct: "SIERRA" | "TANGO" | "ZULU";
+        /**
+         * @description G-AIRMET hazard types
+         * @enum {string}
+         */
+        GAirmetHazardType: "MT_OBSC" | "IFR" | "TURB_LO" | "TURB_HI" | "LLWS" | "SFC_WIND" | "ICE" | "FZLVL" | "M_FZLVL";
+        /** @description Represents altitude information for a G-AIRMET */
+        GAirmetAltitude: {
+            /** @description Minimum altitude in feet MSL. Can be a number, "SFC" for surface, or "FZL" for freezing level */
+            minFtMsl?: string | null;
+            /** @description Maximum altitude in feet MSL */
+            maxFtMsl?: string | null;
+            /** @description Single level altitude in feet MSL (used for freezing level lines) */
+            levelFtMsl?: string | null;
+            /** @description Freezing level altitude range (when min_ft_msl is "FZL") */
+            fzlAltitude?: components["schemas"]["GAirmetFzlAltitude"] | null;
+        };
+        /** @description Represents freezing level altitude range */
+        GAirmetFzlAltitude: {
+            /** @description Minimum freezing level in feet MSL */
+            minFtMsl?: string | null;
+            /** @description Maximum freezing level in feet MSL */
+            maxFtMsl?: string | null;
+        };
+        /** @description Geographic area affected by a G-AIRMET, defined as a polygon of lat/lon points. */
+        GAirmetArea: {
+            /**
+             * Format: int32
+             * @description Number of points defining the polygon boundary.
+             */
+            numPoints?: number;
+            /** @description Ordered list of lat/lon points forming the polygon boundary of the affected area. */
+            points?: components["schemas"]["GAirmetPoint"][];
+        };
+        /** @description A geographic coordinate point forming part of a G-AIRMET area boundary polygon. */
+        GAirmetPoint: {
+            /**
+             * Format: double
+             * @description Longitude in decimal degrees.
+             */
+            longitude?: number;
+            /**
+             * Format: double
+             * @description Latitude in decimal degrees.
+             */
+            latitude?: number;
+        };
+        /**
+         * @description Represents a NOTAM as a GeoJSON Feature from the NMS API.
+         *     See nms-api.yaml NmsNotamData schema for full specification.
+         */
+        NotamDto: {
+            /** @description GeoJSON type, always "Feature". */
+            type?: string;
+            /** @description Unique NOTAM feature identifier. */
+            id?: string | null;
+            /** @description GeoJSON geometry representing the NOTAM's geographic location or affected area (Point, Polygon, or GeometryCollection). */
+            geometry?: components["schemas"]["NotamGeometryDto"] | null;
+            /** @description NOTAM properties containing the core NOTAM data, detail fields, and translations. */
+            properties?: components["schemas"]["NotamPropertiesDto"] | null;
+        };
+        /** @description GeoJSON geometry - can be Point, Polygon, or GeometryCollection */
+        NotamGeometryDto: {
+            type?: string;
+            /**
+             * @description For Point: [lon, lat] array
+             *     For Polygon: array of coordinate rings
+             *     For GeometryCollection: null (use Geometries instead)
+             */
+            coordinates?: unknown;
+            /** @description For GeometryCollection type - contains child geometries */
+            geometries?: components["schemas"]["NotamGeometryDto"][] | null;
+        };
+        /** @description Properties of a NOTAM GeoJSON Feature containing the core NOTAM data. */
+        NotamPropertiesDto: {
+            /** @description Core NOTAM data including the event metadata, detail fields, and translations. */
+            coreNOTAMData?: components["schemas"]["CoreNotamDataDto"] | null;
+        };
+        /** @description Core NOTAM data structure containing event metadata, the NOTAM detail, and any translations. */
+        CoreNotamDataDto: {
+            /** @description NOTAM event metadata (encoding format and scenario). */
+            notamEvent?: components["schemas"]["NotamEventDto"] | null;
+            /** @description The NOTAM detail fields including identifier, text, effective dates, location, and classification. */
+            notam?: components["schemas"]["NotamDetailDto"] | null;
+            /** @description NOTAM text translations in various formats (plain English, domestic format, ICAO format). */
+            notamTranslation?: components["schemas"]["NotamTranslationDto"][] | null;
+        };
+        /** @description NOTAM event metadata */
+        NotamEventDto: {
+            encoding?: string | null;
+            scenario?: string | null;
+        };
+        /**
+         * @description Core NOTAM detail fields per NMS API specification.
+         *     Classification values: INTERNATIONAL, MILITARY, LOCAL_MILITARY, DOMESTIC, FDC
+         *     Feature values: RWY, TWY, APRON, AD, OBST, NAV, COM, SVC, AIRSPACE, ODP, SID, STAR, CHART, DATA, DVA, IAP, VFP, ROUTE, SPECIAL, SECURITY
+         *     Series values: A, B, C, D, E, G, H, I, J, K, N, R, V, Z
+         */
+        NotamDetailDto: {
+            /** @description Unique 16-digit NMS identifier */
+            id?: string | null;
+            /**
+             * @description NOTAM number as returned by the NMS API. Typically a bare sequence number (e.g., "420", "3997")
+             *     but may include a month prefix (e.g., "01/123") for domestic NOTAMs or a series prefix
+             *     (e.g., "A1234/25") for ICAO NOTAMs. Stored as-is from the source; the denormalized
+             *     notam_number column on the entity strips any month prefix for indexed search.
+             */
+            number?: string | null;
+            /** @description ICAO series code (A, B, C, D, E, G, H, I, J, K, N, R, V, Z) */
+            series?: string | null;
+            /** @description 4-digit NOTAM year (e.g., "2025"). Denormalized to the notam_year entity column for indexed search. */
+            year?: string | null;
+            /** @description NOTAM type (N=New, R=Replace, C=Cancel) */
+            type?: string | null;
+            /** @description Issuance timestamp (ISO 8601) */
+            issued?: string | null;
+            /** @description Affected FIR/ARTCC (e.g., "ZTL") */
+            affectedFir?: string | null;
+            /** @description Q-code selection code (e.g., "QXXX") */
+            selectionCode?: string | null;
+            /** @description Traffic type (I=IFR, V=VFR, IV=Both) */
+            traffic?: string | null;
+            /** @description Purpose code (e.g., "BO") */
+            purpose?: string | null;
+            /** @description Scope (A=Aerodrome, E=En-route, W=Navigation warning) */
+            scope?: string | null;
+            /** @description Minimum flight level (e.g., "000") */
+            minimumFl?: string | null;
+            /** @description Maximum flight level (e.g., "999") */
+            maximumFl?: string | null;
+            /** @description Domestic location identifier (e.g., "CLT") */
+            location?: string | null;
+            /** @description ICAO location identifier (e.g., "KCLT") */
+            icaoLocation?: string | null;
+            /** @description Airport/facility name (AIXM-only, e.g., "JOHN C TUNE"). Null for GeoJSON-sourced NOTAMs. */
+            airportName?: string | null;
+            /** @description Effective start timestamp (ISO 8601) */
+            effectiveStart?: string | null;
+            /** @description Effective end timestamp (ISO 8601) */
+            effectiveEnd?: string | null;
+            /** @description Whether end time is estimated ("true"/"false") */
+            estimated?: string | null;
+            /** @description NOTAM text content */
+            text?: string | null;
+            /** @description Classification: INTERNATIONAL, MILITARY, LOCAL_MILITARY, DOMESTIC, FDC */
+            classification?: string | null;
+            /** @description Cancellation date timestamp (ISO 8601) */
+            cancelationDate?: string | null;
+            /**
+             * @description Accountability ID — the issuing office code (e.g., "BNA", "FDC", "CLT").
+             *     3-4 characters for domestic NOTAMs, up to 8 characters for AFTN.
+             *     Denormalized to the account_id entity column for indexed search.
+             */
+            accountId?: string | null;
+            /** @description Origin identifier from FAA FNSE extension */
+            originId?: string | null;
+            /** @description Last updated timestamp (ISO 8601) */
+            lastUpdated?: string | null;
+            /** @description Schedule string (e.g., "Daily:1200-1230~DLY 1200-1230") */
+            schedule?: string | null;
+            /** @description Lower altitude limit (e.g., "SFC", "3000FT") */
+            lowerLimit?: string | null;
+            /** @description Upper altitude limit (e.g., "280M", "FL180") */
+            upperLimit?: string | null;
+            /** @description ICAO coordinates string (e.g., "3939N04302E") */
+            coordinates?: string | null;
+            /** @description Radius in nautical miles */
+            radius?: string | null;
+        };
+        /**
+         * @description NOTAM translation in various formats.
+         *     Type values: LOCAL_FORMAT, ICAO
+         */
+        NotamTranslationDto: {
+            /** @description Translation type: LOCAL_FORMAT or ICAO */
+            type?: string | null;
+            /** @description Simple text translation (plain English) */
+            simpleText?: string | null;
+            /** @description Domestic format message (for LOCAL_FORMAT type) */
+            domestic_message?: string | null;
+            /** @description ICAO format message (for ICAO type) */
+            icao_message?: string | null;
+            /** @description Formatted text (HTML or rich text) */
+            formattedText?: string | null;
+        };
+        /** @description Count summary for a route briefing response. */
+        RouteBriefingSummary: {
+            /** Format: int32 */
+            metarCount?: number;
+            /** Format: int32 */
+            tafCount?: number;
+            /** Format: int32 */
+            pirepCount?: number;
+            /** Format: int32 */
+            sigmetCount?: number;
+            /** Format: int32 */
+            gAirmetCount?: number;
+            /** Format: int32 */
+            notamCount?: number;
+        };
+        /** @description Request for a composite route weather briefing along a flight path. */
+        RouteBriefingRequest: {
+            /**
+             * @description Ordered list of waypoints defining the flight route. Each waypoint is either an
+             *     airport identifier (ICAO code or FAA identifier) or a lat/lon coordinate pair.
+             *     At least two waypoints are required to define a route.
+             */
+            waypoints?: components["schemas"]["BriefingWaypoint"][];
+            /**
+             * Format: double
+             * @description Corridor width in nautical miles on each side of the route centerline.
+             *     Used for PIREPs, NOTAMs, and airport searches. Default is 25 NM.
+             */
+            corridorWidthNm?: number;
+        };
+        /**
+         * @description A single waypoint in a briefing route. Specify either an airport identifier
+         *     or latitude/longitude coordinates.
+         */
+        BriefingWaypoint: {
+            /**
+             * @description Airport ICAO code (e.g., KDFW) or FAA identifier (e.g., DFW).
+             *     If provided, latitude and longitude are ignored and looked up from the database.
+             */
+            airportIdentifier?: string | null;
+            /**
+             * Format: decimal
+             * @description Latitude in decimal degrees (-90 to 90). Required when AirportIdentifier is null.
+             */
+            latitude?: number | null;
+            /**
+             * Format: decimal
+             * @description Longitude in decimal degrees (-180 to 180). Required when AirportIdentifier is null.
+             */
+            longitude?: number | null;
+            /** @description Whether this waypoint specifies an airport identifier. */
+            isAirport?: boolean;
+        };
+        /**
          * @description Airport information with all available chart supplement (formerly Airport/Facility Directory) pages.
          *     Chart supplements contain detailed airport information including runway data, lighting, services,
          *     NOTAMs, and other operational details published by the FAA. The PDF URLs are time-limited pre-signed URLs.
@@ -2569,201 +3578,6 @@ export interface components {
             /** @description Pagination metadata including the cursor to fetch the next page. */
             pagination?: components["schemas"]["PaginationMetadata"];
         };
-        /** @description G-AIRMET (Graphical AIRMET) advisory data with hazard, altitude, and area information. */
-        GAirmetDto: {
-            /**
-             * Format: int32
-             * @description Database identifier.
-             */
-            id?: number;
-            /**
-             * Format: date-time
-             * @description Time the advisory was received.
-             */
-            receiptTime?: string;
-            /**
-             * Format: date-time
-             * @description Time the advisory was issued.
-             */
-            issueTime?: string;
-            /**
-             * Format: date-time
-             * @description Time the advisory expires.
-             */
-            expireTime?: string;
-            /**
-             * Format: date-time
-             * @description Time the advisory is valid for.
-             */
-            validTime?: string;
-            /** @description Product type: SIERRA, TANGO, or ZULU. */
-            product?: components["schemas"]["GAirmetProduct"];
-            /** @description Identifying tag for the advisory. */
-            tag?: string | null;
-            /**
-             * Format: int32
-             * @description Forecast hour offset.
-             */
-            forecastHour?: number;
-            /** @description Hazard type (e.g., ICE, TURB_LO, IFR). */
-            hazard?: components["schemas"]["GAirmetHazardType"] | null;
-            /** @description Hazard severity description. */
-            hazardSeverity?: string | null;
-            /** @description Geometry type of the affected area. */
-            geometryType?: string | null;
-            /** @description Cause of the hazard. */
-            dueTo?: string | null;
-            /** @description Altitude ranges for the advisory. */
-            altitudes?: components["schemas"]["GAirmetAltitude"][] | null;
-            /** @description Geographic area affected by the advisory. */
-            area?: components["schemas"]["GAirmetArea"] | null;
-        };
-        /**
-         * @description G-AIRMET product types
-         * @enum {string}
-         */
-        GAirmetProduct: "SIERRA" | "TANGO" | "ZULU";
-        /**
-         * @description G-AIRMET hazard types
-         * @enum {string}
-         */
-        GAirmetHazardType: "MT_OBSC" | "IFR" | "TURB_LO" | "TURB_HI" | "LLWS" | "SFC_WIND" | "ICE" | "FZLVL" | "M_FZLVL";
-        /** @description Represents altitude information for a G-AIRMET */
-        GAirmetAltitude: {
-            /** @description Minimum altitude in feet MSL. Can be a number, "SFC" for surface, or "FZL" for freezing level */
-            minFtMsl?: string | null;
-            /** @description Maximum altitude in feet MSL */
-            maxFtMsl?: string | null;
-            /** @description Single level altitude in feet MSL (used for freezing level lines) */
-            levelFtMsl?: string | null;
-            /** @description Freezing level altitude range (when min_ft_msl is "FZL") */
-            fzlAltitude?: components["schemas"]["GAirmetFzlAltitude"] | null;
-        };
-        /** @description Represents freezing level altitude range */
-        GAirmetFzlAltitude: {
-            /** @description Minimum freezing level in feet MSL */
-            minFtMsl?: string | null;
-            /** @description Maximum freezing level in feet MSL */
-            maxFtMsl?: string | null;
-        };
-        /** @description Geographic area affected by a G-AIRMET, defined as a polygon of lat/lon points. */
-        GAirmetArea: {
-            /**
-             * Format: int32
-             * @description Number of points defining the polygon boundary.
-             */
-            numPoints?: number;
-            /** @description Ordered list of lat/lon points forming the polygon boundary of the affected area. */
-            points?: components["schemas"]["GAirmetPoint"][];
-        };
-        /** @description A geographic coordinate point forming part of a G-AIRMET area boundary polygon. */
-        GAirmetPoint: {
-            /**
-             * Format: double
-             * @description Longitude in decimal degrees.
-             */
-            longitude?: number;
-            /**
-             * Format: double
-             * @description Latitude in decimal degrees.
-             */
-            latitude?: number;
-        };
-        /** @description METAR (Meteorological Aerodrome Report) observation data for an airport. */
-        MetarDto: {
-            /**
-             * Format: int32
-             * @description Database identifier.
-             */
-            id?: number;
-            /** @description Raw METAR text string as received from the source. */
-            rawText?: string | null;
-            /** @description ICAO station identifier (e.g., KDFW). */
-            stationId?: string | null;
-            /** @description Observation time in ISO 8601 format. */
-            observationTime?: string | null;
-            /**
-             * Format: float
-             * @description Station latitude in decimal degrees.
-             */
-            latitude?: number | null;
-            /**
-             * Format: float
-             * @description Station longitude in decimal degrees.
-             */
-            longitude?: number | null;
-            /**
-             * Format: float
-             * @description Temperature in degrees Celsius.
-             */
-            tempC?: number | null;
-            /**
-             * Format: float
-             * @description Dewpoint temperature in degrees Celsius.
-             */
-            dewpointC?: number | null;
-            /** @description Wind direction in degrees true, or "VRB" for variable. */
-            windDirDegrees?: string | null;
-            /**
-             * Format: int32
-             * @description Wind speed in knots.
-             */
-            windSpeedKt?: number | null;
-            /**
-             * Format: int32
-             * @description Wind gust speed in knots.
-             */
-            windGustKt?: number | null;
-            /** @description Visibility in statute miles. */
-            visibilityStatuteMi?: string | null;
-            /**
-             * Format: float
-             * @description Altimeter setting in inches of mercury.
-             */
-            altimInHg?: number | null;
-            /**
-             * Format: float
-             * @description Sea level pressure in millibars.
-             */
-            seaLevelPressureMb?: number | null;
-            /** @description Quality control flags for the observation. */
-            qualityControlFlags?: components["schemas"]["MetarQualityControlFlagsDto"] | null;
-            /** @description Present weather string (e.g., "-RA" for light rain). */
-            wxString?: string | null;
-            /** @description Sky condition layers (cloud cover and bases). */
-            skyCondition?: components["schemas"]["MetarSkyConditionDto"][] | null;
-            /** @description Flight category: VFR, MVFR, IFR, or LIFR. */
-            flightCategory?: string | null;
-        };
-        /** @description Quality control flags indicating METAR observation characteristics. */
-        MetarQualityControlFlagsDto: {
-            /** @description Indicates a corrected observation. */
-            corrected?: string | null;
-            /** @description Indicates an automated observation. */
-            auto?: string | null;
-            /** @description Indicates an automated station type. */
-            autoStation?: string | null;
-            /** @description Maintenance indicator is on. */
-            maintenanceIndicatorOn?: string | null;
-            /** @description No signal received. */
-            noSignal?: string | null;
-            /** @description Lightning sensor is off. */
-            lightningSensorOff?: string | null;
-            /** @description Freezing rain sensor is off. */
-            freezingRainSensorOff?: string | null;
-            /** @description Present weather sensor is off. */
-            presentWeatherSensorOff?: string | null;
-        };
-        /** @description A single sky condition layer in a METAR observation. */
-        MetarSkyConditionDto: {
-            /** @description Sky cover type: SKC, CLR, FEW, SCT, BKN, or OVC. */
-            skyCover?: string;
-            /**
-             * Format: int32
-             * @description Cloud base height in feet AGL.
-             */
-            cloudBaseFtAgl?: number | null;
-        };
         /**
          * @description Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the
          *     pagination.nextCursor value as the cursor query parameter in your next request.
@@ -3121,131 +3935,6 @@ export interface components {
             /** @description Description of the queried location (e.g., "KDFW", "32.8970,-97.0380 (25nm)", or "KDFW -> KAUS"). */
             queryLocation?: string | null;
         };
-        /**
-         * @description Represents a NOTAM as a GeoJSON Feature from the NMS API.
-         *     See nms-api.yaml NmsNotamData schema for full specification.
-         */
-        NotamDto: {
-            /** @description GeoJSON type, always "Feature". */
-            type?: string;
-            /** @description Unique NOTAM feature identifier. */
-            id?: string | null;
-            /** @description GeoJSON geometry representing the NOTAM's geographic location or affected area (Point, Polygon, or GeometryCollection). */
-            geometry?: components["schemas"]["NotamGeometryDto"] | null;
-            /** @description NOTAM properties containing the core NOTAM data, detail fields, and translations. */
-            properties?: components["schemas"]["NotamPropertiesDto"] | null;
-        };
-        /** @description GeoJSON geometry - can be Point, Polygon, or GeometryCollection */
-        NotamGeometryDto: {
-            type?: string;
-            /**
-             * @description For Point: [lon, lat] array
-             *     For Polygon: array of coordinate rings
-             *     For GeometryCollection: null (use Geometries instead)
-             */
-            coordinates?: unknown;
-            /** @description For GeometryCollection type - contains child geometries */
-            geometries?: components["schemas"]["NotamGeometryDto"][] | null;
-        };
-        /** @description Properties of a NOTAM GeoJSON Feature containing the core NOTAM data. */
-        NotamPropertiesDto: {
-            /** @description Core NOTAM data including the event metadata, detail fields, and translations. */
-            coreNOTAMData?: components["schemas"]["CoreNotamDataDto"] | null;
-        };
-        /** @description Core NOTAM data structure containing event metadata, the NOTAM detail, and any translations. */
-        CoreNotamDataDto: {
-            /** @description NOTAM event metadata (encoding format and scenario). */
-            notamEvent?: components["schemas"]["NotamEventDto"] | null;
-            /** @description The NOTAM detail fields including identifier, text, effective dates, location, and classification. */
-            notam?: components["schemas"]["NotamDetailDto"] | null;
-            /** @description NOTAM text translations in various formats (plain English, domestic format, ICAO format). */
-            notamTranslation?: components["schemas"]["NotamTranslationDto"][] | null;
-        };
-        /** @description NOTAM event metadata */
-        NotamEventDto: {
-            encoding?: string | null;
-            scenario?: string | null;
-        };
-        /**
-         * @description Core NOTAM detail fields per NMS API specification.
-         *     Classification values: INTERNATIONAL, MILITARY, LOCAL_MILITARY, DOMESTIC, FDC
-         *     Feature values: RWY, TWY, APRON, AD, OBST, NAV, COM, SVC, AIRSPACE, ODP, SID, STAR, CHART, DATA, DVA, IAP, VFP, ROUTE, SPECIAL, SECURITY
-         *     Series values: A, B, C, D, E, G, H, I, J, K, N, R, V, Z
-         */
-        NotamDetailDto: {
-            /** @description Unique 16-digit NMS identifier */
-            id?: string | null;
-            /** @description NOTAM number (e.g., "01/123", "A1234/25") */
-            number?: string | null;
-            /** @description ICAO series code (A, B, C, D, E, G, H, I, J, K, N, R, V, Z) */
-            series?: string | null;
-            /** @description NOTAM year */
-            year?: string | null;
-            /** @description NOTAM type (N=New, R=Replace, C=Cancel) */
-            type?: string | null;
-            /** @description Issuance timestamp (ISO 8601) */
-            issued?: string | null;
-            /** @description Affected FIR/ARTCC (e.g., "ZTL") */
-            affectedFir?: string | null;
-            /** @description Q-code selection code (e.g., "QXXX") */
-            selectionCode?: string | null;
-            /** @description Traffic type (I=IFR, V=VFR, IV=Both) */
-            traffic?: string | null;
-            /** @description Purpose code (e.g., "BO") */
-            purpose?: string | null;
-            /** @description Scope (A=Aerodrome, E=En-route, W=Navigation warning) */
-            scope?: string | null;
-            /** @description Minimum flight level (e.g., "000") */
-            minimumFl?: string | null;
-            /** @description Maximum flight level (e.g., "999") */
-            maximumFl?: string | null;
-            /** @description Domestic location identifier (e.g., "CLT") */
-            location?: string | null;
-            /** @description ICAO location identifier (e.g., "KCLT") */
-            icaoLocation?: string | null;
-            /** @description Effective start timestamp (ISO 8601) */
-            effectiveStart?: string | null;
-            /** @description Effective end timestamp (ISO 8601) */
-            effectiveEnd?: string | null;
-            /** @description Whether end time is estimated ("true"/"false") */
-            estimated?: string | null;
-            /** @description NOTAM text content */
-            text?: string | null;
-            /** @description Classification: INTERNATIONAL, MILITARY, LOCAL_MILITARY, DOMESTIC, FDC */
-            classification?: string | null;
-            /** @description Cancellation date timestamp (ISO 8601) */
-            cancelationDate?: string | null;
-            /** @description Accountability ID (3-4 char domestic or 8 char AFTN) */
-            accountId?: string | null;
-            /** @description Last updated timestamp (ISO 8601) */
-            lastUpdated?: string | null;
-            /** @description Schedule string (e.g., "Daily:1200-1230~DLY 1200-1230") */
-            schedule?: string | null;
-            /** @description Lower altitude limit (e.g., "SFC", "3000FT") */
-            lowerLimit?: string | null;
-            /** @description Upper altitude limit (e.g., "280M", "FL180") */
-            upperLimit?: string | null;
-            /** @description ICAO coordinates string (e.g., "3939N04302E") */
-            coordinates?: string | null;
-            /** @description Radius in nautical miles */
-            radius?: string | null;
-        };
-        /**
-         * @description NOTAM translation in various formats.
-         *     Type values: LOCAL_FORMAT, ICAO
-         */
-        NotamTranslationDto: {
-            /** @description Translation type: LOCAL_FORMAT or ICAO */
-            type?: string | null;
-            /** @description Simple text translation (plain English) */
-            simpleText?: string | null;
-            /** @description Domestic format message (for LOCAL_FORMAT type) */
-            domestic_message?: string | null;
-            /** @description ICAO format message (for ICAO type) */
-            icao_message?: string | null;
-            /** @description Formatted text (HTML or rich text) */
-            formattedText?: string | null;
-        };
         /** @description Request DTO for querying NOTAMs along a flight route */
         NotamQueryByRouteRequest: {
             /**
@@ -3420,140 +4109,6 @@ export interface components {
             /** @description Pagination metadata including the cursor to fetch the next page. */
             pagination?: components["schemas"]["PaginationMetadata"];
         };
-        /** @description PIREP (Pilot Report) data including turbulence, icing, and sky conditions. */
-        PirepDto: {
-            /**
-             * Format: int32
-             * @description Database identifier.
-             */
-            id?: number;
-            /** @description Raw PIREP text string. */
-            rawText?: string | null;
-            /** @description Time the PIREP was received. */
-            receiptTime?: string | null;
-            /** @description Time of the pilot observation. */
-            observationTime?: string | null;
-            /** @description Quality control flags for the report. */
-            qualityControlFlags?: components["schemas"]["PirepQualityControlFlags"] | null;
-            /** @description Aircraft type that filed the report. */
-            aircraftRef?: string | null;
-            /**
-             * Format: float
-             * @description Latitude of the report in decimal degrees.
-             */
-            latitude?: number | null;
-            /**
-             * Format: float
-             * @description Longitude of the report in decimal degrees.
-             */
-            longitude?: number | null;
-            /**
-             * Format: int32
-             * @description Altitude of the report in feet MSL.
-             */
-            altitudeFtMsl?: number | null;
-            /** @description Reported sky conditions. */
-            skyConditions?: components["schemas"]["PirepSkyCondition"][] | null;
-            /** @description Reported turbulence conditions. */
-            turbulenceConditions?: components["schemas"]["PirepTurbulenceCondition"][] | null;
-            /** @description Reported icing conditions. */
-            icingConditions?: components["schemas"]["PirepIcingCondition"][] | null;
-            /**
-             * Format: int32
-             * @description Flight visibility in statute miles.
-             */
-            visibilityStatuteMi?: number | null;
-            /** @description Present weather string. */
-            wxString?: string | null;
-            /**
-             * Format: float
-             * @description Temperature in degrees Celsius.
-             */
-            tempC?: number | null;
-            /**
-             * Format: int32
-             * @description Wind direction in degrees true.
-             */
-            windDirDegrees?: number | null;
-            /**
-             * Format: int32
-             * @description Wind speed in knots.
-             */
-            windSpeedKt?: number | null;
-            /**
-             * Format: int32
-             * @description Vertical gust speed in knots.
-             */
-            vertGustKt?: number | null;
-            /** @description Report type: UA (routine) or UUA (urgent). */
-            reportType?: string | null;
-        };
-        /** @description Quality control flags indicating potential data issues with a PIREP. */
-        PirepQualityControlFlags: {
-            /** @description The report location was assumed to be the midpoint of the route. */
-            midPointAssumed?: string | null;
-            /** @description The report had no timestamp and was assigned one by the system. */
-            noTimeStamp?: string | null;
-            /** @description The flight level was reported as a range rather than a single altitude. */
-            fltLvlRange?: string | null;
-            /** @description The altitude was indicated as AGL rather than the standard MSL. */
-            aboveGroundLevelIndicated?: string | null;
-            /** @description No flight level was reported. */
-            noFltLvl?: string | null;
-            /** @description The reported location could not be reliably decoded. */
-            badLocation?: string | null;
-        };
-        /** @description A sky condition layer reported by a pilot in a PIREP. */
-        PirepSkyCondition: {
-            /** @description Sky cover type: SKC (sky clear), CLR (clear), FEW (few), SCT (scattered), BKN (broken), OVC (overcast), or OVX (obscured). */
-            skyCover?: string;
-            /**
-             * Format: int32
-             * @description Cloud base altitude in feet MSL (note: PIREP altitudes are MSL, unlike TAF/METAR which use AGL).
-             */
-            cloudBaseFtMsl?: number | null;
-            /**
-             * Format: int32
-             * @description Cloud top altitude in feet MSL.
-             */
-            cloudTopFtMsl?: number | null;
-        };
-        /** @description A turbulence condition reported by a pilot in a PIREP. */
-        PirepTurbulenceCondition: {
-            /** @description Turbulence type: CAT (clear air), CHOP (chop), LLWS (low-level wind shear), or MWAVE (mountain wave). */
-            turbulenceType?: string | null;
-            /** @description Turbulence intensity: NEG (none), SMTH-LGT (smooth to light), LGT (light), LGT-MOD (light to moderate), MOD (moderate), MOD-SEV (moderate to severe), SEV (severe), SEV-EXTM (severe to extreme), or EXTM (extreme). */
-            turbulenceIntensity?: string | null;
-            /**
-             * Format: int32
-             * @description Bottom of the turbulence layer in feet MSL.
-             */
-            turbulenceBaseFtMsl?: number | null;
-            /**
-             * Format: int32
-             * @description Top of the turbulence layer in feet MSL.
-             */
-            turbulenceTopFtMsl?: number | null;
-            /** @description Turbulence frequency: ISOL (isolated), OCNL (occasional), or CONT (continuous). */
-            turbulenceFreq?: string | null;
-        };
-        /** @description An icing condition reported by a pilot in a PIREP. */
-        PirepIcingCondition: {
-            /** @description Icing type: RIME (rime ice), CLEAR (clear ice), or MIXED (mixed rime and clear). */
-            icingType?: string | null;
-            /** @description Icing intensity: NEG (none), NEGclr (none, clear of clouds), TRC (trace), TRC-LGT (trace to light), LGT (light), LGT-MOD (light to moderate), MOD (moderate), MOD-SEV (moderate to severe), HVY (heavy/severe), or SEV (severe). */
-            icingIntensity?: string | null;
-            /**
-             * Format: int32
-             * @description Bottom of the icing layer in feet MSL.
-             */
-            icingBaseFtMsl?: number | null;
-            /**
-             * Format: int32
-             * @description Top of the icing layer in feet MSL.
-             */
-            icingTopFtMsl?: number | null;
-        };
         /**
          * @description Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the
          *     pagination.nextCursor value as the cursor query parameter in your next request.
@@ -3564,237 +4119,6 @@ export interface components {
             data?: components["schemas"]["SigmetDto"][];
             /** @description Pagination metadata including the cursor to fetch the next page. */
             pagination?: components["schemas"]["PaginationMetadata"];
-        };
-        /** @description Domestic SIGMET advisory data including hazard information and affected area. */
-        SigmetDto: {
-            /**
-             * Format: int32
-             * @description Database identifier.
-             */
-            id?: number;
-            /** @description Raw SIGMET text. */
-            rawText?: string | null;
-            /** @description Start of the valid period in ISO 8601 format. */
-            validTimeFrom?: string | null;
-            /** @description End of the valid period in ISO 8601 format. */
-            validTimeTo?: string | null;
-            /** @description Altitude range of the advisory. */
-            altitude?: components["schemas"]["SigmetAltitude"] | null;
-            /**
-             * Format: int32
-             * @description Movement direction in degrees true.
-             */
-            movementDirDegrees?: number | null;
-            /**
-             * Format: int32
-             * @description Movement speed in knots.
-             */
-            movementSpeedKt?: number | null;
-            /** @description Hazard type and severity information. */
-            hazard?: components["schemas"]["SigmetHazardDto"] | null;
-            /** @description Advisory type: SIGMET or OUTLOOK. */
-            sigmetType?: string | null;
-            /** @description Geographic areas affected by the advisory. */
-            areas?: components["schemas"]["SigmetArea"][] | null;
-        };
-        /** @description Altitude range for a SIGMET advisory. */
-        SigmetAltitude: {
-            /**
-             * Format: int32
-             * @description Minimum altitude in feet MSL for the advisory area.
-             */
-            minFtMsl?: number | null;
-            /**
-             * Format: int32
-             * @description Maximum altitude in feet MSL for the advisory area.
-             */
-            maxFtMsl?: number | null;
-        };
-        /** @description Hazard type and severity information for a SIGMET advisory. */
-        SigmetHazardDto: {
-            /** @description The weather hazard type: CONVECTIVE (thunderstorms/convection), ICE (icing), TURB (turbulence), IFR (instrument flight rules conditions), or MTN_OBSCN (mountain obscuration). */
-            type?: components["schemas"]["SigmetHazardType"] | null;
-            /** @description Hazard severity. SIGMETs use MOD-SEV (moderate to severe) or SEV (severe). Convective SIGMETs do not have a severity value. */
-            severity?: string | null;
-        };
-        /**
-         * @description SIGMET hazard types
-         * @enum {string}
-         */
-        SigmetHazardType: "CONVECTIVE" | "ICE" | "TURB" | "IFR" | "MTN_OBSCN";
-        /** @description Geographic area affected by a SIGMET, defined as a polygon of lat/lon points. */
-        SigmetArea: {
-            /**
-             * Format: int32
-             * @description Number of points defining the polygon boundary.
-             */
-            numPoints?: number;
-            /** @description Ordered list of lat/lon points forming the polygon boundary of the affected area. */
-            points?: components["schemas"]["SigmetPoint"][];
-        };
-        /** @description A geographic coordinate point forming part of a SIGMET area boundary polygon. */
-        SigmetPoint: {
-            /**
-             * Format: float
-             * @description Longitude in decimal degrees.
-             */
-            longitude?: number;
-            /**
-             * Format: float
-             * @description Latitude in decimal degrees.
-             */
-            latitude?: number;
-        };
-        /** @description TAF (Terminal Aerodrome Forecast) data for an airport. */
-        TafDto: {
-            /** @description Raw TAF text string as received from the source. */
-            rawText?: string | null;
-            /** @description ICAO station identifier (e.g., KDFW). */
-            stationId?: string | null;
-            /** @description Time the TAF was issued in ISO 8601 format. */
-            issueTime?: string | null;
-            /** @description Bulletin time in ISO 8601 format. */
-            bulletinTime?: string | null;
-            /** @description Start of the TAF valid period in ISO 8601 format. */
-            validTimeFrom?: string | null;
-            /** @description End of the TAF valid period in ISO 8601 format. */
-            validTimeTo?: string | null;
-            /** @description TAF remarks. */
-            remarks?: string | null;
-            /**
-             * Format: float
-             * @description Station latitude in decimal degrees.
-             */
-            latitude?: number | null;
-            /**
-             * Format: float
-             * @description Station longitude in decimal degrees.
-             */
-            longitude?: number | null;
-            /**
-             * Format: float
-             * @description Station elevation in meters.
-             */
-            elevationM?: number | null;
-            /** @description Forecast periods within the TAF. */
-            forecast?: components["schemas"]["TafForecast"][] | null;
-        };
-        /**
-         * @description A single forecast period within a TAF. Each TAF contains one or more forecast periods
-         *     covering different time ranges, with optional change indicators (TEMPO, BECMG, FM, PROB).
-         */
-        TafForecast: {
-            /** @description Start of this forecast period in ISO 8601 format (UTC). */
-            fcstTimeFrom?: string | null;
-            /** @description End of this forecast period in ISO 8601 format (UTC). */
-            fcstTimeTo?: string | null;
-            /** @description Change indicator: FM (from), BECMG (becoming), TEMPO (temporary), or PROB (probability). Null for the base forecast. */
-            changeIndicator?: string | null;
-            /** @description Time at which a BECMG (becoming) change completes, in ISO 8601 format (UTC). */
-            timeBecoming?: string | null;
-            /**
-             * Format: int32
-             * @description Probability percentage (e.g., 30 or 40) for PROB-type forecast periods.
-             */
-            probability?: number | null;
-            /** @description Forecast wind direction in degrees true, or "VRB" for variable winds. */
-            windDirDegrees?: string | null;
-            /**
-             * Format: int32
-             * @description Forecast wind speed in knots.
-             */
-            windSpeedKt?: number | null;
-            /**
-             * Format: int32
-             * @description Forecast wind gust speed in knots.
-             */
-            windGustKt?: number | null;
-            /** @description Low-level wind shear height in feet AGL. */
-            windShearHgtFtAgl?: number | null;
-            /** @description Low-level wind shear direction in degrees true. */
-            windShearDirDegrees?: number | null;
-            /**
-             * Format: int32
-             * @description Low-level wind shear speed in knots.
-             */
-            windShearSpeedKt?: number | null;
-            /** @description Forecast visibility in statute miles. May contain "6+" for visibility greater than 6 miles. */
-            visibilityStatuteMi?: string | null;
-            /**
-             * Format: float
-             * @description Forecast altimeter setting in inches of mercury.
-             */
-            altimInHg?: number | null;
-            /** @description Vertical visibility in feet, reported when the sky is obscured. */
-            vertVisFt?: number | null;
-            /** @description Forecast weather phenomena string (e.g., "-RA" for light rain, "+TSRA" for heavy thunderstorms with rain). */
-            wxString?: string | null;
-            /** @description Portion of the TAF text that could not be decoded by the parser. */
-            notDecoded?: string | null;
-            /** @description Forecast sky condition layers (cloud cover and bases) for this period. */
-            skyConditions?: components["schemas"]["TafSkyCondition"][] | null;
-            /** @description Forecast turbulence conditions for this period. */
-            turbulenceConditions?: components["schemas"]["TafTurbulenceCondition"][] | null;
-            /** @description Forecast icing conditions for this period. */
-            icingConditions?: components["schemas"]["TafIcingCondition"][] | null;
-            /** @description Forecast temperature data for this period. */
-            temperature?: components["schemas"]["TafTemperature"][] | null;
-        };
-        /** @description A single sky condition layer in a TAF forecast period. */
-        TafSkyCondition: {
-            /** @description Sky cover type: SKC (sky clear), CLR (clear), FEW (few), SCT (scattered), BKN (broken), or OVC (overcast). */
-            skyCover?: string;
-            /**
-             * Format: int32
-             * @description Cloud base height in feet AGL. Null for SKC or CLR.
-             */
-            cloudBaseFtAgl?: number | null;
-            /** @description Cloud type modifier (e.g., CB for cumulonimbus, TCU for towering cumulus). */
-            cloudType?: string | null;
-        };
-        /** @description Forecast turbulence condition within a TAF forecast period. */
-        TafTurbulenceCondition: {
-            /** @description Turbulence intensity code: 0 (none), 1 (light), 2 (moderate occasional), 3 (moderate frequent), 4 (severe), 5 (extreme), or X (mountain wave). */
-            turbulenceIntensity?: string | null;
-            /**
-             * Format: int32
-             * @description Bottom of the turbulence layer in feet AGL.
-             */
-            turbulenceMinAltFtAgl?: number | null;
-            /**
-             * Format: int32
-             * @description Top of the turbulence layer in feet AGL.
-             */
-            turbulenceMaxAltFtAgl?: number | null;
-        };
-        /** @description Forecast icing condition within a TAF forecast period. */
-        TafIcingCondition: {
-            /** @description Icing intensity code: 0 (none), 1 (light), 2 (light in clouds), 3 (light in precipitation), 4 (moderate), 5 (moderate in clouds), 6 (moderate in precipitation), 7 (severe), 8 (severe in clouds), 9 (severe in precipitation). */
-            icingIntensity?: string | null;
-            /**
-             * Format: int32
-             * @description Bottom of the icing layer in feet AGL.
-             */
-            icingMinAltFtAgl?: number | null;
-            /**
-             * Format: int32
-             * @description Top of the icing layer in feet AGL.
-             */
-            icingMaxAltFtAgl?: number | null;
-        };
-        /** @description Forecast temperature data within a TAF forecast period. */
-        TafTemperature: {
-            /** @description Valid time for this temperature forecast in ISO 8601 format (UTC). */
-            validTime?: string | null;
-            /**
-             * Format: float
-             * @description Forecast surface temperature in degrees Celsius.
-             */
-            sfcTempC?: number | null;
-            /** @description Forecast maximum temperature in degrees Celsius. */
-            maxTempC?: string | null;
-            /** @description Forecast minimum temperature in degrees Celsius. */
-            minTempC?: string | null;
         };
     };
     responses: never;
@@ -3838,6 +4162,44 @@ export type AirspaceDto = components['schemas']['AirspaceDto'];
 export type GeoJsonGeometry = components['schemas']['GeoJsonGeometry'];
 export type PaginatedResponseOfSpecialUseAirspaceDto = components['schemas']['PaginatedResponseOfSpecialUseAirspaceDto'];
 export type SpecialUseAirspaceDto = components['schemas']['SpecialUseAirspaceDto'];
+export type RouteBriefingResponse = components['schemas']['RouteBriefingResponse'];
+export type MetarDto = components['schemas']['MetarDto'];
+export type MetarQualityControlFlagsDto = components['schemas']['MetarQualityControlFlagsDto'];
+export type MetarSkyConditionDto = components['schemas']['MetarSkyConditionDto'];
+export type TafDto = components['schemas']['TafDto'];
+export type TafForecast = components['schemas']['TafForecast'];
+export type TafSkyCondition = components['schemas']['TafSkyCondition'];
+export type TafTurbulenceCondition = components['schemas']['TafTurbulenceCondition'];
+export type TafIcingCondition = components['schemas']['TafIcingCondition'];
+export type TafTemperature = components['schemas']['TafTemperature'];
+export type PirepDto = components['schemas']['PirepDto'];
+export type PirepQualityControlFlags = components['schemas']['PirepQualityControlFlags'];
+export type PirepSkyCondition = components['schemas']['PirepSkyCondition'];
+export type PirepTurbulenceCondition = components['schemas']['PirepTurbulenceCondition'];
+export type PirepIcingCondition = components['schemas']['PirepIcingCondition'];
+export type SigmetDto = components['schemas']['SigmetDto'];
+export type SigmetAltitude = components['schemas']['SigmetAltitude'];
+export type SigmetHazardDto = components['schemas']['SigmetHazardDto'];
+export type SigmetHazardType = components['schemas']['SigmetHazardType'];
+export type SigmetArea = components['schemas']['SigmetArea'];
+export type SigmetPoint = components['schemas']['SigmetPoint'];
+export type GAirmetDto = components['schemas']['GAirmetDto'];
+export type GAirmetProduct = components['schemas']['GAirmetProduct'];
+export type GAirmetHazardType = components['schemas']['GAirmetHazardType'];
+export type GAirmetAltitude = components['schemas']['GAirmetAltitude'];
+export type GAirmetFzlAltitude = components['schemas']['GAirmetFzlAltitude'];
+export type GAirmetArea = components['schemas']['GAirmetArea'];
+export type GAirmetPoint = components['schemas']['GAirmetPoint'];
+export type NotamDto = components['schemas']['NotamDto'];
+export type NotamGeometryDto = components['schemas']['NotamGeometryDto'];
+export type NotamPropertiesDto = components['schemas']['NotamPropertiesDto'];
+export type CoreNotamDataDto = components['schemas']['CoreNotamDataDto'];
+export type NotamEventDto = components['schemas']['NotamEventDto'];
+export type NotamDetailDto = components['schemas']['NotamDetailDto'];
+export type NotamTranslationDto = components['schemas']['NotamTranslationDto'];
+export type RouteBriefingSummary = components['schemas']['RouteBriefingSummary'];
+export type RouteBriefingRequest = components['schemas']['RouteBriefingRequest'];
+export type BriefingWaypoint = components['schemas']['BriefingWaypoint'];
 export type ChartSupplementsResponseDto = components['schemas']['ChartSupplementsResponseDto'];
 export type ChartSupplementDto = components['schemas']['ChartSupplementDto'];
 export type PaginatedResponseOfCommunicationFrequencyDto = components['schemas']['PaginatedResponseOfCommunicationFrequencyDto'];
@@ -3857,16 +4219,6 @@ export type CloudBaseRequestDto = components['schemas']['CloudBaseRequestDto'];
 export type PressureAltitudeResponseDto = components['schemas']['PressureAltitudeResponseDto'];
 export type PressureAltitudeRequestDto = components['schemas']['PressureAltitudeRequestDto'];
 export type PaginatedResponseOfGAirmetDto = components['schemas']['PaginatedResponseOfGAirmetDto'];
-export type GAirmetDto = components['schemas']['GAirmetDto'];
-export type GAirmetProduct = components['schemas']['GAirmetProduct'];
-export type GAirmetHazardType = components['schemas']['GAirmetHazardType'];
-export type GAirmetAltitude = components['schemas']['GAirmetAltitude'];
-export type GAirmetFzlAltitude = components['schemas']['GAirmetFzlAltitude'];
-export type GAirmetArea = components['schemas']['GAirmetArea'];
-export type GAirmetPoint = components['schemas']['GAirmetPoint'];
-export type MetarDto = components['schemas']['MetarDto'];
-export type MetarQualityControlFlagsDto = components['schemas']['MetarQualityControlFlagsDto'];
-export type MetarSkyConditionDto = components['schemas']['MetarSkyConditionDto'];
 export type PaginatedResponseOfMetarDto = components['schemas']['PaginatedResponseOfMetarDto'];
 export type NavlogResponseDto = components['schemas']['NavlogResponseDto'];
 export type NavigationLegDto = components['schemas']['NavigationLegDto'];
@@ -3880,13 +4232,6 @@ export type WindsAloftDto = components['schemas']['WindsAloftDto'];
 export type WindsAloftSiteDto = components['schemas']['WindsAloftSiteDto'];
 export type WindTempDto = components['schemas']['WindTempDto'];
 export type NotamResponseDto = components['schemas']['NotamResponseDto'];
-export type NotamDto = components['schemas']['NotamDto'];
-export type NotamGeometryDto = components['schemas']['NotamGeometryDto'];
-export type NotamPropertiesDto = components['schemas']['NotamPropertiesDto'];
-export type CoreNotamDataDto = components['schemas']['CoreNotamDataDto'];
-export type NotamEventDto = components['schemas']['NotamEventDto'];
-export type NotamDetailDto = components['schemas']['NotamDetailDto'];
-export type NotamTranslationDto = components['schemas']['NotamTranslationDto'];
 export type NotamQueryByRouteRequest = components['schemas']['NotamQueryByRouteRequest'];
 export type RoutePointDto = components['schemas']['RoutePointDto'];
 export type NotamFilterDto = components['schemas']['NotamFilterDto'];
@@ -3899,24 +4244,7 @@ export type VerticalAccuracy = components['schemas']['VerticalAccuracy'];
 export type ObstacleMarking = components['schemas']['ObstacleMarking'];
 export type VerificationStatus = components['schemas']['VerificationStatus'];
 export type PaginatedResponseOfPirepDto = components['schemas']['PaginatedResponseOfPirepDto'];
-export type PirepDto = components['schemas']['PirepDto'];
-export type PirepQualityControlFlags = components['schemas']['PirepQualityControlFlags'];
-export type PirepSkyCondition = components['schemas']['PirepSkyCondition'];
-export type PirepTurbulenceCondition = components['schemas']['PirepTurbulenceCondition'];
-export type PirepIcingCondition = components['schemas']['PirepIcingCondition'];
 export type PaginatedResponseOfSigmetDto = components['schemas']['PaginatedResponseOfSigmetDto'];
-export type SigmetDto = components['schemas']['SigmetDto'];
-export type SigmetAltitude = components['schemas']['SigmetAltitude'];
-export type SigmetHazardDto = components['schemas']['SigmetHazardDto'];
-export type SigmetHazardType = components['schemas']['SigmetHazardType'];
-export type SigmetArea = components['schemas']['SigmetArea'];
-export type SigmetPoint = components['schemas']['SigmetPoint'];
-export type TafDto = components['schemas']['TafDto'];
-export type TafForecast = components['schemas']['TafForecast'];
-export type TafSkyCondition = components['schemas']['TafSkyCondition'];
-export type TafTurbulenceCondition = components['schemas']['TafTurbulenceCondition'];
-export type TafIcingCondition = components['schemas']['TafIcingCondition'];
-export type TafTemperature = components['schemas']['TafTemperature'];
 export type $defs = Record<string, never>;
 export interface operations {
     Airport_GetAirports: {
@@ -3944,6 +4272,46 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PaginatedResponseOfAirportDto"];
+                };
+            };
+        };
+    };
+    Airport_SearchNearby: {
+        parameters: {
+            query?: {
+                /** @description Latitude in decimal degrees (-90 to 90) */
+                lat?: number;
+                /** @description Longitude in decimal degrees (-180 to 180) */
+                lon?: number;
+                /** @description Search radius in nautical miles (default 30) */
+                radiusNm?: number;
+                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+                cursor?: string | null;
+                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Returns the nearby airports */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedResponseOfAirportDto"];
+                };
+            };
+            /** @description If coordinates or radius are invalid */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
                 };
             };
         };
@@ -4307,6 +4675,49 @@ export interface operations {
             };
             /** @description If the global IDs parameter is empty */
             400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+        };
+    };
+    Briefing_GetRouteBriefing: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Route definition with waypoints and corridor width */
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RouteBriefingRequest"];
+            };
+        };
+        responses: {
+            /** @description Returns the route weather briefing */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RouteBriefingResponse"];
+                };
+            };
+            /** @description If the request is invalid (fewer than 2 waypoints, invalid coordinates, etc.) */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+            /** @description If an airport waypoint is not found */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -4824,6 +5235,44 @@ export interface operations {
             };
         };
     };
+    GAirmet_SearchAffecting: {
+        parameters: {
+            query?: {
+                /** @description Latitude in decimal degrees (-90 to 90) */
+                lat?: number;
+                /** @description Longitude in decimal degrees (-180 to 180) */
+                lon?: number;
+                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+                cursor?: string | null;
+                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Returns the G-AIRMETs found */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedResponseOfGAirmetDto"];
+                };
+            };
+            /** @description If coordinates are invalid */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+        };
+    };
     Metar_GetMetarForAirport: {
         parameters: {
             query?: never;
@@ -4847,6 +5296,38 @@ export interface operations {
             };
             /** @description If no METAR is found for the airport */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+        };
+    };
+    Metar_GetMetarsBatch: {
+        parameters: {
+            query?: {
+                /** @description Comma-separated ICAO codes or FAA identifiers (e.g., KDFW,KAUS,KHOU) */
+                ids?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Returns the METAR observations */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MetarDto"][];
+                };
+            };
+            /** @description If the ids parameter is empty */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -5034,6 +5515,47 @@ export interface operations {
             };
             /** @description The winds aloft data source is temporarily unavailable */
             503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+        };
+    };
+    Notam_GetNotamsByNumber: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description NOTAM number in any supported format (URL-encoded) */
+                notamNumber: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Returns the matching NOTAMs */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotamDto"][];
+                };
+            };
+            /** @description If the input cannot be parsed or is invalid */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+            /** @description If no NOTAMs match the given number */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -5557,6 +6079,94 @@ export interface operations {
             };
         };
     };
+    Pirep_SearchNearby: {
+        parameters: {
+            query?: {
+                /** @description Latitude in decimal degrees (-90 to 90) */
+                lat?: number;
+                /** @description Longitude in decimal degrees (-180 to 180) */
+                lon?: number;
+                /** @description Search radius in nautical miles (default 50) */
+                radiusNm?: number;
+                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+                cursor?: string | null;
+                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Returns the PIREPs found */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedResponseOfPirepDto"];
+                };
+            };
+            /** @description If coordinates or radius are invalid */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+        };
+    };
+    Pirep_SearchNearAirport: {
+        parameters: {
+            query?: {
+                /** @description Search radius in nautical miles (default 50) */
+                radiusNm?: number;
+                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+                cursor?: string | null;
+                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+                limit?: number;
+            };
+            header?: never;
+            path: {
+                /** @description ICAO code (e.g., KDFW) or FAA identifier (e.g., DFW) */
+                icaoCodeOrIdent: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Returns the PIREPs found */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedResponseOfPirepDto"];
+                };
+            };
+            /** @description If the radius is invalid or the airport has no coordinates on record */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+            /** @description If the airport is not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+        };
+    };
     Sigmet_GetAllSigmets: {
         parameters: {
             query?: {
@@ -5609,6 +6219,118 @@ export interface operations {
                 };
             };
             /** @description If the hazard type is invalid */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+        };
+    };
+    Sigmet_SearchAffecting: {
+        parameters: {
+            query?: {
+                /** @description Latitude in decimal degrees (-90 to 90) */
+                lat?: number;
+                /** @description Longitude in decimal degrees (-180 to 180) */
+                lon?: number;
+                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+                cursor?: string | null;
+                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Returns the SIGMETs found */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedResponseOfSigmetDto"];
+                };
+            };
+            /** @description If coordinates are invalid */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+        };
+    };
+    Sigmet_SearchByArea: {
+        parameters: {
+            query?: {
+                /** @description Minimum latitude (-90 to 90) */
+                minLat?: number;
+                /** @description Maximum latitude (-90 to 90) */
+                maxLat?: number;
+                /** @description Minimum longitude (-180 to 180) */
+                minLon?: number;
+                /** @description Maximum longitude (-180 to 180) */
+                maxLon?: number;
+                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+                cursor?: string | null;
+                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Returns the SIGMETs found */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedResponseOfSigmetDto"];
+                };
+            };
+            /** @description If coordinates are invalid */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+        };
+    };
+    Taf_GetTafsBatch: {
+        parameters: {
+            query?: {
+                /** @description Comma-separated ICAO codes or FAA identifiers (e.g., KDFW,KAUS,KHOU) */
+                ids?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Returns the TAFs with all forecast periods */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TafDto"][];
+                };
+            };
+            /** @description If the ids parameter is empty */
             400: {
                 headers: {
                     [name: string]: unknown;
