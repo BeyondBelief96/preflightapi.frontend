@@ -111,7 +111,7 @@
           {
             "name": "radiusNm",
             "in": "query",
-            "description": "Search radius in nautical miles (default 30)",
+            "description": "Search radius in nautical miles (default 30, max 500)",
             "schema": {
               "type": "number",
               "format": "double",
@@ -308,13 +308,14 @@
           "Airport Diagrams"
         ],
         "summary": "Gets time-limited pre-signed URLs for all available airport diagram PDFs.\nThe URLs expire after a limited period; request new URLs if they have expired.",
+        "description": "Returns the airport's ICAO code, name, and a list of diagram URLs.\n\n``` GET /api/v1/airport-diagrams/KDFW GET /api/v1/airport-diagrams/DFW ```",
         "operationId": "AirportDiagram_GetAirportDiagrams",
         "parameters": [
           {
             "name": "icaoCodeOrIdent",
             "in": "path",
             "required": true,
-            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW)",
+            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW). Case-insensitive.",
             "schema": {
               "type": "string"
             },
@@ -333,7 +334,7 @@
             }
           },
           "404": {
-            "description": "If no airport diagrams are found",
+            "description": "If no airport diagrams are found for the given identifier",
             "content": {
               "application/json": {
                 "schema": {
@@ -350,13 +351,14 @@
         "tags": [
           "Airspace"
         ],
-        "summary": "Gets airspaces filtered by airspace classes",
+        "summary": "Gets controlled airspaces filtered by airspace class (B, C, or D).",
+        "description": "``` GET /api/v1/airspaces/by-classes?classes=B — all Class B airspaces GET /api/v1/airspaces/by-classes?classes=B,C,D — Class B, C, and D airspaces ```",
         "operationId": "Airspace_GetByClasses",
         "parameters": [
           {
             "name": "classes",
             "in": "query",
-            "description": "Comma-separated airspace classes (e.g., B,C,D)",
+            "description": "Comma-separated airspace classes: B, C, or D",
             "schema": {
               "type": "string"
             },
@@ -415,13 +417,14 @@
         "tags": [
           "Airspace"
         ],
-        "summary": "Gets airspaces filtered by city names",
+        "summary": "Gets controlled airspaces filtered by city name.",
+        "description": "``` GET /api/v1/airspaces/by-cities?cities=Dallas — airspaces for Dallas GET /api/v1/airspaces/by-cities?cities=Dallas,Houston — multiple cities ```",
         "operationId": "Airspace_GetByCity",
         "parameters": [
           {
             "name": "cities",
             "in": "query",
-            "description": "Comma-separated city names",
+            "description": "Comma-separated city names (e.g., Dallas or Dallas,Houston)",
             "schema": {
               "type": "string"
             },
@@ -480,13 +483,14 @@
         "tags": [
           "Airspace"
         ],
-        "summary": "Gets airspaces filtered by state codes",
+        "summary": "Gets controlled airspaces filtered by two-letter state code.",
+        "description": "``` GET /api/v1/airspaces/by-states?states=TX — airspaces in Texas GET /api/v1/airspaces/by-states?states=TX,OK — airspaces in Texas and Oklahoma ```",
         "operationId": "Airspace_GetByState",
         "parameters": [
           {
             "name": "states",
             "in": "query",
-            "description": "Comma-separated state codes (e.g., TX,OK)",
+            "description": "Comma-separated two-letter state codes (e.g., TX or TX,OK)",
             "schema": {
               "type": "string"
             },
@@ -545,13 +549,14 @@
         "tags": [
           "Airspace"
         ],
-        "summary": "Gets special use airspaces filtered by type codes",
+        "summary": "Gets special use airspaces filtered by type code.",
+        "description": "**Type Codes**\n\n- `R` — Restricted\n\n- `P` — Prohibited\n\n- `W` — Warning\n\n- `A` — Alert\n\n- `M` — MOA (Military Operations Area)\n\n``` GET /api/v1/airspaces/special-use/by-type-codes?typeCodes=R,P — restricted and prohibited GET /api/v1/airspaces/special-use/by-type-codes?typeCodes=M — MOAs only ```",
         "operationId": "Airspace_GetByTypeCode",
         "parameters": [
           {
             "name": "typeCodes",
             "in": "query",
-            "description": "Comma-separated type codes (e.g., R,P,W for restricted, prohibited, warning)",
+            "description": "Comma-separated type codes: R (restricted), P (prohibited), W (warning), A (alert), M (MOA)",
             "schema": {
               "type": "string"
             },
@@ -657,12 +662,13 @@
           "Airspace"
         ],
         "summary": "Gets controlled airspaces by their global IDs. This endpoint is designed to be used with the\nAirspaceGlobalIds returned by the navigation log endpoint (POST /api/v1/navlog/calculate)\nto retrieve full details for airspaces along a planned route.",
+        "description": "``` GET /api/v1/airspaces/by-global-ids?globalIds={guid1},{guid2} ```",
         "operationId": "Airspace_GetByGlobalIds",
         "parameters": [
           {
             "name": "globalIds",
             "in": "query",
-            "description": "Comma-separated global IDs (e.g., from the navlog response's AirspaceGlobalIds)",
+            "description": "Comma-separated global IDs (GUIDs from the navlog response's AirspaceGlobalIds field)",
             "schema": {
               "type": "string"
             },
@@ -702,12 +708,13 @@
           "Airspace"
         ],
         "summary": "Gets special use airspaces by their global IDs. This endpoint is designed to be used with the\nSpecialUseAirspaceGlobalIds returned by the navigation log endpoint (POST /api/v1/navlog/calculate)\nto retrieve full details for special use airspaces along a planned route.",
+        "description": "``` GET /api/v1/airspaces/special-use/by-global-ids?globalIds={guid1},{guid2} ```",
         "operationId": "Airspace_GetSpecialUseByGlobalIds",
         "parameters": [
           {
             "name": "globalIds",
             "in": "query",
-            "description": "Comma-separated global IDs (e.g., from the navlog response's SpecialUseAirspaceGlobalIds)",
+            "description": "Comma-separated global IDs (GUIDs from the navlog response's SpecialUseAirspaceGlobalIds field)",
             "schema": {
               "type": "string"
             },
@@ -747,10 +754,11 @@
           "Briefing"
         ],
         "summary": "Generates a composite weather briefing for a flight route. Accepts a list of waypoints\n(airport identifiers or lat/lon coordinates) and returns all weather products affecting\nthe route corridor: METARs and TAFs for airports along the route, PIREPs within the\ncorridor, SIGMETs and G-AIRMETs intersecting the route, and active NOTAMs.",
+        "description": "Each waypoint is either an airport identifier (ICAO or FAA) or a lat/lon coordinate. At least two waypoints are required. The corridor width controls how far from the route centerline to search for PIREPs, airports, and NOTAMs (default 25 NM each side).\n\n**Airport-only route**\n\n``` { \"waypoints\": [ { \"airportIdentifier\": \"KDFW\" }, { \"airportIdentifier\": \"KAUS\" } ] } ```\n\n**Mixed route with coordinate waypoints and custom corridor**\n\n``` { \"waypoints\": [ { \"airportIdentifier\": \"KDFW\" }, { \"latitude\": 31.5, \"longitude\": -97.2 }, { \"airportIdentifier\": \"KAUS\" } ], \"corridorWidthNm\": 30 } ```\n\n**Response Contents**\n\n- `Metars` — latest METARs for airports within the corridor\n\n- `Tafs` — current TAFs for airports within the corridor\n\n- `Pireps` — pilot reports within the corridor\n\n- `Sigmets` — active SIGMETs whose boundaries intersect the route\n\n- `GAirmets` — active G-AIRMETs whose boundaries intersect the route\n\n- `Notams` — active NOTAMs for airports along the route",
         "operationId": "Briefing_GetRouteBriefing",
         "requestBody": {
           "x-name": "request",
-          "description": "Route definition with waypoints and corridor width",
+          "description": "Route definition containing Waypoints (minimum 2, each with AirportIdentifier\nor Latitude/Longitude) and optional CorridorWidthNm (default 25).",
           "content": {
             "application/json": {
               "schema": {
@@ -801,13 +809,14 @@
           "Chart Supplements"
         ],
         "summary": "Gets time-limited pre-signed URLs for all chart supplement pages for an airport.\nMulti-page supplements will have one URL per page. The URLs expire after a limited period;\nrequest new URLs if they have expired.",
+        "description": "Returns the airport's ICAO code, name, and a list of page URLs.\n\n``` GET /api/v1/chart-supplements/KDFW GET /api/v1/chart-supplements/DFW ```",
         "operationId": "ChartSupplement_GetChartSupplements",
         "parameters": [
           {
             "name": "icaoCodeOrIdent",
             "in": "path",
             "required": true,
-            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW)",
+            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW). Case-insensitive.",
             "schema": {
               "type": "string"
             },
@@ -826,7 +835,7 @@
             }
           },
           "404": {
-            "description": "If no chart supplements are found",
+            "description": "If no chart supplements are found for the given identifier",
             "content": {
               "application/json": {
                 "schema": {
@@ -844,13 +853,14 @@
           "Communication Frequencies"
         ],
         "summary": "Gets all communication frequencies for a serviced facility (airport or ATC facility).\nReturns frequencies including their intended use (e.g., TWR, GND, ATIS, APP, DEP),\ncall signs, operating hours, and sectorization details.",
+        "description": "The facility identifier is the FAA airport code — typically the ICAO code without the leading \"K\" prefix (e.g., `DFW` not `KDFW`). This corresponds to the `ArptId` field returned by the Airports endpoint.\n\n``` GET /api/v1/communication-frequencies/DFW GET /api/v1/communication-frequencies/AUS ```",
         "operationId": "CommunicationFrequency_GetFrequenciesByServicedFacility",
         "parameters": [
           {
             "name": "servicedFacility",
             "in": "path",
             "required": true,
-            "description": "FAA facility identifier — typically the FAA airport code without the \"K\" prefix (e.g., DFW, AUS). Use the airport's ArptId field from the Airports endpoint.",
+            "description": "FAA facility identifier — the FAA airport code without the \"K\" prefix (e.g., DFW, AUS). Use the ArptId field from the Airports endpoint.",
             "schema": {
               "type": "string"
             },
@@ -1386,7 +1396,8 @@
         "tags": [
           "Weather - G-AIRMETs"
         ],
-        "summary": "Gets G-AIRMETs filtered by product type",
+        "summary": "Gets G-AIRMETs filtered by product type.",
+        "description": "**Product Types**\n\n- `SIERRA` — IFR conditions and mountain obscuration\n\n- `TANGO` — turbulence, low-level wind shear, and strong surface winds\n\n- `ZULU` — icing and freezing level\n\n``` GET /api/v1/g-airmets/product/SIERRA GET /api/v1/g-airmets/product/ZULU ```",
         "operationId": "GAirmet_GetGAirmetsByProduct",
         "parameters": [
           {
@@ -1452,7 +1463,8 @@
         "tags": [
           "Weather - G-AIRMETs"
         ],
-        "summary": "Gets G-AIRMETs filtered by hazard type",
+        "summary": "Gets G-AIRMETs filtered by hazard type.",
+        "description": "**Hazard Types**\n\n- `IFR` — IFR conditions (ceiling below 1000 ft and/or visibility below 3 SM)\n\n- `MT_OBSC` — mountain obscuration\n\n- `TURB_LO` — low-level turbulence (below FL180)\n\n- `TURB_HI` — high-level turbulence (FL180 and above)\n\n- `LLWS` — low-level wind shear\n\n- `SFC_WIND` — strong surface winds (30 kt or greater)\n\n- `ICE` — icing\n\n- `FZLVL` — freezing level\n\n- `M_FZLVL` — multiple freezing levels\n\n``` GET /api/v1/g-airmets/hazard/ICE GET /api/v1/g-airmets/hazard/TURB_LO ```",
         "operationId": "GAirmet_GetGAirmetsByHazardType",
         "parameters": [
           {
@@ -1519,6 +1531,7 @@
           "Weather - G-AIRMETs"
         ],
         "summary": "Finds G-AIRMETs whose geographic boundary contains the given point. Returns advisories\nthat affect a specific location, answering \"what G-AIRMETs are active at this position?\"",
+        "description": "``` GET /api/v1/g-airmets/affecting?lat=32.897&lon=-97.038 ```",
         "operationId": "GAirmet_SearchAffecting",
         "parameters": [
           {
@@ -1595,13 +1608,14 @@
           "Weather - METARs"
         ],
         "summary": "Gets the most recent METAR observation for a specific airport.\nReturns decoded weather data including wind, visibility, sky conditions, temperature, and flight category.",
+        "description": "``` GET /api/v1/metars/KDFW — by ICAO code GET /api/v1/metars/DFW — by FAA identifier ```",
         "operationId": "Metar_GetMetarForAirport",
         "parameters": [
           {
             "name": "icaoCodeOrIdent",
             "in": "path",
             "required": true,
-            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW)",
+            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW). Case-insensitive.",
             "schema": {
               "type": "string"
             },
@@ -1638,12 +1652,13 @@
           "Weather - METARs"
         ],
         "summary": "Gets the most recent METAR observations for multiple airports in a single request.\nAccepts ICAO codes or FAA identifiers. Identifiers that don't resolve to a METAR are silently skipped.",
+        "description": "Both ICAO codes and FAA identifiers can be mixed in the same request. Maximum 100 identifiers per request.\n\n``` GET /api/v1/metars/batch?ids=KDFW,KAUS,KHOU GET /api/v1/metars/batch?ids=DFW,AUS ```",
         "operationId": "Metar_GetMetarsBatch",
         "parameters": [
           {
             "name": "ids",
             "in": "query",
-            "description": "Comma-separated ICAO codes or FAA identifiers (e.g., KDFW,KAUS,KHOU)",
+            "description": "Comma-separated ICAO codes or FAA identifiers (e.g., KDFW,KAUS,KHOU). Maximum 100.",
             "schema": {
               "type": "string"
             },
@@ -1665,7 +1680,7 @@
             }
           },
           "400": {
-            "description": "If the ids parameter is empty",
+            "description": "If the ids parameter is empty or exceeds 100 identifiers",
             "content": {
               "application/json": {
                 "schema": {
@@ -2444,7 +2459,8 @@
         "tags": [
           "Obstacles"
         ],
-        "summary": "Searches for obstacles near an airport",
+        "summary": "Searches for obstacles near an airport. Looks up the airport coordinates, then finds\nobstacles within the specified radius. Use minHeightAgl to filter out low obstacles.",
+        "description": "``` GET /api/v1/obstacles/airport/KDFW — default 10 NM radius GET /api/v1/obstacles/airport/DFW?radiusNm=5&minHeightAgl=200 — towers 200+ ft AGL within 5 NM ```",
         "operationId": "Obstacle_SearchNearAirport",
         "parameters": [
           {
@@ -2460,7 +2476,7 @@
           {
             "name": "radiusNm",
             "in": "query",
-            "description": "Search radius in nautical miles (default 10)",
+            "description": "Search radius in nautical miles (default 10, must be greater than 0)",
             "schema": {
               "type": "number",
               "format": "double",
@@ -2471,7 +2487,7 @@
           {
             "name": "minHeightAgl",
             "in": "query",
-            "description": "Optional minimum height AGL in feet to filter results",
+            "description": "Optional minimum height AGL in feet — only return obstacles at or above this height",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -2542,7 +2558,8 @@
         "tags": [
           "Obstacles"
         ],
-        "summary": "Searches for obstacles near a geographic point",
+        "summary": "Searches for obstacles near a geographic point.",
+        "description": "``` GET /api/v1/obstacles/search?lat=32.897&lon=-97.038 — default 5 NM radius GET /api/v1/obstacles/search?lat=32.897&lon=-97.038&radiusNm=10&minHeightAgl=500 — tall obstacles within 10 NM ```",
         "operationId": "Obstacle_SearchNearby",
         "parameters": [
           {
@@ -2568,7 +2585,7 @@
           {
             "name": "radiusNm",
             "in": "query",
-            "description": "Search radius in nautical miles (default 5)",
+            "description": "Search radius in nautical miles (default 5, must be greater than 0)",
             "schema": {
               "type": "number",
               "format": "double",
@@ -2579,7 +2596,7 @@
           {
             "name": "minHeightAgl",
             "in": "query",
-            "description": "Optional minimum height AGL in feet to filter results",
+            "description": "Optional minimum height AGL in feet — only return obstacles at or above this height",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -2640,7 +2657,8 @@
         "tags": [
           "Obstacles"
         ],
-        "summary": "Gets obstacles in a specific state",
+        "summary": "Gets obstacles in a specific state.",
+        "description": "``` GET /api/v1/obstacles/state/TX — all obstacles in Texas GET /api/v1/obstacles/state/TX?minHeightAgl=1000 — obstacles 1000+ ft AGL in Texas ```",
         "operationId": "Obstacle_GetByState",
         "parameters": [
           {
@@ -2656,7 +2674,7 @@
           {
             "name": "minHeightAgl",
             "in": "query",
-            "description": "Optional minimum height AGL in feet to filter results",
+            "description": "Optional minimum height AGL in feet — only return obstacles at or above this height",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -2717,14 +2735,15 @@
         "tags": [
           "Obstacles"
         ],
-        "summary": "Gets an obstacle by its OAS number",
+        "summary": "Gets a single obstacle by its OAS (Obstacle Assessment Surface) number.",
+        "description": "``` GET /api/v1/obstacles/12-345678 ```",
         "operationId": "Obstacle_GetByOasNumber",
         "parameters": [
           {
             "name": "oasNumber",
             "in": "path",
             "required": true,
-            "description": "Obstacle Assessment Surface number",
+            "description": "Obstacle Assessment Surface number (e.g., 12-345678)",
             "schema": {
               "type": "string"
             },
@@ -2811,13 +2830,14 @@
         "tags": [
           "Obstacles"
         ],
-        "summary": "Gets obstacles within a geographic bounding box",
+        "summary": "Gets obstacles within a geographic bounding box.",
+        "description": "**Note:** The bounding box must not cross the antimeridian (i.e., `minLon` must be less than `maxLon`). Antimeridian-crossing queries are not supported.\n\n``` GET /api/v1/obstacles/bbox?minLat=32.5&maxLat=33.5&minLon=-97.5&maxLon=-96.5 GET /api/v1/obstacles/bbox?minLat=32.5&maxLat=33.5&minLon=-97.5&maxLon=-96.5&minHeightAgl=500 ```",
         "operationId": "Obstacle_GetByBoundingBox",
         "parameters": [
           {
             "name": "minLat",
             "in": "query",
-            "description": "Minimum latitude (-90 to 90)",
+            "description": "Southwest corner latitude (-90 to 90)",
             "schema": {
               "type": "number",
               "format": "decimal"
@@ -2827,7 +2847,7 @@
           {
             "name": "maxLat",
             "in": "query",
-            "description": "Maximum latitude (-90 to 90)",
+            "description": "Northeast corner latitude (-90 to 90, must be greater than minLat)",
             "schema": {
               "type": "number",
               "format": "decimal"
@@ -2837,7 +2857,7 @@
           {
             "name": "minLon",
             "in": "query",
-            "description": "Minimum longitude (-180 to 180)",
+            "description": "Southwest corner longitude (-180 to 180)",
             "schema": {
               "type": "number",
               "format": "decimal"
@@ -2847,7 +2867,7 @@
           {
             "name": "maxLon",
             "in": "query",
-            "description": "Maximum longitude (-180 to 180)",
+            "description": "Northeast corner longitude (-180 to 180, must be greater than minLon)",
             "schema": {
               "type": "number",
               "format": "decimal"
@@ -2857,7 +2877,7 @@
           {
             "name": "minHeightAgl",
             "in": "query",
-            "description": "Optional minimum height AGL in feet to filter results",
+            "description": "Optional minimum height AGL in feet — only return obstacles at or above this height",
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -2901,7 +2921,7 @@
             }
           },
           "400": {
-            "description": "If coordinates are invalid or minLat >= maxLat",
+            "description": "If coordinates are invalid, minLat >= maxLat, or the box crosses the antimeridian",
             "content": {
               "application/json": {
                 "schema": {
@@ -2965,6 +2985,7 @@
           "Weather - PIREPs"
         ],
         "summary": "Searches for PIREPs near a geographic point. Returns pilot reports within the specified\nradius of the given coordinates, useful for checking conditions along a flight route.",
+        "description": "``` GET /api/v1/pireps/nearby?lat=32.897&lon=-97.038 — default 50 NM radius GET /api/v1/pireps/nearby?lat=32.897&lon=-97.038&radiusNm=100 — custom radius ```",
         "operationId": "Pirep_SearchNearby",
         "parameters": [
           {
@@ -2990,7 +3011,7 @@
           {
             "name": "radiusNm",
             "in": "query",
-            "description": "Search radius in nautical miles (default 50)",
+            "description": "Search radius in nautical miles (default 50, max 500)",
             "schema": {
               "type": "number",
               "format": "double",
@@ -3052,6 +3073,7 @@
           "Weather - PIREPs"
         ],
         "summary": "Searches for PIREPs near an airport. Looks up the airport coordinates by ICAO code or\nFAA identifier, then returns pilot reports within the specified radius.",
+        "description": "``` GET /api/v1/pireps/airport/KDFW — default 50 NM radius GET /api/v1/pireps/airport/DFW?radiusNm=100 — custom radius with FAA identifier ```",
         "operationId": "Pirep_SearchNearAirport",
         "parameters": [
           {
@@ -3067,7 +3089,7 @@
           {
             "name": "radiusNm",
             "in": "query",
-            "description": "Search radius in nautical miles (default 50)",
+            "description": "Search radius in nautical miles (default 50, max 500)",
             "schema": {
               "type": "number",
               "format": "double",
@@ -3185,7 +3207,8 @@
         "tags": [
           "Weather - Domestic SIGMETs"
         ],
-        "summary": "Gets SIGMETs filtered by hazard type",
+        "summary": "Gets SIGMETs filtered by hazard type.",
+        "description": "**Hazard Types**\n\n- `CONVECTIVE` — thunderstorms and convective activity\n\n- `ICE` — severe icing\n\n- `TURB` — severe turbulence\n\n- `IFR` — widespread IFR conditions\n\n- `MTN_OBSCN` — mountain obscuration\n\n``` GET /api/v1/sigmets/hazard/CONVECTIVE GET /api/v1/sigmets/hazard/TURB ```",
         "operationId": "Sigmet_GetSigmetsByHazardType",
         "parameters": [
           {
@@ -3252,6 +3275,7 @@
           "Weather - Domestic SIGMETs"
         ],
         "summary": "Finds SIGMETs whose geographic boundary contains the given point. Returns advisories\nthat affect a specific location, answering \"what SIGMETs are active at this position?\"",
+        "description": "``` GET /api/v1/sigmets/affecting?lat=32.897&lon=-97.038 ```",
         "operationId": "Sigmet_SearchAffecting",
         "parameters": [
           {
@@ -3328,6 +3352,7 @@
           "Weather - Domestic SIGMETs"
         ],
         "summary": "Finds SIGMETs that intersect a geographic bounding box. Returns advisories whose\nboundary overlaps the specified area, useful for checking conditions across a flight route.",
+        "description": "**Note:** The bounding box must not cross the antimeridian (i.e., `minLon` must be less than `maxLon`). Antimeridian-crossing queries are not supported. This endpoint covers domestic US SIGMETs within the contiguous United States.\n\n``` GET /api/v1/sigmets/by-area?minLat=30&maxLat=35&minLon=-100&maxLon=-95 ```",
         "operationId": "Sigmet_SearchByArea",
         "parameters": [
           {
@@ -3406,7 +3431,7 @@
             }
           },
           "400": {
-            "description": "If coordinates are invalid",
+            "description": "If coordinates are invalid or the bounding box crosses the antimeridian",
             "content": {
               "application/json": {
                 "schema": {
@@ -3424,12 +3449,13 @@
           "Weather - TAFs"
         ],
         "summary": "Gets the current TAFs for multiple airports in a single request.\nAccepts ICAO codes or FAA identifiers. Identifiers that don't resolve to a TAF are silently skipped.",
+        "description": "Both ICAO codes and FAA identifiers can be mixed in the same request. Maximum 100 identifiers per request.\n\n``` GET /api/v1/tafs/batch?ids=KDFW,KAUS,KHOU GET /api/v1/tafs/batch?ids=DFW,AUS ```",
         "operationId": "Taf_GetTafsBatch",
         "parameters": [
           {
             "name": "ids",
             "in": "query",
-            "description": "Comma-separated ICAO codes or FAA identifiers (e.g., KDFW,KAUS,KHOU)",
+            "description": "Comma-separated ICAO codes or FAA identifiers (e.g., KDFW,KAUS,KHOU). Maximum 100.",
             "schema": {
               "type": "string"
             },
@@ -3451,7 +3477,7 @@
             }
           },
           "400": {
-            "description": "If the ids parameter is empty",
+            "description": "If the ids parameter is empty or exceeds 100 identifiers",
             "content": {
               "application/json": {
                 "schema": {
@@ -3469,13 +3495,14 @@
           "Weather - TAFs"
         ],
         "summary": "Gets the current TAF for a specific airport, including all forecast periods with expected\nweather conditions (wind, visibility, sky cover, precipitation, turbulence, and icing).",
+        "description": "``` GET /api/v1/tafs/KDFW — by ICAO code GET /api/v1/tafs/DFW — by FAA identifier ```",
         "operationId": "Taf_GetTafByIcaoCodeOrIdent",
         "parameters": [
           {
             "name": "icaoCodeOrIdent",
             "in": "path",
             "required": true,
-            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW)",
+            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW). Case-insensitive.",
             "schema": {
               "type": "string"
             },
