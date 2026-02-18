@@ -78,7 +78,7 @@ const staticComparisonFeatures = [
         atp: true,
       },
       {
-        name: 'Controlled airspace (Class A\u2013E)',
+        name: 'Controlled airspace (Class B\u2013D)',
         student: false,
         private: true,
         commercial: true,
@@ -159,6 +159,13 @@ const staticComparisonFeatures = [
       },
       {
         name: 'Winds aloft forecasts (6/12/24 hr)',
+        student: false,
+        private: false,
+        commercial: true,
+        atp: true,
+      },
+      {
+        name: 'Route weather briefing',
         student: false,
         private: false,
         commercial: true,
