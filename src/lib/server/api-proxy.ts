@@ -58,11 +58,20 @@ export const proxyApiRequest = createServerFn({ method: 'POST' })
 
     const start = performance.now()
 
-    const response = await fetch(url, {
-      method: data.method,
-      headers,
-      body: data.body ?? undefined,
-    })
+    const controller = new AbortController()
+    const fetchTimer = setTimeout(() => controller.abort(), 15_000)
+
+    let response: Response
+    try {
+      response = await fetch(url, {
+        method: data.method,
+        headers,
+        body: data.body ?? undefined,
+        signal: controller.signal,
+      })
+    } finally {
+      clearTimeout(fetchTimer)
+    }
 
     const durationMs = Math.round(performance.now() - start)
 

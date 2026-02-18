@@ -53,7 +53,7 @@ export default defineHandler(async (event) => {
     resolveApimProductId = tierResolverMod.resolveApimProductId
   } catch (err) {
     log.error({ err }, 'Failed to import modules')
-    return { received: true }
+    throw new HTTPError({ statusCode: 500, statusMessage: 'Internal error' })
   }
 
   const stripe = getStripe()
@@ -67,16 +67,38 @@ export default defineHandler(async (event) => {
     })
   }
 
-  // Warn about missing price env vars (makes misconfiguration visible in logs)
-  if (!process.env.STRIPE_PRIVATE_PRICE_ID) {
-    log.warn(
-      'STRIPE_PRIVATE_PRICE_ID is not set — price-based tier mapping will fail for private plans',
-    )
-  }
-  if (!process.env.STRIPE_COMMERCIAL_PRICE_ID) {
-    log.warn(
-      'STRIPE_COMMERCIAL_PRICE_ID is not set — price-based tier mapping will fail for commercial plans',
-    )
+  // In production, price IDs are required — without them every paid customer
+  // silently falls back to the student (free) tier.
+  if (process.env.NODE_ENV === 'production') {
+    if (!process.env.STRIPE_PRIVATE_PRICE_ID) {
+      log.error(
+        'STRIPE_PRIVATE_PRICE_ID is not set — paid tier mapping will fail',
+      )
+      throw new HTTPError({
+        statusCode: 500,
+        statusMessage: 'Missing price configuration',
+      })
+    }
+    if (!process.env.STRIPE_COMMERCIAL_PRICE_ID) {
+      log.error(
+        'STRIPE_COMMERCIAL_PRICE_ID is not set — paid tier mapping will fail',
+      )
+      throw new HTTPError({
+        statusCode: 500,
+        statusMessage: 'Missing price configuration',
+      })
+    }
+  } else {
+    if (!process.env.STRIPE_PRIVATE_PRICE_ID) {
+      log.warn(
+        'STRIPE_PRIVATE_PRICE_ID is not set — price-based tier mapping will fail for private plans',
+      )
+    }
+    if (!process.env.STRIPE_COMMERCIAL_PRICE_ID) {
+      log.warn(
+        'STRIPE_COMMERCIAL_PRICE_ID is not set — price-based tier mapping will fail for commercial plans',
+      )
+    }
   }
 
   const body = await event.req.text()

@@ -1,16 +1,38 @@
 import { createEnv } from '@t3-oss/env-core'
 import { z } from 'zod'
 
+const isProduction = process.env.NODE_ENV === 'production'
+
+/**
+ * Helper: required in production, optional in development.
+ * Lets local dev work with partial config while ensuring production
+ * never starts with missing critical vars.
+ */
+const requiredInProd = (schema: z.ZodString) =>
+  isProduction ? schema.min(1) : schema.optional()
+
+const requiredUrlInProd = (schema: z.ZodString) =>
+  isProduction ? schema.url() : schema.url().optional()
+
 export const env = createEnv({
   server: {
-    SERVER_URL: z.url().optional(),
+    // --- Required in production ---
+    SERVER_URL: requiredUrlInProd(z.string()),
+    CLERK_SECRET_KEY: requiredInProd(z.string()),
+    STRIPE_SECRET_KEY: requiredInProd(z.string()),
+    STRIPE_WEBHOOK_SECRET: requiredInProd(z.string()),
+    STRIPE_PRIVATE_PRICE_ID: requiredInProd(z.string()),
+    STRIPE_COMMERCIAL_PRICE_ID: requiredInProd(z.string()),
+    AZURE_TENANT_ID: requiredInProd(z.string()),
+    AZURE_CLIENT_ID: requiredInProd(z.string()),
+    AZURE_CLIENT_SECRET: requiredInProd(z.string()),
+    AZURE_SUBSCRIPTION_ID: requiredInProd(z.string()),
+    APIM_RESOURCE_GROUP: requiredInProd(z.string()),
+    APIM_SERVICE_NAME: requiredInProd(z.string()),
+    RESEND_API_KEY: requiredInProd(z.string()),
+
+    // --- Optional (have defaults or non-critical) ---
     PREFLIGHT_API_BASE_URL: z.url().optional(),
-    AZURE_TENANT_ID: z.string().optional(),
-    AZURE_CLIENT_ID: z.string().optional(),
-    AZURE_CLIENT_SECRET: z.string().optional(),
-    AZURE_SUBSCRIPTION_ID: z.string().optional(),
-    APIM_RESOURCE_GROUP: z.string().optional(),
-    APIM_SERVICE_NAME: z.string().optional(),
     APIM_API_VERSION: z.string().optional(),
     APIM_LOG_ANALYTICS_WORKSPACE_ID: z.string().optional(),
     APIM_STUDENT_PRODUCT_ID: z.string().optional().default('student-pilot'),
@@ -19,12 +41,7 @@ export const env = createEnv({
       .string()
       .optional()
       .default('commercial-pilot'),
-    STRIPE_SECRET_KEY: z.string().optional(),
-    STRIPE_WEBHOOK_SECRET: z.string().optional(),
-    STRIPE_PRIVATE_PRICE_ID: z.string().optional(),
-    STRIPE_COMMERCIAL_PRICE_ID: z.string().optional(),
-    CLERK_SECRET_KEY: z.string().optional(),
-    RESEND_API_KEY: z.string().optional(),
+    CLERK_WEBHOOK_SECRET: z.string().optional(),
   },
 
   /**
@@ -34,10 +51,12 @@ export const env = createEnv({
   clientPrefix: 'VITE_',
 
   client: {
+    VITE_CLERK_PUBLISHABLE_KEY: z.string().min(1),
+    VITE_APIM_GATEWAY_URL: isProduction
+      ? z.string().url()
+      : z.string().url().optional(),
     VITE_APP_TITLE: z.string().min(1).optional(),
     VITE_BASE_URL: z.url().optional(),
-    VITE_CLERK_PUBLISHABLE_KEY: z.string().min(1).optional(),
-    VITE_APIM_GATEWAY_URL: z.url().optional(),
     VITE_WAITLIST_MODE: z.string().optional().default('false'),
   },
 

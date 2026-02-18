@@ -42,6 +42,7 @@ function getManagementBaseUrl(): string {
 
 const MAX_RETRIES = 3
 const RETRY_BASE_DELAY = 500
+const FETCH_TIMEOUT_MS = 30_000
 
 function isRetryable(status: number): boolean {
   return status === 429 || status >= 500
@@ -67,9 +68,13 @@ export async function apimFetch<T = unknown>(
       )
     }
 
+    const controller = new AbortController()
+    const fetchTimer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS)
+
     try {
       const response = await fetch(url, {
         ...options,
+        signal: controller.signal,
         headers: {
           Authorization: `Bearer ${token.token}`,
           Accept: 'application/json',
@@ -102,7 +107,7 @@ export async function apimFetch<T = unknown>(
     } catch (err) {
       lastError = err instanceof Error ? err : new Error('APIM request failed')
 
-      // Retry on network errors (fetch throws on network failure)
+      // Retry on network errors and timeouts (fetch throws on these)
       if (
         attempt < MAX_RETRIES &&
         !lastError.message.startsWith('APIM Management API error')
@@ -113,6 +118,8 @@ export async function apimFetch<T = unknown>(
       }
 
       throw lastError
+    } finally {
+      clearTimeout(fetchTimer)
     }
   }
 
