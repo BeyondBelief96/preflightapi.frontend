@@ -357,8 +357,20 @@ export default defineHandler(async (event) => {
 
             if (clerkUserId) {
               const firstItem = subscription.items.data[0]
-              const periodStart = firstItem?.current_period_start ?? 0
-              await syncQuotaEpoch(apimFetch, clerkUserId, periodStart)
+              const periodStart = firstItem?.current_period_start
+
+              if (!periodStart || periodStart < 1_000_000_000) {
+                log.error(
+                  {
+                    userId: clerkUserId,
+                    periodStart,
+                    subscriptionId: subscription.id,
+                  },
+                  'Invalid period_start on subscription item — skipping epoch sync',
+                )
+              } else {
+                await syncQuotaEpoch(apimFetch, clerkUserId, periodStart)
+              }
             } else {
               log.warn(
                 'Could not resolve clerkUserId for invoice.paid subscription',

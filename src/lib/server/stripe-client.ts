@@ -24,6 +24,7 @@ export function getStripe(): Stripe {
 
     stripeInstance = new Stripe(secretKey, {
       apiVersion: '2026-01-28.clover',
+      timeout: 15_000,
     })
   }
   return stripeInstance

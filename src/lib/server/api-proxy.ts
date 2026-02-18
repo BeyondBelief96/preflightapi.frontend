@@ -1,4 +1,5 @@
 import { createServerFn } from '@tanstack/react-start'
+import { z } from 'zod'
 import { env } from '@/env'
 import { API_BASE_PATH } from '@/lib/api-metadata'
 
@@ -10,16 +11,24 @@ export interface ProxyResult {
   durationMs: number
 }
 
+const proxyInputSchema = z.object({
+  method: z.enum(['GET', 'POST', 'PUT', 'DELETE', 'PATCH']),
+  path: z.string().min(1).regex(/^\/api\/v\d+\//, 'Path must start with /api/v{n}/'),
+  apiKey: z.string().min(1),
+  queryParams: z.record(z.string(), z.string()).optional(),
+  body: z.string().optional(),
+})
+
+type ProxyInput = {
+  method: string
+  path: string
+  apiKey: string
+  queryParams?: Record<string, string>
+  body?: string
+}
+
 export const proxyApiRequest = createServerFn({ method: 'POST' })
-  .inputValidator(
-    (input: {
-      method: string
-      path: string
-      apiKey: string
-      queryParams?: Record<string, string>
-      body?: string
-    }) => input,
-  )
+  .inputValidator((input: ProxyInput) => proxyInputSchema.parse(input))
   .handler(async ({ data }): Promise<ProxyResult> => {
     // Security: path must start with the current API base path
     if (!data.path.startsWith(`${API_BASE_PATH}/`)) {
