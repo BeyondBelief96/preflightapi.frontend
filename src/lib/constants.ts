@@ -164,13 +164,14 @@ export const PLANS: Array<PlanDefinition> = [
   {
     id: 'atp',
     name: 'ATP',
-    price: null,
+    price: 149.99,
     interval: 'month',
     apimProductId: 'atp',
     limits: { callsPerMonth: 2_000_000, ratePerMinute: 500 },
     features: buildPlanFeatures(
       'atp',
       { callsPerMonth: 2_000_000, ratePerMinute: 500 },
+      149.99,
     ),
     cta: 'Go ATP',
   },
