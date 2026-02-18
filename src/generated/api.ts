@@ -2682,7 +2682,7 @@ export interface components {
             skyCover?: string;
             /**
              * Format: int32
-             * @description Cloud base height in feet AGL. Null for SKC or CLR.
+             * @description Cloud base height in feet AGL. Null for CLR or CAVOK.
              */
             cloudBaseFtAgl?: number | null;
             /** @description Cloud type modifier (e.g., CB for cumulonimbus, TCU for towering cumulus). */
@@ -2893,7 +2893,7 @@ export interface components {
             movementSpeedKt?: number | null;
             /** @description Hazard type and severity information. */
             hazard?: components["schemas"]["SigmetHazardDto"] | null;
-            /** @description Advisory type: SIGMET, AIRMET, or OUTLOOK (convective). */
+            /** @description Advisory type: always SIGMET. */
             sigmetType?: string | null;
             /** @description Geographic areas affected by the advisory. */
             areas?: components["schemas"]["SigmetArea"][] | null;

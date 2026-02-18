@@ -6170,7 +6170,7 @@
           },
           "cloudBaseFtAgl": {
             "type": "integer",
-            "description": "Cloud base height in feet AGL. Null for SKC or CLR.",
+            "description": "Cloud base height in feet AGL. Null for CLR or CAVOK.",
             "format": "int32",
             "nullable": true
           },
@@ -6560,7 +6560,7 @@
           },
           "sigmetType": {
             "type": "string",
-            "description": "Advisory type: SIGMET, AIRMET, or OUTLOOK (convective).",
+            "description": "Advisory type: always SIGMET.",
             "nullable": true
           },
           "areas": {
