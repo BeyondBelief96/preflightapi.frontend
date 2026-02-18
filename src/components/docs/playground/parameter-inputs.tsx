@@ -55,7 +55,7 @@ export function ParameterInputs({
                   className="w-full font-mono text-xs"
                   id={`param-${p.name}`}
                 >
-                  <SelectValue />
+                  <SelectValue placeholder={`Select ${p.name}`} />
                 </SelectTrigger>
                 <SelectContent>
                   {p.enum.map((val) => (

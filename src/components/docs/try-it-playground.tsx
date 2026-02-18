@@ -30,10 +30,14 @@ function initParamValues(
   const values: Record<string, string> = {}
   for (const p of params) {
     if (p.in === 'path' || p.in === 'query') {
+      if (!p.required) continue
       if (p.enum?.length) {
         values[p.name] = p.enum[0]
       } else {
-        values[p.name] = getExampleValue(p)
+        const example = getExampleValue(p)
+        if (example !== 'value') {
+          values[p.name] = example
+        }
       }
     }
   }
@@ -57,6 +61,18 @@ export function TryItPlayground({ endpoint }: TryItPlaygroundProps) {
   const queryParams = endpoint.parameters.filter((p) => p.in === 'query')
   const hasBody = ['POST', 'PUT', 'PATCH'].includes(endpoint.method)
 
+  const canSend = useMemo(() => {
+    if (!apiKey.trim()) return false
+    if (isLoading) return false
+    for (const p of pathParams) {
+      if (p.required && !paramValues[p.name]?.trim()) return false
+    }
+    for (const p of queryParams) {
+      if (p.required && !paramValues[p.name]?.trim()) return false
+    }
+    return true
+  }, [apiKey, isLoading, pathParams, queryParams, paramValues])
+
   // Build the URL preview
   const urlPreview = useMemo(() => {
     let path = endpoint.path
@@ -78,6 +94,7 @@ export function TryItPlayground({ endpoint }: TryItPlaygroundProps) {
   }
 
   const handleSend = () => {
+    if (!canSend) return
     setResponseOpen(true)
     send({
       method: endpoint.method,
@@ -90,8 +107,21 @@ export function TryItPlayground({ endpoint }: TryItPlaygroundProps) {
     })
   }
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (
+      e.key === 'Enter' &&
+      e.target instanceof HTMLInputElement
+    ) {
+      e.preventDefault()
+      handleSend()
+    }
+  }
+
   return (
-    <div className="space-y-4 rounded-lg border border-accent/30 bg-accent/5 p-4">
+    <div
+      onKeyDown={handleKeyDown}
+      className="space-y-4 rounded-lg border border-accent/30 bg-accent/5 p-4"
+    >
       {/* API Key */}
       <div className="space-y-1.5">
         <Label className="text-xs font-medium text-muted-foreground">
@@ -167,7 +197,7 @@ export function TryItPlayground({ endpoint }: TryItPlaygroundProps) {
       </div>
 
       {/* Send Button */}
-      <Button onClick={handleSend} disabled={isLoading} size="sm">
+      <Button type="button" onClick={handleSend} disabled={!canSend} size="sm">
         {isLoading ? (
           <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
         ) : (
