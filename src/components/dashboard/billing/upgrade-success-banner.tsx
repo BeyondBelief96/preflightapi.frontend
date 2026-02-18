@@ -2,42 +2,11 @@ import { Link } from '@tanstack/react-router'
 import { ArrowRight, BookOpen, KeyRound, X } from 'lucide-react'
 import type { EndpointTier, PlanDefinition } from '@/lib/constants'
 import { PLAN_ORDER } from '@/lib/constants'
+import { getEndpointDocMap } from '@/lib/endpoint-registry'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 
-const ENDPOINT_DOCS: Record<string, { label: string; href: string }> = {
-  pirep: { label: 'PIREPs', href: '/docs/pireps' },
-  sigmet: { label: 'Domestic SIGMETs', href: '/docs/sigmets' },
-  'g-airmet': { label: 'G-AIRMETs', href: '/docs/g-airmets' },
-  'airspace/controlled': {
-    label: 'Controlled Airspace',
-    href: '/docs/airspace',
-  },
-  'airspace/special-use': {
-    label: 'Special Use Airspace',
-    href: '/docs/airspace',
-  },
-  'navigation/obstacles': {
-    label: 'Obstacle Database',
-    href: '/docs/obstacles',
-  },
-  notams: { label: 'NOTAMs', href: '/docs/notams' },
-  'airports/diagrams': {
-    label: 'Airport Diagrams',
-    href: '/docs/airport-diagrams',
-  },
-  'charts/supplements': {
-    label: 'Chart Supplements',
-    href: '/docs/chart-supplements',
-  },
-  'e6b/calculator': { label: 'E6B Flight Computer', href: '/docs/e6b' },
-  'navigation/bearing-distance': {
-    label: 'Bearing & Distance',
-    href: '/docs/nav-log',
-  },
-  'navigation/winds-aloft': { label: 'Winds Aloft', href: '/docs/nav-log' },
-  'navigation/nav-log': { label: 'Navigation Log', href: '/docs/nav-log' },
-}
+const ENDPOINT_DOCS = getEndpointDocMap()
 
 function getNewEndpoints(
   planId: string,
