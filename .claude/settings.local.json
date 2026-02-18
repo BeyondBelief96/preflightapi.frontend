@@ -52,7 +52,9 @@
       "Bash(git stash:*)",
       "Bash(npm view:*)",
       "mcp__ide__executeCode",
-      "Bash(npx vitest:*)"
+      "Bash(npx vitest:*)",
+      "Bash(node --experimental-vm-modules:*)",
+      "Bash(npx tsx:*)"
     ]
   }
 }

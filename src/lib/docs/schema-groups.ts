@@ -1,3 +1,6 @@
+import spec from '../../../docs/preflightapi_swagger.json'
+import { schemaNamesByTag } from './spec-parser'
+
 export interface SchemaGroup {
   slug: string
   title: string
@@ -6,49 +9,32 @@ export interface SchemaGroup {
   schemaNames: Array<string>
 }
 
-export const SCHEMA_GROUPS: Array<SchemaGroup> = [
+// ---------------------------------------------------------------------------
+// Group definitions — metadata is editorial, schemas are derived from tags
+// ---------------------------------------------------------------------------
+
+interface GroupDef {
+  slug: string
+  title: string
+  description: string
+  icon: string
+  tags: Array<string>
+}
+
+const GROUP_DEFS: Array<GroupDef> = [
   {
     slug: 'weather',
     title: 'Weather',
     description:
       'METARs, TAFs, PIREPs, SIGMETs, and G-AIRMETs — surface observations, forecasts, pilot reports, and weather advisories.',
     icon: 'cloud',
-    schemaNames: [
-      'MetarDto',
-      'MetarQualityControlFlagsDto',
-      'MetarSkyConditionDto',
-      'PaginatedResponseOfMetarDto',
-      'TafDto',
-      'TafForecast',
-      'TafSkyCondition',
-      'TafTurbulenceCondition',
-      'TafIcingCondition',
-      'TafTemperature',
-      'PirepDto',
-      'PaginatedResponseOfPirepDto',
-      'PirepQualityControlFlags',
-      'PirepSkyCondition',
-      'PirepTurbulenceCondition',
-      'PirepIcingCondition',
-      'SigmetDto',
-      'SigmetAltitude',
-      'SigmetArea',
-      'SigmetPoint',
-      'SigmetHazardDto',
-      'SigmetHazardType',
-      'PaginatedResponseOfSigmetDto',
-      'GAirmetDto',
-      'GAirmetProduct',
-      'GAirmetHazardType',
-      'GAirmetAltitude',
-      'GAirmetFzlAltitude',
-      'GAirmetArea',
-      'GAirmetPoint',
-      'PaginatedResponseOfGAirmetDto',
-      'RouteBriefingResponse',
-      'RouteBriefingRequest',
-      'RouteBriefingSummary',
-      'BriefingWaypoint',
+    tags: [
+      'Weather - METARs',
+      'Weather - TAFs',
+      'Weather - PIREPs',
+      'Weather - Domestic SIGMETs',
+      'Weather - G-AIRMETs',
+      'Briefing',
     ],
   },
   {
@@ -57,36 +43,7 @@ export const SCHEMA_GROUPS: Array<SchemaGroup> = [
     description:
       'Airport details, runway data, surface types, lighting, markings, approaches, and controlling objects.',
     icon: 'plane',
-    schemaNames: [
-      'PaginatedResponseOfAirportDto',
-      'AirportDto',
-      'AirportOwnershipType',
-      'AirportFacilityUse',
-      'AirportSiteType',
-      'AirportStatus',
-      'AirportInspectionMethod',
-      'AirportInspectorAgency',
-      'BeaconLensColor',
-      'OxygenPressureType',
-      'RepairServiceAvailability',
-      'SegmentedCircleMarkerType',
-      'SurveyMethod',
-      'WindIndicatorType',
-      'RunwayDto',
-      'RunwaySurfaceType',
-      'RunwaySurfaceTreatment',
-      'RunwayEdgeLightIntensity',
-      'RunwayEndDto',
-      'RunwayVisualRangeEquipmentType',
-      'InstrumentApproachType',
-      'RunwayMarkingsType',
-      'RunwayMarkingsCondition',
-      'VisualGlideSlopeIndicatorType',
-      'ApproachLightSystemType',
-      'ControllingObjectMarking',
-      'PaginatedResponseOfCommunicationFrequencyDto',
-      'CommunicationFrequencyDto',
-    ],
+    tags: ['Airports', 'Communication Frequencies'],
   },
   {
     slug: 'airspace',
@@ -94,13 +51,7 @@ export const SCHEMA_GROUPS: Array<SchemaGroup> = [
     description:
       'Controlled airspace boundaries, special-use airspace, and GeoJSON geometry.',
     icon: 'layers',
-    schemaNames: [
-      'PaginatedResponseOfAirspaceDto',
-      'AirspaceDto',
-      'GeoJsonGeometry',
-      'PaginatedResponseOfSpecialUseAirspaceDto',
-      'SpecialUseAirspaceDto',
-    ],
+    tags: ['Airspace'],
   },
   {
     slug: 'notams',
@@ -108,20 +59,7 @@ export const SCHEMA_GROUPS: Array<SchemaGroup> = [
     description:
       'Notices to Air Missions — NOTAM data, geometry, properties, translations, and route queries.',
     icon: 'alert-triangle',
-    schemaNames: [
-      'NotamResponseDto',
-      'PaginatedResponseOfNotamDto',
-      'NotamDto',
-      'NotamGeometryDto',
-      'NotamPropertiesDto',
-      'CoreNotamDataDto',
-      'NotamEventDto',
-      'NotamDetailDto',
-      'NotamTranslationDto',
-      'NotamFilterDto',
-      'NotamQueryByRouteRequest',
-      'RoutePointDto',
-    ],
+    tags: ['NOTAMs'],
   },
   {
     slug: 'obstacles',
@@ -129,15 +67,7 @@ export const SCHEMA_GROUPS: Array<SchemaGroup> = [
     description:
       'FAA-charted obstacles — positions, heights, lighting, markings, and accuracy classifications.',
     icon: 'triangle-alert',
-    schemaNames: [
-      'PaginatedResponseOfObstacleDto',
-      'ObstacleDto',
-      'ObstacleLighting',
-      'HorizontalAccuracy',
-      'VerticalAccuracy',
-      'ObstacleMarking',
-      'VerificationStatus',
-    ],
+    tags: ['Obstacles'],
   },
   {
     slug: 'documents',
@@ -145,12 +75,7 @@ export const SCHEMA_GROUPS: Array<SchemaGroup> = [
     description:
       'FAA airport diagram and chart supplement PDF document references.',
     icon: 'file-text',
-    schemaNames: [
-      'AirportDiagramsResponseDto',
-      'AirportDiagramDto',
-      'ChartSupplementsResponseDto',
-      'ChartSupplementDto',
-    ],
+    tags: ['Airport Diagrams', 'Chart Supplements'],
   },
   {
     slug: 'e6b',
@@ -158,22 +83,7 @@ export const SCHEMA_GROUPS: Array<SchemaGroup> = [
     description:
       'E6B flight computer — crosswind, density altitude, wind triangle, true airspeed, cloud base, and pressure altitude.',
     icon: 'calculator',
-    schemaNames: [
-      'AirportCrosswindResponseDto',
-      'RunwayCrosswindComponentDto',
-      'CrosswindCalculationResponseDto',
-      'CrosswindCalculationRequestDto',
-      'DensityAltitudeResponseDto',
-      'DensityAltitudeRequestDto',
-      'WindTriangleResponseDto',
-      'WindTriangleRequestDto',
-      'TrueAirspeedResponseDto',
-      'TrueAirspeedRequestDto',
-      'CloudBaseResponseDto',
-      'CloudBaseRequestDto',
-      'PressureAltitudeResponseDto',
-      'PressureAltitudeRequestDto',
-    ],
+    tags: ['E6B Flight Computer'],
   },
   {
     slug: 'navigation',
@@ -181,19 +91,7 @@ export const SCHEMA_GROUPS: Array<SchemaGroup> = [
     description:
       'Navigation log, bearing & distance, waypoints, and winds aloft data.',
     icon: 'route',
-    schemaNames: [
-      'NavlogResponseDto',
-      'NavigationLegDto',
-      'WaypointDto',
-      'WaypointType',
-      'NavlogRequestDto',
-      'NavlogPerformanceDataDto',
-      'BearingAndDistanceResponseDto',
-      'BearingAndDistanceRequestDto',
-      'WindsAloftDto',
-      'WindsAloftSiteDto',
-      'WindTempDto',
-    ],
+    tags: ['Navigation Log'],
   },
   {
     slug: 'common',
@@ -201,9 +99,84 @@ export const SCHEMA_GROUPS: Array<SchemaGroup> = [
     description:
       'Shared types used across all endpoints — pagination metadata and error responses.',
     icon: 'database',
-    schemaNames: ['PaginationMetadata', 'ApiErrorResponse'],
+    tags: [], // catches unclaimed schemas
   },
 ]
+
+// ---------------------------------------------------------------------------
+// Compute schemaNames from tags → $ref walking
+// ---------------------------------------------------------------------------
+
+const oaSpec = spec as { components: { schemas: Record<string, unknown> } }
+const allSchemaNames = Object.keys(oaSpec.components.schemas)
+
+function buildSchemaGroups(): Array<SchemaGroup> {
+  // First pass: compute raw schema sets per group from tags
+  const rawGroups: Array<{ def: GroupDef; schemas: Set<string> }> = []
+  for (const def of GROUP_DEFS) {
+    if (def.slug === 'common') continue
+    const schemaSet = new Set<string>()
+    for (const tag of def.tags) {
+      for (const name of schemaNamesByTag[tag] ?? []) {
+        schemaSet.add(name)
+      }
+    }
+    rawGroups.push({ def, schemas: schemaSet })
+  }
+
+  // Count how many groups each schema appears in
+  const groupCount = new Map<string, number>()
+  for (const { schemas } of rawGroups) {
+    for (const name of schemas) {
+      groupCount.set(name, (groupCount.get(name) ?? 0) + 1)
+    }
+  }
+
+  // Deduplicate: schemas in 3+ groups → common (truly shared types).
+  // Schemas in exactly 2 groups → keep in the later (more specific) group.
+  const claimed = new Set<string>()
+  for (let i = rawGroups.length - 1; i >= 0; i--) {
+    const { schemas } = rawGroups[i]
+    for (const name of [...schemas]) {
+      const count = groupCount.get(name) ?? 0
+      if (count >= 3) {
+        schemas.delete(name)
+      } else if (count === 2) {
+        if (claimed.has(name)) {
+          schemas.delete(name)
+        } else {
+          claimed.add(name)
+        }
+      } else {
+        claimed.add(name)
+      }
+    }
+  }
+
+  // Build groups in original order
+  const groups: Array<SchemaGroup> = rawGroups.map(({ def, schemas }) => ({
+    slug: def.slug,
+    title: def.title,
+    description: def.description,
+    icon: def.icon,
+    schemaNames: [...schemas].sort(),
+  }))
+
+  // Common group: any schema not claimed by a specific group
+  const commonDef = GROUP_DEFS.find((d) => d.slug === 'common')!
+  const unclaimed = allSchemaNames.filter((n) => !claimed.has(n)).sort()
+  groups.push({
+    slug: commonDef.slug,
+    title: commonDef.title,
+    description: commonDef.description,
+    icon: commonDef.icon,
+    schemaNames: unclaimed,
+  })
+
+  return groups
+}
+
+export const SCHEMA_GROUPS: Array<SchemaGroup> = buildSchemaGroups()
 
 /** Reverse lookup: schema name → group slug */
 export const SCHEMA_TO_GROUP: Record<string, string> = Object.fromEntries(
