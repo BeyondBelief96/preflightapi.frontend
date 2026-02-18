@@ -1,4 +1,5 @@
 import { env } from '@/env'
+import { PLAN_ORDER } from '@/lib/constants'
 
 /**
  * Returns the APIM product ID for each plan ID,
@@ -35,21 +36,11 @@ export const PLAN_IDS = [
 ] as const
 
 /**
- * Numeric tier ordering for upgrade/downgrade comparisons.
- */
-const TIER_ORDER: Record<string, number> = {
-  student: 0,
-  private: 1,
-  commercial: 2,
-  atp: 3,
-}
-
-/**
  * Returns true if moving from `fromPlanId` to `toPlanId` is a downgrade.
  */
 export function isDowngrade(fromPlanId: string, toPlanId: string): boolean {
-  const fromOrder = TIER_ORDER[fromPlanId]
-  const toOrder = TIER_ORDER[toPlanId]
+  const fromOrder = PLAN_ORDER[fromPlanId as keyof typeof PLAN_ORDER]
+  const toOrder = PLAN_ORDER[toPlanId as keyof typeof PLAN_ORDER]
   if (fromOrder === undefined || toOrder === undefined) {
     throw new Error(
       `Unknown plan ID in downgrade check: from="${fromPlanId}" to="${toPlanId}"`,

@@ -1,3 +1,5 @@
+import type { PlanId } from '@/types/plans'
+
 export const SITE_CONFIG = {
   name: 'PreflightAPI',
   tagline: 'Aviation Data API for Developers',
@@ -177,7 +179,14 @@ export const PLANS: Array<PlanDefinition> = [
   },
 ] as const
 
-export type EndpointTier = 'student' | 'private' | 'commercial'
+export type EndpointTier = PlanId
+
+export const PLAN_ORDER: Record<PlanId, number> = {
+  student: 0,
+  private: 1,
+  commercial: 2,
+  atp: 3,
+}
 
 export const ENDPOINT_ACCESS: Record<string, EndpointTier> = {
   metar: 'student',
