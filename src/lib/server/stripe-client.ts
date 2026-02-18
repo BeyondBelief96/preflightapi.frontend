@@ -13,8 +13,18 @@ export function getStripe(): Stripe {
       )
     }
 
+    if (
+      process.env.NODE_ENV === 'production' &&
+      secretKey.startsWith('sk_test_')
+    ) {
+      throw new Error(
+        'Stripe test key detected in production! Set a live STRIPE_SECRET_KEY.',
+      )
+    }
+
     stripeInstance = new Stripe(secretKey, {
       apiVersion: '2026-01-28.clover',
+      timeout: 15_000,
     })
   }
   return stripeInstance

@@ -51,7 +51,8 @@
       "Bash(pnpm dlx:*)",
       "Bash(git stash:*)",
       "Bash(npm view:*)",
-      "mcp__ide__executeCode"
+      "mcp__ide__executeCode",
+      "Bash(npx vitest:*)"
     ]
   }
 }

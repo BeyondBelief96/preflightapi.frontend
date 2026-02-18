@@ -23,11 +23,63 @@ const emailSchema = z.object({
   message: z.string().min(1),
 })
 
+// --- Simple rate limiting ---
+// Per-email: max 3 submissions per 15 minutes
+// Global: max 30 submissions per 15 minutes (prevents distributed abuse)
+const WINDOW_MS = 15 * 60 * 1000
+const MAX_PER_EMAIL = 3
+const MAX_GLOBAL = 30
+
+const emailAttempts = new Map<string, number[]>()
+let globalAttempts: number[] = []
+
+function isRateLimited(email: string): boolean {
+  const now = Date.now()
+
+  // Clean and check global limit
+  globalAttempts = globalAttempts.filter((t) => now - t < WINDOW_MS)
+  if (globalAttempts.length >= MAX_GLOBAL) return true
+
+  // Clean and check per-email limit
+  const key = email.toLowerCase()
+  const attempts = (emailAttempts.get(key) ?? []).filter(
+    (t) => now - t < WINDOW_MS,
+  )
+
+  if (attempts.length >= MAX_PER_EMAIL) {
+    emailAttempts.set(key, attempts)
+    return true
+  }
+
+  // Record this attempt
+  attempts.push(now)
+  emailAttempts.set(key, attempts)
+  globalAttempts.push(now)
+
+  // Periodic cleanup of stale entries
+  if (emailAttempts.size > 500) {
+    for (const [k, v] of emailAttempts) {
+      if (v.every((t) => now - t >= WINDOW_MS)) {
+        emailAttempts.delete(k)
+      }
+    }
+  }
+
+  return false
+}
+
 export const sendContactEmail = createServerFn({ method: 'POST' })
   .inputValidator((input: z.input<typeof emailSchema>) =>
     emailSchema.parse(input),
   )
   .handler(async ({ data }) => {
+    if (isRateLimited(data.email)) {
+      logger.warn({ email: data.email }, 'Contact form rate limited')
+      throw new Error(
+        'Too many submissions. Please wait a few minutes and try again.',
+      )
+    }
+
     if (!env.RESEND_API_KEY) {
       logger.error('RESEND_API_KEY is not configured')
       throw new Error('RESEND_API_KEY is not configured')

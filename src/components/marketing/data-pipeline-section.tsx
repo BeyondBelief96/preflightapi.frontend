@@ -283,7 +283,8 @@ function ArchitectureDiagram() {
 
         {/* ── Animated glow pulses ────────────────────── */}
         {pulses.map((p) => (
-          <g key={p.id} className="glow-pulse">
+          <g key={p.id} className="glow-pulse" visibility="hidden">
+            <set attributeName="visibility" to="visible" begin={`${p.begin}s`} fill="freeze" />
             {/* Wide soft aura */}
             <circle
               r="10"
