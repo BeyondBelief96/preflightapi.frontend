@@ -44,6 +44,16 @@ const MAX_RETRIES = 3
 const RETRY_BASE_DELAY = 500
 const FETCH_TIMEOUT_MS = 30_000
 
+class ApimApiError extends Error {
+  constructor(
+    message: string,
+    public status: number,
+  ) {
+    super(message)
+    this.name = 'ApimApiError'
+  }
+}
+
 function isRetryable(status: number): boolean {
   return status === 429 || status >= 500
 }
@@ -85,8 +95,9 @@ export async function apimFetch<T = unknown>(
 
       if (!response.ok) {
         const body = await response.text()
-        lastError = new Error(
+        lastError = new ApimApiError(
           `APIM Management API error (${response.status}): ${body}`,
+          response.status,
         )
 
         if (isRetryable(response.status) && attempt < MAX_RETRIES) {
@@ -107,11 +118,9 @@ export async function apimFetch<T = unknown>(
     } catch (err) {
       lastError = err instanceof Error ? err : new Error('APIM request failed')
 
-      // Retry on network errors and timeouts (fetch throws on these)
-      if (
-        attempt < MAX_RETRIES &&
-        !lastError.message.startsWith('APIM Management API error')
-      ) {
+      // Retry on network errors and timeouts (AbortError, TypeError, etc.)
+      // but not non-retryable API errors that were re-thrown above
+      if (attempt < MAX_RETRIES && !(lastError instanceof ApimApiError)) {
         const delay = RETRY_BASE_DELAY * 2 ** attempt
         await new Promise((resolve) => setTimeout(resolve, delay))
         continue

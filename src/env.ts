@@ -8,16 +8,13 @@ const isProduction = process.env.NODE_ENV === 'production'
  * Lets local dev work with partial config while ensuring production
  * never starts with missing critical vars.
  */
-const requiredInProd = (schema: z.ZodString) =>
+const requiredInProd = (schema: z.ZodString | z.ZodURL) =>
   isProduction ? schema.min(1) : schema.optional()
-
-const requiredUrlInProd = (schema: z.ZodString) =>
-  isProduction ? schema.url() : schema.url().optional()
 
 export const env = createEnv({
   server: {
     // --- Required in production ---
-    SERVER_URL: requiredUrlInProd(z.string()),
+    SERVER_URL: requiredInProd(z.url()),
     CLERK_SECRET_KEY: requiredInProd(z.string()),
     STRIPE_SECRET_KEY: requiredInProd(z.string()),
     STRIPE_WEBHOOK_SECRET: requiredInProd(z.string()),
@@ -52,9 +49,7 @@ export const env = createEnv({
 
   client: {
     VITE_CLERK_PUBLISHABLE_KEY: z.string().min(1),
-    VITE_APIM_GATEWAY_URL: isProduction
-      ? z.string().url()
-      : z.string().url().optional(),
+    VITE_APIM_GATEWAY_URL: requiredInProd(z.string().url()),
     VITE_APP_TITLE: z.string().min(1).optional(),
     VITE_BASE_URL: z.url().optional(),
     VITE_WAITLIST_MODE: z.string().optional().default('false'),
