@@ -11,6 +11,10 @@ export const apimKeys = {
     [...apimKeys.all, 'daily-trend', subscriptionId] as const,
   endpointBreakdown: (subscriptionId: string) =>
     [...apimKeys.all, 'endpoint-breakdown', subscriptionId] as const,
+  errorBreakdown: (subscriptionId: string) =>
+    [...apimKeys.all, 'error-breakdown', subscriptionId] as const,
+  recentErrors: (subscriptionId: string) =>
+    [...apimKeys.all, 'recent-errors', subscriptionId] as const,
   tierConfig: () => [...apimKeys.all, 'tier-config'] as const,
 }
 

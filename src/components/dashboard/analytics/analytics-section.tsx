@@ -3,8 +3,15 @@ import { ResponseBreakdownCard } from './response-breakdown-card'
 import { PerformanceStatsCard } from './performance-stats-card'
 import { DailyTrendChart } from './daily-trend-chart'
 import { EndpointBreakdownChart } from './endpoint-breakdown-chart'
+import { ErrorBreakdownChart } from './error-breakdown-chart'
+import { RecentErrorsTable } from './recent-errors-table'
 import type { ApimUsageReport } from '@/types/plans'
-import { getDailyUsageTrend, getEndpointBreakdown } from '@/lib/server/apim'
+import {
+  getDailyUsageTrend,
+  getEndpointBreakdown,
+  getErrorBreakdown,
+  getRecentErrors,
+} from '@/lib/server/apim'
 import { apimKeys } from '@/lib/server/apim-queries'
 
 interface AnalyticsSectionProps {
@@ -30,6 +37,18 @@ export function AnalyticsSection({
     staleTime: 5 * 60 * 1000,
   })
 
+  const errorBreakdownQuery = useQuery({
+    queryKey: apimKeys.errorBreakdown(subscriptionId),
+    queryFn: () => getErrorBreakdown({ data: { subscriptionId } }),
+    staleTime: 5 * 60 * 1000,
+  })
+
+  const recentErrorsQuery = useQuery({
+    queryKey: apimKeys.recentErrors(subscriptionId),
+    queryFn: () => getRecentErrors({ data: { subscriptionId } }),
+    staleTime: 5 * 60 * 1000,
+  })
+
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold">Analytics</h3>
@@ -45,6 +64,11 @@ export function AnalyticsSection({
         />
       </div>
 
+      <ErrorBreakdownChart
+        data={errorBreakdownQuery.data}
+        isLoading={errorBreakdownQuery.isLoading}
+      />
+
       <DailyTrendChart
         data={dailyTrendQuery.data}
         isLoading={dailyTrendQuery.isLoading}
@@ -53,6 +77,11 @@ export function AnalyticsSection({
       <EndpointBreakdownChart
         data={endpointBreakdownQuery.data}
         isLoading={endpointBreakdownQuery.isLoading}
+      />
+
+      <RecentErrorsTable
+        data={recentErrorsQuery.data}
+        isLoading={recentErrorsQuery.isLoading}
       />
     </div>
   )
