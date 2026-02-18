@@ -64,14 +64,16 @@ export function TryItPlayground({ endpoint }: TryItPlaygroundProps) {
   const canSend = useMemo(() => {
     if (!apiKey.trim()) return false
     if (isLoading) return false
-    for (const p of pathParams) {
-      if (p.required && !paramValues[p.name]?.trim()) return false
-    }
-    for (const p of queryParams) {
-      if (p.required && !paramValues[p.name]?.trim()) return false
+    for (const p of endpoint.parameters) {
+      if (
+        (p.in === 'path' || p.in === 'query') &&
+        p.required &&
+        !paramValues[p.name]?.trim()
+      )
+        return false
     }
     return true
-  }, [apiKey, isLoading, pathParams, queryParams, paramValues])
+  }, [apiKey, isLoading, endpoint.parameters, paramValues])
 
   // Build the URL preview
   const urlPreview = useMemo(() => {
@@ -227,11 +229,18 @@ export function TryItPlayground({ endpoint }: TryItPlaygroundProps) {
               <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
             )}
           </button>
-          <ResponseDisplay
-            result={response}
-            isOpen={responseOpen}
-            maxHeight="max-h-96"
-          />
+          <div className="relative">
+            {isLoading && (
+              <div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-background/60 backdrop-blur-[1px]">
+                <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+              </div>
+            )}
+            <ResponseDisplay
+              result={response}
+              isOpen={responseOpen}
+              maxHeight="max-h-96"
+            />
+          </div>
         </div>
       )}
     </div>
