@@ -1,5 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
+// --- Import handler after all mocks ---
+
+import handler from '../../../../server/api/stripe/webhook'
+
 // --- Mock fns (declared before vi.mock so closures capture the reference) ---
 
 const mockApimFetch = vi.fn()
@@ -41,19 +45,19 @@ vi.mock('@/lib/server/logger', () => ({
 vi.mock('@/lib/server/stripe-client', () => ({
   getStripe: () => ({
     webhooks: {
-      constructEvent: (...a: any[]) => mockConstructEvent(...a),
+      constructEvent: (...a: Array<any>) => mockConstructEvent(...a),
     },
     customers: {
-      retrieve: (...a: any[]) => mockCustomersRetrieve(...a),
+      retrieve: (...a: Array<any>) => mockCustomersRetrieve(...a),
     },
     subscriptions: {
-      retrieve: (...a: any[]) => mockSubscriptionsRetrieve(...a),
+      retrieve: (...a: Array<any>) => mockSubscriptionsRetrieve(...a),
     },
   }),
 }))
 
 vi.mock('@/lib/server/apim-client', () => ({
-  apimFetch: (...a: any[]) => mockApimFetch(...a),
+  apimFetch: (...a: Array<any>) => mockApimFetch(...a),
 }))
 
 vi.mock('@/lib/server/apim-products', () => ({
@@ -62,25 +66,21 @@ vi.mock('@/lib/server/apim-products', () => ({
     private: 'private-pilot',
     commercial: 'commercial-pilot',
   }),
-  isDowngrade: (...a: any[]) => mockIsDowngrade(...a),
-  planIdFromProductId: (...a: any[]) => mockPlanIdFromProductId(...a),
+  isDowngrade: (...a: Array<any>) => mockIsDowngrade(...a),
+  planIdFromProductId: (...a: Array<any>) => mockPlanIdFromProductId(...a),
 }))
 
 vi.mock('@/lib/server/stripe-tier-resolver', () => ({
-  resolveApimProductId: (...a: any[]) => mockResolveApimProductId(...a),
+  resolveApimProductId: (...a: Array<any>) => mockResolveApimProductId(...a),
 }))
 
 vi.mock('@clerk/tanstack-react-start/server', () => ({
   clerkClient: () => ({
     users: {
-      updateUserMetadata: (...a: any[]) => mockUpdateUserMetadata(...a),
+      updateUserMetadata: (...a: Array<any>) => mockUpdateUserMetadata(...a),
     },
   }),
 }))
-
-// --- Import handler after all mocks ---
-
-import handler from '../../../../server/api/stripe/webhook'
 
 // --- Helpers ---
 

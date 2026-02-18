@@ -81,6 +81,23 @@ export const CATEGORIES: Array<ApiCategory> = [
     ],
   },
 
+  {
+    slug: 'briefing',
+    title: 'Route Briefing',
+    description:
+      tagsMeta['Briefing'] ??
+      'Composite weather briefings for flight routes.',
+    icon: 'file-text',
+    subcategories: [
+      {
+        tag: 'Briefing',
+        label: 'Route Briefing',
+        description:
+          'Composite weather briefing with METARs, TAFs, PIREPs, SIGMETs, G-AIRMETs, and NOTAMs for a flight route.',
+      },
+    ],
+  },
+
   // ── Airports & Airspace ────────────────────────────────
   {
     slug: 'airports',

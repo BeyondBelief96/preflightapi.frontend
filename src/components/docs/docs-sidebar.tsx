@@ -27,6 +27,7 @@ const sections = [
       { label: 'PIREPs', href: '/docs/pireps' },
       { label: 'Domestic SIGMETs', href: '/docs/sigmets' },
       { label: 'G-AIRMETs', href: '/docs/g-airmets' },
+      { label: 'Route Briefing', href: '/docs/briefing' },
     ],
   },
   {

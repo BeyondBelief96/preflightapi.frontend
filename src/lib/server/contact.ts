@@ -30,8 +30,8 @@ const WINDOW_MS = 15 * 60 * 1000
 const MAX_PER_EMAIL = 3
 const MAX_GLOBAL = 30
 
-const emailAttempts = new Map<string, number[]>()
-let globalAttempts: number[] = []
+const emailAttempts = new Map<string, Array<number>>()
+let globalAttempts: Array<number> = []
 
 function isRateLimited(email: string): boolean {
   const now = Date.now()

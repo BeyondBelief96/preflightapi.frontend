@@ -1,5 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { apimFetch } from '../apim-client'
+
 // --- Mocks ---
 
 const mockGetToken = vi.fn()
@@ -23,8 +25,6 @@ vi.mock('@/env', () => ({
 
 const mockFetch = vi.fn()
 vi.stubGlobal('fetch', mockFetch)
-
-import { apimFetch } from '../apim-client'
 
 // --- Helpers ---
 

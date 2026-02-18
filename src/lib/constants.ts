@@ -205,6 +205,7 @@ export const ENDPOINT_ACCESS: Record<string, EndpointTier> = {
   'e6b/pressure-altitude': 'commercial',
   'e6b/calculator': 'commercial',
   'navigation/nav-log': 'commercial',
+  'briefing/route': 'commercial',
 } as const
 
 export const DEFAULT_PLAN_LIMITS: Record<
