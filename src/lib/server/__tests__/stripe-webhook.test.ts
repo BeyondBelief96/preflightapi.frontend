@@ -65,6 +65,7 @@ vi.mock('@/lib/server/apim-products', () => ({
     student: 'student-pilot',
     private: 'private-pilot',
     commercial: 'commercial-pilot',
+    atp: 'atp',
   }),
   isDowngrade: (...a: Array<any>) => mockIsDowngrade(...a),
   planIdFromProductId: (...a: Array<any>) => mockPlanIdFromProductId(...a),
@@ -107,12 +108,14 @@ beforeEach(() => {
   vi.stubEnv('STRIPE_WEBHOOK_SECRET', 'whsec_test')
   vi.stubEnv('STRIPE_PRIVATE_PRICE_ID', 'price_private')
   vi.stubEnv('STRIPE_COMMERCIAL_PRICE_ID', 'price_commercial')
+  vi.stubEnv('STRIPE_ATP_PRICE_ID', 'price_atp')
 
   mockPlanIdFromProductId.mockImplementation((id: string) => {
     const m: Record<string, string> = {
       'student-pilot': 'student',
       'private-pilot': 'private',
       'commercial-pilot': 'commercial',
+      atp: 'atp',
     }
     return m[id] ?? 'student'
   })

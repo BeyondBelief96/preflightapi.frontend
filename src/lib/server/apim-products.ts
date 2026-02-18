@@ -9,6 +9,7 @@ export function getApimProductIds(): Record<string, string> {
     student: env.APIM_STUDENT_PRODUCT_ID ?? 'student-pilot',
     private: env.APIM_PRIVATE_PRODUCT_ID ?? 'private-pilot',
     commercial: env.APIM_COMMERCIAL_PRODUCT_ID ?? 'commercial-pilot',
+    atp: env.APIM_ATP_PRODUCT_ID ?? 'atp',
   }
 }
 
@@ -30,6 +31,7 @@ export const PLAN_IDS = [
   'student-pilot',
   'private-pilot',
   'commercial-pilot',
+  'atp',
 ] as const
 
 /**
@@ -39,6 +41,7 @@ const TIER_ORDER: Record<string, number> = {
   student: 0,
   private: 1,
   commercial: 2,
+  atp: 3,
 }
 
 /**

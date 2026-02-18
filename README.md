@@ -276,9 +276,10 @@ Three subscription tiers. Plan data (names, limits, prices) is fetched dynamical
 
 | Tier             | Plan ID      | APIM Product ID    | Default Price | Default Calls/Month | Rate Limit  |
 | ---------------- | ------------ | ------------------ | ------------- | ------------------- | ----------- |
-| Student Pilot    | `student`    | `student-pilot`    | Free          | 500                 | 10 req/min  |
-| Private Pilot    | `private`    | `private-pilot`    | $29.99/mo     | 25,000              | 60 req/min  |
-| Commercial Pilot | `commercial` | `commercial-pilot` | $79.99/mo     | 250,000             | 300 req/min |
+| Student Pilot    | `student`    | `student-pilot`    | Free          | 5000                | 10 req/min  |
+| Private Pilot    | `private`    | `private-pilot`    | $14.99/mo     | 150,000             | 60 req/min  |
+| Commercial Pilot | `commercial` | `commercial-pilot` | $49.99/mo     | 750,000             | 300 req/min |
+| ATP              | `atp`        | `atp`              | $149.99/mo    | 2,000,000           | 500 req/min |
 
 - `ENDPOINT_ACCESS` in `src/lib/constants.ts` maps each API endpoint to its minimum required tier
 - UI pages use the `usePlans()` hook for dynamic plan data — avoid hardcoding tier names or prices

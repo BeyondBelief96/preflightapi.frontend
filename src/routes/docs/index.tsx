@@ -185,59 +185,67 @@ const categoryGroups: Array<CategoryGroup> = [
 ]
 
 const endpointAccessRows = [
-  { category: 'METARs', student: true, private: true, commercial: true },
-  { category: 'TAFs', student: true, private: true, commercial: true },
+  { category: 'METARs', student: true, private: true, commercial: true, atp: true },
+  { category: 'TAFs', student: true, private: true, commercial: true, atp: true },
   {
     category: 'Airports (search, details & runways)',
     student: true,
     private: true,
     commercial: true,
+    atp: true,
   },
   {
     category: 'Communication Frequencies',
     student: true,
     private: true,
     commercial: true,
+    atp: true,
   },
-  { category: 'PIREPs', student: false, private: true, commercial: true },
+  { category: 'PIREPs', student: false, private: true, commercial: true, atp: true },
   {
     category: 'Domestic SIGMETs',
     student: false,
     private: true,
     commercial: true,
+    atp: true,
   },
-  { category: 'G-AIRMETs', student: false, private: true, commercial: true },
+  { category: 'G-AIRMETs', student: false, private: true, commercial: true, atp: true },
   {
     category: 'Airspace & Special-Use Airspace',
     student: false,
     private: true,
     commercial: true,
+    atp: true,
   },
-  { category: 'Obstacles', student: false, private: true, commercial: true },
-  { category: 'NOTAMs', student: false, private: false, commercial: true },
+  { category: 'Obstacles', student: false, private: true, commercial: true, atp: true },
+  { category: 'NOTAMs', student: false, private: false, commercial: true, atp: true },
   {
     category: 'Airport Diagrams',
     student: false,
     private: false,
     commercial: true,
+    atp: true,
   },
   {
     category: 'Chart Supplements',
     student: false,
     private: false,
     commercial: true,
+    atp: true,
   },
   {
     category: 'E6B Flight Computer',
     student: false,
     private: false,
     commercial: true,
+    atp: true,
   },
   {
     category: 'Navigation Log',
     student: false,
     private: false,
     commercial: true,
+    atp: true,
   },
 ]
 
@@ -266,6 +274,7 @@ function DocsIndex() {
   const studentPlan = plans.find((p) => p.id === 'student')
   const privatePlan = plans.find((p) => p.id === 'private')
   const commercialPlan = plans.find((p) => p.id === 'commercial')
+  const atpPlan = plans.find((p) => p.id === 'atp')
 
   return (
     <div>
@@ -470,6 +479,15 @@ function DocsIndex() {
                       : ''}
                   </span>
                 </th>
+                <th className="py-3 text-center font-semibold">
+                  {atpPlan?.name ?? 'ATP'}
+                  <br />
+                  <span className="font-normal text-muted-foreground">
+                    {atpPlan?.price != null
+                      ? `$${atpPlan.price}/mo`
+                      : ''}
+                  </span>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -484,6 +502,9 @@ function DocsIndex() {
                   </td>
                   <td className="py-3 text-center">
                     {row.commercial ? '\u2705' : '\u2014'}
+                  </td>
+                  <td className="py-3 text-center">
+                    {row.atp ? '\u2705' : '\u2014'}
                   </td>
                 </tr>
               ))}

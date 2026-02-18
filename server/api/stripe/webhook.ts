@@ -88,6 +88,15 @@ export default defineHandler(async (event) => {
         statusMessage: 'Missing price configuration',
       })
     }
+    if (!process.env.STRIPE_ATP_PRICE_ID) {
+      log.error(
+        'STRIPE_ATP_PRICE_ID is not set — paid tier mapping will fail',
+      )
+      throw new HTTPError({
+        statusCode: 500,
+        statusMessage: 'Missing price configuration',
+      })
+    }
   } else {
     if (!process.env.STRIPE_PRIVATE_PRICE_ID) {
       log.warn(
@@ -97,6 +106,11 @@ export default defineHandler(async (event) => {
     if (!process.env.STRIPE_COMMERCIAL_PRICE_ID) {
       log.warn(
         'STRIPE_COMMERCIAL_PRICE_ID is not set — price-based tier mapping will fail for commercial plans',
+      )
+    }
+    if (!process.env.STRIPE_ATP_PRICE_ID) {
+      log.warn(
+        'STRIPE_ATP_PRICE_ID is not set — price-based tier mapping will fail for ATP plans',
       )
     }
   }

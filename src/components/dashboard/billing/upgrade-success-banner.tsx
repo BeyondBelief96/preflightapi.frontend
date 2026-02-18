@@ -4,10 +4,11 @@ import type { EndpointTier, PlanDefinition } from '@/lib/constants'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 
-const TIER_RANK: Record<EndpointTier, number> = {
+const TIER_RANK: Record<string, number> = {
   student: 0,
   private: 1,
   commercial: 2,
+  atp: 3,
 }
 
 const ENDPOINT_DOCS: Record<string, { label: string; href: string }> = {

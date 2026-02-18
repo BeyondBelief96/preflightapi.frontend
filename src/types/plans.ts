@@ -1,4 +1,4 @@
-export type PlanId = 'student' | 'private' | 'commercial'
+export type PlanId = 'student' | 'private' | 'commercial' | 'atp'
 
 export interface Subscription {
   id: string
