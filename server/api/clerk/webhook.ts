@@ -1,8 +1,21 @@
 import { HTTPError, defineHandler } from 'h3'
 import { Webhook } from 'svix'
+import { Resend } from 'resend'
 import { createLogger } from '@/lib/server/logger'
 
 const log = createLogger('clerk-webhook')
+
+const HTML_ESCAPE: Record<string, string> = {
+  '<': '&lt;',
+  '>': '&gt;',
+  '&': '&amp;',
+  '"': '&quot;',
+  "'": '&#39;',
+}
+
+function escapeHtml(str: string): string {
+  return str.replace(/[<>&"']/g, (c) => HTML_ESCAPE[c] ?? c)
+}
 
 interface ClerkUserEvent {
   data: {
@@ -95,9 +108,8 @@ async function handleUserCreated(event: ClerkUserEvent) {
   }
 
   try {
-    const { Resend } = await import('resend')
     const resend = new Resend(resendApiKey)
-    const name = first_name || 'there'
+    const name = escapeHtml(first_name || 'there')
 
     const { error } = await resend.emails.send({
       from: 'PreflightAPI <welcome@contact.preflightapi.io>',
@@ -159,7 +171,12 @@ async function handleUserDeleted(event: ClerkUserEvent) {
     const { getStripe } = await import('@/lib/server/stripe-client')
     const stripe = getStripe()
 
-    // Look up customer by metadata
+    // Validate userId format before using in search query (defense-in-depth)
+    if (!/^user_[\w]+$/.test(userId)) {
+      log.error({ userId }, 'Invalid Clerk userId format — skipping Stripe cleanup')
+      return
+    }
+
     const customers = await stripe.customers.search({
       query: `metadata["clerkUserId"]:"${userId}"`,
       limit: 1,
