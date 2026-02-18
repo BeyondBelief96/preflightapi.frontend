@@ -1468,7 +1468,7 @@ export interface components {
             icaoId?: string | null;
             /** @description FAA NASR field: ARPT_ID. FAA location identifier (e.g., DFW, LAX, ORD). Up to 4 characters. */
             arptId?: string | null;
-            /** @description FAA NASR field: ARPT_NAME. Official airport facility name. */
+            /** @description FAA NASR field: ARPT_NAME. Official Facility Name. */
             arptName?: string | null;
             /**
              * Format: date-time
@@ -1483,7 +1483,7 @@ export interface components {
             facilityUse?: components["schemas"]["AirportFacilityUse"];
             /** @description FAA NASR field: ARPT_STATUS. Airport operational status. */
             arptStatus?: components["schemas"]["AirportStatus"];
-            /** @description FAA NASR field: NASP_CODE. National Plan of Integrated Airport Systems (NPIAS) or Federal/Military Airport code. */
+            /** @description FAA NASR field: NASP_CODE. NPIAS/Federal Agreements Code. A combination of 1 to 7 codes indicating the type of Federal agreements existing at the Airport. */
             naspCode?: string | null;
             /** @description FAA NASR field: CITY. Associated city name for the airport. */
             city?: string | null;
@@ -1499,18 +1499,18 @@ export interface components {
             adoCode?: string | null;
             /** @description FAA NASR field: COUNTY_NAME. County name where the airport is located. */
             countyName?: string | null;
-            /** @description FAA NASR field: COUNTY_ASSOC_STATE. Two-letter state code associated with the county. */
+            /** @description FAA NASR field: COUNTY_ASSOC_STATE. Two-letter state, territory, or country code associated with the county (e.g., US state codes, CN for Canada, GU for Guam, VI for Virgin Islands). */
             countyAssocState?: string | null;
             /**
              * Format: decimal
-             * @description FAA NASR field: DIST_CITY_TO_AIRPORT. Distance from the associated city to the airport, in nautical miles.
+             * @description FAA NASR field: DIST_CITY_TO_AIRPORT. Distance from Central Business District of the Associated City to the Airport.
              */
             distCityToAirport?: number | null;
-            /** @description FAA NASR field: DIRECTION_CODE. Compass direction from the associated city to the airport (e.g., N, NE, SW). */
+            /** @description FAA NASR field: DIRECTION_CODE. Direction of Airport from Central Business District of Associated City (Nearest 1/8 Compass Point). */
             directionCode?: string | null;
             /**
              * Format: int32
-             * @description FAA NASR field: ACREAGE. Airport acreage.
+             * @description FAA NASR field: ACREAGE. Land Area Covered by Airport (Acres).
              */
             acreage?: number | null;
             /**
@@ -1568,7 +1568,7 @@ export interface components {
             positionSrcDate?: string | null;
             /**
              * Format: decimal
-             * @description FAA NASR field: ELEV. Airport elevation in feet above Mean Sea Level (MSL), to the nearest tenth of a foot.
+             * @description FAA NASR field: ELEV. Airport elevation in feet MSL, to the nearest tenth of a foot. Measured at the highest point on the centerline of the usable landing surface.
              */
             elev?: number | null;
             /** @description FAA NASR field: ELEV_METHOD_CODE. Method used to determine the airport elevation. */
@@ -1582,60 +1582,60 @@ export interface components {
             elevationSrcDate?: string | null;
             /**
              * Format: decimal
-             * @description FAA NASR field: MAG_VARN. Magnetic variation in degrees.
+             * @description FAA NASR field: MAG_VARN. Magnetic Variation in degrees.
              */
             magVarn?: number | null;
-            /** @description FAA NASR field: MAG_HEMIS. Magnetic variation hemisphere (E or W). */
+            /** @description FAA NASR field: MAG_HEMIS. Magnetic Variation Direction (E or W). */
             magHemis?: string | null;
             /**
              * Format: int32
-             * @description FAA NASR field: MAG_VARN_YEAR. Year the magnetic variation was determined.
+             * @description FAA NASR field: MAG_VARN_YEAR. Magnetic Variation Epoch Year.
              */
             magVarnYear?: number | null;
             /**
              * Format: int32
-             * @description FAA NASR field: TPA. Traffic Pattern Altitude in feet above Mean Sea Level (MSL).
+             * @description FAA NASR field: TPA. Traffic Pattern Altitude (Whole Feet AGL).
              */
             tpa?: number | null;
             /** @description FAA NASR field: CHART_NAME. Sectional aeronautical chart name on which the airport appears. */
             chartName?: string | null;
-            /** @description FAA NASR field: RESP_ARTCC_ID. Identifier of the responsible Air Route Traffic Control Center (ARTCC). */
+            /** @description FAA NASR field: RESP_ARTCC_ID. Responsible ARTCC Identifier. The Responsible ARTCC is the FAA Air Route Traffic Control Center that has control over the Airport. */
             respArtccId?: string | null;
             /** @description FAA NASR field: ARTCC_NAME. Name of the responsible ARTCC. */
             artccName?: string | null;
-            /** @description FAA NASR field: TWR_TYPE_CODE. Air Traffic Control Tower type (e.g., NON-ATCT, ATCT). */
+            /** @description FAA NASR field: TWR_TYPE_CODE. Air Traffic Control Tower Facility Type (ATCT, NON-ATCT, ATCT-A/C, ATCT-RAPCON, ATCT-RATCF, ATCT-TRACON, TRACON). */
             twrTypeCode?: string | null;
-            /** @description FAA NASR field: FSS_ON_ARPT_FLAG. Whether a Flight Service Station (FSS) is located on the airport. */
+            /** @description FAA NASR field: FSS_ON_ARPT_FLAG. Tie-In FSS Physically Located On Facility. */
             fssOnAirport?: boolean;
-            /** @description FAA NASR field: FSS_ID. Identifier of the Flight Service Station (FSS) serving the airport. */
+            /** @description FAA NASR field: FSS_ID. Tie-In Flight Service Station (FSS) Identifier. */
             fssId?: string | null;
-            /** @description FAA NASR field: FSS_NAME. Name of the Flight Service Station (FSS) serving the airport. */
+            /** @description FAA NASR field: FSS_NAME. Tie-In FSS Name. */
             fssName?: string | null;
-            /** @description FAA NASR field: PHONE_NO. FSS local phone number. */
+            /** @description FAA NASR field: PHONE_NO. Local Phone Number from Airport to FSS for Administrative Services. */
             fssPhoneNumber?: string | null;
-            /** @description FAA NASR field: TOLL_FREE_NO. FSS toll-free phone number. */
+            /** @description FAA NASR field: TOLL_FREE_NO. Toll Free Phone Number from Airport to FSS for Pilot Briefing Services. */
             tollFreeNumber?: string | null;
-            /** @description FAA NASR field: ALT_FSS_ID. Alternate Flight Service Station identifier. */
+            /** @description FAA NASR field: ALT_FSS_ID. Alternate FSS Identifier. Identifies a full-time FSS that assumes responsibility during the off hours of a part-time primary FSS. */
             altFssId?: string | null;
             /** @description FAA NASR field: ALT_FSS_NAME. Alternate Flight Service Station name. */
             altFssName?: string | null;
-            /** @description FAA NASR field: ALT_TOLL_FREE_NO. Alternate FSS toll-free phone number. */
+            /** @description FAA NASR field: ALT_TOLL_FREE_NO. Toll Free Phone Number from Airport to Alternate FSS for Pilot Briefing Services. */
             altTollFreeNumber?: string | null;
-            /** @description FAA NASR field: NOTAM_ID. NOTAM facility identifier. */
+            /** @description FAA NASR field: NOTAM_ID. Identifier of the Facility responsible for issuing NOTAMs and Weather information for the Airport. */
             notamId?: string | null;
-            /** @description FAA NASR field: NOTAM_FLAG. Whether NOTAM service is available. */
+            /** @description FAA NASR field: NOTAM_FLAG. Availability of NOTAM 'D' Service at Airport. */
             notamAvailable?: boolean;
-            /** @description FAA NASR field: CUST_FLAG. Whether the airport is a customs port of entry. */
+            /** @description FAA NASR field: CUST_FLAG. Facility designated by U.S. Department of Homeland Security as an International Airport of Entry for Customs. */
             customsPortOfEntry?: boolean;
-            /** @description FAA NASR field: LNDG_RIGHTS_FLAG. Whether the airport has customs landing rights. */
+            /** @description FAA NASR field: LNDG_RIGHTS_FLAG. Facility designated by U.S. Department of Homeland Security as a Customs Landing Rights Airport. */
             customsLandingRights?: boolean;
-            /** @description FAA NASR field: JOINT_USE_FLAG. Whether a joint civil/military use agreement exists. */
+            /** @description FAA NASR field: JOINT_USE_FLAG. Facility has Military/Civil Joint Use Agreement that allows Civil Operations at a Military Airport. */
             jointUse?: boolean;
-            /** @description FAA NASR field: MIL_LNDG_FLAG. Whether military landing rights exist. */
+            /** @description FAA NASR field: MIL_LNDG_FLAG. Airport has entered into an Agreement that Grants Landing Rights to the Military. */
             militaryLandingRights?: boolean;
             /** @description FAA NASR field: INSPECT_METHOD_CODE. Airport inspection method. */
             inspectionMethod?: components["schemas"]["AirportInspectionMethod"];
-            /** @description FAA NASR field: INSPECTOR_CODE. Agency performing the airport inspection. */
+            /** @description FAA NASR field: INSPECTOR_CODE. Agency/Group Performing Physical Inspection. */
             inspectorAgency?: components["schemas"]["AirportInspectorAgency"];
             /**
              * Format: date-time
@@ -1647,7 +1647,7 @@ export interface components {
              * @description FAA NASR field: LAST_INFO_RESPONSE. Date of the last information request response.
              */
             lastInfoResponse?: string | null;
-            /** @description FAA NASR field: FUEL_TYPES. Available fuel types (e.g., 100LL, JET-A, MOGAS). */
+            /** @description FAA NASR field: FUEL_TYPES. Fuel Types available for public use at the Airport (e.g., 100LL, A, A+, MOGAS, UL94). */
             fuelTypes?: string | null;
             /** @description FAA NASR field: CONTR_FUEL_AVBL. Whether contract fuel is available. */
             contractFuelAvailable?: boolean;
@@ -1667,9 +1667,9 @@ export interface components {
             transientStorageHangars?: boolean;
             /** @description FAA NASR field: TRNS_STRG_TIE_FLAG. Whether transient storage tie-downs are available. */
             transientStorageTiedowns?: boolean;
-            /** @description FAA NASR field: LGT_SKED. Airport lighting schedule (e.g., SS-SR for sunset to sunrise). */
+            /** @description FAA NASR field: LGT_SKED. Airport Lighting Schedule. Beginning-ending times (local time) that Standard Airport Lights are operated. Value can be 'SS-SR' (sunset-sunrise), blank, or 'SEE RMK'. */
             lgtSked?: string | null;
-            /** @description FAA NASR field: BCN_LGT_SKED. Beacon lighting schedule (e.g., SS-SR). */
+            /** @description FAA NASR field: BCN_LGT_SKED. Beacon Lighting Schedule. Beginning-ending times (local time) that the Rotating Airport Beacon Light is operated. Value can be 'SS-SR' (sunset-sunrise), blank, or 'SEE RMK'. */
             bcnLgtSked?: string | null;
             /** @description FAA NASR field: BCN_LENS_COLOR. Airport beacon lens color. */
             beaconLensColor?: components["schemas"]["BeaconLensColor"];
@@ -1677,11 +1677,11 @@ export interface components {
             segmentedCircleMarker?: components["schemas"]["SegmentedCircleMarkerType"];
             /** @description FAA NASR field: WIND_INDCR_FLAG. Wind indicator type. */
             windIndicator?: components["schemas"]["WindIndicatorType"];
-            /** @description FAA NASR field: LNDG_FEE_FLAG. Whether landing fees are charged. */
+            /** @description FAA NASR field: LNDG_FEE_FLAG. Landing Fee charged to Non-Commercial Users of Airport. */
             landingFee?: boolean;
-            /** @description FAA NASR field: MEDICAL_USE_FLAG. Whether the airport is used for medical purposes (air ambulance). */
+            /** @description FAA NASR field: MEDICAL_USE_FLAG. Indicates that the Landing Facility is used for Medical Purposes. */
             medicalUse?: boolean;
-            /** @description FAA NASR field: ACTIVATION_DATE. Airport activation date (MM/YYYY format). */
+            /** @description FAA NASR field: ACTIVATION_DATE. Airport Activation Date (YYYY/MM). Year and month the facility was added to the NFDC airport database. Only available for facilities opened since 1981. */
             activationDate?: string | null;
             /** @description FAA NASR field: MIN_OP_NETWORK. Minimum Operational Network (MON) designation. */
             minOpNetwork?: string | null;
@@ -1689,18 +1689,18 @@ export interface components {
             userFeeFlag?: string | null;
             /** @description FAA NASR field: CTA. Cold Temperature Airport. Altitude correction required at or below the temperature given in Celsius. */
             cta?: string | null;
-            /** @description FAA NASR field: COMPUTER_ID. Computer identifier assigned to the airport. */
+            /** @description FAA NASR field: COMPUTER_ID. Responsible ARTCC (FAA) Computer Identifier. */
             computerId?: string | null;
-            /** @description FAA NASR field: FAR_139_TYPE_CODE. FAR Part 139 airport certification type code. */
+            /** @description FAA NASR field: FAR_139_TYPE_CODE. Airport ARFF Certification Type Code. Format is class code (I/II/III/IV) followed by A/B/C/D/E (full certificate) or L (limited certification). Blank if not certificated. */
             far139TypeCode?: string | null;
-            /** @description FAA NASR field: FAR_139_CARRIER_SER_CODE. FAR Part 139 carrier service code. */
+            /** @description FAA NASR field: FAR_139_CARRIER_SER_CODE. Airport ARFF Certification Carrier Service Code. S (scheduled service) or U (not receiving scheduled service). */
             far139CarrierSerCode?: string | null;
             /**
              * Format: date-time
-             * @description FAA NASR field: ARFF_CERT_TYPE_DATE. ARFF certification type and date.
+             * @description FAA NASR field: ARFF_CERT_TYPE_DATE. Airport ARFF Certification Date (YYYY/MM).
              */
             arffCertTypeDate?: string | null;
-            /** @description FAA NASR field: ASP_ANLYS_DTRM_CODE. Airport safety analysis determination code. */
+            /** @description FAA NASR field: ASP_ANLYS_DTRM_CODE. Airport Airspace Analysis Determination (CONDL, NOT ANALYZED, NO OBJECTION, OBJECTIONABLE). */
             aspAnalysisDtrmCode?: string | null;
             /**
              * Format: int32
@@ -1741,7 +1741,7 @@ export interface components {
          * @description Airport Ownership Type. Corresponds to FAA NASR field OWNERSHIP_TYPE_CODE (APT_BASE).
          * @enum {string}
          */
-        AirportOwnershipType: "Unknown" | "PubliclyOwned" | "PrivatelyOwned" | "AirForce" | "Navy" | "Army";
+        AirportOwnershipType: "Unknown" | "PubliclyOwned" | "PrivatelyOwned" | "AirForce" | "Navy" | "Army" | "CoastGuard";
         /**
          * @description Airport Facility Use. Corresponds to FAA NASR field FACILITY_USE_CODE (APT_BASE).
          * @enum {string}
@@ -1766,7 +1766,7 @@ export interface components {
          * @description Airport Inspector Agency. Corresponds to FAA NASR field INSPECTOR_CODE (APT_BASE).
          * @enum {string}
          */
-        AirportInspectorAgency: "Unknown" | "Faa" | "State" | "Contractor";
+        AirportInspectorAgency: "Unknown" | "Faa" | "State" | "Contractor" | "Owner";
         /**
          * @description Repair Service Availability. Corresponds to FAA NASR fields AIRFRAME_REPAIR_SER_CODE and PWR_PLANT_REPAIR_SER (APT_BASE).
          * @enum {string}
@@ -1781,7 +1781,7 @@ export interface components {
          * @description Airport Beacon Lens Color. Corresponds to FAA NASR field BCN_LENS_COLOR (APT_BASE).
          * @enum {string}
          */
-        BeaconLensColor: "Unknown" | "ClearGreen" | "ClearYellow" | "ClearGreenYellow" | "SplitClearGreen" | "Clear";
+        BeaconLensColor: "Unknown" | "WhiteGreen" | "WhiteYellow" | "WhiteGreenYellow" | "SplitWhiteGreen" | "White" | "Yellow" | "Green" | "None";
         /**
          * @description Segmented Circle Airport Marker. Corresponds to FAA NASR field SEG_CIRCLE_MKR_FLAG (APT_BASE).
          * @enum {string}
@@ -1886,15 +1886,24 @@ export interface components {
              * @description FAA NASR field: GROSS_WT_DDTW. Runway weight-bearing capacity for two dual wheels in tandem/two dual wheels in double tandem body gear type landing gear, in pounds.
              */
             weightBearingDoubleDualTandem?: number | null;
-            /** @description FAA NASR field: COND. Runway surface condition. */
+            /**
+             * @description FAA NASR field: COND. Runway Surface Condition.
+             *     Possible values: EXCELLENT, GOOD, FAIR, POOR, FAILED.
+             */
             surfaceCondition?: string | null;
-            /** @description FAA NASR field: PAVEMENT_TYPE_CODE. Pavement type code. */
+            /**
+             * @description FAA NASR field: PAVEMENT_TYPE_CODE. Pavement Type.
+             *     Possible values: R (Rigid), F (Flexible).
+             */
             pavementTypeCode?: string | null;
-            /** @description FAA NASR field: SUBGRADE_STRENGTH_CODE. Subgrade strength code. */
+            /** @description FAA NASR field: SUBGRADE_STRENGTH_CODE. Subgrade Strength (Letters A-F). */
             subgradeStrengthCode?: string | null;
-            /** @description FAA NASR field: TIRE_PRES_CODE. Tire pressure code. */
+            /** @description FAA NASR field: TIRE_PRES_CODE. Tire Pressure Code (Letters W-Z). */
             tirePressureCode?: string | null;
-            /** @description FAA NASR field: DTRM_METHOD_CODE. Determination method code for pavement strength. */
+            /**
+             * @description FAA NASR field: DTRM_METHOD_CODE. Determination Method for pavement strength.
+             *     Possible values: T (Technical), U (Using Aircraft).
+             */
             determinationMethodCode?: string | null;
             /** @description FAA NASR field: RWY_LEN_SOURCE. Source of runway length information. */
             runwayLengthSource?: string | null;
@@ -2124,16 +2133,21 @@ export interface components {
             displacedThrLongSec?: number | null;
             /** @description FAA NASR field: DISPLACED_THR_LONG_HEMIS. Displaced threshold longitude hemisphere (E or W). */
             displacedThrLongHemis?: string | null;
-            /** @description FAA NASR field: FAR_PART_77_CODE. FAR Part 77 approach category code. */
+            /**
+             * @description FAA NASR field: FAR_PART_77_CODE. FAA CFR Part 77 (Objects Affecting Navigable Airspace) Runway Category.
+             *     Possible values: A(V) (Utility Runway with Visual Approach), B(V) (Other Than Utility with Visual Approach),
+             *     A(NP) (Utility with Nonprecision Approach), C (Other Than Utility with Nonprecision, visibility > 3/4 mile),
+             *     D (Other Than Utility with Nonprecision, visibility as low as 3/4 mile), PIR (Precision Instrument Runway).
+             */
             farPart77Code?: string | null;
-            /** @description FAA NASR field: CNTRLN_DIR_CODE. Centerline direction code. */
+            /** @description FAA NASR field: CNTRLN_DIR_CODE. Controlling Object Centerline Offset Direction. Indicates direction (left or right) to the object from the centerline as seen by an approaching pilot. */
             centerlineDirectionCode?: string | null;
             /**
              * Format: decimal
-             * @description FAA NASR field: RWY_GRAD. Runway gradient as a percentage.
+             * @description FAA NASR field: RWY_GRAD. Runway End Gradient.
              */
             runwayGradient?: number | null;
-            /** @description FAA NASR field: RWY_GRAD_DIRECTION. Runway gradient direction (UP or DOWN). */
+            /** @description FAA NASR field: RWY_GRAD_DIRECTION. Runway End Gradient Direction (Up or Down). */
             runwayGradientDirection?: string | null;
             /** @description FAA NASR field: RWY_END_PSN_SOURCE. Source of runway end position information. */
             rwyEndPositionSource?: string | null;
@@ -2192,12 +2206,12 @@ export interface components {
             landingDistanceAvailable?: number | null;
             /**
              * Format: int32
-             * @description FAA NASR field: LAHSO_ALD. LAHSO available landing distance in feet.
+             * @description FAA NASR field: LAHSO_ALD. Available Landing Distance for Land and Hold Short Operations (LAHSO), in feet.
              */
             lahsoAvailableLandingDistance?: number | null;
-            /** @description FAA NASR field: RWY_END_INTERSECT_LAHSO. Intersecting runway for LAHSO operations. */
+            /** @description FAA NASR field: RWY_END_INTERSECT_LAHSO. ID of Intersecting Runway Defining Hold Short Point. */
             lahsoIntersectingRunway?: string | null;
-            /** @description FAA NASR field: LAHSO_DESC. LAHSO hold short point description. */
+            /** @description FAA NASR field: LAHSO_DESC. Description of Entity Defining Hold Short Point if not an Intersecting Runway. */
             lahsoDescription?: string | null;
             /** @description FAA NASR field: LAHSO_LAT. LAHSO hold short point latitude (DMS format). */
             lahsoLatitude?: string | null;
@@ -2526,7 +2540,7 @@ export interface components {
             altimInHg?: number | null;
             /**
              * Format: float
-             * @description Sea level pressure in millibars.
+             * @description Sea level pressure in millibars. ex: 1016.2
              */
             seaLevelPressureMb?: number | null;
             /** @description Quality control flags for the observation. */
@@ -2559,17 +2573,17 @@ export interface components {
         };
         /** @description A single sky condition layer in a METAR observation. */
         MetarSkyConditionDto: {
-            /** @description Sky cover type: SKC, CLR, FEW, SCT, BKN, or OVC. */
+            /** @description Sky cover type: SKC (sky clear), CLR (clear below 12,000), FEW (few), SCT (scattered), BKN (broken), OVC (overcast), or OVX (obscured). */
             skyCover?: string;
             /**
              * Format: int32
-             * @description Cloud base height in feet AGL.
+             * @description Cloud base height in feet AGL. Null for SKC or CLR.
              */
             cloudBaseFtAgl?: number | null;
         };
         /** @description TAF (Terminal Aerodrome Forecast) data for an airport. */
         TafDto: {
-            /** @description Raw TAF text string as received from the source. */
+            /** @description Raw TAF forecast text as received from the source. ex: KORD 061728Z 0618/0724 21012KT P6SM BKN250 */
             rawText?: string | null;
             /** @description ICAO station identifier (e.g., KDFW). */
             stationId?: string | null;
@@ -2664,11 +2678,11 @@ export interface components {
         };
         /** @description A single sky condition layer in a TAF forecast period. */
         TafSkyCondition: {
-            /** @description Sky cover type: SKC (sky clear), CLR (clear), FEW (few), SCT (scattered), BKN (broken), or OVC (overcast). */
+            /** @description Sky cover type: CLR (clear), CAVOK (ceiling and visibility OK), FEW (few), SCT (scattered), BKN (broken), OVC (overcast), or OVX (obscured). */
             skyCover?: string;
             /**
              * Format: int32
-             * @description Cloud base height in feet AGL. Null for SKC or CLR.
+             * @description Cloud base height in feet AGL. Null for CLR or CAVOK.
              */
             cloudBaseFtAgl?: number | null;
             /** @description Cloud type modifier (e.g., CB for cumulonimbus, TCU for towering cumulus). */
@@ -2676,7 +2690,7 @@ export interface components {
         };
         /** @description Forecast turbulence condition within a TAF forecast period. */
         TafTurbulenceCondition: {
-            /** @description Turbulence intensity code: 0 (none), 1 (light), 2 (moderate occasional), 3 (moderate frequent), 4 (severe), 5 (extreme), or X (mountain wave). */
+            /** @description Turbulence intensity code (integer 0-9 per TAF implementation table): 0 (none), 1 (light), 2 (moderate occasional), 3 (moderate frequent), 4 (severe), 5 (extreme), 6-8 (reserved), 9 (not specified), or X (mountain wave). */
             turbulenceIntensity?: string | null;
             /**
              * Format: int32
@@ -2733,7 +2747,7 @@ export interface components {
             observationTime?: string | null;
             /** @description Quality control flags for the report. */
             qualityControlFlags?: components["schemas"]["PirepQualityControlFlags"] | null;
-            /** @description Aircraft type that filed the report. */
+            /** @description Aircraft type designation. ex: B738, C172 */
             aircraftRef?: string | null;
             /**
              * Format: float
@@ -2783,7 +2797,7 @@ export interface components {
              * @description Vertical gust speed in knots.
              */
             vertGustKt?: number | null;
-            /** @description Report type: UA (routine) or UUA (urgent). */
+            /** @description Report type: UA (routine PIREP) or UUA (urgent PIREP). */
             reportType?: string | null;
         };
         /** @description Quality control flags indicating potential data issues with a PIREP. */
@@ -2879,7 +2893,7 @@ export interface components {
             movementSpeedKt?: number | null;
             /** @description Hazard type and severity information. */
             hazard?: components["schemas"]["SigmetHazardDto"] | null;
-            /** @description Advisory type: SIGMET or OUTLOOK. */
+            /** @description Advisory type: always SIGMET. */
             sigmetType?: string | null;
             /** @description Geographic areas affected by the advisory. */
             areas?: components["schemas"]["SigmetArea"][] | null;
@@ -2899,16 +2913,16 @@ export interface components {
         };
         /** @description Hazard type and severity information for a SIGMET advisory. */
         SigmetHazardDto: {
-            /** @description The weather hazard type: CONVECTIVE (thunderstorms/convection), ICE (icing), TURB (turbulence), IFR (instrument flight rules conditions), or MTN_OBSCN (mountain obscuration). */
+            /** @description The weather hazard type: CONVECTIVE (thunderstorms/convection), ICE (icing), TURB (turbulence), IFR (instrument flight rules conditions), ASH (volcanic ash), or MTN_OBSCN (mountain obscuration). */
             type?: components["schemas"]["SigmetHazardType"] | null;
-            /** @description Hazard severity. SIGMETs use MOD-SEV (moderate to severe) or SEV (severe). Convective SIGMETs do not have a severity value. */
+            /** @description Hazard severity: LGT (light), LT-MOD (light to moderate), MOD (moderate, typical for AIRMET), MOD-SEV (moderate to severe), SEV (severe, typical for SIGMET). Convective SIGMETs do not have a severity value. */
             severity?: string | null;
         };
         /**
          * @description SIGMET hazard types
          * @enum {string}
          */
-        SigmetHazardType: "CONVECTIVE" | "ICE" | "TURB" | "IFR" | "MTN_OBSCN";
+        SigmetHazardType: "CONVECTIVE" | "ICE" | "TURB" | "IFR" | "ASH" | "MTN_OBSCN";
         /** @description Geographic area affected by a SIGMET, defined as a polygon of lat/lon points. */
         SigmetArea: {
             /**
@@ -2951,32 +2965,32 @@ export interface components {
             issueTime?: string;
             /**
              * Format: date-time
-             * @description Time the advisory expires.
+             * @description Time the advisory expires, typically 6 hours after issuance.
              */
             expireTime?: string;
             /**
              * Format: date-time
-             * @description Time the advisory is valid for.
+             * @description The valid time of the G-AIRMET snapshot.
              */
             validTime?: string;
             /** @description Product type: SIERRA, TANGO, or ZULU. */
             product?: components["schemas"]["GAirmetProduct"];
-            /** @description Identifying tag for the advisory. */
+            /** @description Forecast component identifier tag. ex: 1C */
             tag?: string | null;
             /**
              * Format: int32
-             * @description Forecast hour offset.
+             * @description The forecast hour taken from initial product issuance. ex: 0, 3, 6, 9, 12
              */
             forecastHour?: number;
-            /** @description Hazard type (e.g., ICE, TURB_LO, IFR). */
+            /** @description Hazard type: IFR, MT_OBSC, TURB_HI, TURB_LO, ICE, FZLVL, M_FZLVL, SFC_WIND, or LLWS. */
             hazard?: components["schemas"]["GAirmetHazardType"] | null;
-            /** @description Hazard severity description. */
+            /** @description Hazard severity: MOD (moderate) or null. */
             hazardSeverity?: string | null;
-            /** @description Geometry type of the affected area. */
+            /** @description The geometry type: AREA or LINE. */
             geometryType?: string | null;
-            /** @description Cause of the hazard. */
+            /** @description Additional information, reason for the AIRMET. ex: CIG BLW 010/VIS BLW 3SM PCPN/BR/FG */
             dueTo?: string | null;
-            /** @description Altitude ranges for the advisory. */
+            /** @description Altitude ranges for the advisory in feet MSL. 0 indicates surface, -1 indicates freezing level. */
             altitudes?: components["schemas"]["GAirmetAltitude"][] | null;
             /** @description Geographic area affected by the advisory. */
             area?: components["schemas"]["GAirmetArea"] | null;
@@ -2991,22 +3005,22 @@ export interface components {
          * @enum {string}
          */
         GAirmetHazardType: "MT_OBSC" | "IFR" | "TURB_LO" | "TURB_HI" | "LLWS" | "SFC_WIND" | "ICE" | "FZLVL" | "M_FZLVL";
-        /** @description Represents altitude information for a G-AIRMET */
+        /** @description Altitude information for a G-AIRMET advisory. Bottom/top levels valid in feet MSL; 0 indicates surface, -1 indicates freezing level. */
         GAirmetAltitude: {
-            /** @description Minimum altitude in feet MSL. Can be a number, "SFC" for surface, or "FZL" for freezing level */
+            /** @description Minimum altitude in feet MSL. 0 indicates surface, -1 indicates freezing level. */
             minFtMsl?: string | null;
-            /** @description Maximum altitude in feet MSL */
+            /** @description Maximum altitude in feet MSL. */
             maxFtMsl?: string | null;
-            /** @description Single level altitude in feet MSL (used for freezing level lines) */
+            /** @description Single level altitude in feet MSL (used for freezing level lines). */
             levelFtMsl?: string | null;
-            /** @description Freezing level altitude range (when min_ft_msl is "FZL") */
+            /** @description Range of altitudes for freezing level within an icing AIRMET. */
             fzlAltitude?: components["schemas"]["GAirmetFzlAltitude"] | null;
         };
-        /** @description Represents freezing level altitude range */
+        /** @description Range of altitudes for the freezing level within an icing G-AIRMET. */
         GAirmetFzlAltitude: {
-            /** @description Minimum freezing level in feet MSL */
+            /** @description Minimum freezing level altitude in feet MSL. */
             minFtMsl?: string | null;
-            /** @description Maximum freezing level in feet MSL */
+            /** @description Maximum freezing level altitude in feet MSL. */
             maxFtMsl?: string | null;
         };
         /** @description Geographic area affected by a G-AIRMET, defined as a polygon of lat/lon points. */
@@ -3264,56 +3278,56 @@ export interface components {
              * @description System-generated unique identifier.
              */
             id?: string;
-            /** @description FAA NASR field: FACILITY_CODE. FAA facility identifier code for the communication facility. */
+            /** @description FAA NASR field: FACILITY. Contains FACILITY ID except for FACILITY TYPE AFIS, CTAF, GCO, UNICOM and RCAG. The FACILITY NAME is used for RCAG sites. AFIS, CTAF, GCO and UNICOM are NULL. */
             facilityCode?: string | null;
             /**
              * Format: date-time
-             * @description FAA NASR field: EFF_DATE. Effective date of the frequency record.
+             * @description FAA NASR field: EFF_DATE. The 28 Day NASR Subscription Effective Date (YYYY/MM/DD).
              */
             effectiveDate?: string;
-            /** @description FAA NASR field: FACILITY_NAME. Name of the communication facility. */
+            /** @description FAA NASR field: FAC_NAME. Official Facility Name. NULL for AFIS, CTAF, GCO, UNICOM (no FACILITY ID or NAME in NASR) and ASOS/AWOS (no FACILITY NAME in NASR). */
             facilityName?: string | null;
-            /** @description FAA NASR field: FACILITY_TYPE. Type of facility (e.g., ATCT, TRACON, ARTCC, FSS, CTAF). */
+            /** @description FAA NASR field: FACILITY_TYPE. All records contain a FACILITY TYPE. Note: RCO and RCO1 serve the same function (remote communication outlet). An RCO1 may exist if two separate sites share the same identifier. */
             facilityType?: string;
-            /** @description FAA NASR field: ARTCC_OR_FSS_ID. Associated Air Route Traffic Control Center (ARTCC) or Flight Service Station (FSS) identifier. */
+            /** @description FAA NASR field: ARTCC_OR_FSS_ID. RCAG facilities contain an ARTCC ID; RCO/RCO1 facilities contain an FSS ID. Included for convenience to identify the parent ARTCC or FSS resource in NASR. */
             artccOrFssId?: string | null;
-            /** @description FAA NASR field: CPDLC. Controller-Pilot Data Link Communications (CPDLC) information. */
+            /** @description FAA NASR field: CPDLC. A Controller Pilot Data Link Communications (CPDLC) remark associated with a FACILITY. */
             cpdlc?: string | null;
-            /** @description FAA NASR field: TOWER_HOURS. Tower operating hours (e.g., "0600-2200", "24 HRS", "SS-SR"). */
+            /** @description FAA NASR field: TOWER_HRS. Tower operating hours. Only listed for ATCT FACILITY TYPEs where the FACILITY equals the SERVICED FACILITY. */
             towerHours?: string | null;
-            /** @description FAA NASR field: SERVICED_FACILITY. FAA identifier of the facility being serviced by this frequency. */
+            /** @description FAA NASR field: SERVICED_FACILITY. The FACILITY ID (or FACILITY NAME if FACILITY TYPE is RCAG) that is serviced by the frequencies listed. This is a NON-NULL field. */
             servicedFacility?: string;
-            /** @description FAA NASR field: SERVICED_FACILITY_NAME. Name of the facility being serviced. */
+            /** @description FAA NASR field: SERVICED_FAC_NAME. The FACILITY NAME that is serviced by the frequencies listed. */
             servicedFacilityName?: string | null;
-            /** @description FAA NASR field: SERVICED_SITE_TYPE. Site type of the facility being serviced (e.g., AIRPORT, HELIPORT). */
+            /** @description FAA NASR field: SERVICED_SITE_TYPE. Facility Type of SERVICED FACILITY. */
             servicedSiteType?: string | null;
             /**
              * Format: decimal
-             * @description FAA NASR field: LATITUDE. Latitude of the serviced facility in decimal degrees.
+             * @description FAA NASR field: LAT_DECIMAL. Facility Reference Point Latitude in Decimal Format.
              */
             latitude?: number | null;
             /**
              * Format: decimal
-             * @description FAA NASR field: LONGITUDE. Longitude of the serviced facility in decimal degrees.
+             * @description FAA NASR field: LONG_DECIMAL. Facility Reference Point Longitude in Decimal Format.
              */
             longitude?: number | null;
-            /** @description FAA NASR field: SERVICED_CITY. City of the serviced facility. */
+            /** @description FAA NASR field: SERVICED_CITY. Serviced Facility Associated City Name. */
             servicedCity?: string | null;
-            /** @description FAA NASR field: SERVICED_STATE. Two-letter state code of the serviced facility. */
+            /** @description FAA NASR field: SERVICED_STATE. Two-letter state ID of the SERVICED FACILITY. */
             servicedState?: string | null;
-            /** @description FAA NASR field: SERVICED_COUNTRY. Two-letter country code of the serviced facility. */
+            /** @description FAA NASR field: SERVICED_COUNTRY. Country Post Office Code of Serviced Facility. */
             servicedCountry?: string | null;
-            /** @description FAA NASR field: TOWER_OR_COMM_CALL. Tower or communications call sign (e.g., "DALLAS TOWER", "SOCAL APPROACH"). */
+            /** @description FAA NASR field: TOWER_OR_COMM_CALL. Radio call used by pilot to contact ATC or FSS facility. */
             towerOrCommCall?: string | null;
-            /** @description FAA NASR field: PRIMARY_APPROACH_RADIO_CALL. Primary approach control radio call sign. */
+            /** @description FAA NASR field: PRIMARY_APPROACH_RADIO_CALL. Radio call of facility that furnishes primary approach control. */
             primaryApproachRadioCall?: string | null;
-            /** @description FAA NASR field: FREQUENCY. Radio frequency in MHz (e.g., "118.700", "121.900"). */
+            /** @description FAA NASR field: FREQ. Frequency for SERVICED FACILITY use. In the case of a NAVAID with DME/TACAN Channel, the Frequency is displayed with the Channel (FREQ/CHAN). */
             frequency?: string | null;
-            /** @description FAA NASR field: SECTORIZATION. Sectorization or coverage area description for the frequency. */
+            /** @description FAA NASR field: SECTORIZATION. Sectorization based on SERVICED FACILITY or airway boundaries, or limitations based on runway usage. For ARTCC and RCAG, identifies the Frequency Altitude as Low, High, Low/High or Ultra-High. */
             sectorization?: string | null;
-            /** @description FAA NASR field: FREQUENCY_USE. Intended use of the frequency (e.g., ATIS, LCL/P (Local/Tower), GND/P (Ground), CD/P (Clearance Delivery), APCH/P (Approach), DEP/P (Departure)). */
+            /** @description FAA NASR field: FREQ_USE. Intended use of the frequency (e.g., ATIS, LCL/P (Local/Tower), GND/P (Ground), CD/P (Clearance Delivery), APCH/P (Approach), DEP/P (Departure)). */
             frequencyUse?: string | null;
-            /** @description FAA NASR field: REMARK. Free-form remark text providing additional information about the frequency. */
+            /** @description FAA NASR field: REMARK. Remark Text (Free Form Text that further describes a specific Information Item). */
             remark?: string | null;
         };
         /** @description Response DTO containing crosswind components for all runways at an airport */

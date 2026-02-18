@@ -38,7 +38,6 @@ export function useApiRequest() {
 
     setIsLoading(true)
     setError(null)
-    setResponse(null)
 
     try {
       // Build the path with substituted path params

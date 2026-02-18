@@ -10,9 +10,20 @@ interface SchemaViewerProps {
   className?: string
 }
 
-function TypeBadge({ type, refName }: { type: string; refName?: string }) {
+function TypeBadge({
+  type,
+  refName,
+  itemRefName,
+}: {
+  type: string
+  refName?: string
+  itemRefName?: string
+}) {
   if (refName) {
     return <SchemaLink name={refName} />
+  }
+  if (itemRefName) {
+    return <SchemaLink name={itemRefName} isArray />
   }
   return <span className="font-mono text-xs text-blue-400">{type}</span>
 }
@@ -24,7 +35,7 @@ function FieldRow({
   field: ParsedSchemaField
   depth: number
 }) {
-  const [expanded, setExpanded] = useState(depth < 1)
+  const [expanded, setExpanded] = useState(false)
   const hasChildren =
     (field.fields && field.fields.length > 0) ||
     (field.items?.fields && field.items.fields.length > 0)
@@ -56,7 +67,11 @@ function FieldRow({
           {field.name}
         </span>
 
-        <TypeBadge type={field.type} refName={field.refName} />
+        <TypeBadge
+          type={field.type}
+          refName={field.refName}
+          itemRefName={field.items?.refName}
+        />
 
         {field.required && (
           <span className="shrink-0 text-xs text-red-400">required</span>
