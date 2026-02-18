@@ -39,6 +39,10 @@ export const SCHEMA_GROUPS: Array<SchemaGroup> = [
       'GAirmetFzlAltitude',
       'GAirmetArea',
       'GAirmetPoint',
+      'RouteBriefingResponse',
+      'RouteBriefingRequest',
+      'RouteBriefingSummary',
+      'BriefingWaypoint',
     ],
   },
   {

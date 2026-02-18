@@ -1,5 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
+// --- Import handler after mocks ---
+
+import handler from '../../../../server/api/clerk/webhook'
+
 // --- Mock fns ---
 
 const mockVerify = vi.fn()
@@ -38,18 +42,18 @@ vi.mock('@/lib/server/logger', () => ({
 
 vi.mock('svix', () => ({
   Webhook: vi.fn().mockImplementation(() => ({
-    verify: (...a: any[]) => mockVerify(...a),
+    verify: (...a: Array<any>) => mockVerify(...a),
   })),
 }))
 
 vi.mock('resend', () => ({
   Resend: vi.fn().mockImplementation(() => ({
-    emails: { send: (...a: any[]) => mockEmailSend(...a) },
+    emails: { send: (...a: Array<any>) => mockEmailSend(...a) },
   })),
 }))
 
 vi.mock('@react-email/render', () => ({
-  render: (...a: any[]) => mockRender(...a),
+  render: (...a: Array<any>) => mockRender(...a),
 }))
 
 vi.mock('@/emails/welcome', () => ({
@@ -59,19 +63,15 @@ vi.mock('@/emails/welcome', () => ({
 vi.mock('@/lib/server/stripe-client', () => ({
   getStripe: () => ({
     customers: {
-      search: (...a: any[]) => mockCustomerSearch(...a),
-      del: (...a: any[]) => mockCustomerDel(...a),
+      search: (...a: Array<any>) => mockCustomerSearch(...a),
+      del: (...a: Array<any>) => mockCustomerDel(...a),
     },
   }),
 }))
 
 vi.mock('@/lib/server/apim-client', () => ({
-  apimFetch: (...a: any[]) => mockApimFetch(...a),
+  apimFetch: (...a: Array<any>) => mockApimFetch(...a),
 }))
-
-// --- Import handler after mocks ---
-
-import handler from '../../../../server/api/clerk/webhook'
 
 // --- Helpers ---
 
