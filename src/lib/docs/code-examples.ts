@@ -1,7 +1,6 @@
 import type { ParsedEndpoint } from './types'
 import { API_BASE_PATH } from '@/lib/api-metadata'
-
-const GATEWAY_URL = 'https://preflightapi-apim-service.azure-api.net'
+import { GATEWAY_URL } from '@/lib/gateway-url'
 
 /** Maps common parameter names to realistic aviation example values */
 const EXAMPLE_VALUES: Record<string, string> = {
