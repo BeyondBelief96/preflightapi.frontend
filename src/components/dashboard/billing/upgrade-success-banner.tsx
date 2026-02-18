@@ -1,14 +1,9 @@
 import { Link } from '@tanstack/react-router'
 import { ArrowRight, BookOpen, KeyRound, X } from 'lucide-react'
 import type { EndpointTier, PlanDefinition } from '@/lib/constants'
+import { PLAN_ORDER } from '@/lib/constants'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-
-const TIER_RANK: Record<EndpointTier, number> = {
-  student: 0,
-  private: 1,
-  commercial: 2,
-}
 
 const ENDPOINT_DOCS: Record<string, { label: string; href: string }> = {
   pirep: { label: 'PIREPs', href: '/docs/pireps' },
@@ -48,9 +43,9 @@ function getNewEndpoints(
   planId: string,
   endpointAccess: Record<string, EndpointTier>,
 ): Array<{ label: string; href: string }> {
-  const rank = TIER_RANK[planId as EndpointTier] ?? 0
+  const rank = PLAN_ORDER[planId as EndpointTier] ?? 0
   return Object.entries(endpointAccess)
-    .filter(([, tier]) => TIER_RANK[tier] > 0 && TIER_RANK[tier] <= rank)
+    .filter(([, tier]) => PLAN_ORDER[tier] > 0 && PLAN_ORDER[tier] <= rank)
     .map(([endpoint]) => ENDPOINT_DOCS[endpoint])
     .filter(Boolean)
 }

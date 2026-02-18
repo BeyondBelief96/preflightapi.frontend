@@ -78,7 +78,7 @@ const staticComparisonFeatures = [
         atp: true,
       },
       {
-        name: 'Controlled airspace (Class A\u2013E)',
+        name: 'Controlled airspace (Class B\u2013D)',
         student: false,
         private: true,
         commercial: true,
@@ -159,6 +159,13 @@ const staticComparisonFeatures = [
       },
       {
         name: 'Winds aloft forecasts (6/12/24 hr)',
+        student: false,
+        private: false,
+        commercial: true,
+        atp: true,
+      },
+      {
+        name: 'Route weather briefing',
         student: false,
         private: false,
         commercial: true,
@@ -254,21 +261,21 @@ function buildComparisonFeatures(plans: Array<PlanDefinition>) {
           'callsPerMonth',
           'Unlimited',
         ),
-        atp: 'Custom',
+        atp: formatLimit(plans, 'atp', 'callsPerMonth', 'Unlimited'),
       },
       {
         name: 'Rate Limit (req/min)',
         student: formatLimit(plans, 'student', 'ratePerMinute', 'Custom'),
         private: formatLimit(plans, 'private', 'ratePerMinute', 'Custom'),
         commercial: formatLimit(plans, 'commercial', 'ratePerMinute', 'Custom'),
-        atp: 'Custom',
+        atp: formatLimit(plans, 'atp', 'ratePerMinute', 'Custom'),
       },
       {
         name: 'Support',
         student: 'Email',
         private: 'Email',
         commercial: 'Priority',
-        atp: 'Priority',
+        atp: 'Dedicated Priority',
       },
     ],
   }
@@ -297,23 +304,18 @@ function PricingPage() {
           </div>
 
           {/* Plan cards */}
-          <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {selfServicePlans.map((plan) => (
               <PricingCard key={plan.id} plan={plan} />
             ))}
           </div>
 
-          {/* Enterprise / ATP section */}
-          <div className="mt-12 text-center">
-            <p className="text-sm font-medium text-muted-foreground">
-              Need more?
-            </p>
-          </div>
-          <div className="mx-auto mt-4 max-w-2xl rounded-xl border border-accent/20 bg-card p-8 text-center">
-            <h3 className="text-xl font-semibold">ATP</h3>
+          {/* Custom / Enterprise section */}
+          <div className="mx-auto mt-12 max-w-2xl rounded-xl border border-accent/20 bg-card p-8 text-center">
+            <h3 className="text-xl font-semibold">Need More?</h3>
             <p className="mt-2 text-muted-foreground">
-              Everything in Commercial Pilot, plus custom pricing, quotas, rate
-              limits, and dedicated priority support tailored to your needs.
+              Need custom quotas, dedicated infrastructure, or an SLA tailored
+              to your organization? Let's talk.
             </p>
             <Link to="/contact">
               <Button variant="outline" className="mt-6">

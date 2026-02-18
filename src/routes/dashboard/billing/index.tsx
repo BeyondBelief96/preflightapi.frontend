@@ -23,7 +23,7 @@ import { useReconcile } from '@/components/dashboard/billing/use-reconcile'
 
 const billingSearchSchema = z.object({
   checkout: z.enum(['success', 'canceled']).optional(),
-  plan: z.enum(['private', 'commercial']).optional(),
+  plan: z.enum(['private', 'commercial', 'atp']).optional(),
   portal: z.enum(['return']).optional(),
 })
 

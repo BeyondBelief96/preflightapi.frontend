@@ -12,28 +12,28 @@ import { ENDPOINT_ACCESS } from '@/lib/constants'
 // ---------- helpers ----------
 
 const oaSpec = spec as {
-  paths: Record<string, Record<string, OaOperation>>
-  components: { schemas: Record<string, OaSchema> }
+  paths: Record<string, Record<string, OpenApiOperation>>
+  components: { schemas: Record<string, OpenApiSchema> }
   tags: Array<{ name: string; description: string }>
 }
 
-interface OaSchema {
+interface OpenApiSchema {
   type?: string
   format?: string
   nullable?: boolean
   description?: string
-  properties?: Record<string, OaSchema>
+  properties?: Record<string, OpenApiSchema>
   required?: Array<string>
-  items?: OaSchema
+  items?: OpenApiSchema
   $ref?: string
-  oneOf?: Array<OaSchema>
+  oneOf?: Array<OpenApiSchema>
   enum?: Array<string | number>
   'x-enumNames'?: Array<string>
-  additionalProperties?: OaSchema | boolean
-  allOf?: Array<OaSchema>
+  additionalProperties?: OpenApiSchema | boolean
+  allOf?: Array<OpenApiSchema>
 }
 
-interface OaOperation {
+interface OpenApiOperation {
   tags?: Array<string>
   operationId?: string
   summary?: string
@@ -42,17 +42,17 @@ interface OaOperation {
     name: string
     in: string
     required?: boolean
-    schema?: OaSchema
+    schema?: OpenApiSchema
     description?: string
   }>
   requestBody?: {
-    content?: Record<string, { schema?: OaSchema }>
+    content?: Record<string, { schema?: OpenApiSchema }>
   }
   responses?: Record<
     string,
     {
       description?: string
-      content?: Record<string, { schema?: OaSchema }>
+      content?: Record<string, { schema?: OpenApiSchema }>
     }
   >
 }
@@ -61,14 +61,14 @@ function stripRef(ref: string): string {
   return ref.replace('#/components/schemas/', '')
 }
 
-function lookupSchema(name: string): OaSchema | undefined {
+function lookupSchema(name: string): OpenApiSchema | undefined {
   return oaSpec.components.schemas[name]
 }
 
 function resolveSchema(
-  s: OaSchema | undefined,
+  s: OpenApiSchema | undefined,
   visited = new Set<string>(),
-): OaSchema | undefined {
+): OpenApiSchema | undefined {
   if (!s) return undefined
   if (s.$ref) {
     const name = stripRef(s.$ref)
@@ -81,7 +81,7 @@ function resolveSchema(
     return resolveSchema(s.oneOf[0], visited)
   }
   if (s.allOf && s.allOf.length) {
-    const merged: OaSchema = { type: 'object', properties: {}, required: [] }
+    const merged: OpenApiSchema = { type: 'object', properties: {}, required: [] }
     for (const part of s.allOf) {
       const resolved = resolveSchema(part, new Set(visited))
       if (resolved?.properties) {
@@ -96,14 +96,14 @@ function resolveSchema(
   return s
 }
 
-function getRefName(s: OaSchema | undefined): string | undefined {
+function getRefName(s: OpenApiSchema | undefined): string | undefined {
   if (!s) return undefined
   if (s.$ref) return stripRef(s.$ref)
   if (s.oneOf?.length === 1 && s.oneOf[0].$ref) return stripRef(s.oneOf[0].$ref)
   return undefined
 }
 
-function schemaToType(s: OaSchema | undefined): string {
+function schemaToType(s: OpenApiSchema | undefined): string {
   if (!s) return 'unknown'
   if (s.$ref) return stripRef(s.$ref)
   if (s.oneOf?.length === 1) return schemaToType(s.oneOf[0])
@@ -128,7 +128,7 @@ function schemaToType(s: OaSchema | undefined): string {
 }
 
 function parseSchemaFields(
-  s: OaSchema,
+  s: OpenApiSchema,
   visited = new Set<string>(),
   depth = 0,
 ): Array<ParsedSchemaField> {
@@ -195,7 +195,7 @@ function parseSchemaFields(
   })
 }
 
-function parseParsedSchema(name: string, s: OaSchema): ParsedSchema {
+function parseParsedSchema(name: string, s: OpenApiSchema): ParsedSchema {
   const resolved = resolveSchema(s, new Set())
   const isEnum = !!(resolved?.enum && resolved.enum.length > 0)
   return {
@@ -387,6 +387,107 @@ function parseEndpoints(): Array<ParsedEndpoint> {
 
   return endpoints
 }
+
+// ---------- schema ref walking ----------
+
+/** Recursively collect all schema names reachable via $ref from a given schema */
+function collectSchemaRefs(
+  name: string,
+  visited = new Set<string>(),
+): Set<string> {
+  if (visited.has(name)) return visited
+  visited.add(name)
+  const raw = oaSpec.components.schemas[name]
+  if (!raw) return visited
+  walkSchemaForRefs(raw, visited)
+  return visited
+}
+
+function walkSchemaForRefs(s: OpenApiSchema, visited: Set<string>): void {
+  if (s.$ref) {
+    const name = stripRef(s.$ref)
+    collectSchemaRefs(name, visited)
+    return
+  }
+  if (s.properties) {
+    for (const prop of Object.values(s.properties)) {
+      walkSchemaForRefs(prop, visited)
+    }
+  }
+  if (s.items) {
+    walkSchemaForRefs(s.items, visited)
+  }
+  if (s.allOf) {
+    for (const part of s.allOf) {
+      walkSchemaForRefs(part, visited)
+    }
+  }
+  if (s.oneOf) {
+    for (const part of s.oneOf) {
+      walkSchemaForRefs(part, visited)
+    }
+  }
+  if (s.additionalProperties && typeof s.additionalProperties === 'object') {
+    walkSchemaForRefs(s.additionalProperties, visited)
+  }
+}
+
+/** Extract top-level $ref schema names from an operation's responses and requestBody */
+function collectOperationRefs(op: OpenApiOperation): Set<string> {
+  const refs = new Set<string>()
+
+  // Request body
+  if (op.requestBody?.content) {
+    const jsonSchema = op.requestBody.content['application/json']?.schema
+    if (jsonSchema) {
+      const name = getRefName(jsonSchema)
+      if (name) refs.add(name)
+    }
+  }
+
+  // Responses
+  for (const resp of Object.values(op.responses ?? {})) {
+    const jsonSchema = resp.content?.['application/json']?.schema
+    if (!jsonSchema) continue
+    const name = getRefName(jsonSchema)
+    if (name) {
+      refs.add(name)
+    } else if (jsonSchema.type === 'array' && jsonSchema.items) {
+      // Handle array responses: { type: "array", items: { $ref: "..." } }
+      const itemName = getRefName(jsonSchema.items)
+      if (itemName) refs.add(itemName)
+    }
+  }
+
+  return refs
+}
+
+/** Map of OpenAPI tag → all schema names reachable from that tag's endpoints */
+export const schemaNamesByTag: Record<string, Array<string>> = (() => {
+  const tagSchemas: Record<string, Set<string>> = {}
+
+  for (const methods of Object.values(oaSpec.paths)) {
+    for (const op of Object.values(methods)) {
+      if (!op.tags?.length) continue
+      const tag = op.tags[0]
+      const set = (tagSchemas[tag] ??= new Set<string>())
+
+      // Collect top-level refs, then walk each transitively
+      for (const topRef of collectOperationRefs(op)) {
+        for (const name of collectSchemaRefs(topRef)) {
+          set.add(name)
+        }
+      }
+    }
+  }
+
+  return Object.fromEntries(
+    Object.entries(tagSchemas).map(([tag, set]) => [
+      tag,
+      [...set].sort(),
+    ]),
+  )
+})()
 
 // ---------- exports ----------
 

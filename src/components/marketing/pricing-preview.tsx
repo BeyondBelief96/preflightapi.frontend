@@ -19,7 +19,7 @@ export function PricingPreview() {
             Start free and scale as your application grows. No hidden fees.
           </p>
         </div>
-        <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {selfServicePlans.map((plan) => (
             <div
               key={plan.id}
@@ -71,23 +71,6 @@ export function PricingPreview() {
               </div>
             </div>
           ))}
-        </div>
-        <div className="mt-12 text-center">
-          <p className="text-sm font-medium text-muted-foreground">
-            Need more?
-          </p>
-        </div>
-        <div className="mx-auto mt-4 max-w-2xl rounded-xl border border-accent/20 bg-card p-8 text-center">
-          <h3 className="text-lg font-semibold">ATP</h3>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Custom pricing, quotas, dedicated support, and everything in
-            Commercial tailored to your needs.
-          </p>
-          <Link to="/contact">
-            <Button variant="outline" className="mt-4">
-              Contact Us
-            </Button>
-          </Link>
         </div>
         <div className="mt-8 text-center">
           <Link

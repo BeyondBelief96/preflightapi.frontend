@@ -1,3 +1,5 @@
+import type { PlanId } from '@/types/plans'
+
 export const SITE_CONFIG = {
   name: 'PreflightAPI',
   tagline: 'Aviation Data API for Developers',
@@ -28,37 +30,37 @@ export interface PlanDefinition {
 export const TIER_FEATURES: Record<string, Array<string>> = {
   student: [
     'Real-time METARs & TAFs',
-    '~19,600 US airports with runway and frequency data',
+    'All US airports, runways & frequencies',
+    'Batch queries for multiple airports',
+    'Always up-to-date with the latest FAA data',
     'Email support',
   ],
   private: [
-    'All student pilot endpoints',
-    'PIREPs — pilot weather reports',
-    'SIGMETs & G-AIRMETs',
-    'Controlled & special-use airspace information and geospatial boundaries',
-    'Access to ~625,000 aviation obstacles (towers, cranes, etc.)',
-    'Email support',
+    'Everything in Student Pilot',
+    'PIREPs, SIGMETs & G-AIRMETs',
+    'Controlled & special-use airspace with geospatial boundaries',
+    'Full FAA obstacle database',
+    'Always up-to-date with the latest FAA data',
+    '99.95% uptime SLA',
   ],
   commercial: [
-    'All Private Pilot endpoints',
-    'NOTAMs by airport, geographic radius, or flight route, or general search',
+    'Everything in Private Pilot',
+    'Search NOTAMs from FAA NOTAM management system by airport, radius, route or general search',
+    'Generate route weather briefing with full METARs, TAFs, PIREPs, SIGMETs, G-AIRMETs & NOTAMs',
+    'E6B utilities',
+    'VFR navigation log generation with wind correction and fuel burn calculations',
     'Bearing & distance calculations between geographic coordinates',
     'Winds aloft forecasts (6/12/24 hr) from aviationweather.gov',
     'Official FAA airport diagram PDFs',
     'Official FAA chart supplement (A/FD) PDFs',
-    'Runway crosswind calculator',
-    'Density altitude calculator',
-    'Wind triangle (heading & ground speed) calculator',
-    'True airspeed & Mach number calculator',
-    'Cloud base estimator',
-    'Pressure altitude calculator',
-    'VFR navigation log generation with wind correction and fuel burn calculations',
-    'Priority email support',
+    'Always up-to-date with the latest FAA data',
+    'Priority support',
   ],
   atp: [
-    'All Commercial Pilot endpoints',
-    'Custom monthly quotas & rate limits',
-    'Dedicated priority support',
+    'All available endpoints',
+    'Built for production workloads',
+    'Always up-to-date with the latest FAA data',
+    'Priority support',
     '99.95% uptime SLA',
   ],
 }
@@ -67,7 +69,7 @@ export const TIER_UI: Record<string, { highlighted?: boolean; cta: string }> = {
   student: { cta: 'Get Started Free' },
   private: { highlighted: true, cta: 'Go Private' },
   commercial: { cta: 'Go Commercial' },
-  atp: { cta: 'Contact Us' },
+  atp: { cta: 'Go ATP' },
 }
 
 // --- Helpers ---
@@ -124,10 +126,10 @@ export const PLANS: Array<PlanDefinition> = [
     price: 0,
     interval: 'month',
     apimProductId: 'student-pilot',
-    limits: { callsPerMonth: 500, ratePerMinute: 10 },
+    limits: { callsPerMonth: 5_000, ratePerMinute: 10 },
     features: buildPlanFeatures(
       'student',
-      { callsPerMonth: 500, ratePerMinute: 10 },
+      { callsPerMonth: 5_000, ratePerMinute: 10 },
       0,
     ),
     cta: 'Get Started Free',
@@ -135,7 +137,7 @@ export const PLANS: Array<PlanDefinition> = [
   {
     id: 'private',
     name: 'Private Pilot',
-    price: 29.99,
+    price: 14.99,
     interval: 'month',
     apimProductId: 'private-pilot',
     limits: { callsPerMonth: 150_000, ratePerMinute: 60 },
@@ -143,41 +145,48 @@ export const PLANS: Array<PlanDefinition> = [
     features: buildPlanFeatures(
       'private',
       { callsPerMonth: 150_000, ratePerMinute: 60 },
-      29.99,
+      14.99,
     ),
     cta: 'Go Private',
   },
   {
     id: 'commercial',
     name: 'Commercial Pilot',
-    price: 79.99,
+    price: 49.99,
     interval: 'month',
     apimProductId: 'commercial-pilot',
     limits: { callsPerMonth: 750_000, ratePerMinute: 300 },
     features: buildPlanFeatures(
       'commercial',
       { callsPerMonth: 750_000, ratePerMinute: 300 },
-      79.99,
+      49.99,
     ),
     cta: 'Go Commercial',
   },
   {
     id: 'atp',
     name: 'ATP',
-    price: null,
-    interval: null,
-    apimProductId: '',
-    limits: { callsPerMonth: null, ratePerMinute: null },
-    features: buildPlanFeatures('atp', {
-      callsPerMonth: null,
-      ratePerMinute: null,
-    }),
-    cta: 'Contact Us',
-    marketingOnly: true,
+    price: 149.99,
+    interval: 'month',
+    apimProductId: 'atp',
+    limits: { callsPerMonth: 2_000_000, ratePerMinute: 500 },
+    features: buildPlanFeatures(
+      'atp',
+      { callsPerMonth: 2_000_000, ratePerMinute: 500 },
+      149.99,
+    ),
+    cta: 'Go ATP',
   },
 ] as const
 
-export type EndpointTier = 'student' | 'private' | 'commercial'
+export type EndpointTier = PlanId
+
+export const PLAN_ORDER: Record<PlanId, number> = {
+  student: 0,
+  private: 1,
+  commercial: 2,
+  atp: 3,
+}
 
 export const ENDPOINT_ACCESS: Record<string, EndpointTier> = {
   metar: 'student',
