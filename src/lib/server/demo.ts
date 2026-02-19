@@ -130,7 +130,7 @@ async function demoFetch<T>(
       method,
       headers,
       body: isPost ? JSON.stringify(options?.body) : undefined,
-      signal: AbortSignal.timeout(isPost ? 15_000 : 10_000),
+      signal: AbortSignal.timeout(isPost ? 30_000 : 10_000),
     })
 
     const durationMs = Math.round(performance.now() - start)
