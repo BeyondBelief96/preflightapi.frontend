@@ -89,9 +89,7 @@ export default defineHandler(async (event) => {
       })
     }
     if (!process.env.STRIPE_ATP_PRICE_ID) {
-      log.error(
-        'STRIPE_ATP_PRICE_ID is not set — paid tier mapping will fail',
-      )
+      log.error('STRIPE_ATP_PRICE_ID is not set — paid tier mapping will fail')
       throw new HTTPError({
         statusCode: 500,
         statusMessage: 'Missing price configuration',
@@ -215,12 +213,7 @@ export default defineHandler(async (event) => {
           // Any non-active status loses paid access immediately.
           // If Stripe recovers a past_due payment, subscription.updated
           // fires again with status=active and we re-sync the paid tier.
-          await syncTierToApim(
-            apimFetch,
-            clerkUserId,
-            studentProductId,
-            true,
-          )
+          await syncTierToApim(apimFetch, clerkUserId, studentProductId, true)
         }
         break
       }
@@ -230,12 +223,7 @@ export default defineHandler(async (event) => {
         const clerkUserId = await resolveClerkUserId(stripe, subscription)
 
         if (clerkUserId) {
-          await syncTierToApim(
-            apimFetch,
-            clerkUserId,
-            studentProductId,
-            true,
-          )
+          await syncTierToApim(apimFetch, clerkUserId, studentProductId, true)
         } else {
           log.warn('Could not resolve clerkUserId for paused subscription')
         }
@@ -265,12 +253,7 @@ export default defineHandler(async (event) => {
         const clerkUserId = await resolveClerkUserId(stripe, subscription)
 
         if (clerkUserId) {
-          await syncTierToApim(
-            apimFetch,
-            clerkUserId,
-            studentProductId,
-            true,
-          )
+          await syncTierToApim(apimFetch, clerkUserId, studentProductId, true)
         } else {
           log.warn('Could not resolve clerkUserId for deleted subscription')
         }
@@ -286,12 +269,7 @@ export default defineHandler(async (event) => {
         const clerkUserId = customer.metadata?.clerkUserId
 
         if (clerkUserId) {
-          await syncTierToApim(
-            apimFetch,
-            clerkUserId,
-            studentProductId,
-            true,
-          )
+          await syncTierToApim(apimFetch, clerkUserId, studentProductId, true)
 
           // Clear stale stripeCustomerId from Clerk so getOrCreateStripeCustomer
           // will create a fresh customer on the next checkout attempt.
@@ -338,12 +316,7 @@ export default defineHandler(async (event) => {
           const clerkUserId = await resolveClerkUserId(stripe, subscription)
 
           if (clerkUserId) {
-            await syncTierToApim(
-              apimFetch,
-              clerkUserId,
-              studentProductId,
-              true,
-            )
+            await syncTierToApim(apimFetch, clerkUserId, studentProductId, true)
           } else {
             log.warn(
               'Could not resolve clerkUserId for failed invoice subscription',

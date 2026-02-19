@@ -33,9 +33,7 @@ function formatRelativeTime(timestamp: string): string {
 }
 
 function cleanEndpointName(name: string): string {
-  return name
-    .replace(/-/g, ' ')
-    .replace(/\b\w/g, (c) => c.toUpperCase())
+  return name.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
 }
 
 function statusVariant(code: number) {
@@ -43,10 +41,7 @@ function statusVariant(code: number) {
   return 'outline' as const
 }
 
-export function RecentErrorsTable({
-  data,
-  isLoading,
-}: RecentErrorsTableProps) {
+export function RecentErrorsTable({ data, isLoading }: RecentErrorsTableProps) {
   return (
     <Card>
       <CardHeader className="pb-3">

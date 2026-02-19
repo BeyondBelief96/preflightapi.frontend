@@ -258,12 +258,22 @@ export async function getTierConfig(): Promise<TierConfig> {
   // Fetch APIM data (limits + products + endpoint access) in parallel
   if (isApimConfigured()) {
     try {
-      const [limits, products, endpointAccess] = await Promise.all([
+      const [apimLimits, products, endpointAccess] = await Promise.all([
         fetchApimLimits(),
         fetchApimProducts(),
         fetchApimEndpointAccess(),
       ])
-      config.limits = limits
+      // Merge APIM limits with defaults — null fields fall back to static values
+      // (rate limits may be defined at the API level rather than product level)
+      for (const [planId, fetched] of Object.entries(apimLimits)) {
+        const defaults = DEFAULT_PLAN_LIMITS[planId]
+        config.limits[planId] = {
+          callsPerMonth:
+            fetched.callsPerMonth ?? defaults?.callsPerMonth ?? null,
+          ratePerMinute:
+            fetched.ratePerMinute ?? defaults?.ratePerMinute ?? null,
+        }
+      }
       config.products = products
       config.endpointAccess = endpointAccess
     } catch (error) {

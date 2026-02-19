@@ -16,6 +16,7 @@ import { useEffect, useState } from 'react'
 import { SignedIn, SignedOut, UserButton } from '@clerk/clerk-react'
 import { createPageHead } from '@/lib/seo'
 import { DocsSidebar } from '@/components/docs/docs-sidebar'
+import { DocsPrevNext } from '@/components/docs/docs-prev-next'
 import { DocsSearch } from '@/components/docs/docs-search'
 import { Button } from '@/components/ui/button'
 import { PlaneAnimation } from '@/components/plane-animation'
@@ -142,6 +143,7 @@ function DocsLayout() {
         </div>
         <div className="mx-auto max-w-5xl px-6 py-10 lg:px-12">
           <Outlet />
+          <DocsPrevNext />
         </div>
       </main>
 

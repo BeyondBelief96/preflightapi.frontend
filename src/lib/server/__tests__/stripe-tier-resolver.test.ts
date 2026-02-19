@@ -56,14 +56,14 @@ describe('resolveApimProductId', () => {
   })
 
   it('resolves ATP from price ID', () => {
-    expect(
-      resolveApimProductId('price_atp_test', undefined, PRODUCT_IDS),
-    ).toBe('atp')
+    expect(resolveApimProductId('price_atp_test', undefined, PRODUCT_IDS)).toBe(
+      'atp',
+    )
   })
 
   it('resolves ATP from metadata when price ID is unknown', () => {
-    expect(
-      resolveApimProductId('price_unknown', 'atp', PRODUCT_IDS),
-    ).toBe('atp')
+    expect(resolveApimProductId('price_unknown', 'atp', PRODUCT_IDS)).toBe(
+      'atp',
+    )
   })
 })

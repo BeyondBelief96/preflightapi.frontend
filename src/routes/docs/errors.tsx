@@ -1,6 +1,8 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
+import { Callout } from '@/components/docs/callout'
 import { CodeBlock } from '@/components/docs/code-block'
 import { API_BASE_PATH } from '@/lib/api-metadata'
+import { cn } from '@/lib/utils'
 import { createPageHead } from '@/lib/seo'
 
 export const Route = createFileRoute('/docs/errors')({
@@ -202,6 +204,13 @@ function ErrorsDocs() {
           not found, server errors) — each with a distinct response format.
         </p>
       </div>
+
+      <Callout variant="note">
+        Errors come from two sources with different response shapes: the{' '}
+        <strong>APIM gateway</strong> (auth, rate limits, quotas, tier-gating)
+        and the <strong>backend API</strong> (validation, not found, server
+        errors). Check both formats when parsing errors.
+      </Callout>
 
       {/* APIM Gateway Errors */}
       <section className="space-y-4">
@@ -491,8 +500,11 @@ function ErrorsDocs() {
           programmatically:
         </p>
 
-        {errorCodeGroups.map((group) => (
-          <div key={group.category}>
+        {errorCodeGroups.map((group, index) => (
+          <div
+            key={group.category}
+            className={cn(index > 0 && 'border-t border-border/30 pt-4')}
+          >
             <h3 className="mb-2 mt-4 text-sm font-semibold text-foreground">
               {group.category}
             </h3>

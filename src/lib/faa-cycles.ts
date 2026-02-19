@@ -36,6 +36,7 @@ function nextCycleDate(cycleDays: 28 | 56, now: Date): Date {
 export interface SyncJob {
   name: string
   utcHour: number
+  utcMinute?: number
   data: string
   cycleDays: 28 | 56 | null // null = continuous
   schedule?: string // for continuous jobs
@@ -44,19 +45,21 @@ export interface SyncJob {
 export const SYNC_JOBS_28: Array<SyncJob> = [
   {
     name: 'Airports',
-    utcHour: 0,
+    utcHour: 10,
     data: 'Airport base data, runways, runway ends (from FAA NASR)',
     cycleDays: 28,
   },
   {
     name: 'Frequencies',
-    utcHour: 1,
+    utcHour: 10,
+    utcMinute: 30,
     data: 'Communication frequencies (from FAA NASR)',
     cycleDays: 28,
   },
   {
     name: 'Airport Diagrams',
-    utcHour: 5,
+    utcHour: 12,
+    utcMinute: 30,
     data: 'Airport diagram PDFs (stored in Azure Blob Storage)',
     cycleDays: 28,
   },
@@ -65,19 +68,20 @@ export const SYNC_JOBS_28: Array<SyncJob> = [
 export const SYNC_JOBS_56: Array<SyncJob> = [
   {
     name: 'Airspaces',
-    utcHour: 2,
+    utcHour: 11,
     data: 'Airspace boundaries (from ArcGIS REST API)',
     cycleDays: 56,
   },
   {
     name: 'Special Use Airspaces',
-    utcHour: 3,
+    utcHour: 11,
+    utcMinute: 30,
     data: 'SUA boundaries (from ArcGIS REST API)',
     cycleDays: 56,
   },
   {
     name: 'Chart Supplements',
-    utcHour: 4,
+    utcHour: 12,
     data: 'FAA chart supplement PDFs (stored in Azure Blob Storage)',
     cycleDays: 56,
   },
@@ -86,17 +90,18 @@ export const SYNC_JOBS_56: Array<SyncJob> = [
 export const SYNC_JOBS_OBSTACLES: Array<SyncJob> = [
   {
     name: 'Obstacle Full Load',
-    utcHour: 6,
+    utcHour: 12,
     data: 'Full reload of all ~625K obstacles from the FAA Digital Obstacle File (DOF)',
     cycleDays: 56,
-    schedule: 'Every 56 days at 06:00 UTC',
+    schedule: 'Every 56 days at 12:00 UTC',
   },
   {
     name: 'Obstacle Daily Change',
-    utcHour: 7,
+    utcHour: 10,
+    utcMinute: 30,
     data: 'Incremental obstacle updates — additions, changes, and removals (from FAA DOF)',
     cycleDays: null,
-    schedule: 'Daily at 07:00 UTC',
+    schedule: 'Daily at 10:30 UTC',
   },
 ]
 
@@ -110,10 +115,10 @@ export const SYNC_JOBS_NOTAMS: Array<SyncJob> = [
   },
   {
     name: 'NOTAM Initial Load',
-    utcHour: 6,
+    utcHour: 11,
     data: 'Full reload across all 5 NOTAM classifications',
     cycleDays: null,
-    schedule: 'Daily at 06:00 UTC',
+    schedule: 'Daily at 11:00 UTC',
   },
 ]
 
@@ -134,7 +139,7 @@ export function getNextSyncDate(
       next.getUTCMonth(),
       next.getUTCDate(),
       job.utcHour,
-      0,
+      job.utcMinute ?? 0,
       0,
     ),
   )
@@ -156,11 +161,14 @@ export function formatLocalDateTime(date: Date): string {
 }
 
 /**
- * Formats a UTC hour as the user's local time for a reference day.
+ * Formats a UTC hour (and optional minute) as the user's local time for a reference day.
  */
-export function formatUtcHourAsLocal(utcHour: number): string {
+export function formatUtcHourAsLocal(
+  utcHour: number,
+  utcMinute: number = 0,
+): string {
   const ref = new Date()
-  ref.setUTCHours(utcHour, 0, 0, 0)
+  ref.setUTCHours(utcHour, utcMinute, 0, 0)
   return ref.toLocaleTimeString(undefined, {
     hour: '2-digit',
     minute: '2-digit',

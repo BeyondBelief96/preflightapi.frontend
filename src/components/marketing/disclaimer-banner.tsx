@@ -8,11 +8,12 @@ export function DisclaimerBanner() {
           <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-amber-500" />
           <div className="space-y-2 text-xs leading-relaxed text-muted-foreground">
             <p>
-              PreflightAPI sources its data from official providers such as the FAA and AWC, but this
-              service itself has not been approved and they do not endorse the accuracy or completeness of the data.
-              This service is not a substitute for official aviation information sources. It is designed for
-              supplemental pre-flight planning and application development
-              purposes only.
+              PreflightAPI sources its data from official providers such as the
+              FAA and AWC, but this service itself has not been approved and
+              they do not endorse the accuracy or completeness of the data. This
+              service is not a substitute for official aviation information
+              sources. It is designed for supplemental pre-flight planning and
+              application development purposes only.
             </p>
             <p>
               Developers integrating this API should ensure their end users

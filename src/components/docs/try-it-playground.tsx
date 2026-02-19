@@ -110,10 +110,7 @@ export function TryItPlayground({ endpoint }: TryItPlaygroundProps) {
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (
-      e.key === 'Enter' &&
-      e.target instanceof HTMLInputElement
-    ) {
+    if (e.key === 'Enter' && e.target instanceof HTMLInputElement) {
       e.preventDefault()
       handleSend()
     }

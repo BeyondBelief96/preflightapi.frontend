@@ -36,10 +36,7 @@ export function WelcomeEmail({ name }: WelcomeEmailProps) {
           <Section style={steps}>
             <Text style={step}>
               <strong>1.</strong> Head to your{' '}
-              <Link
-                href={`${baseUrl}/dashboard/getting-started`}
-                style={link}
-              >
+              <Link href={`${baseUrl}/dashboard/getting-started`} style={link}>
                 Getting Started guide
               </Link>
             </Text>

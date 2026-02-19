@@ -151,7 +151,10 @@ export const PRICING_FEATURES: Array<PricingFeatureGroup> = [
         endpointKey: 'airports/search',
       },
       { name: 'Runways', endpointKey: 'airports/runways' },
-      { name: 'Communication frequencies', endpointKey: 'airports/frequencies' },
+      {
+        name: 'Communication frequencies',
+        endpointKey: 'airports/frequencies',
+      },
       {
         name: 'Controlled airspace (Class B\u2013D)',
         endpointKey: 'airspace/controlled',
@@ -289,9 +292,7 @@ export function planHasEndpointAccess(
  */
 export function buildEndpointAccessRows(
   endpointAccess: Record<string, EndpointTier> = ENDPOINT_ACCESS,
-): Array<
-  Record<'category', string> & Record<PlanId, boolean>
-> {
+): Array<Record<'category', string> & Record<PlanId, boolean>> {
   return ENDPOINT_CATEGORIES.map((cat) => ({
     category: cat.label,
     student: planHasAccess('student', cat, endpointAccess),
@@ -310,9 +311,7 @@ export function buildPricingComparisonFeatures(
   endpointAccess: Record<string, EndpointTier> = ENDPOINT_ACCESS,
 ): Array<{
   category: string
-  features: Array<
-    Record<'name', string> & Record<PlanId, boolean>
-  >
+  features: Array<Record<'name', string> & Record<PlanId, boolean>>
 }> {
   return PRICING_FEATURES.map((group) => ({
     category: group.category,

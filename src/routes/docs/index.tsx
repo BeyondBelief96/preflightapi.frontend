@@ -191,26 +191,6 @@ const categoryGroups: Array<CategoryGroup> = [
   },
 ]
 
-const cacheDurations = [
-  { category: 'Real-time weather (METARs, PIREPs)', duration: '2 minutes' },
-  { category: 'E6B calculations (live METAR mode)', duration: '2 minutes' },
-  {
-    category: 'Forecasts & advisories (TAFs, SIGMETs, G-AIRMETs)',
-    duration: '5 minutes',
-  },
-  { category: 'NOTAMs', duration: '5 minutes' },
-  { category: 'Winds aloft', duration: '5 minutes' },
-  {
-    category: 'Documents (airport diagrams, chart supplements)',
-    duration: '10 minutes',
-  },
-  {
-    category: 'Static data (airports, frequencies, airspace, obstacles)',
-    duration: '15 minutes',
-  },
-  { category: 'POST endpoints', duration: 'Not cached' },
-]
-
 function DocsIndex() {
   const { plans, endpointAccess } = usePlans()
   const endpointAccessRows = buildEndpointAccessRows(endpointAccess)
@@ -224,7 +204,7 @@ function DocsIndex() {
       <h1 className="text-3xl font-bold">Overview</h1>
       <p className="mt-4 text-lg text-muted-foreground">
         PreflightAPI is a REST API for aviation data and flight planning
-        calculations. It provides real-time METAR's, Terminal Area Forecasts
+        calculations. It provides real-time METARs, Terminal Area Forecasts
         (TAFs), airport information, geospatial airspace boundaries, NOTAMs,
         Chart Supplements, Airport Diagrams, and many other flight planning
         tools — sourced from NOAA, FAA NASR Subscriptions, the NOTAM Management
@@ -331,6 +311,18 @@ function DocsIndex() {
             <code>message</code>, and a <code>traceId</code> for support.
             Gateway errors (auth, rate limit, quota) use a simpler format.
           </li>
+          <li>
+            <strong className="text-foreground">Response caching</strong> — GET
+            responses are cached at the API gateway. Cache duration varies by
+            data type (2–15 minutes). See the{' '}
+            <Link
+              to="/docs/rate-limits"
+              className="text-accent hover:underline"
+            >
+              rate limits page
+            </Link>{' '}
+            for the full cache duration table.
+          </li>
         </ul>
 
         <p className="text-sm text-muted-foreground">
@@ -347,35 +339,6 @@ function DocsIndex() {
   }
 }`}
         />
-      </section>
-
-      {/* Response Caching */}
-      <section className="mt-10 space-y-4">
-        <h2 className="text-2xl font-semibold">Response Caching</h2>
-        <p className="text-muted-foreground">
-          GET requests are cached at the API gateway level to reduce latency.
-          Cache duration varies by data type to balance freshness with
-          performance. Cached responses are identical to fresh responses and
-          still count toward your rate limit and monthly quota.
-        </p>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b">
-                <th className="py-3 text-left font-semibold">Data Type</th>
-                <th className="py-3 text-left font-semibold">Cache Duration</th>
-              </tr>
-            </thead>
-            <tbody>
-              {cacheDurations.map((row) => (
-                <tr key={row.category} className="border-b">
-                  <td className="py-3 text-muted-foreground">{row.category}</td>
-                  <td className="py-3 font-medium">{row.duration}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
       </section>
 
       {/* Endpoint Access by Plan */}
@@ -426,9 +389,7 @@ function DocsIndex() {
                   {atpPlan?.name ?? 'ATP'}
                   <br />
                   <span className="font-normal text-muted-foreground">
-                    {atpPlan?.price != null
-                      ? `$${atpPlan.price}/mo`
-                      : ''}
+                    {atpPlan?.price != null ? `$${atpPlan.price}/mo` : ''}
                   </span>
                 </th>
               </tr>

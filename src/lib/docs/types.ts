@@ -63,6 +63,9 @@ export interface ApiCategory {
   title: string
   description: string
   icon: string
+  intro?: string
+  learnMoreUrl?: string
+  learnMoreLabel?: string
   subcategories: Array<{
     tag: string
     label: string

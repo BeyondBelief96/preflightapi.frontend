@@ -60,9 +60,7 @@ export async function logAnalyticsQuery(
   for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
     const token = await credential.getToken(LOG_ANALYTICS_SCOPE)
     if (!token) {
-      throw new Error(
-        'Failed to acquire Azure AD token for Log Analytics API.',
-      )
+      throw new Error('Failed to acquire Azure AD token for Log Analytics API.')
     }
 
     const controller = new AbortController()

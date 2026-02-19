@@ -97,8 +97,7 @@ export function AirportExplorerContent() {
 
   const frequencies = useQuery({
     queryKey: ['demo', 'frequencies', facilityId],
-    queryFn: () =>
-      fetchDemoFrequencies({ data: { facilityId: facilityId! } }),
+    queryFn: () => fetchDemoFrequencies({ data: { facilityId: facilityId! } }),
     enabled: !!facilityId && !!selectedIcao,
     staleTime: 5 * 60 * 1000,
     retry: false,
@@ -134,12 +133,8 @@ export function AirportExplorerContent() {
                     className="py-1 text-xs data-[selected=true]:bg-accent/15 data-[selected=true]:text-foreground"
                   >
                     <Search className="h-3 w-3" />
-                    <span className="font-mono font-semibold">
-                      {apt.icao}
-                    </span>
-                    <span className="opacity-70">
-                      {apt.name}
-                    </span>
+                    <span className="font-mono font-semibold">{apt.icao}</span>
+                    <span className="opacity-70">{apt.name}</span>
                   </CommandItem>
                 ))}
               </CommandGroup>
@@ -168,9 +163,7 @@ export function AirportExplorerContent() {
                 </div>
                 <div className="mt-3 grid grid-cols-2 gap-x-6 gap-y-2">
                   <div>
-                    <span className="text-xs text-muted-foreground">
-                      ICAO
-                    </span>
+                    <span className="text-xs text-muted-foreground">ICAO</span>
                     <div className="font-mono font-semibold">
                       {airport.data.data.icaoId}
                     </div>
@@ -188,8 +181,7 @@ export function AirportExplorerContent() {
                       Elevation
                     </span>
                     <div className="font-semibold">
-                      {airport.data.data.elev?.toLocaleString() ?? '—'} ft
-                      MSL
+                      {airport.data.data.elev?.toLocaleString() ?? '—'} ft MSL
                     </div>
                   </div>
                   <div>
@@ -239,9 +231,8 @@ export function AirportExplorerContent() {
                   {metar.data.data.flightCategory && (
                     <Badge
                       className={
-                        flightCategoryColors[
-                          metar.data.data.flightCategory
-                        ] ?? ''
+                        flightCategoryColors[metar.data.data.flightCategory] ??
+                        ''
                       }
                     >
                       {metar.data.data.flightCategory}
@@ -263,9 +254,7 @@ export function AirportExplorerContent() {
                     </div>
                   </div>
                   <div>
-                    <span className="text-xs text-muted-foreground">
-                      Wind
-                    </span>
+                    <span className="text-xs text-muted-foreground">Wind</span>
                     <div className="font-semibold">
                       {metar.data.data.windDirDegrees ?? '—'}° @{' '}
                       {metar.data.data.windSpeedKt ?? '—'}kt
@@ -294,13 +283,14 @@ export function AirportExplorerContent() {
                 {metar.data.data.skyCondition &&
                   metar.data.data.skyCondition.length > 0 && (
                     <div>
-                      <span className="text-xs text-muted-foreground">
-                        Sky
-                      </span>
+                      <span className="text-xs text-muted-foreground">Sky</span>
                       <div className="flex flex-wrap gap-1.5">
                         {metar.data.data.skyCondition.map(
                           (
-                            sc: { skyCover?: string; cloudBaseFtAgl?: number | null },
+                            sc: {
+                              skyCover?: string
+                              cloudBaseFtAgl?: number | null
+                            },
                             i: number,
                           ) => (
                             <Badge

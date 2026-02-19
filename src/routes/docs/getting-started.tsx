@@ -32,8 +32,8 @@ function GettingStartedDocs() {
         <h1 className="text-3xl font-bold">Getting Started</h1>
         <p className="mt-4 text-lg text-muted-foreground">
           Get up and running with PreflightAPI in under 5 minutes. By the end of
-          this guide you'll have made your first API call and seen real METAR
-          data come back.
+          this guide you'll have made your first API call and received live
+          METAR data.
         </p>
       </div>
 
@@ -83,10 +83,7 @@ function GettingStartedDocs() {
         <Callout variant="tip">
           You can also explore the API without writing code — import our OpenAPI
           spec into Postman or Insomnia. See the{' '}
-          <Link
-            to="/docs/integrations"
-            className="text-accent hover:underline"
-          >
+          <Link to="/docs/integrations" className="text-accent hover:underline">
             Integrations guide
           </Link>
           .
@@ -323,10 +320,7 @@ console.log(data)`}
 
         <Callout variant="tip">
           Check out our{' '}
-          <Link
-            to="/docs/integrations"
-            className="text-accent hover:underline"
-          >
+          <Link to="/docs/integrations" className="text-accent hover:underline">
             Integrations guide
           </Link>{' '}
           for ready-made patterns using TanStack Query, RTK Query, and more.

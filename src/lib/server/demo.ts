@@ -65,7 +65,10 @@ function isRateLimited(): boolean {
 // --- Deduplication of in-flight requests ---
 // If 50 users request KJFK simultaneously before the first response arrives,
 // only one actual fetch is made and all 50 await the same promise.
-const inflight = new Map<string, Promise<{ data: unknown; durationMs: number }>>()
+const inflight = new Map<
+  string,
+  Promise<{ data: unknown; durationMs: number }>
+>()
 
 // --- Demo fetch helper ---
 interface DemoFetchOptions {
@@ -216,48 +219,44 @@ export const fetchDemoFrequencies = createServerFn()
 // --- Demo flight planning functions (curated KBNA → KCLT route) ---
 
 export const fetchDemoNavlog = createServerFn().handler(async () => {
-  return demoFetch<NavlogResponseDto>(
-    '/navlog/calculate',
-    CACHE_TTL.navlog,
-    {
-      method: 'POST',
-      cacheKey: 'demo-navlog-KBNA-KCLT',
-      body: {
-        waypoints: [
-          {
-            id: 'KBNA',
-            name: 'Nashville Intl',
-            latitude: 36.1245,
-            longitude: -86.6782,
-            altitude: 599,
-            waypointType: 'Airport',
-          },
-          {
-            id: 'KCLT',
-            name: 'Charlotte Douglas Intl',
-            latitude: 35.214,
-            longitude: -80.9431,
-            altitude: 748,
-            waypointType: 'Airport',
-          },
-        ],
-        performanceData: {
-          cruiseTrueAirspeed: 110,
-          climbTrueAirspeed: 75,
-          descentTrueAirspeed: 90,
-          climbFpm: 500,
-          descentFpm: 500,
-          cruiseFuelBurn: 8.5,
-          climbFuelBurn: 10,
-          descentFuelBurn: 6,
-          sttFuelGals: 1.5,
-          fuelOnBoardGals: 40,
+  return demoFetch<NavlogResponseDto>('/navlog/calculate', CACHE_TTL.navlog, {
+    method: 'POST',
+    cacheKey: 'demo-navlog-KBNA-KCLT',
+    body: {
+      waypoints: [
+        {
+          id: 'KBNA',
+          name: 'Nashville Intl',
+          latitude: 36.1245,
+          longitude: -86.6782,
+          altitude: 599,
+          waypointType: 'Airport',
         },
-        plannedCruisingAltitude: 5500,
-        timeOfDeparture: new Date(Date.now()).toISOString(),
+        {
+          id: 'KCLT',
+          name: 'Charlotte Douglas Intl',
+          latitude: 35.214,
+          longitude: -80.9431,
+          altitude: 748,
+          waypointType: 'Airport',
+        },
+      ],
+      performanceData: {
+        cruiseTrueAirspeed: 110,
+        climbTrueAirspeed: 75,
+        descentTrueAirspeed: 90,
+        climbFpm: 500,
+        descentFpm: 500,
+        cruiseFuelBurn: 8.5,
+        climbFuelBurn: 10,
+        descentFuelBurn: 6,
+        sttFuelGals: 1.5,
+        fuelOnBoardGals: 40,
       },
+      plannedCruisingAltitude: 5500,
+      timeOfDeparture: new Date(Date.now()).toISOString(),
     },
-  )
+  })
 })
 
 export const fetchDemoRouteBriefing = createServerFn().handler(async () => {
@@ -279,8 +278,5 @@ export const fetchDemoRouteBriefing = createServerFn().handler(async () => {
 })
 
 export const fetchDemoWindsAloft = createServerFn().handler(async () => {
-  return demoFetch<WindsAloftDto>(
-    '/navlog/winds-aloft/6',
-    CACHE_TTL.windsAloft,
-  )
+  return demoFetch<WindsAloftDto>('/navlog/winds-aloft/6', CACHE_TTL.windsAloft)
 })

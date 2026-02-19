@@ -265,10 +265,7 @@ X-RateLimit-Remaining: 58`}
           TanStack Query's built-in <code>staleTime</code> pairs naturally with
           our cache durations. Set <code>staleTime</code> to match the cache
           window for each data type. See the{' '}
-          <Link
-            to="/docs/integrations"
-            className="text-accent hover:underline"
-          >
+          <Link to="/docs/integrations" className="text-accent hover:underline">
             Integrations guide
           </Link>{' '}
           for examples.
@@ -292,9 +289,9 @@ X-RateLimit-Remaining: 58`}
             your real-time rate limit usage.
           </li>
           <li>
-            <strong className="text-foreground">Proactive alerts</strong> — If
-            you're consistently hitting your limits, consider upgrading your
-            plan for higher throughput.
+            <strong className="text-foreground">Plan ahead</strong> — If you're
+            consistently hitting your limits, consider upgrading your plan for
+            higher throughput.
           </li>
         </ul>
       </section>

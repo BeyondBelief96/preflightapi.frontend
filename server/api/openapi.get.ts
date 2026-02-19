@@ -3,7 +3,10 @@ import spec from '../../docs/preflightapi_swagger.json'
 
 export default defineEventHandler((event) => {
   event.res.headers.set('Content-Type', 'application/json')
-  event.res.headers.set('Content-Disposition', 'inline; filename="preflightapi_openapi.json"')
+  event.res.headers.set(
+    'Content-Disposition',
+    'inline; filename="preflightapi_openapi.json"',
+  )
 
   const gatewayUrl = process.env.VITE_APIM_GATEWAY_URL
   if (gatewayUrl && spec.servers?.[0]) {

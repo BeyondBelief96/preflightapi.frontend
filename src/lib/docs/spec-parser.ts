@@ -81,7 +81,11 @@ function resolveSchema(
     return resolveSchema(s.oneOf[0], visited)
   }
   if (s.allOf && s.allOf.length) {
-    const merged: OpenApiSchema = { type: 'object', properties: {}, required: [] }
+    const merged: OpenApiSchema = {
+      type: 'object',
+      properties: {},
+      required: [],
+    }
     for (const part of s.allOf) {
       const resolved = resolveSchema(part, new Set(visited))
       if (resolved?.properties) {
@@ -482,10 +486,7 @@ export const schemaNamesByTag: Record<string, Array<string>> = (() => {
   }
 
   return Object.fromEntries(
-    Object.entries(tagSchemas).map(([tag, set]) => [
-      tag,
-      [...set].sort(),
-    ]),
+    Object.entries(tagSchemas).map(([tag, set]) => [tag, [...set].sort()]),
   )
 })()
 

@@ -5,18 +5,28 @@ interface DocsSidebarProps {
   onNavigate?: () => void
 }
 
-const sections = [
+export const sections = [
   {
     title: 'Getting Started',
     items: [
       { label: 'Overview', href: '/docs', exact: true },
       { label: 'Quick Start', href: '/docs/getting-started' },
       { label: 'Authentication', href: '/docs/authentication' },
+    ],
+  },
+  {
+    title: 'Guides',
+    items: [
       { label: 'Rate Limits', href: '/docs/rate-limits' },
       { label: 'Error Handling', href: '/docs/errors' },
+      { label: 'Integrations', href: '/docs/integrations' },
+    ],
+  },
+  {
+    title: 'Reference',
+    items: [
       { label: 'Data Freshness', href: '/docs/data-freshness' },
       { label: 'OpenAPI Spec', href: '/docs/openapi' },
-      { label: 'Integrations', href: '/docs/integrations' },
     ],
   },
   {

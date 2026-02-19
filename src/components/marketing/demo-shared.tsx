@@ -4,9 +4,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 export function CardSkeleton({ message }: { message?: string }) {
   return (
     <div className="space-y-3 p-5">
-      {message && (
-        <p className="text-sm text-muted-foreground">{message}</p>
-      )}
+      {message && <p className="text-sm text-muted-foreground">{message}</p>}
       <Skeleton className="h-4 w-1/3" />
       <Skeleton className="h-4 w-full" />
       <Skeleton className="h-4 w-2/3" />
@@ -16,9 +14,7 @@ export function CardSkeleton({ message }: { message?: string }) {
 }
 
 export function ErrorCard({ message }: { message: string }) {
-  return (
-    <p className="p-5 text-sm text-muted-foreground">{message}</p>
-  )
+  return <p className="p-5 text-sm text-muted-foreground">{message}</p>
 }
 
 export function DemoCard({ children }: { children: React.ReactNode }) {
@@ -59,9 +55,7 @@ export function EndpointFooter({
         >
           <span
             className={
-              ep.method === 'POST'
-                ? 'text-yellow-400'
-                : 'text-green-400'
+              ep.method === 'POST' ? 'text-yellow-400' : 'text-green-400'
             }
           >
             {ep.method}

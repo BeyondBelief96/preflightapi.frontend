@@ -13,6 +13,10 @@ export const CATEGORIES: Array<ApiCategory> = [
     description:
       tagsMeta['Weather - METARs'] ?? 'METAR surface weather observations.',
     icon: 'thermometer',
+    intro:
+      'Standardized hourly aviation weather reports covering wind, visibility, clouds, temperature, dewpoint, and altimeter setting. Issued for airports; SPECI reports issued for significant changes between regular observations.',
+    learnMoreUrl: 'https://aviationweather.gov/help/data/#metar',
+    learnMoreLabel: 'METAR data guide on aviationweather.gov',
     subcategories: [
       {
         tag: 'Weather - METARs',
@@ -26,6 +30,10 @@ export const CATEGORIES: Array<ApiCategory> = [
     title: 'TAFs',
     description: tagsMeta['Weather - TAFs'] ?? 'Terminal aerodrome forecasts.',
     icon: 'thermometer',
+    intro:
+      'Forecasts of expected conditions within 5 statute miles of a runway complex, typically 24–30 hours ahead. Cover wind, visibility, weather, and clouds; updated at least four times daily.',
+    learnMoreUrl: 'https://aviationweather.gov/help/data/#taf',
+    learnMoreLabel: 'TAF data guide on aviationweather.gov',
     subcategories: [
       {
         tag: 'Weather - TAFs',
@@ -41,6 +49,10 @@ export const CATEGORIES: Array<ApiCategory> = [
       tagsMeta['Weather - PIREPs'] ??
       'Pilot reports of in-flight weather conditions.',
     icon: 'radio',
+    intro:
+      'Submitted by pilots reporting actual in-flight conditions including turbulence, icing, and visibility. Provide real-world observations that help other aviators anticipate hazardous weather.',
+    learnMoreUrl: 'https://aviationweather.gov/help/data/#pirep',
+    learnMoreLabel: 'PIREP data guide on aviationweather.gov',
     subcategories: [
       {
         tag: 'Weather - PIREPs',
@@ -56,6 +68,10 @@ export const CATEGORIES: Array<ApiCategory> = [
       tagsMeta['Weather - Domestic SIGMETs'] ??
       'Domestic SIGMET advisories for significant weather hazards.',
     icon: 'cloud-lightning',
+    intro:
+      'Warn of hazardous weather including severe icing, turbulence, dust storms, and volcanic ash. Valid for up to 4 hours; used by pilots and ATC for en route planning.',
+    learnMoreUrl: 'https://aviationweather.gov/help/data/#sigmet',
+    learnMoreLabel: 'SIGMET data guide on aviationweather.gov',
     subcategories: [
       {
         tag: 'Weather - Domestic SIGMETs',
@@ -72,6 +88,10 @@ export const CATEGORIES: Array<ApiCategory> = [
       tagsMeta['Weather - G-AIRMETs'] ??
       'Graphical AIRMETs with gridded hazard areas.',
     icon: 'map',
+    intro:
+      'Depict moderate-level hazards like turbulence, IFR conditions, icing, and mountain obscuration. Issued at 3-hour intervals extending 12 hours ahead for the contiguous US.',
+    learnMoreUrl: 'https://aviationweather.gov/help/data/#gairmet',
+    learnMoreLabel: 'G-AIRMET data guide on aviationweather.gov',
     subcategories: [
       {
         tag: 'Weather - G-AIRMETs',
@@ -85,8 +105,7 @@ export const CATEGORIES: Array<ApiCategory> = [
     slug: 'briefing',
     title: 'Route Briefing',
     description:
-      tagsMeta['Briefing'] ??
-      'Composite weather briefings for flight routes.',
+      tagsMeta['Briefing'] ?? 'Composite weather briefings for flight routes.',
     icon: 'file-text',
     subcategories: [
       {

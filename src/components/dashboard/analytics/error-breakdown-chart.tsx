@@ -46,10 +46,7 @@ function statusColor(code: number): string {
 }
 
 function estimateLabelWidth(labels: Array<string>, fontSize: number): number {
-  const longest = labels.reduce(
-    (a, b) => (a.length > b.length ? a : b),
-    '',
-  )
+  const longest = labels.reduce((a, b) => (a.length > b.length ? a : b), '')
   return Math.ceil(longest.length * fontSize * 0.6) + 12
 }
 

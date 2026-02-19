@@ -31,6 +31,23 @@ function AuthenticationDocs() {
         </p>
       </div>
 
+      {/* TL;DR */}
+      <div className="rounded-lg border border-accent/30 bg-accent/5 p-4">
+        <p className="text-sm text-muted-foreground">
+          Add this header to every request:
+        </p>
+        <code className="mt-2 block text-base font-semibold text-accent">
+          Ocp-Apim-Subscription-Key: YOUR_API_KEY
+        </code>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Get your key from the{' '}
+          <Link to="/dashboard/keys" className="text-accent hover:underline">
+            API Keys dashboard
+          </Link>
+          .
+        </p>
+      </div>
+
       {/* Subscription Key Header */}
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold">Subscription Key Header</h2>

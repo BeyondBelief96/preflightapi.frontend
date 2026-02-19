@@ -36,14 +36,25 @@ function NextSyncCell({ job }: { job: SyncJob }) {
   return <span>{label}</span>
 }
 
-function LocalTimeCell({ utcHour }: { utcHour: number }) {
+function LocalTimeCell({
+  utcHour,
+  utcMinute = 0,
+}: {
+  utcHour: number
+  utcMinute?: number
+}) {
   const [label, setLabel] = useState<string>('')
 
   useEffect(() => {
-    setLabel(formatUtcHourAsLocal(utcHour))
-  }, [utcHour])
+    setLabel(formatUtcHourAsLocal(utcHour, utcMinute))
+  }, [utcHour, utcMinute])
 
-  return <span>{label || `${String(utcHour).padStart(2, '0')}:00 UTC`}</span>
+  return (
+    <span>
+      {label ||
+        `${String(utcHour).padStart(2, '0')}:${String(utcMinute).padStart(2, '0')} UTC`}
+    </span>
+  )
 }
 
 function SyncJobCard({
@@ -61,7 +72,7 @@ function SyncJobCard({
           {isContinuous ? (
             job.schedule
           ) : (
-            <LocalTimeCell utcHour={job.utcHour} />
+            <LocalTimeCell utcHour={job.utcHour} utcMinute={job.utcMinute} />
           )}
         </span>
       </div>
@@ -126,9 +137,7 @@ function DataFreshnessDocs() {
             follow the FAA's 56-day charting publication schedule.
           </li>
           <li>
-            <strong className="text-foreground">
-              Daily obstacle updates
-            </strong>{' '}
+            <strong className="text-foreground">Daily obstacle updates</strong>{' '}
             — Obstacle data is sourced from the FAA Digital Obstacle File (DOF).
             A full load runs each 56-day cycle, with daily incremental changes
             applied in between.

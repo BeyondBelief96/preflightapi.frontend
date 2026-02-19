@@ -87,7 +87,10 @@ async function handleUserCreated(event: ClerkUserEvent) {
   const primaryEmail = email_addresses[0]?.email_address
 
   if (!primaryEmail) {
-    log.warn({ userId }, 'No email address on new user — skipping welcome email')
+    log.warn(
+      { userId },
+      'No email address on new user — skipping welcome email',
+    )
     return
   }
 
@@ -135,7 +138,10 @@ async function handleUserDeleted(event: ClerkUserEvent) {
 
     // Validate userId format before using in search query (defense-in-depth)
     if (!/^user_[\w]+$/.test(userId)) {
-      log.error({ userId }, 'Invalid Clerk userId format — skipping Stripe cleanup')
+      log.error(
+        { userId },
+        'Invalid Clerk userId format — skipping Stripe cleanup',
+      )
       return
     }
 
