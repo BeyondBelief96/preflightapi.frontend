@@ -134,7 +134,8 @@ function CodeTabs() {
         </div>
         <span className="text-xs text-white/50">{activeExample.file}</span>
       </div>
-      <div className="flex overflow-x-auto border-b border-white/10">
+      {/* Tabs — hidden on mobile, shows first example only */}
+      <div className="hidden overflow-x-auto border-b border-white/10 lg:flex">
         {codeExamples.map((example, index) => (
           <button
             key={example.id}
@@ -150,8 +151,8 @@ function CodeTabs() {
           </button>
         ))}
       </div>
-      {/* Code content — fixed height prevents layout shift when switching tabs */}
-      <div className="h-[340px] overflow-auto p-4 text-sm leading-relaxed [&_pre]:!bg-transparent [&_pre]:!m-0 [&_code]:!bg-transparent">
+      {/* Code content — responsive height */}
+      <div className="max-h-[260px] overflow-auto p-4 text-[13px] leading-relaxed sm:text-sm lg:max-h-[420px] [&_pre]:!bg-transparent [&_pre]:!m-0 [&_code]:!bg-transparent">
         {isComplete && highlightedHtml[activeTab] ? (
           <div
             dangerouslySetInnerHTML={{ __html: highlightedHtml[activeTab] }}
@@ -180,7 +181,7 @@ export function HeroSection() {
   return (
     <section className="relative overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
-        <div className="grid items-start gap-12 lg:grid-cols-2">
+        <div className="grid items-start gap-12 lg:grid-cols-[5fr_7fr]">
           {/* Left: Copy */}
           <div>
             <img
