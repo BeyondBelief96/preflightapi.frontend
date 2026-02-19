@@ -31,18 +31,6 @@ function OpenApiDocs() {
           generate typed clients, explore endpoints in tools like Swagger UI, or
           import directly into Postman.
         </p>
-
-        <Callout variant="tip">
-          For framework integration patterns (TanStack Query, RTK Query), see
-          the{' '}
-          <Link
-            to="/docs/integrations"
-            className="text-accent hover:underline"
-          >
-            Integrations guide
-          </Link>
-          .
-        </Callout>
       </div>
 
       {/* Download */}
