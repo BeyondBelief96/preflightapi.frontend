@@ -167,8 +167,9 @@ console.log(data)`}
         <h2 className="text-2xl font-semibold">4. Understand the Response</h2>
         <p className="text-muted-foreground">
           Single-resource endpoints (like fetching a METAR by ICAO code) return
-          the object directly. Collection endpoints that return multiple items
-          use a paginated wrapper:
+          the object directly. Some collection endpoints — particularly those
+          that can return large or unbounded result sets — use a paginated
+          wrapper:
         </p>
 
         <CodeBlock

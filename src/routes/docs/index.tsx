@@ -316,10 +316,10 @@ function DocsIndex() {
           </li>
           <li>
             <strong className="text-foreground">Cursor-based pagination</strong>{' '}
-            — Collection endpoints return a paginated wrapper. Use the{' '}
-            <code>cursor</code> query parameter to fetch subsequent pages. The{' '}
-            <code>limit</code> parameter controls page size (1–500, default
-            100).
+            — Endpoints that can return large result sets use a paginated
+            wrapper. Use the <code>cursor</code> query parameter to fetch
+            subsequent pages. The <code>limit</code> parameter controls page
+            size (1–500, default 100).
           </li>
           <li>
             <strong className="text-foreground">Structured errors</strong> —

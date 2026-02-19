@@ -206,10 +206,6 @@ PREFLIGHT_API_KEY=your-subscription-key-here`}
             page.
           </li>
         </ul>
-        <Callout variant="tip">
-          Store your API key in a <code>.env</code> file and load it with{' '}
-          <code>process.env</code>. Never hardcode keys in source files.
-        </Callout>
       </section>
 
       {/* Tier-Based Access Control */}
