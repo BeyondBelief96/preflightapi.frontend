@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { Layers, RefreshCw, Zap } from 'lucide-react'
+import { FadeIn } from '@/components/marketing/fade-in'
 
 const reasons = [
   {
@@ -49,21 +50,20 @@ export function WhySection() {
 
           {/* Right: reason cards */}
           <div className="space-y-5">
-            {reasons.map((reason) => (
-              <div
-                key={reason.title}
-                className="flex gap-4 rounded-xl border bg-card p-5"
-              >
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-accent/10 text-accent">
-                  <reason.icon className="h-5 w-5" />
+            {reasons.map((reason, index) => (
+              <FadeIn key={reason.title} delay={index * 150}>
+                <div className="flex gap-4 rounded-xl border bg-card p-5">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-accent/10 text-accent">
+                    <reason.icon className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">{reason.title}</h3>
+                    <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                      {reason.description}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-semibold">{reason.title}</h3>
-                  <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                    {reason.description}
-                  </p>
-                </div>
-              </div>
+              </FadeIn>
             ))}
           </div>
         </div>

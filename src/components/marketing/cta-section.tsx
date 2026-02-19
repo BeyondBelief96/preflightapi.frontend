@@ -3,6 +3,7 @@ import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { usePlans } from '@/hooks/use-plans'
 import { isWaitlistMode } from '@/lib/waitlist'
+import { CtaRadarBackdrop } from '@/components/marketing/cta-radar-backdrop'
 
 export function CtaSection() {
   const { plans } = usePlans()
@@ -11,8 +12,9 @@ export function CtaSection() {
     studentPlan?.limits.callsPerMonth?.toLocaleString() ?? '500'
 
   return (
-    <section className="border-t border-border bg-card py-20 text-card-foreground">
-      <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
+    <section className="relative overflow-hidden border-t border-border bg-[oklch(0.08_0.005_245)] py-20 text-card-foreground">
+      <CtaRadarBackdrop />
+      <div className="relative mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
         <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
           Skip the data pipeline
         </h2>

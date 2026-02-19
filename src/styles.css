@@ -319,6 +319,15 @@ code {
   animation: trail-fade 1s ease-out forwards;
 }
 
+/* Cursor blink animation for typing effect */
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+@utility animate-cursor-blink {
+  animation: cursor-blink 1s step-end infinite;
+}
+
 /* Radar backdrop animations */
 @keyframes radar-sweep {
   from {

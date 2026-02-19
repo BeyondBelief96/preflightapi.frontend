@@ -1,46 +1,27 @@
-import { useEffect, useRef, useState } from 'react'
+import type { ReactNode } from 'react'
+import { useInView } from '@/hooks/use-in-view'
 import { cn } from '@/lib/utils'
 
 interface FadeInProps {
-  children: React.ReactNode
-  className?: string
-  /** Delay in ms before the animation starts once visible */
+  children: ReactNode
   delay?: number
+  className?: string
 }
 
-export function FadeIn({ children, className, delay = 0 }: FadeInProps) {
-  const ref = useRef<HTMLDivElement>(null)
-  const [isVisible, setIsVisible] = useState(false)
-
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.unobserve(el)
-        }
-      },
-      { threshold: 0.15 },
-    )
-
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [])
+export function FadeIn({ children, delay = 0, className }: FadeInProps) {
+  const { ref, isInView } = useInView()
 
   return (
     <div
       ref={ref}
       className={cn(
         'transition-all duration-700 ease-out',
-        isVisible
-          ? 'translate-y-0 opacity-100'
-          : 'translate-y-8 opacity-0',
+        isInView
+          ? 'opacity-100 translate-y-0'
+          : 'opacity-0 translate-y-4',
         className,
       )}
-      style={{ transitionDelay: `${delay}ms` }}
+      style={delay > 0 ? { transitionDelay: `${delay}ms` } : undefined}
     >
       {children}
     </div>

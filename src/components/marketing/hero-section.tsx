@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { API_BASE_URL } from '@/lib/gateway-url'
 import { isWaitlistMode } from '@/lib/waitlist'
 import { usePlans } from '@/hooks/use-plans'
+import { useTypingEffect } from '@/hooks/use-typing-effect'
 
 const codeExamples = [
   {
@@ -107,7 +108,6 @@ function CodeTabs() {
   >({})
 
   useEffect(() => {
-    // Highlight all code examples on mount
     codeExamples.forEach((example, index) => {
       codeToHtml(example.code, {
         lang: example.lang,
@@ -119,6 +119,9 @@ function CodeTabs() {
   }, [])
 
   const activeExample = codeExamples[activeTab]
+  const { displayedText, isComplete } = useTypingEffect({
+    text: activeExample.code,
+  })
 
   return (
     <div className="overflow-hidden rounded-xl border bg-aviation-dark shadow-2xl">
@@ -131,7 +134,8 @@ function CodeTabs() {
         </div>
         <span className="text-xs text-white/50">{activeExample.file}</span>
       </div>
-      <div className="flex overflow-x-auto border-b border-white/10">
+      {/* Tabs — hidden on mobile, shows first example only */}
+      <div className="hidden overflow-x-auto border-b border-white/10 lg:flex">
         {codeExamples.map((example, index) => (
           <button
             key={example.id}
@@ -147,15 +151,20 @@ function CodeTabs() {
           </button>
         ))}
       </div>
-      {/* Code content — fixed height prevents layout shift when switching tabs */}
-      <div className="h-[340px] overflow-auto p-4 text-sm leading-relaxed [&_pre]:!bg-transparent [&_pre]:!m-0 [&_code]:!bg-transparent">
-        {highlightedHtml[activeTab] ? (
+      {/* Code content — responsive height */}
+      <div className="max-h-[260px] overflow-auto p-4 text-[13px] leading-relaxed sm:text-sm lg:max-h-[420px] [&_pre]:!bg-transparent [&_pre]:!m-0 [&_code]:!bg-transparent">
+        {isComplete && highlightedHtml[activeTab] ? (
           <div
             dangerouslySetInnerHTML={{ __html: highlightedHtml[activeTab] }}
           />
         ) : (
           <pre>
-            <code className="text-white/90">{activeExample.code}</code>
+            <code className="text-white/90">
+              {isComplete ? activeExample.code : displayedText}
+            </code>
+            {!isComplete && (
+              <span className="animate-cursor-blink text-accent">|</span>
+            )}
           </pre>
         )}
       </div>
@@ -172,7 +181,7 @@ export function HeroSection() {
   return (
     <section className="relative overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
-        <div className="grid items-start gap-12 lg:grid-cols-2">
+        <div className="grid items-start gap-12 lg:grid-cols-[5fr_7fr]">
           {/* Left: Copy */}
           <div>
             <img
@@ -186,10 +195,10 @@ export function HeroSection() {
             </h1>
             <p className="mt-4 text-lg font-medium text-muted-foreground sm:text-xl">
                 Airports, runways, frequencies, airspace, NOTAMs, obstacles, and more — all with one API key.
-                Your aviation data infrastructure, already built. 
+                Your aviation data infrastructure, already built.
             </p>
             <p className="mt-6 text-base leading-relaxed text-muted-foreground">
-              Built by a pilot and software engineer. All data sourced from the FAA and NOAA.
+              Built by a pilot and software engineer. All data sourced from the FAA and AWC.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <Link to={isWaitlistMode ? '/waitlist' : '/sign-up'}>

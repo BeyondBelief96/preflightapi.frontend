@@ -28,8 +28,9 @@ export const env = createEnv({
     APIM_RESOURCE_GROUP: requiredInProd(z.string()),
     APIM_SERVICE_NAME: requiredInProd(z.string()),
     RESEND_API_KEY: requiredInProd(z.string()),
-
+    DEMO_API_KEY: requiredInProd(z.string()),
     // --- Optional (have defaults or non-critical) ---
+
     PREFLIGHT_API_BASE_URL: z.url().optional(),
     APIM_API_VERSION: z.string().optional(),
     APIM_LOG_ANALYTICS_WORKSPACE_ID: z.string().optional(),
