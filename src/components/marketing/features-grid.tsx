@@ -6,6 +6,7 @@ import {
   Navigation,
   TowerControl,
 } from 'lucide-react'
+import { FadeIn } from '@/components/marketing/fade-in'
 
 const features = [
   {
@@ -56,19 +57,18 @@ export function FeaturesGrid() {
           </h2>
         </div>
         <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {features.map((feature) => (
-            <div
-              key={feature.title}
-              className="group rounded-xl border bg-card p-6 transition-colors hover:border-accent/50"
-            >
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-accent">
-                <feature.icon className="h-5 w-5" />
+          {features.map((feature, index) => (
+            <FadeIn key={feature.title} delay={index * 100}>
+              <div className="group rounded-xl border bg-card p-6 transition-colors hover:border-accent/50">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-accent">
+                  <feature.icon className="h-5 w-5" />
+                </div>
+                <h3 className="mt-4 text-lg font-semibold">{feature.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                  {feature.description}
+                </p>
               </div>
-              <h3 className="mt-4 text-lg font-semibold">{feature.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                {feature.description}
-              </p>
-            </div>
+            </FadeIn>
           ))}
         </div>
       </div>
