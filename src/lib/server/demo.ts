@@ -254,7 +254,7 @@ export const fetchDemoNavlog = createServerFn().handler(async () => {
           fuelOnBoardGals: 40,
         },
         plannedCruisingAltitude: 5500,
-        timeOfDeparture: new Date().toISOString(),
+        timeOfDeparture: new Date(Date.now()).toISOString(),
       },
     },
   )
