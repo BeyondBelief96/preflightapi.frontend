@@ -3,27 +3,31 @@
  *
  * The FAA publishes aeronautical data on fixed cycles:
  * - 28-day (AIRAC) cycle for NASR data (airports, frequencies, etc.)
- * - 56-day charting cycle for charts and supplements
+ * - 56-day charting cycle for charts, supplements, airspace, and obstacles
  *
- * A known AIRAC effective date is used as an epoch. Every subsequent
- * cycle starts exactly N days later.
+ * Each cycle has its own epoch. Every subsequent cycle starts exactly
+ * N days after the epoch.
  */
 
-// Known AIRAC effective date (January 30, 2025)
-const AIRAC_EPOCH = new Date(Date.UTC(2025, 0, 30))
+// Known AIRAC effective date (January 23, 2025)
+const AIRAC_EPOCH = new Date(Date.UTC(2025, 0, 23))
+
+// Known charting cycle effective date (February 20, 2025)
+const CHARTING_EPOCH = new Date(Date.UTC(2025, 1, 20))
 
 /**
  * Returns the next cycle effective date on or after `now`.
  */
 function nextCycleDate(cycleDays: 28 | 56, now: Date): Date {
+  const epoch = cycleDays === 28 ? AIRAC_EPOCH : CHARTING_EPOCH
   const msPerDay = 86_400_000
-  const diffMs = now.getTime() - AIRAC_EPOCH.getTime()
+  const diffMs = now.getTime() - epoch.getTime()
   const daysSinceEpoch = diffMs / msPerDay
   const cyclesPassed = Math.floor(daysSinceEpoch / cycleDays)
 
   // Start of the current cycle
   const currentCycleStart = new Date(
-    AIRAC_EPOCH.getTime() + cyclesPassed * cycleDays * msPerDay,
+    epoch.getTime() + cyclesPassed * cycleDays * msPerDay,
   )
 
   // If we're already past the start of the current cycle, the next one is +cycleDays
