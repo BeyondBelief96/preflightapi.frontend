@@ -3,6 +3,7 @@ import { Link, createFileRoute } from '@tanstack/react-router'
 import { Check, Minus } from 'lucide-react'
 import type { PlanDefinition } from '@/lib/constants'
 import { createPageHead } from '@/lib/seo'
+import { buildPricingComparisonFeatures } from '@/lib/endpoint-registry'
 import { usePlans } from '@/hooks/use-plans'
 import { PricingCard } from '@/components/marketing/pricing-card'
 import { Button } from '@/components/ui/button'
@@ -19,223 +20,6 @@ export const Route = createFileRoute('/_marketing/pricing')({
   component: PricingPage,
 })
 
-const staticComparisonFeatures = [
-  {
-    category: 'Weather Data',
-    features: [
-      {
-        name: 'METARs (current conditions)',
-        student: true,
-        private: true,
-        commercial: true,
-        atp: true,
-      },
-      {
-        name: 'TAFs (terminal forecasts)',
-        student: true,
-        private: true,
-        commercial: true,
-        atp: true,
-      },
-      {
-        name: 'PIREPs (pilot weather reports)',
-        student: false,
-        private: true,
-        commercial: true,
-        atp: true,
-      },
-      {
-        name: 'SIGMETs & G-AIRMETs (weather hazards)',
-        student: false,
-        private: true,
-        commercial: true,
-        atp: true,
-      },
-    ],
-  },
-  {
-    category: 'Airport & Airspace',
-    features: [
-      {
-        name: 'Airport information (19,600+ US airports)',
-        student: true,
-        private: true,
-        commercial: true,
-        atp: true,
-      },
-      {
-        name: 'Runways',
-        student: true,
-        private: true,
-        commercial: true,
-        atp: true,
-      },
-      {
-        name: 'Communication frequencies',
-        student: true,
-        private: true,
-        commercial: true,
-        atp: true,
-      },
-      {
-        name: 'Controlled airspace (Class B\u2013D)',
-        student: false,
-        private: true,
-        commercial: true,
-        atp: true,
-      },
-      {
-        name: 'Special use airspace (MOAs, restricted, etc.)',
-        student: false,
-        private: true,
-        commercial: true,
-        atp: true,
-      },
-      {
-        name: 'Obstacle database (625,000+ obstacles)',
-        student: false,
-        private: true,
-        commercial: true,
-        atp: true,
-      },
-    ],
-  },
-  {
-    category: 'NOTAMs & Documents',
-    features: [
-      {
-        name: 'NOTAMs by airport',
-        student: false,
-        private: false,
-        commercial: true,
-        atp: true,
-      },
-      {
-        name: 'NOTAMs by geographic radius',
-        student: false,
-        private: false,
-        commercial: true,
-        atp: true,
-      },
-      {
-        name: 'NOTAMs by flight route',
-        student: false,
-        private: false,
-        commercial: true,
-        atp: true,
-      },
-      {
-        name: 'Airport diagram PDFs',
-        student: false,
-        private: false,
-        commercial: true,
-        atp: true,
-      },
-      {
-        name: 'Chart supplement (A/FD) PDFs',
-        student: false,
-        private: false,
-        commercial: true,
-        atp: true,
-      },
-    ],
-  },
-  {
-    category: 'Flight Planning',
-    features: [
-      {
-        name: 'Nav log with wind correction & fuel burn',
-        student: false,
-        private: false,
-        commercial: true,
-        atp: true,
-      },
-      {
-        name: 'Bearing & distance between any two points',
-        student: false,
-        private: false,
-        commercial: true,
-        atp: true,
-      },
-      {
-        name: 'Winds aloft forecasts (6/12/24 hr)',
-        student: false,
-        private: false,
-        commercial: true,
-        atp: true,
-      },
-      {
-        name: 'Route weather briefing',
-        student: false,
-        private: false,
-        commercial: true,
-        atp: true,
-      },
-    ],
-  },
-  {
-    category: 'E6B Calculator Utilities',
-    features: [
-      {
-        name: 'Crosswind calculator (from live METAR)',
-        student: false,
-        private: false,
-        commercial: true,
-        atp: true,
-      },
-      {
-        name: 'Crosswind calculator (manual input)',
-        student: false,
-        private: false,
-        commercial: true,
-        atp: true,
-      },
-      {
-        name: 'Density altitude (from live METAR)',
-        student: false,
-        private: false,
-        commercial: true,
-        atp: true,
-      },
-      {
-        name: 'Density altitude (manual input)',
-        student: false,
-        private: false,
-        commercial: true,
-        atp: true,
-      },
-      {
-        name: 'Wind triangle (heading & ground speed)',
-        student: false,
-        private: false,
-        commercial: true,
-        atp: true,
-      },
-      {
-        name: 'True airspeed & Mach number',
-        student: false,
-        private: false,
-        commercial: true,
-        atp: true,
-      },
-      {
-        name: 'Cloud base estimator',
-        student: false,
-        private: false,
-        commercial: true,
-        atp: true,
-      },
-      {
-        name: 'Pressure altitude',
-        student: false,
-        private: false,
-        commercial: true,
-        atp: true,
-      },
-    ],
-  },
-]
-
 function formatLimit(
   plans: Array<PlanDefinition>,
   planId: string,
@@ -247,7 +31,14 @@ function formatLimit(
   return value != null ? value.toLocaleString() : fallback
 }
 
-function buildComparisonFeatures(plans: Array<PlanDefinition>) {
+function buildComparisonFeatures(
+  plans: Array<PlanDefinition>,
+  endpointAccess?: Record<string, string>,
+) {
+  const endpointSections = buildPricingComparisonFeatures(
+    endpointAccess as Parameters<typeof buildPricingComparisonFeatures>[0],
+  )
+
   const limitsSection = {
     category: 'Support & Limits',
     features: [
@@ -280,13 +71,13 @@ function buildComparisonFeatures(plans: Array<PlanDefinition>) {
     ],
   }
 
-  return [...staticComparisonFeatures, limitsSection]
+  return [...endpointSections, limitsSection]
 }
 
 function PricingPage() {
-  const { plans } = usePlans()
+  const { plans, endpointAccess } = usePlans()
   const selfServicePlans = plans.filter((p) => !p.marketingOnly)
-  const comparisonFeatures = buildComparisonFeatures(plans)
+  const comparisonFeatures = buildComparisonFeatures(plans, endpointAccess)
 
   return (
     <div>

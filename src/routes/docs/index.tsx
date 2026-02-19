@@ -21,6 +21,7 @@ import { Callout } from '@/components/docs/callout'
 import { CodeBlock } from '@/components/docs/code-block'
 import { API_BASE_URL } from '@/lib/gateway-url'
 import { API_BASE_PATH, API_VERSION } from '@/lib/api-metadata'
+import { buildEndpointAccessRows } from '@/lib/endpoint-registry'
 import { usePlans } from '@/hooks/use-plans'
 import { createPageHead } from '@/lib/seo'
 
@@ -93,6 +94,12 @@ const categoryGroups: Array<CategoryGroup> = [
         title: 'G-AIRMETs',
         description: 'Graphical AIRMET hazard areas.',
         href: '/docs/g-airmets',
+      },
+      {
+        icon: 'file-text',
+        title: 'Route Briefing',
+        description: 'Composite weather briefing for flight routes.',
+        href: '/docs/briefing',
       },
     ],
   },
@@ -184,71 +191,6 @@ const categoryGroups: Array<CategoryGroup> = [
   },
 ]
 
-const endpointAccessRows = [
-  { category: 'METARs', student: true, private: true, commercial: true, atp: true },
-  { category: 'TAFs', student: true, private: true, commercial: true, atp: true },
-  {
-    category: 'Airports (search, details & runways)',
-    student: true,
-    private: true,
-    commercial: true,
-    atp: true,
-  },
-  {
-    category: 'Communication Frequencies',
-    student: true,
-    private: true,
-    commercial: true,
-    atp: true,
-  },
-  { category: 'PIREPs', student: false, private: true, commercial: true, atp: true },
-  {
-    category: 'Domestic SIGMETs',
-    student: false,
-    private: true,
-    commercial: true,
-    atp: true,
-  },
-  { category: 'G-AIRMETs', student: false, private: true, commercial: true, atp: true },
-  {
-    category: 'Airspace & Special-Use Airspace',
-    student: false,
-    private: true,
-    commercial: true,
-    atp: true,
-  },
-  { category: 'Obstacles', student: false, private: true, commercial: true, atp: true },
-  { category: 'NOTAMs', student: false, private: false, commercial: true, atp: true },
-  {
-    category: 'Airport Diagrams',
-    student: false,
-    private: false,
-    commercial: true,
-    atp: true,
-  },
-  {
-    category: 'Chart Supplements',
-    student: false,
-    private: false,
-    commercial: true,
-    atp: true,
-  },
-  {
-    category: 'E6B Flight Computer',
-    student: false,
-    private: false,
-    commercial: true,
-    atp: true,
-  },
-  {
-    category: 'Navigation Log',
-    student: false,
-    private: false,
-    commercial: true,
-    atp: true,
-  },
-]
-
 const cacheDurations = [
   { category: 'Real-time weather (METARs, PIREPs)', duration: '2 minutes' },
   { category: 'E6B calculations (live METAR mode)', duration: '2 minutes' },
@@ -270,7 +212,8 @@ const cacheDurations = [
 ]
 
 function DocsIndex() {
-  const { plans } = usePlans()
+  const { plans, endpointAccess } = usePlans()
+  const endpointAccessRows = buildEndpointAccessRows(endpointAccess)
   const studentPlan = plans.find((p) => p.id === 'student')
   const privatePlan = plans.find((p) => p.id === 'private')
   const commercialPlan = plans.find((p) => p.id === 'commercial')

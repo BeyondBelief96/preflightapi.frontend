@@ -58,6 +58,18 @@ export interface EndpointBreakdownItem {
   calls: number
 }
 
+export interface ErrorCodeBreakdownItem {
+  statusCode: number
+  count: number
+}
+
+export interface RecentError {
+  timestamp: string // ISO datetime
+  endpoint: string // APIM OperationId
+  statusCode: number // HTTP response code
+  method: string // HTTP method (GET, POST, etc.)
+}
+
 export interface StripeSubscriptionStatus {
   status: string
   planId: PlanId
