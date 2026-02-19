@@ -5,7 +5,10 @@ import type {
   AirportDto,
   CommunicationFrequencyDto,
   MetarDto,
+  NavlogResponseDto,
+  RouteBriefingResponse,
   RunwayDto,
+  WindsAloftDto,
 } from '@/generated/api'
 import { env } from '@/env'
 import { API_BASE_PATH } from '@/lib/api-metadata'
@@ -30,6 +33,9 @@ const CACHE_TTL = {
   metar: 2 * 60 * 1000, // 2 minutes
   runways: 60 * 60 * 1000, // 1 hour
   frequencies: 60 * 60 * 1000, // 1 hour
+  navlog: 10 * 60 * 1000, // 10 min — winds change
+  briefing: 5 * 60 * 1000, // 5 min — weather changes
+  windsAloft: 15 * 60 * 1000, // 15 min — FB data updates every 6 hours
 } as const
 
 // Periodic cleanup so stale entries don't accumulate
@@ -62,9 +68,16 @@ function isRateLimited(): boolean {
 const inflight = new Map<string, Promise<{ data: unknown; durationMs: number }>>()
 
 // --- Demo fetch helper ---
+interface DemoFetchOptions {
+  method?: 'GET' | 'POST'
+  body?: unknown
+  cacheKey?: string // override for POST to avoid time-dependent keys
+}
+
 async function demoFetch<T>(
   path: string,
   ttl: number,
+  options?: DemoFetchOptions,
 ): Promise<{ data: T; durationMs: number }> {
   if (!env.DEMO_API_KEY) {
     throw new Error('Demo API is not configured')
@@ -77,7 +90,7 @@ async function demoFetch<T>(
 
   // Check cache first
   cleanupCache()
-  const cacheKey = path
+  const cacheKey = options?.cacheKey ?? path
   const cached = cache.get(cacheKey) as CacheEntry<T> | undefined
   if (cached && Date.now() < cached.expiresAt) {
     return { data: cached.data, durationMs: cached.durationMs }
@@ -99,15 +112,25 @@ async function demoFetch<T>(
     return result as { data: T; durationMs: number }
   }
 
+  const method = options?.method ?? 'GET'
+  const isPost = method === 'POST'
+
   const fetchPromise = (async () => {
     const url = `${gatewayUrl}${API_BASE_PATH}${path}`
     const start = performance.now()
 
+    const headers: Record<string, string> = {
+      'Ocp-Apim-Subscription-Key': env.DEMO_API_KEY,
+    }
+    if (isPost) {
+      headers['Content-Type'] = 'application/json'
+    }
+
     const res = await fetch(url, {
-      headers: {
-        'Ocp-Apim-Subscription-Key': env.DEMO_API_KEY,
-      },
-      signal: AbortSignal.timeout(10_000),
+      method,
+      headers,
+      body: isPost ? JSON.stringify(options?.body) : undefined,
+      signal: AbortSignal.timeout(isPost ? 15_000 : 10_000),
     })
 
     const durationMs = Math.round(performance.now() - start)
@@ -189,3 +212,75 @@ export const fetchDemoFrequencies = createServerFn()
     }>(`/communication-frequencies/${data.facilityId}`, CACHE_TTL.frequencies)
     return { data: result.data.data, durationMs: result.durationMs }
   })
+
+// --- Demo flight planning functions (curated KBNA → KCLT route) ---
+
+export const fetchDemoNavlog = createServerFn().handler(async () => {
+  return demoFetch<NavlogResponseDto>(
+    '/navlog/calculate',
+    CACHE_TTL.navlog,
+    {
+      method: 'POST',
+      cacheKey: 'demo-navlog-KBNA-KCLT',
+      body: {
+        waypoints: [
+          {
+            id: 'KBNA',
+            name: 'Nashville Intl',
+            latitude: 36.1245,
+            longitude: -86.6782,
+            altitude: 599,
+            waypointType: 'Airport',
+          },
+          {
+            id: 'KCLT',
+            name: 'Charlotte Douglas Intl',
+            latitude: 35.214,
+            longitude: -80.9431,
+            altitude: 748,
+            waypointType: 'Airport',
+          },
+        ],
+        performanceData: {
+          cruiseTrueAirspeed: 110,
+          climbTrueAirspeed: 75,
+          descentTrueAirspeed: 90,
+          climbFpm: 500,
+          descentFpm: 500,
+          cruiseFuelBurn: 8.5,
+          climbFuelBurn: 10,
+          descentFuelBurn: 6,
+          sttFuelGals: 1.5,
+          fuelOnBoardGals: 40,
+        },
+        plannedCruisingAltitude: 5500,
+        timeOfDeparture: new Date().toISOString(),
+      },
+    },
+  )
+})
+
+export const fetchDemoRouteBriefing = createServerFn().handler(async () => {
+  return demoFetch<RouteBriefingResponse>(
+    '/briefing/route',
+    CACHE_TTL.briefing,
+    {
+      method: 'POST',
+      cacheKey: 'demo-briefing-KBNA-KCLT',
+      body: {
+        waypoints: [
+          { airportIdentifier: 'KBNA' },
+          { airportIdentifier: 'KCLT' },
+        ],
+        corridorWidthNm: 25,
+      },
+    },
+  )
+})
+
+export const fetchDemoWindsAloft = createServerFn().handler(async () => {
+  return demoFetch<WindsAloftDto>(
+    '/navlog/winds-aloft/6',
+    CACHE_TTL.windsAloft,
+  )
+})

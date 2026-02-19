@@ -152,7 +152,7 @@ function CodeTabs() {
         ))}
       </div>
       {/* Code content — responsive height */}
-      <div className="max-h-[260px] overflow-auto p-4 text-[13px] leading-relaxed sm:text-sm lg:max-h-[420px] [&_pre]:!bg-transparent [&_pre]:!m-0 [&_code]:!bg-transparent">
+      <div className="max-h-[280px] overflow-auto p-4 text-[13px] leading-relaxed sm:text-sm lg:max-h-[420px] [&_pre]:!bg-transparent [&_pre]:!m-0 [&_code]:!bg-transparent">
         {isComplete && highlightedHtml[activeTab] ? (
           <div
             dangerouslySetInnerHTML={{ __html: highlightedHtml[activeTab] }}
