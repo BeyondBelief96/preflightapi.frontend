@@ -40,30 +40,26 @@ export function ApiDemoSection() {
         </div>
 
         <Tabs defaultValue="airport" className="mt-10">
-          <div className="flex justify-center">
+          <div className="-mx-4 flex justify-center overflow-x-auto px-4 sm:mx-0 sm:px-0">
             <TabsList
               variant="line"
-              className="w-full max-w-2xl overflow-x-auto border-b border-white/10"
+              className="w-auto shrink-0 gap-1 border-b border-white/10 sm:w-full sm:max-w-2xl"
             >
-              <TabsTrigger value="airport" className="gap-1.5">
-                <MapPin className="h-4 w-4" />
+              <TabsTrigger value="airport" className="gap-1.5 px-3 sm:px-4">
+                <MapPin className="h-4 w-4 shrink-0" />
                 <span className="hidden sm:inline">Airport Explorer</span>
-                <span className="sm:hidden">Airports</span>
               </TabsTrigger>
-              <TabsTrigger value="navlog" className="gap-1.5">
-                <Navigation className="h-4 w-4" />
+              <TabsTrigger value="navlog" className="gap-1.5 px-3 sm:px-4">
+                <Navigation className="h-4 w-4 shrink-0" />
                 <span className="hidden sm:inline">Flight Planner</span>
-                <span className="sm:hidden">Planner</span>
               </TabsTrigger>
-              <TabsTrigger value="weather" className="gap-1.5">
-                <CloudSun className="h-4 w-4" />
+              <TabsTrigger value="weather" className="gap-1.5 px-3 sm:px-4">
+                <CloudSun className="h-4 w-4 shrink-0" />
                 <span className="hidden sm:inline">Route Weather</span>
-                <span className="sm:hidden">Weather</span>
               </TabsTrigger>
-              <TabsTrigger value="winds" className="gap-1.5">
-                <Wind className="h-4 w-4" />
+              <TabsTrigger value="winds" className="gap-1.5 px-3 sm:px-4">
+                <Wind className="h-4 w-4 shrink-0" />
                 <span className="hidden sm:inline">Winds Aloft</span>
-                <span className="sm:hidden">Winds</span>
               </TabsTrigger>
             </TabsList>
           </div>

@@ -22,7 +22,11 @@ export function ErrorCard({ message }: { message: string }) {
 }
 
 export function DemoCard({ children }: { children: React.ReactNode }) {
-  return <div className="rounded-xl border bg-card">{children}</div>
+  return (
+    <div className="min-w-0 overflow-hidden rounded-xl border bg-card">
+      {children}
+    </div>
+  )
 }
 
 export function DemoCardHeader({

@@ -99,12 +99,12 @@ export default function DemoWindsAloft() {
       <DemoCard>
         <DemoCardHeader icon={Wind} title="Wind & Temperature by Altitude" />
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full min-w-[400px] text-sm">
             <thead>
               <tr className="border-b text-xs text-muted-foreground">
-                <th className="px-4 py-2 text-left font-medium">Station</th>
+                <th className="whitespace-nowrap px-3 py-2 text-left font-medium sm:px-4">Station</th>
                 {ALTITUDE_LEVELS.map((alt) => (
-                  <th key={alt} className="px-4 py-2 text-center font-medium">
+                  <th key={alt} className="whitespace-nowrap px-3 py-2 text-center font-medium sm:px-4">
                     {Number(alt).toLocaleString()} ft
                   </th>
                 ))}
@@ -113,14 +113,14 @@ export default function DemoWindsAloft() {
             <tbody className="divide-y">
               {routeSites.map((site) => (
                 <tr key={site.id}>
-                  <td className="px-4 py-3">
+                  <td className="whitespace-nowrap px-3 py-3 sm:px-4">
                     <span className="font-mono font-semibold">{site.id}</span>
                   </td>
                   {ALTITUDE_LEVELS.map((alt) => {
                     const wt = site.windTemp?.[alt]
                     const temp = formatTemp(wt)
                     return (
-                      <td key={alt} className="px-4 py-3 text-center">
+                      <td key={alt} className="whitespace-nowrap px-3 py-3 text-center sm:px-4">
                         <div className="font-mono text-sm">
                           {formatWindCell(wt)}
                         </div>
@@ -138,7 +138,7 @@ export default function DemoWindsAloft() {
                 <tr>
                   <td
                     colSpan={ALTITUDE_LEVELS.length + 1}
-                    className="px-4 py-6 text-center text-muted-foreground"
+                    className="px-3 py-6 text-center text-muted-foreground sm:px-4"
                   >
                     No route-relevant stations found in forecast data
                   </td>

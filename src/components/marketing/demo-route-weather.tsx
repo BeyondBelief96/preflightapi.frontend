@@ -68,18 +68,20 @@ function CountBadge({
 function MetarCard({ metar }: { metar: MetarDto }) {
   const catColors = flightCategoryColors[metar.flightCategory ?? ''] ?? ''
   return (
-    <div className="flex items-start gap-3 px-5 py-3 text-sm">
-      <span className="shrink-0 font-mono font-semibold">
-        {metar.stationId}
-      </span>
-      {metar.flightCategory && (
-        <Badge className={`shrink-0 ${catColors}`}>
-          {metar.flightCategory}
-        </Badge>
-      )}
-      <span className="font-mono text-xs text-muted-foreground">
+    <div className="space-y-1.5 px-5 py-3 text-sm">
+      <div className="flex items-center gap-2">
+        <span className="shrink-0 font-mono font-semibold">
+          {metar.stationId}
+        </span>
+        {metar.flightCategory && (
+          <Badge className={`shrink-0 ${catColors}`}>
+            {metar.flightCategory}
+          </Badge>
+        )}
+      </div>
+      <div className="break-words font-mono text-xs text-muted-foreground">
         {metar.rawText}
-      </span>
+      </div>
     </div>
   )
 }
@@ -88,7 +90,7 @@ function TafCard({ taf }: { taf: TafDto }) {
   return (
     <div className="space-y-1 px-5 py-3">
       <span className="font-mono text-sm font-semibold">{taf.stationId}</span>
-      <div className="rounded-md bg-muted/50 px-3 py-2 font-mono text-xs text-muted-foreground">
+      <div className="break-words rounded-md bg-muted/50 px-3 py-2 font-mono text-xs text-muted-foreground">
         {taf.rawText}
       </div>
     </div>
@@ -224,6 +226,11 @@ export default function DemoRouteWeather() {
   const sigmets = data.sigmets ?? []
   const gAirmets = data.gAirmets ?? []
   const notams = data.notams ?? []
+  const MAX_METARS = 6
+  const MAX_TAFS = 4
+  const MAX_PIREPS = 5
+  const MAX_SIGMETS = 3
+  const MAX_GAIRMETS = 4
   const MAX_NOTAMS = 5
 
   return (
@@ -284,9 +291,14 @@ export default function DemoRouteWeather() {
             <ErrorCard message="No METARs available" />
           ) : (
             <div className="divide-y">
-              {metars.map((m, i) => (
+              {metars.slice(0, MAX_METARS).map((m, i) => (
                 <MetarCard key={m.stationId ?? i} metar={m} />
               ))}
+              {metars.length > MAX_METARS && (
+                <p className="px-5 py-2 text-xs text-muted-foreground">
+                  + {metars.length - MAX_METARS} more METARs
+                </p>
+              )}
             </div>
           )}
         </DemoCard>
@@ -298,9 +310,14 @@ export default function DemoRouteWeather() {
             <ErrorCard message="No TAFs available" />
           ) : (
             <div className="divide-y">
-              {tafs.map((t, i) => (
+              {tafs.slice(0, MAX_TAFS).map((t, i) => (
                 <TafCard key={t.stationId ?? i} taf={t} />
               ))}
+              {tafs.length > MAX_TAFS && (
+                <p className="px-5 py-2 text-xs text-muted-foreground">
+                  + {tafs.length - MAX_TAFS} more TAFs
+                </p>
+              )}
             </div>
           )}
         </DemoCard>
@@ -316,9 +333,14 @@ export default function DemoRouteWeather() {
             </div>
           ) : (
             <div className="divide-y">
-              {pireps.map((p, i) => (
+              {pireps.slice(0, MAX_PIREPS).map((p, i) => (
                 <PirepCard key={p.id ?? i} pirep={p} />
               ))}
+              {pireps.length > MAX_PIREPS && (
+                <p className="px-5 py-2 text-xs text-muted-foreground">
+                  + {pireps.length - MAX_PIREPS} more PIREPs
+                </p>
+              )}
             </div>
           )}
         </DemoCard>
@@ -334,9 +356,14 @@ export default function DemoRouteWeather() {
             </div>
           ) : (
             <div className="divide-y">
-              {sigmets.map((s, i) => (
+              {sigmets.slice(0, MAX_SIGMETS).map((s, i) => (
                 <SigmetCard key={s.id ?? i} sigmet={s} />
               ))}
+              {sigmets.length > MAX_SIGMETS && (
+                <p className="px-5 py-2 text-xs text-muted-foreground">
+                  + {sigmets.length - MAX_SIGMETS} more SIGMETs
+                </p>
+              )}
             </div>
           )}
         </DemoCard>
@@ -352,9 +379,14 @@ export default function DemoRouteWeather() {
             </div>
           ) : (
             <div className="divide-y">
-              {gAirmets.map((a, i) => (
+              {gAirmets.slice(0, MAX_GAIRMETS).map((a, i) => (
                 <GAirmetCard key={a.id ?? i} airmet={a} />
               ))}
+              {gAirmets.length > MAX_GAIRMETS && (
+                <p className="px-5 py-2 text-xs text-muted-foreground">
+                  + {gAirmets.length - MAX_GAIRMETS} more G-AIRMETs
+                </p>
+              )}
             </div>
           )}
         </DemoCard>

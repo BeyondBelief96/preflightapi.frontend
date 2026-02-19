@@ -157,25 +157,25 @@ export default function DemoFlightPlanner() {
         <DemoCard>
           <DemoCardHeader icon={Navigation} title="Navigation Log" />
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="w-full min-w-[640px] text-sm">
               <thead>
                 <tr className="border-b text-xs text-muted-foreground">
-                  <th className="px-4 py-2 text-left font-medium">From</th>
-                  <th className="px-4 py-2 text-left font-medium">To</th>
-                  <th className="px-4 py-2 text-right font-medium">
+                  <th className="whitespace-nowrap px-3 py-2 text-left font-medium">From</th>
+                  <th className="whitespace-nowrap px-3 py-2 text-left font-medium">To</th>
+                  <th className="whitespace-nowrap px-3 py-2 text-right font-medium">
                     Crs °M
                   </th>
-                  <th className="px-4 py-2 text-right font-medium">
+                  <th className="whitespace-nowrap px-3 py-2 text-right font-medium">
                     Hdg °M
                   </th>
-                  <th className="px-4 py-2 text-right font-medium">
+                  <th className="whitespace-nowrap px-3 py-2 text-right font-medium">
                     Dist
                   </th>
-                  <th className="px-4 py-2 text-right font-medium">GS</th>
-                  <th className="px-4 py-2 text-right font-medium">
+                  <th className="whitespace-nowrap px-3 py-2 text-right font-medium">GS</th>
+                  <th className="whitespace-nowrap px-3 py-2 text-right font-medium">
                     Fuel Rem
                   </th>
-                  <th className="px-4 py-2 text-right font-medium">Wind</th>
+                  <th className="whitespace-nowrap px-3 py-2 text-right font-medium">Wind</th>
                 </tr>
               </thead>
               <tbody className="divide-y">
@@ -190,30 +190,30 @@ export default function DemoFlightPlanner() {
                           : ''
                       }
                     >
-                      <td className="px-4 py-2 font-mono text-xs">
+                      <td className="whitespace-nowrap px-3 py-2 font-mono text-xs">
                         {leg.legStartPoint?.id ??
                           shortLabel(leg.legStartPoint?.name)}
                       </td>
-                      <td className="px-4 py-2 font-mono text-xs">
+                      <td className="whitespace-nowrap px-3 py-2 font-mono text-xs">
                         {leg.legEndPoint?.id ??
                           shortLabel(leg.legEndPoint?.name)}
                       </td>
-                      <td className="px-4 py-2 text-right font-mono">
+                      <td className="whitespace-nowrap px-3 py-2 text-right font-mono">
                         {leg.magneticCourse?.toFixed(0) ?? '—'}
                       </td>
-                      <td className="px-4 py-2 text-right font-mono">
+                      <td className="whitespace-nowrap px-3 py-2 text-right font-mono">
                         {leg.magneticHeading?.toFixed(0) ?? '—'}
                       </td>
-                      <td className="px-4 py-2 text-right font-mono">
+                      <td className="whitespace-nowrap px-3 py-2 text-right font-mono">
                         {leg.legDistance?.toFixed(1) ?? '—'}
                       </td>
-                      <td className="px-4 py-2 text-right font-mono">
+                      <td className="whitespace-nowrap px-3 py-2 text-right font-mono">
                         {leg.groundSpeed?.toFixed(0) ?? '—'}
                       </td>
-                      <td className="px-4 py-2 text-right font-mono">
+                      <td className="whitespace-nowrap px-3 py-2 text-right font-mono">
                         {leg.remainingFuelGals?.toFixed(1) ?? '—'}
                       </td>
-                      <td className="px-4 py-2 text-right font-mono text-xs">
+                      <td className="whitespace-nowrap px-3 py-2 text-right font-mono text-xs">
                         {formatWind(leg.windDir, leg.windSpeed)}
                       </td>
                     </tr>
