@@ -124,10 +124,7 @@ export function PlanCTA({ plan }: { plan: PlanDefinition }) {
   if (hasActiveSubscription) {
     return (
       <Link to="/dashboard/billing">
-        <Button
-          className="w-full"
-          variant={plan.highlighted ? 'default' : 'outline'}
-        >
+        <Button className="w-full" variant="outline">
           Manage Subscription
         </Button>
       </Link>
