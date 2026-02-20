@@ -151,8 +151,8 @@ function CodeTabs() {
           </button>
         ))}
       </div>
-      {/* Code content — responsive height */}
-      <div className="max-h-[280px] overflow-auto p-4 text-[13px] leading-relaxed sm:text-sm lg:max-h-[420px] [&_pre]:!bg-transparent [&_pre]:!m-0 [&_code]:!bg-transparent">
+      {/* Code content — fixed height */}
+      <div className="h-[280px] overflow-auto p-4 text-[13px] leading-relaxed sm:text-sm lg:h-[420px] [&_pre]:!bg-transparent [&_pre]:!m-0 [&_code]:!bg-transparent">
         {isComplete && highlightedHtml[activeTab] ? (
           <div
             dangerouslySetInnerHTML={{ __html: highlightedHtml[activeTab] }}
@@ -181,7 +181,7 @@ export function HeroSection() {
   return (
     <section className="relative overflow-hidden">
       <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
-        <div className="grid items-start gap-12 lg:grid-cols-[5fr_7fr]">
+        <div className="grid items-start gap-12 lg:grid-cols-[6fr_8fr]">
           {/* Left: Copy */}
           <div>
             <img
