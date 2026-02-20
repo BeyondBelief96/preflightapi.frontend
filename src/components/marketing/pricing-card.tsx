@@ -59,7 +59,7 @@ export function PricingCard({ plan }: PricingCardProps) {
   )
 }
 
-function PlanCTA({ plan }: { plan: PlanDefinition }) {
+export function PlanCTA({ plan }: { plan: PlanDefinition }) {
   const { isSignedIn, userId } = useAuth()
 
   const stripeSubQuery = useQuery({

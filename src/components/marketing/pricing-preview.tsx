@@ -1,10 +1,9 @@
 import { Link } from '@tanstack/react-router'
 import { Check } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { usePlans } from '@/hooks/use-plans'
-import { isWaitlistMode } from '@/lib/waitlist'
 import { FadeIn } from '@/components/marketing/fade-in'
+import { PlanCTA } from '@/components/marketing/pricing-card'
 
 export function PricingPreview() {
   const { plans } = usePlans()
@@ -61,14 +60,7 @@ export function PricingPreview() {
                   ))}
                 </ul>
                 <div className="mt-6">
-                  <Link to={isWaitlistMode ? '/waitlist' : '/sign-up'}>
-                    <Button
-                      className="w-full"
-                      variant={plan.highlighted ? 'default' : 'outline'}
-                    >
-                      {isWaitlistMode ? 'Join the Waitlist' : plan.cta}
-                    </Button>
-                  </Link>
+                  <PlanCTA plan={plan} />
                 </div>
               </div>
             </FadeIn>
