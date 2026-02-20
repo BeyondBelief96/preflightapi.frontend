@@ -1,3 +1,4 @@
+import { ExternalLink } from 'lucide-react'
 import { EndpointCard } from './endpoint-card'
 import { FormatApiText } from './format-api-text'
 import type { ApiCategory, ParsedEndpoint } from '@/lib/docs/types'
@@ -28,6 +29,20 @@ export function CategoryPage({ category, endpoints }: CategoryPageProps) {
           text={category.description}
           className="mt-2 text-base text-muted-foreground"
         />
+        {category.intro && (
+          <p className="mt-4 text-muted-foreground">{category.intro}</p>
+        )}
+        {category.learnMoreUrl && (
+          <a
+            href={category.learnMoreUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-2 inline-flex items-center gap-1.5 text-sm text-accent hover:underline"
+          >
+            {category.learnMoreLabel ?? 'Learn more'}
+            <ExternalLink className="h-3.5 w-3.5" />
+          </a>
+        )}
       </div>
 
       {/* Subcategory sections */}

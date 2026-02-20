@@ -45,18 +45,18 @@ Server-side logic uses `createServerFn()` from `@tanstack/react-start`. Two dist
 
 **`src/lib/server/`** — Modules imported by server functions:
 
-| Module                  | Purpose                                          |
-| ----------------------- | ------------------------------------------------ |
-| `apim.ts`               | APIM user & subscription management              |
-| `apim-client.ts`        | Authenticated Azure APIM REST client             |
-| `apim-products.ts`      | APIM product ID mapping (`getApimProductIds`)    |
-| `stripe.ts`             | Checkout, portal, subscription management        |
-| `stripe-client.ts`      | Stripe SDK singleton                             |
-| `stripe-utils.ts`       | Price/plan ID mapping utilities                  |
-| `stripe-tier-resolver.ts` | Resolves Stripe price → APIM product ID        |
-| `tier-config.ts`        | Dynamic plan data (APIM limits + Stripe prices)  |
-| `auth.ts`               | `requireAuth()` helper                           |
-| `contact.ts`            | Contact form handler (sends via Resend)          |
+| Module                    | Purpose                                         |
+| ------------------------- | ----------------------------------------------- |
+| `apim.ts`                 | APIM user & subscription management             |
+| `apim-client.ts`          | Authenticated Azure APIM REST client            |
+| `apim-products.ts`        | APIM product ID mapping (`getApimProductIds`)   |
+| `stripe.ts`               | Checkout, portal, subscription management       |
+| `stripe-client.ts`        | Stripe SDK singleton                            |
+| `stripe-utils.ts`         | Price/plan ID mapping utilities                 |
+| `stripe-tier-resolver.ts` | Resolves Stripe price → APIM product ID         |
+| `tier-config.ts`          | Dynamic plan data (APIM limits + Stripe prices) |
+| `auth.ts`                 | `requireAuth()` helper                          |
+| `contact.ts`              | Contact form handler (sends via Resend)         |
 
 **`server/api/`** — Nitro HTTP endpoints (webhooks, public APIs):
 
@@ -75,8 +75,9 @@ import { auth } from '@clerk/tanstack-react-start/server'
 
 const myServerFn = createServerFn()
   .inputValidator(z.object({ id: z.string() })) // .inputValidator(), NOT .validator()
-  .handler(async ({ data }) => {                  // destructure { data }
-    const { userId } = await auth()               // no request param needed
+  .handler(async ({ data }) => {
+    // destructure { data }
+    const { userId } = await auth() // no request param needed
   })
 ```
 

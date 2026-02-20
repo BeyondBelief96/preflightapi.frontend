@@ -1,10 +1,9 @@
 import { Link } from '@tanstack/react-router'
 import { Check } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { usePlans } from '@/hooks/use-plans'
-import { isWaitlistMode } from '@/lib/waitlist'
 import { FadeIn } from '@/components/marketing/fade-in'
+import { PlanCTA } from '@/components/marketing/pricing-card'
 
 export function PricingPreview() {
   const { plans } = usePlans()
@@ -40,7 +39,9 @@ export function PricingPreview() {
                   <div className="mt-3">
                     {plan.price !== null ? (
                       <div className="flex items-baseline gap-1">
-                        <span className="text-3xl font-bold">${plan.price}</span>
+                        <span className="text-3xl font-bold">
+                          ${plan.price}
+                        </span>
                         {plan.price > 0 && (
                           <span className="text-sm text-muted-foreground">
                             /month
@@ -54,21 +55,17 @@ export function PricingPreview() {
                 </div>
                 <ul className="mt-6 flex-1 space-y-3">
                   {plan.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-2 text-sm">
+                    <li
+                      key={feature}
+                      className="flex items-start gap-2 text-sm"
+                    >
                       <Check className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
                       <span>{feature}</span>
                     </li>
                   ))}
                 </ul>
                 <div className="mt-6">
-                  <Link to={isWaitlistMode ? '/waitlist' : '/sign-up'}>
-                    <Button
-                      className="w-full"
-                      variant={plan.highlighted ? 'default' : 'outline'}
-                    >
-                      {isWaitlistMode ? 'Join the Waitlist' : plan.cta}
-                    </Button>
-                  </Link>
+                  <PlanCTA plan={plan} />
                 </div>
               </div>
             </FadeIn>

@@ -32,8 +32,8 @@ function GettingStartedDocs() {
         <h1 className="text-3xl font-bold">Getting Started</h1>
         <p className="mt-4 text-lg text-muted-foreground">
           Get up and running with PreflightAPI in under 5 minutes. By the end of
-          this guide you'll have made your first API call and seen real METAR
-          data come back.
+          this guide you'll have made your first API call and received live
+          METAR data.
         </p>
       </div>
 
@@ -83,10 +83,7 @@ function GettingStartedDocs() {
         <Callout variant="tip">
           You can also explore the API without writing code — import our OpenAPI
           spec into Postman or Insomnia. See the{' '}
-          <Link
-            to="/docs/integrations"
-            className="text-accent hover:underline"
-          >
+          <Link to="/docs/integrations" className="text-accent hover:underline">
             Integrations guide
           </Link>
           .
@@ -167,8 +164,9 @@ console.log(data)`}
         <h2 className="text-2xl font-semibold">4. Understand the Response</h2>
         <p className="text-muted-foreground">
           Single-resource endpoints (like fetching a METAR by ICAO code) return
-          the object directly. Collection endpoints that return multiple items
-          use a paginated wrapper:
+          the object directly. Some collection endpoints — particularly those
+          that can return large or unbounded result sets — use a paginated
+          wrapper:
         </p>
 
         <CodeBlock
@@ -322,10 +320,7 @@ console.log(data)`}
 
         <Callout variant="tip">
           Check out our{' '}
-          <Link
-            to="/docs/integrations"
-            className="text-accent hover:underline"
-          >
+          <Link to="/docs/integrations" className="text-accent hover:underline">
             Integrations guide
           </Link>{' '}
           for ready-made patterns using TanStack Query, RTK Query, and more.

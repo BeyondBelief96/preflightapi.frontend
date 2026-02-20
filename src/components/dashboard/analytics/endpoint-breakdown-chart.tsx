@@ -1,10 +1,10 @@
 import { Bar, BarChart, XAxis, YAxis } from 'recharts'
 import type { EndpointBreakdownItem } from '@/types/plans'
-import type {ChartConfig} from '@/components/ui/chart';
+import type { ChartConfig } from '@/components/ui/chart'
 import {
   ChartContainer,
   ChartTooltip,
-  ChartTooltipContent
+  ChartTooltipContent,
 } from '@/components/ui/chart'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -22,16 +22,11 @@ const chartConfig = {
 } satisfies ChartConfig
 
 function cleanEndpointName(name: string): string {
-  return name
-    .replace(/-/g, ' ')
-    .replace(/\b\w/g, (c) => c.toUpperCase())
+  return name.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
 }
 
 function estimateLabelWidth(labels: Array<string>, fontSize: number): number {
-  const longest = labels.reduce(
-    (a, b) => (a.length > b.length ? a : b),
-    '',
-  )
+  const longest = labels.reduce((a, b) => (a.length > b.length ? a : b), '')
   // ~0.6em per character at the given font size, plus 12px padding
   return Math.ceil(longest.length * fontSize * 0.6) + 12
 }

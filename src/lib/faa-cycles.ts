@@ -3,27 +3,31 @@
  *
  * The FAA publishes aeronautical data on fixed cycles:
  * - 28-day (AIRAC) cycle for NASR data (airports, frequencies, etc.)
- * - 56-day charting cycle for charts and supplements
+ * - 56-day charting cycle for charts, supplements, airspace, and obstacles
  *
- * A known AIRAC effective date is used as an epoch. Every subsequent
- * cycle starts exactly N days later.
+ * Each cycle has its own epoch. Every subsequent cycle starts exactly
+ * N days after the epoch.
  */
 
-// Known AIRAC effective date (January 30, 2025)
-const AIRAC_EPOCH = new Date(Date.UTC(2025, 0, 30))
+// Known AIRAC effective date (January 23, 2025)
+const AIRAC_EPOCH = new Date(Date.UTC(2025, 0, 23))
+
+// Known charting cycle effective date (February 20, 2025)
+const CHARTING_EPOCH = new Date(Date.UTC(2025, 1, 20))
 
 /**
  * Returns the next cycle effective date on or after `now`.
  */
 function nextCycleDate(cycleDays: 28 | 56, now: Date): Date {
+  const epoch = cycleDays === 28 ? AIRAC_EPOCH : CHARTING_EPOCH
   const msPerDay = 86_400_000
-  const diffMs = now.getTime() - AIRAC_EPOCH.getTime()
+  const diffMs = now.getTime() - epoch.getTime()
   const daysSinceEpoch = diffMs / msPerDay
   const cyclesPassed = Math.floor(daysSinceEpoch / cycleDays)
 
   // Start of the current cycle
   const currentCycleStart = new Date(
-    AIRAC_EPOCH.getTime() + cyclesPassed * cycleDays * msPerDay,
+    epoch.getTime() + cyclesPassed * cycleDays * msPerDay,
   )
 
   // If we're already past the start of the current cycle, the next one is +cycleDays
@@ -36,6 +40,7 @@ function nextCycleDate(cycleDays: 28 | 56, now: Date): Date {
 export interface SyncJob {
   name: string
   utcHour: number
+  utcMinute?: number
   data: string
   cycleDays: 28 | 56 | null // null = continuous
   schedule?: string // for continuous jobs
@@ -44,19 +49,21 @@ export interface SyncJob {
 export const SYNC_JOBS_28: Array<SyncJob> = [
   {
     name: 'Airports',
-    utcHour: 0,
+    utcHour: 10,
     data: 'Airport base data, runways, runway ends (from FAA NASR)',
     cycleDays: 28,
   },
   {
     name: 'Frequencies',
-    utcHour: 1,
+    utcHour: 10,
+    utcMinute: 30,
     data: 'Communication frequencies (from FAA NASR)',
     cycleDays: 28,
   },
   {
     name: 'Airport Diagrams',
-    utcHour: 5,
+    utcHour: 12,
+    utcMinute: 30,
     data: 'Airport diagram PDFs (stored in Azure Blob Storage)',
     cycleDays: 28,
   },
@@ -65,19 +72,20 @@ export const SYNC_JOBS_28: Array<SyncJob> = [
 export const SYNC_JOBS_56: Array<SyncJob> = [
   {
     name: 'Airspaces',
-    utcHour: 2,
+    utcHour: 11,
     data: 'Airspace boundaries (from ArcGIS REST API)',
     cycleDays: 56,
   },
   {
     name: 'Special Use Airspaces',
-    utcHour: 3,
+    utcHour: 11,
+    utcMinute: 30,
     data: 'SUA boundaries (from ArcGIS REST API)',
     cycleDays: 56,
   },
   {
     name: 'Chart Supplements',
-    utcHour: 4,
+    utcHour: 12,
     data: 'FAA chart supplement PDFs (stored in Azure Blob Storage)',
     cycleDays: 56,
   },
@@ -86,17 +94,18 @@ export const SYNC_JOBS_56: Array<SyncJob> = [
 export const SYNC_JOBS_OBSTACLES: Array<SyncJob> = [
   {
     name: 'Obstacle Full Load',
-    utcHour: 6,
+    utcHour: 12,
     data: 'Full reload of all ~625K obstacles from the FAA Digital Obstacle File (DOF)',
     cycleDays: 56,
-    schedule: 'Every 56 days at 06:00 UTC',
+    schedule: 'Every 56 days at 12:00 UTC',
   },
   {
     name: 'Obstacle Daily Change',
-    utcHour: 7,
+    utcHour: 10,
+    utcMinute: 30,
     data: 'Incremental obstacle updates — additions, changes, and removals (from FAA DOF)',
     cycleDays: null,
-    schedule: 'Daily at 07:00 UTC',
+    schedule: 'Daily at 10:30 UTC',
   },
 ]
 
@@ -110,10 +119,10 @@ export const SYNC_JOBS_NOTAMS: Array<SyncJob> = [
   },
   {
     name: 'NOTAM Initial Load',
-    utcHour: 6,
+    utcHour: 11,
     data: 'Full reload across all 5 NOTAM classifications',
     cycleDays: null,
-    schedule: 'Daily at 06:00 UTC',
+    schedule: 'Daily at 11:00 UTC',
   },
 ]
 
@@ -134,7 +143,7 @@ export function getNextSyncDate(
       next.getUTCMonth(),
       next.getUTCDate(),
       job.utcHour,
-      0,
+      job.utcMinute ?? 0,
       0,
     ),
   )
@@ -156,11 +165,14 @@ export function formatLocalDateTime(date: Date): string {
 }
 
 /**
- * Formats a UTC hour as the user's local time for a reference day.
+ * Formats a UTC hour (and optional minute) as the user's local time for a reference day.
  */
-export function formatUtcHourAsLocal(utcHour: number): string {
+export function formatUtcHourAsLocal(
+  utcHour: number,
+  utcMinute: number = 0,
+): string {
   const ref = new Date()
-  ref.setUTCHours(utcHour, 0, 0, 0)
+  ref.setUTCHours(utcHour, utcMinute, 0, 0)
   return ref.toLocaleTimeString(undefined, {
     hour: '2-digit',
     minute: '2-digit',

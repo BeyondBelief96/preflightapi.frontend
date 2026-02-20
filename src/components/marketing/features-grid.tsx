@@ -31,7 +31,7 @@ const features = [
     icon: AlertTriangle,
     title: 'NOTAMs',
     description:
-      'Straight from the FAA NOTAM Management System. Don\'t worry about applying for access, we\'ve already done it for you.',
+      "Straight from the FAA NOTAM Management System. Don't worry about applying for access, we've already done it for you.",
   },
   {
     icon: Navigation,

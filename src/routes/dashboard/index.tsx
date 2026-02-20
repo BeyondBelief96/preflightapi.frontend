@@ -83,10 +83,12 @@ function DashboardOverview() {
   // For "Calls This Month": use Stripe billing period for paid users,
   // calendar month for free users
   const stripeSettled = !stripeSubQuery.isLoading
-  const monthFromDate = stripeSub?.currentPeriodStart
-    ?? new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
-  const monthToDate = stripeSub?.currentPeriodEnd
-    ?? new Date(now.getFullYear(), now.getMonth() + 1, 1).toISOString()
+  const monthFromDate =
+    stripeSub?.currentPeriodStart ??
+    new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
+  const monthToDate =
+    stripeSub?.currentPeriodEnd ??
+    new Date(now.getFullYear(), now.getMonth() + 1, 1).toISOString()
 
   const monthlyUsageQuery = useQuery({
     queryKey: apimKeys.usage(activeSubscription?.id ?? '', monthFromDate),

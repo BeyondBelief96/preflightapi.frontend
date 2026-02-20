@@ -137,7 +137,9 @@ function ContactPage() {
                       </SelectItem>
                       <SelectItem value="billing">Billing</SelectItem>
                       <SelectItem value="partnership">Partnership</SelectItem>
-                      <SelectItem value="enterprise">Enterprise / Custom Plan</SelectItem>
+                      <SelectItem value="enterprise">
+                        Enterprise / Custom Plan
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

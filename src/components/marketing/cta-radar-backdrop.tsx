@@ -2,10 +2,7 @@ const RADAR_GREEN = '#22c55e'
 
 export function CtaRadarBackdrop() {
   return (
-    <div
-      className="pointer-events-none absolute inset-0"
-      aria-hidden="true"
-    >
+    <div className="pointer-events-none absolute inset-0" aria-hidden="true">
       {/* Radar layer — vivid green, no blur */}
       <div className="absolute inset-0 flex items-center justify-center">
         {/* Concentric rings */}
@@ -24,11 +21,15 @@ export function CtaRadarBackdrop() {
         {/* Cardinal cross */}
         <div
           className="absolute h-full w-px"
-          style={{ background: `color-mix(in srgb, ${RADAR_GREEN} 12%, transparent)` }}
+          style={{
+            background: `color-mix(in srgb, ${RADAR_GREEN} 12%, transparent)`,
+          }}
         />
         <div
           className="absolute h-px w-full"
-          style={{ background: `color-mix(in srgb, ${RADAR_GREEN} 12%, transparent)` }}
+          style={{
+            background: `color-mix(in srgb, ${RADAR_GREEN} 12%, transparent)`,
+          }}
         />
 
         {/* Center dot */}

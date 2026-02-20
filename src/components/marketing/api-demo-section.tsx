@@ -2,7 +2,10 @@ import { Suspense, lazy } from 'react'
 import { CloudSun, MapPin, Navigation, Wind } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { AirportExplorerContent } from '@/components/marketing/airport-explorer'
-import { CardSkeleton, EndpointFooter } from '@/components/marketing/demo-shared'
+import {
+  CardSkeleton,
+  EndpointFooter,
+} from '@/components/marketing/demo-shared'
 
 const DemoFlightPlanner = lazy(
   () => import('@/components/marketing/demo-flight-planner'),
@@ -71,7 +74,10 @@ export function ApiDemoSection() {
                 { method: 'GET', path: '/airports/{icao}' },
                 { method: 'GET', path: '/metars/{icao}' },
                 { method: 'GET', path: '/airports/{icao}/runways' },
-                { method: 'GET', path: '/communication-frequencies/{facilityId}' },
+                {
+                  method: 'GET',
+                  path: '/communication-frequencies/{facilityId}',
+                },
               ]}
             />
           </TabsContent>

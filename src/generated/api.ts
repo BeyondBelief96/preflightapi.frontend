@@ -1062,15 +1062,25 @@ export interface paths {
         };
         /**
          * Searches NOTAMs across all locations using filter criteria.
-         * @description Searches the entire active NOTAM database without requiring a specific airport or location. At least one filter parameter is required to prevent unbounded queries.
+         * @description Searches the entire active NOTAM database without requiring a specific airport or location. At least one filter parameter is required to prevent unbounded queries. Mirrors the FAA NMS API query parameters for flexible NOTAM filtering.
          *
          *     **Pagination**
          *
          *     Results are returned with cursor-based pagination. Pass the `pagination.nextCursor` value from a previous response as the `cursor` query parameter to retrieve the next page. The `limit` parameter controls page size (1–500, default 100).
          *
+         *     **Parameter Pairing Rules**
+         *
+         *     - `notamNumber` must be paired with `location` or `accountability`
+         *
+         *     - `latitude`, `longitude`, and `radius` must all be provided together
+         *
+         *     - `effectiveStartDate` and `effectiveEndDate` must both be provided or both omitted
+         *
+         *     - `lastUpdatedDate`: when provided, returns both active and inactive NOTAMs modified since that time
+         *
          *     **Examples**
          *
-         *     ``` GET /api/v1/notams/search?classification=FDC — all active FDC NOTAMs GET /api/v1/notams/search?freeText=CLOSED&limit=50 — text search, 50 per page GET /api/v1/notams/search?feature=RWY&classification=DOMESTIC — combined filters GET /api/v1/notams/search?classification=FDC&cursor=ABC123&limit=100 — next page ```
+         *     ``` GET /api/v1/notams/search?classification=FDC — all active FDC NOTAMs GET /api/v1/notams/search?freeText=CLOSED&limit=50 — text search, 50 per page GET /api/v1/notams/search?feature=RWY&classification=DOMESTIC — combined filters GET /api/v1/notams/search?accountability=BNA — NOTAMs by issuing office GET /api/v1/notams/search?location=DFW — NOTAMs for a location GET /api/v1/notams/search?notamNumber=420&location=DFW — NOTAM by number + location GET /api/v1/notams/search?latitude=32.8998&longitude=-97.0403&radius=25 — spatial search GET /api/v1/notams/search?lastUpdatedDate=2025-03-01T00:00:00Z — recently modified (active + inactive) GET /api/v1/notams/search?classification=FDC&cursor=ABC123&limit=100 — next page ```
          */
         get: operations["Notam_SearchNotams"];
         put?: never;
@@ -4167,6 +4177,38 @@ export interface components {
              *     Must be paired with EffectiveStartDate.
              */
             effectiveEndDate?: string | null;
+            /**
+             * @description Filter by accountability code (issuing office), e.g., "BNA", "FDC", "CLT".
+             *     Maps to the account_id column. Alphanumeric, max 10 characters.
+             */
+            accountability?: string | null;
+            /**
+             * @description Filter by location identifier (FAA domestic or ICAO code), e.g., "DFW" or "KDFW".
+             *     Matches against both the domestic location and ICAO location columns. Alphanumeric, max 10 characters.
+             */
+            location?: string | null;
+            /**
+             * @description ISO 8601 timestamp. When provided, returns NOTAMs modified between this time and now,
+             *     including both active and inactive NOTAMs (skips the active filter per FAA behavior).
+             */
+            lastUpdatedDate?: string | null;
+            /** @description NOTAM number in any supported format. Per FAA spec, must be paired with Location or Accountability. */
+            notamNumber?: string | null;
+            /**
+             * Format: double
+             * @description Latitude in decimal degrees [-90, 90]. Must be paired with Longitude and Radius.
+             */
+            latitude?: number | null;
+            /**
+             * Format: double
+             * @description Longitude in decimal degrees [-180, 180]. Must be paired with Latitude and Radius.
+             */
+            longitude?: number | null;
+            /**
+             * Format: double
+             * @description Search radius in nautical miles [0, 100]. Must be paired with Latitude and Longitude.
+             */
+            radius?: number | null;
             /** @description Whether any filter values are set. */
             hasFilters?: boolean;
         };
@@ -5882,6 +5924,20 @@ export interface operations {
                 effectiveStartDate?: string | null;
                 /** @description Optional effective end date filter (ISO 8601). Must be paired with effectiveStartDate. */
                 effectiveEndDate?: string | null;
+                /** @description Optional accountability code (issuing office) filter, e.g., "BNA", "FDC". Alphanumeric, max 10 characters. */
+                accountability?: string | null;
+                /** @description Optional location identifier filter (FAA domestic or ICAO code), e.g., "DFW" or "KDFW". Alphanumeric, max 10 characters. */
+                location?: string | null;
+                /** @description Optional NOTAM number filter. Must be paired with location or accountability. */
+                notamNumber?: string | null;
+                /** @description Optional latitude in decimal degrees (-90 to 90). Must be paired with longitude and radius. */
+                latitude?: number | null;
+                /** @description Optional longitude in decimal degrees (-180 to 180). Must be paired with latitude and radius. */
+                longitude?: number | null;
+                /** @description Optional search radius in nautical miles (0 to 100). Must be paired with latitude and longitude. */
+                radius?: number | null;
+                /** @description Optional ISO 8601 timestamp. Returns NOTAMs modified since this time, including inactive NOTAMs. */
+                lastUpdatedDate?: string | null;
                 /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
                 cursor?: string | null;
                 /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */

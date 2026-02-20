@@ -238,8 +238,7 @@ export default function DemoRouteWeather() {
       {/* Route header */}
       <div className="flex flex-wrap items-center gap-3">
         <h3 className="text-lg font-semibold">
-          Weather Briefing:{' '}
-          <span className="font-mono">KBNA</span>
+          Weather Briefing: <span className="font-mono">KBNA</span>
           <span className="mx-2 text-muted-foreground/50">&rarr;</span>
           <span className="font-mono">KCLT</span>
         </h3>

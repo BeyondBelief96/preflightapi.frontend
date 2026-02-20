@@ -18,8 +18,7 @@ const reasons = [
   {
     icon: Zap,
     title: 'Get building in minutes',
-    description:
-      'Sign up, get a key, start building in minutes.',
+    description: 'Sign up, get a key, start building in minutes.',
   },
 ]
 
@@ -38,7 +37,8 @@ export function WhySection() {
               <span className="text-accent">already built.</span>
             </h2>
             <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
-              Save time and money so you can build your next generation aviation product.
+              Save time and money so you can build your next generation aviation
+              product.
             </p>
             <Link
               to="/about"

@@ -87,12 +87,8 @@ export default function DemoWindsAloft() {
     <div className="space-y-5">
       {/* Header */}
       <div className="flex flex-wrap items-center gap-3">
-        <h3 className="text-lg font-semibold">
-          6-Hour Winds Aloft Forecast
-        </h3>
-        {validPeriod && (
-          <Badge variant="secondary">{validPeriod}</Badge>
-        )}
+        <h3 className="text-lg font-semibold">6-Hour Winds Aloft Forecast</h3>
+        {validPeriod && <Badge variant="secondary">{validPeriod}</Badge>}
       </div>
 
       {/* Table */}
@@ -102,9 +98,14 @@ export default function DemoWindsAloft() {
           <table className="w-full min-w-[400px] text-sm">
             <thead>
               <tr className="border-b text-xs text-muted-foreground">
-                <th className="whitespace-nowrap px-3 py-2 text-left font-medium sm:px-4">Station</th>
+                <th className="whitespace-nowrap px-3 py-2 text-left font-medium sm:px-4">
+                  Station
+                </th>
                 {ALTITUDE_LEVELS.map((alt) => (
-                  <th key={alt} className="whitespace-nowrap px-3 py-2 text-center font-medium sm:px-4">
+                  <th
+                    key={alt}
+                    className="whitespace-nowrap px-3 py-2 text-center font-medium sm:px-4"
+                  >
                     {Number(alt).toLocaleString()} ft
                   </th>
                 ))}
@@ -120,7 +121,10 @@ export default function DemoWindsAloft() {
                     const wt = site.windTemp?.[alt]
                     const temp = formatTemp(wt)
                     return (
-                      <td key={alt} className="whitespace-nowrap px-3 py-3 text-center sm:px-4">
+                      <td
+                        key={alt}
+                        className="whitespace-nowrap px-3 py-3 text-center sm:px-4"
+                      >
                         <div className="font-mono text-sm">
                           {formatWindCell(wt)}
                         </div>
@@ -151,9 +155,9 @@ export default function DemoWindsAloft() {
 
       {/* Info note */}
       <p className="text-xs text-muted-foreground">
-        Winds aloft forecasts (FB) are issued by the NWS every 6 hours.
-        Pilots use this data to calculate ground speed, fuel burn, and
-        optimal cruising altitudes for cross-country flights.
+        Winds aloft forecasts (FB) are issued by the NWS every 6 hours. Pilots
+        use this data to calculate ground speed, fuel burn, and optimal cruising
+        altitudes for cross-country flights.
       </p>
     </div>
   )

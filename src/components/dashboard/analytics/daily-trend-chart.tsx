@@ -1,10 +1,10 @@
 import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts'
 import type { DailyUsagePoint } from '@/types/plans'
-import type {ChartConfig} from '@/components/ui/chart';
+import type { ChartConfig } from '@/components/ui/chart'
 import {
   ChartContainer,
   ChartTooltip,
-  ChartTooltipContent
+  ChartTooltipContent,
 } from '@/components/ui/chart'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'

@@ -15,11 +15,7 @@ export function PlaneAnimation({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) {
   )
 }
 
-export function LogoIcon({
-  className = 'h-8',
-}: {
-  className?: string
-}) {
+export function LogoIcon({ className = 'h-8' }: { className?: string }) {
   return (
     <img
       src="/preflight_api_logo.svg"

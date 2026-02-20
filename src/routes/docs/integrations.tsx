@@ -1,4 +1,5 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { CodeBlock } from '@/components/docs/code-block'
 import { API_BASE_URL } from '@/lib/gateway-url'
 import { createPageHead } from '@/lib/seo'
@@ -8,11 +9,14 @@ export const Route = createFileRoute('/docs/integrations')({
     createPageHead({
       title: 'Integrations',
       description:
-        'Integrate PreflightAPI with TanStack Query, RTK Query, Postman, Insomnia, and other tools. Copy-pasteable TypeScript recipes for popular frameworks.',
+        'Integrate PreflightAPI with TanStack Query, RTK Query, Postman, Insomnia, and other tools. Ready-to-use TypeScript and Python recipes for popular frameworks.',
       path: '/docs/integrations',
     }),
   component: IntegrationsDocs,
 })
+
+const tabTriggerClass =
+  'rounded-none border-b-2 border-transparent px-3 py-1.5 text-xs data-[state=active]:border-accent data-[state=active]:bg-transparent'
 
 function IntegrationsDocs() {
   return (
@@ -22,21 +26,32 @@ function IntegrationsDocs() {
         <p className="mt-4 text-lg text-muted-foreground">
           Ready-made patterns for integrating PreflightAPI with popular
           frameworks and tools. Each section is a self-contained recipe with
-          copy-pasteable TypeScript code.
+          ready-to-use code.
         </p>
       </div>
 
-      {/* TypeScript Fetch Wrapper */}
+      {/* Fetch Wrapper */}
       <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">TypeScript Fetch Wrapper</h2>
+        <h2 className="text-2xl font-semibold">Fetch Wrapper</h2>
         <p className="text-muted-foreground">
           A reusable API client that wraps <code>fetch</code> with your API key,
           base URL, and error handling. This is the foundation for the framework
           examples below.
         </p>
-        <CodeBlock
-          language="typescript"
-          code={`// src/lib/preflight.ts
+
+        <Tabs defaultValue="typescript" className="w-full">
+          <TabsList className="h-auto bg-transparent p-0">
+            <TabsTrigger value="typescript" className={tabTriggerClass}>
+              TypeScript
+            </TabsTrigger>
+            <TabsTrigger value="python" className={tabTriggerClass}>
+              Python
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="typescript" className="mt-2">
+            <CodeBlock
+              language="typescript"
+              code={`// src/lib/preflight.ts
 const BASE_URL = '${API_BASE_URL}'
 
 class PreflightError extends Error {
@@ -90,7 +105,30 @@ interface Metar {
 
 const metar = await api.get<Metar>('/metars/KJFK')
 console.log(metar.rawText)`}
-        />
+            />
+          </TabsContent>
+          <TabsContent value="python" className="mt-2">
+            <CodeBlock
+              language="python"
+              code={`# pip install requests
+import os
+import requests
+
+BASE_URL = "${API_BASE_URL}"
+API_KEY = os.environ["PREFLIGHT_API_KEY"]
+
+headers = {
+    "Ocp-Apim-Subscription-Key": API_KEY,
+}
+
+response = requests.get(f"{BASE_URL}/metars/KJFK", headers=headers)
+response.raise_for_status()
+
+metar = response.json()
+print(metar["rawText"])`}
+            />
+          </TabsContent>
+        </Tabs>
       </section>
 
       {/* TanStack Query */}
@@ -232,7 +270,9 @@ function MetarDisplay({ icaoCode }: { icaoCode: string }) {
 
       {/* Cross-link to OpenAPI tools */}
       <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">API Clients & Code Generation</h2>
+        <h2 className="text-2xl font-semibold">
+          API Clients & Code Generation
+        </h2>
         <p className="text-muted-foreground">
           For importing into Postman, Insomnia, Bruno, or generating typed
           clients with openapi-typescript and Orval, see the{' '}

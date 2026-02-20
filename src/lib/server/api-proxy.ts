@@ -13,7 +13,10 @@ export interface ProxyResult {
 
 const proxyInputSchema = z.object({
   method: z.enum(['GET', 'POST', 'PUT', 'DELETE', 'PATCH']),
-  path: z.string().min(1).regex(/^\/api\/v\d+\//, 'Path must start with /api/v{n}/'),
+  path: z
+    .string()
+    .min(1)
+    .regex(/^\/api\/v\d+\//, 'Path must start with /api/v{n}/'),
   apiKey: z.string().min(1),
   queryParams: z.record(z.string(), z.string()).optional(),
   body: z.string().optional(),

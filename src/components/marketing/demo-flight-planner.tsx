@@ -107,7 +107,9 @@ export default function DemoFlightPlanner() {
           </div>
           <div className="mt-1 text-lg font-semibold">
             {data.totalRouteDistance?.toFixed(0) ?? '—'}{' '}
-            <span className="text-sm font-normal text-muted-foreground">nm</span>
+            <span className="text-sm font-normal text-muted-foreground">
+              nm
+            </span>
           </div>
         </div>
         <div className="rounded-lg border bg-card p-3">
@@ -128,7 +130,9 @@ export default function DemoFlightPlanner() {
           </div>
           <div className="mt-1 text-lg font-semibold">
             {data.totalFuelUsed?.toFixed(1) ?? '—'}{' '}
-            <span className="text-sm font-normal text-muted-foreground">gal</span>
+            <span className="text-sm font-normal text-muted-foreground">
+              gal
+            </span>
           </div>
         </div>
         <div className="rounded-lg border bg-card p-3">
@@ -160,8 +164,12 @@ export default function DemoFlightPlanner() {
             <table className="w-full min-w-[640px] text-sm">
               <thead>
                 <tr className="border-b text-xs text-muted-foreground">
-                  <th className="whitespace-nowrap px-3 py-2 text-left font-medium">From</th>
-                  <th className="whitespace-nowrap px-3 py-2 text-left font-medium">To</th>
+                  <th className="whitespace-nowrap px-3 py-2 text-left font-medium">
+                    From
+                  </th>
+                  <th className="whitespace-nowrap px-3 py-2 text-left font-medium">
+                    To
+                  </th>
                   <th className="whitespace-nowrap px-3 py-2 text-right font-medium">
                     Crs °M
                   </th>
@@ -171,11 +179,15 @@ export default function DemoFlightPlanner() {
                   <th className="whitespace-nowrap px-3 py-2 text-right font-medium">
                     Dist
                   </th>
-                  <th className="whitespace-nowrap px-3 py-2 text-right font-medium">GS</th>
+                  <th className="whitespace-nowrap px-3 py-2 text-right font-medium">
+                    GS
+                  </th>
                   <th className="whitespace-nowrap px-3 py-2 text-right font-medium">
                     Fuel Rem
                   </th>
-                  <th className="whitespace-nowrap px-3 py-2 text-right font-medium">Wind</th>
+                  <th className="whitespace-nowrap px-3 py-2 text-right font-medium">
+                    Wind
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y">

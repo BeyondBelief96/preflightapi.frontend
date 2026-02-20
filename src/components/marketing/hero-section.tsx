@@ -194,11 +194,13 @@ export function HeroSection() {
               <span className="text-accent">Developer-Ready.</span>
             </h1>
             <p className="mt-4 text-lg font-medium text-muted-foreground sm:text-xl">
-                Airports, runways, frequencies, airspace, NOTAMs, obstacles, and more — all with one API key.
-                Your aviation data infrastructure, already built.
+              Airports, runways, frequencies, airspace, NOTAMs, obstacles, and
+              more — all with one API key. Your aviation data infrastructure,
+              already built.
             </p>
             <p className="mt-6 text-base leading-relaxed text-muted-foreground">
-              Built by a pilot and software engineer. All data sourced from the FAA and AWC.
+              Built by a pilot and software engineer. All data sourced from the
+              FAA and AWC.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <Link to={isWaitlistMode ? '/waitlist' : '/sign-up'}>
