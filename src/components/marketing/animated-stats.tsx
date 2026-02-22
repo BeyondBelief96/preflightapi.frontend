@@ -7,7 +7,7 @@ const stats = [
   { target: 40, suffix: '+', label: 'REST Endpoints' },
   { target: 7, suffix: '+', label: 'FAA & AWC Sources' },
   { target: 3, suffix: '-min', label: 'NOTAM Updates' },
-  { target: 99.9, suffix: '%', label: 'Uptime', decimals: 1 },
+  { target: 25000, suffix: '+', label: 'Terminal Procedures' },
 ] as const
 
 function StatItem({
