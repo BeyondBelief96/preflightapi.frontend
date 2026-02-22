@@ -61,10 +61,10 @@ export const SYNC_JOBS_28: Array<SyncJob> = [
     cycleDays: 28,
   },
   {
-    name: 'Airport Diagrams',
+    name: 'Terminal Procedures',
     utcHour: 12,
     utcMinute: 30,
-    data: 'Airport diagram PDFs (stored in Azure Blob Storage)',
+    data: 'Terminal procedure chart PDFs (stored in Azure Blob Storage)',
     cycleDays: 28,
   },
 ]

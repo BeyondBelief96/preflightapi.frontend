@@ -190,15 +190,18 @@ export const CATEGORIES: Array<ApiCategory> = [
 
   // ── Documents ────────────────────────────────────────
   {
-    slug: 'airport-diagrams',
-    title: 'Airport Diagrams',
-    description: tagsMeta['Airport Diagrams'] ?? 'FAA airport diagram PDFs.',
+    slug: 'terminal-procedures',
+    title: 'Terminal Procedures',
+    description:
+      tagsMeta['Terminal Procedures'] ??
+      'FAA terminal procedure chart PDFs (IAP, DP, STAR, airport diagrams, and more).',
     icon: 'file-text',
     subcategories: [
       {
-        tag: 'Airport Diagrams',
-        label: 'Airport Diagrams',
-        description: 'FAA airport diagram PDFs.',
+        tag: 'Terminal Procedures',
+        label: 'Terminal Procedures',
+        description:
+          'FAA terminal procedure chart PDFs from the Digital Terminal Procedures Publication (d-TPP).',
       },
     ],
   },

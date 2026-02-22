@@ -19,7 +19,7 @@ const features = [
     icon: TowerControl,
     title: '19,600+ US Airports',
     description:
-      'Sourced from the FAA NASR subscription. Runways, frequencies, airport diagrams, chart supplements. Updated every 28 days.',
+      'Sourced from the FAA NASR subscription. Runways, frequencies, terminal procedures, chart supplements. Updated every 28 days.',
   },
   {
     icon: Map,

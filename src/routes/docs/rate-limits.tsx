@@ -23,7 +23,7 @@ const cacheDurations = [
   { category: 'NOTAMs', duration: '5 minutes' },
   { category: 'Winds aloft', duration: '5 minutes' },
   {
-    category: 'Presigned URLs (airport diagrams, chart supplements)',
+    category: 'Presigned URLs (terminal procedures, chart supplements)',
     duration: '10 minutes',
   },
   {

@@ -142,9 +142,9 @@ const categoryGroups: Array<CategoryGroup> = [
     items: [
       {
         icon: 'file-text',
-        title: 'Airport Diagrams',
-        description: 'FAA airport diagram PDFs.',
-        href: '/docs/airport-diagrams',
+        title: 'Terminal Procedures',
+        description: 'FAA terminal procedure chart PDFs.',
+        href: '/docs/terminal-procedures',
       },
       {
         icon: 'file-text',
@@ -205,7 +205,7 @@ function DocsIndex() {
         PreflightAPI is a REST API for aviation data and flight planning
         calculations. It provides real-time METARs, Terminal Area Forecasts
         (TAFs), airport information, geospatial airspace boundaries, NOTAMs,
-        Chart Supplements, Airport Diagrams, and many other flight planning
+        Chart Supplements, Terminal Procedures, and many other flight planning
         tools — sourced from NOAA, FAA NASR Subscriptions, the NOTAM Management
         System, and more. Here's how to get started.
       </p>

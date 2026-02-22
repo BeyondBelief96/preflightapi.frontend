@@ -127,7 +127,7 @@ function DataFreshnessDocs() {
         <ul className="list-inside list-disc space-y-2 text-muted-foreground">
           <li>
             <strong className="text-foreground">28-day AIRAC cycle</strong> —
-            Airport data, communication frequencies, and airport diagrams are
+            Airport data, communication frequencies, and terminal procedures are
             published every 28 days as part of the Aeronautical Information
             Regulation and Control (AIRAC) cycle.
           </li>
@@ -227,7 +227,7 @@ function DataFreshnessDocs() {
                 <strong className="text-foreground">
                   Documents are unaffected
                 </strong>{' '}
-                — Airport diagrams and chart supplements are served via
+                — Terminal procedures and chart supplements are served via
                 time-limited presigned URLs from Azure Blob Storage, so there is
                 no interruption when new PDFs are uploaded.
               </li>
@@ -253,7 +253,7 @@ function DataFreshnessDocs() {
             <tbody>
               <tr className="border-b">
                 <td className="py-3 font-medium">
-                  Airports, Frequencies, Diagrams
+                  Airports, Frequencies, Terminal Procedures
                 </td>
                 <td className="py-3 text-muted-foreground">Every 28 days</td>
                 <td className="py-3 text-muted-foreground">FAA NASR / AIRAC</td>

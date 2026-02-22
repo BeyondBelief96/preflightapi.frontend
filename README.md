@@ -185,7 +185,7 @@ This project uses **TanStack Router with file-based routing**. Routes are define
 /docs/airmets-sigmets          AIRMET/SIGMET docs
 /docs/g-airmets                G-AIRMET docs
 /docs/airports                 Airport endpoint docs
-/docs/airport-diagrams         Airport diagram docs
+/docs/terminal-procedures      Terminal procedures docs
 /docs/chart-supplements        Chart supplement docs
 /docs/communication-frequencies  Frequency docs
 /docs/airspace                 Airspace endpoint docs

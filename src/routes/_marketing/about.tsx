@@ -242,8 +242,8 @@ function AboutPage() {
                 data: 'Active NOTAMs by airport, geographic radius, or flight route',
               },
               {
-                source: 'FAA Charts & Diagrams',
-                data: 'Airport diagram PDFs and Chart Supplement (A/FD) documents',
+                source: 'FAA d-TPP & Charts',
+                data: 'Terminal procedure charts (IAP, DP, STAR, airport diagrams) and Chart Supplement (A/FD) documents',
               },
               {
                 source: 'FAA Digital Obstacle File',

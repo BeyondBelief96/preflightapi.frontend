@@ -48,7 +48,7 @@ const sources: Array<DataSource> = [
   {
     name: 'FAA d-TPPs',
     description:
-      'Digital Terminal Procedures Publication - airport diagram PDFs',
+      'Digital Terminal Procedures Publication — IAP, DP, STAR, airport diagrams, and more',
     frequency: 'Every 28 days',
     format: 'PDF',
   },

@@ -81,9 +81,9 @@ export const ENDPOINT_CATEGORIES: Array<EndpointCategoryEntry> = [
     href: '/docs/briefing',
   },
   {
-    label: 'Airport Diagrams',
-    endpointKeys: ['airports/diagrams'],
-    href: '/docs/airport-diagrams',
+    label: 'Terminal Procedures',
+    endpointKeys: ['terminal-procedures'],
+    href: '/docs/terminal-procedures',
   },
   {
     label: 'Chart Supplements',
@@ -175,7 +175,7 @@ export const PRICING_FEATURES: Array<PricingFeatureGroup> = [
       { name: 'NOTAMs by airport', endpointKey: 'notams' },
       { name: 'NOTAMs by geographic radius', endpointKey: 'notams' },
       { name: 'NOTAMs by flight route', endpointKey: 'notams' },
-      { name: 'Airport diagram PDFs', endpointKey: 'airports/diagrams' },
+      { name: 'Terminal procedure charts', endpointKey: 'terminal-procedures' },
       {
         name: 'Chart supplement (A/FD) PDFs',
         endpointKey: 'charts/supplements',

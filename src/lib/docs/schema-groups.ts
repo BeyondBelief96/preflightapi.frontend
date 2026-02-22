@@ -73,9 +73,9 @@ const GROUP_DEFS: Array<GroupDef> = [
     slug: 'documents',
     title: 'Documents',
     description:
-      'FAA airport diagram and chart supplement PDF document references.',
+      'FAA terminal procedure charts and chart supplement PDF document references.',
     icon: 'file-text',
-    tags: ['Airport Diagrams', 'Chart Supplements'],
+    tags: ['Terminal Procedures', 'Chart Supplements'],
   },
   {
     slug: 'e6b',

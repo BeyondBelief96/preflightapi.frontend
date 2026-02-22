@@ -55,7 +55,7 @@ export const sections = [
   {
     title: 'Documents',
     items: [
-      { label: 'Airport Diagrams', href: '/docs/airport-diagrams' },
+      { label: 'Terminal Procedures', href: '/docs/terminal-procedures' },
       { label: 'Chart Supplements', href: '/docs/chart-supplements' },
     ],
   },

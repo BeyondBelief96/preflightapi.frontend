@@ -102,8 +102,8 @@ const errorCodeGroups = [
         description: 'No airport exists with the given identifier',
       },
       {
-        code: 'AIRPORT_DIAGRAM_NOT_FOUND',
-        description: 'No airport diagram available for this airport',
+        code: 'TERMINAL_PROCEDURES_NOT_FOUND',
+        description: 'No terminal procedures available for this airport',
       },
       {
         code: 'RUNWAY_NOT_FOUND',
