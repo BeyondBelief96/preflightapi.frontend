@@ -10,7 +10,6 @@ import {
   Key,
   Layers,
   Plane,
-  Plug,
   Radio,
   Route as RouteIcon,
   TriangleAlert,
@@ -240,13 +239,6 @@ function DocsIndex() {
         >
           <Database className="h-4 w-4" />
           Data Models
-        </Link>
-        <Link
-          to="/docs/integrations"
-          className="inline-flex items-center gap-2 rounded-lg bg-muted px-4 py-2 text-sm font-medium transition-colors hover:bg-muted/80"
-        >
-          <Plug className="h-4 w-4" />
-          Integrations
         </Link>
       </div>
 

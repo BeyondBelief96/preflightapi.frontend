@@ -15,15 +15,14 @@ export const sections = [
     ],
   },
   {
-    title: 'Guides',
+    title: 'Usage & Limits',
     items: [
       { label: 'Rate Limits', href: '/docs/rate-limits' },
       { label: 'Error Handling', href: '/docs/errors' },
-      { label: 'Integrations', href: '/docs/integrations' },
     ],
   },
   {
-    title: 'Reference',
+    title: 'Resources',
     items: [
       { label: 'Data Freshness', href: '/docs/data-freshness' },
       { label: 'OpenAPI Spec', href: '/docs/openapi' },

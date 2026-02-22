@@ -262,13 +262,9 @@ X-RateLimit-Remaining: 58`}
           Only GET requests are cached. POST endpoints are never cached.
         </p>
         <Callout variant="tip">
-          TanStack Query's built-in <code>staleTime</code> pairs naturally with
-          our cache durations. Set <code>staleTime</code> to match the cache
-          window for each data type. See the{' '}
-          <Link to="/docs/integrations" className="text-accent hover:underline">
-            Integrations guide
-          </Link>{' '}
-          for examples.
+          If your HTTP client supports cache TTLs (e.g.{' '}
+          <code>staleTime</code> in TanStack Query), match them to these cache
+          durations for optimal freshness without redundant requests.
         </Callout>
       </section>
 

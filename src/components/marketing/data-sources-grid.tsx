@@ -9,7 +9,7 @@ type DataSource = {
   format: string;
 }
 
-const sources: DataSource[] = [
+const sources: Array<DataSource> = [
   {
     name: 'FAA NASR',
     description:
