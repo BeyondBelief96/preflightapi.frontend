@@ -81,12 +81,11 @@ function GettingStartedDocs() {
           </p>
         </div>
         <Callout variant="tip">
-          You can also explore the API without writing code — import our OpenAPI
-          spec into Postman or Insomnia. See the{' '}
-          <Link to="/docs/integrations" className="text-accent hover:underline">
-            Integrations guide
-          </Link>
-          .
+          You can also explore the API without writing code — import our{' '}
+          <Link to="/docs/openapi" className="text-accent hover:underline">
+            OpenAPI spec
+          </Link>{' '}
+          into Postman, Insomnia, or any OpenAPI-compatible tool.
         </Callout>
       </section>
 
@@ -319,11 +318,11 @@ console.log(data)`}
         </div>
 
         <Callout variant="tip">
-          Check out our{' '}
-          <Link to="/docs/integrations" className="text-accent hover:underline">
-            Integrations guide
+          Download the{' '}
+          <Link to="/docs/openapi" className="text-accent hover:underline">
+            OpenAPI spec
           </Link>{' '}
-          for ready-made patterns using TanStack Query, RTK Query, and more.
+          to generate typed clients or import into your favorite API tool.
         </Callout>
       </section>
 

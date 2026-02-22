@@ -19,7 +19,7 @@ const features = [
     icon: TowerControl,
     title: '19,600+ US Airports',
     description:
-      'Sourced from the FAA NASR subscription. Runways, frequencies, airport diagrams, chart supplements. Updated every 28 days.',
+      'Sourced from the FAA NASR subscription. Runways, frequencies, terminal procedures, chart supplements. Updated every 28 days.',
   },
   {
     icon: Map,
@@ -59,7 +59,7 @@ export function FeaturesGrid() {
         <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((feature, index) => (
             <FadeIn key={feature.title} delay={index * 100}>
-              <div className="group rounded-xl border bg-card p-6 transition-colors hover:border-accent/50">
+              <div className="group flex h-full flex-col rounded-xl border bg-card p-6 transition-colors hover:border-accent/50">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-accent">
                   <feature.icon className="h-5 w-5" />
                 </div>

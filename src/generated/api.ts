@@ -110,29 +110,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/airport-diagrams/{icaoCodeOrIdent}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Gets time-limited pre-signed URLs for all available airport diagram PDFs.
-         *     The URLs expire after a limited period; request new URLs if they have expired.
-         * @description Returns the airport's ICAO code, name, and a list of diagram URLs.
-         *
-         *     ``` GET /api/v1/airport-diagrams/KDFW GET /api/v1/airport-diagrams/DFW ```
-         */
-        get: operations["AirportDiagram_GetAirportDiagrams"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/airspaces/by-classes": {
         parameters: {
             query?: never;
@@ -1446,6 +1423,29 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/terminal-procedures/{icaoCodeOrIdent}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Gets time-limited pre-signed URLs for all available terminal procedure chart PDFs.
+         *     The URLs expire after a limited period; request new URLs if they have expired.
+         * @description Returns the airport's ICAO code, name, and a list of procedure chart URLs. Optionally filter by chart code (IAP, DP, STAR, APD, MIN, HOT, etc.).
+         *
+         *     ``` GET /api/v1/terminal-procedures/KDFW GET /api/v1/terminal-procedures/DFW?chartCode=IAP ```
+         */
+        get: operations["TerminalProcedure_GetTerminalProcedures"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -2281,27 +2281,6 @@ export interface components {
          */
         ControllingObjectMarking: "Unknown" | "None" | "Marked" | "Lighted" | "MarkedAndLighted";
         /**
-         * @description Airport information with all available airport diagrams. Diagrams are FAA-published PDF charts
-         *     showing taxiways, runways, and other ground features. The PDF URLs are time-limited pre-signed URLs.
-         */
-        AirportDiagramsResponseDto: {
-            /** @description Official airport name. */
-            airportName?: string;
-            /** @description ICAO identifier (e.g., KDFW). Use this to cross-reference with other endpoints such as METARs and TAFs. */
-            icaoIdent?: string | null;
-            /** @description FAA airport identifier (e.g., DFW). Use this to cross-reference with the Airports endpoint. */
-            airportIdent?: string | null;
-            /** @description List of available airport diagram PDFs with time-limited download URLs. */
-            diagrams?: components["schemas"]["AirportDiagramDto"][];
-        };
-        /** @description An airport diagram (e.g., Airport Diagram, Hot Spot, taxi chart) with a time-limited pre-signed URL for PDF download. */
-        AirportDiagramDto: {
-            /** @description Name of the chart/diagram (e.g., "AIRPORT DIAGRAM", "HOT SPOT"). */
-            chartName?: string;
-            /** @description Pre-signed URL to download the diagram PDF. This URL expires after a limited time period; request a new URL if it has expired. */
-            pdfUrl?: string;
-        };
-        /**
          * @description Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the
          *     pagination.nextCursor value as the cursor query parameter in your next request.
          *     Continue until pagination.hasMore is false.
@@ -3123,6 +3102,8 @@ export interface components {
             year?: string | null;
             /** @description NOTAM type (N=New, R=Replace, C=Cancel) */
             type?: string | null;
+            /** @description Feature category: RWY, TWY, APRON, AD, OBST, NAV, COM, SVC, AIRSPACE, ODP, SID, STAR, CHART, DATA, DVA, IAP, VFP, ROUTE, SPECIAL, SECURITY */
+            feature?: string | null;
             /** @description Issuance timestamp (ISO 8601) */
             issued?: string | null;
             /** @description Affected FIR/ARTCC (e.g., "ZTL") */
@@ -4316,6 +4297,33 @@ export interface components {
             /** @description Pagination metadata including the cursor to fetch the next page. */
             pagination?: components["schemas"]["PaginationMetadata"];
         };
+        /**
+         * @description Airport information with all available terminal procedure charts. Charts are FAA-published PDFs from the
+         *     Digital Terminal Procedures Publication (d-TPP). The PDF URLs are time-limited pre-signed URLs.
+         */
+        TerminalProceduresResponseDto: {
+            /** @description Official airport name. */
+            airportName?: string;
+            /** @description ICAO identifier (e.g., KDFW). Use this to cross-reference with other endpoints such as METARs and TAFs. */
+            icaoIdent?: string | null;
+            /** @description FAA airport identifier (e.g., DFW). Use this to cross-reference with the Airports endpoint. */
+            airportIdent?: string | null;
+            /** @description List of available terminal procedure chart PDFs with time-limited download URLs. */
+            procedures?: components["schemas"]["TerminalProcedureDto"][];
+        };
+        /** @description A terminal procedure chart (IAP, DP, STAR, APD, MIN, HOT, etc.) with a time-limited pre-signed URL for PDF download. */
+        TerminalProcedureDto: {
+            /** @description Chart code indicating the procedure type (e.g., "IAP", "DP", "STAR", "APD", "MIN", "HOT"). */
+            chartCode?: string;
+            /** @description Name of the chart (e.g., "ILS OR LOC RWY 18L", "AIRPORT DIAGRAM"). */
+            chartName?: string;
+            /** @description Pre-signed URL to download the chart PDF. This URL expires after a limited time period; request a new URL if it has expired. */
+            pdfUrl?: string;
+            /** @description Amendment number, if applicable. */
+            amendmentNumber?: string | null;
+            /** @description Amendment date, if applicable. */
+            amendmentDate?: string | null;
+        };
     };
     responses: never;
     parameters: never;
@@ -4351,8 +4359,6 @@ export type VisualGlideSlopeIndicatorType = components['schemas']['VisualGlideSl
 export type RunwayVisualRangeEquipmentType = components['schemas']['RunwayVisualRangeEquipmentType'];
 export type ApproachLightSystemType = components['schemas']['ApproachLightSystemType'];
 export type ControllingObjectMarking = components['schemas']['ControllingObjectMarking'];
-export type AirportDiagramsResponseDto = components['schemas']['AirportDiagramsResponseDto'];
-export type AirportDiagramDto = components['schemas']['AirportDiagramDto'];
 export type PaginatedResponseOfAirspaceDto = components['schemas']['PaginatedResponseOfAirspaceDto'];
 export type AirspaceDto = components['schemas']['AirspaceDto'];
 export type GeoJsonGeometry = components['schemas']['GeoJsonGeometry'];
@@ -4441,6 +4447,8 @@ export type ObstacleMarking = components['schemas']['ObstacleMarking'];
 export type VerificationStatus = components['schemas']['VerificationStatus'];
 export type PaginatedResponseOfPirepDto = components['schemas']['PaginatedResponseOfPirepDto'];
 export type PaginatedResponseOfSigmetDto = components['schemas']['PaginatedResponseOfSigmetDto'];
+export type TerminalProceduresResponseDto = components['schemas']['TerminalProceduresResponseDto'];
+export type TerminalProcedureDto = components['schemas']['TerminalProcedureDto'];
 export type $defs = Record<string, never>;
 export interface operations {
     Airport_GetAirports: {
@@ -4598,38 +4606,6 @@ export interface operations {
                 };
             };
             /** @description If the airport is not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    AirportDiagram_GetAirportDiagrams: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description ICAO code or FAA identifier (e.g., KDFW, DFW). Case-insensitive. */
-                icaoCodeOrIdent: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the airport diagrams */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AirportDiagramsResponseDto"];
-                };
-            };
-            /** @description If no airport diagrams are found for the given identifier */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -6576,6 +6552,41 @@ export interface operations {
                 };
             };
             /** @description If no TAF is found for the airport */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+        };
+    };
+    TerminalProcedure_GetTerminalProcedures: {
+        parameters: {
+            query?: {
+                /** @description Optional chart code filter (e.g., IAP, DP, STAR, APD, MIN, HOT). Case-insensitive. */
+                chartCode?: string | null;
+            };
+            header?: never;
+            path: {
+                /** @description ICAO code or FAA identifier (e.g., KDFW, DFW). Case-insensitive. */
+                icaoCodeOrIdent: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Returns the terminal procedures */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TerminalProceduresResponseDto"];
+                };
+            };
+            /** @description If no terminal procedures are found for the given identifier */
             404: {
                 headers: {
                     [name: string]: unknown;

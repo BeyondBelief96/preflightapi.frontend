@@ -302,50 +302,6 @@
         }
       }
     },
-    "/api/v1/airport-diagrams/{icaoCodeOrIdent}": {
-      "get": {
-        "tags": [
-          "Airport Diagrams"
-        ],
-        "summary": "Gets time-limited pre-signed URLs for all available airport diagram PDFs.\nThe URLs expire after a limited period; request new URLs if they have expired.",
-        "description": "Returns the airport's ICAO code, name, and a list of diagram URLs.\n\n``` GET /api/v1/airport-diagrams/KDFW GET /api/v1/airport-diagrams/DFW ```",
-        "operationId": "AirportDiagram_GetAirportDiagrams",
-        "parameters": [
-          {
-            "name": "icaoCodeOrIdent",
-            "in": "path",
-            "required": true,
-            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW). Case-insensitive.",
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Returns the airport diagrams",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AirportDiagramsResponseDto"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "If no airport diagrams are found for the given identifier",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v1/airspaces/by-classes": {
       "get": {
         "tags": [
@@ -3605,6 +3561,60 @@
           }
         }
       }
+    },
+    "/api/v1/terminal-procedures/{icaoCodeOrIdent}": {
+      "get": {
+        "tags": [
+          "Terminal Procedures"
+        ],
+        "summary": "Gets time-limited pre-signed URLs for all available terminal procedure chart PDFs.\nThe URLs expire after a limited period; request new URLs if they have expired.",
+        "description": "Returns the airport's ICAO code, name, and a list of procedure chart URLs. Optionally filter by chart code (IAP, DP, STAR, APD, MIN, HOT, etc.).\n\n``` GET /api/v1/terminal-procedures/KDFW GET /api/v1/terminal-procedures/DFW?chartCode=IAP ```",
+        "operationId": "TerminalProcedure_GetTerminalProcedures",
+        "parameters": [
+          {
+            "name": "icaoCodeOrIdent",
+            "in": "path",
+            "required": true,
+            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW). Case-insensitive.",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "chartCode",
+            "in": "query",
+            "description": "Optional chart code filter (e.g., IAP, DP, STAR, APD, MIN, HOT). Case-insensitive.",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the terminal procedures",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TerminalProceduresResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "If no terminal procedures are found for the given identifier",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -5372,49 +5382,6 @@
           "MarkedAndLighted"
         ]
       },
-      "AirportDiagramsResponseDto": {
-        "type": "object",
-        "description": "Airport information with all available airport diagrams. Diagrams are FAA-published PDF charts\nshowing taxiways, runways, and other ground features. The PDF URLs are time-limited pre-signed URLs.",
-        "additionalProperties": false,
-        "properties": {
-          "airportName": {
-            "type": "string",
-            "description": "Official airport name."
-          },
-          "icaoIdent": {
-            "type": "string",
-            "description": "ICAO identifier (e.g., KDFW). Use this to cross-reference with other endpoints such as METARs and TAFs.",
-            "nullable": true
-          },
-          "airportIdent": {
-            "type": "string",
-            "description": "FAA airport identifier (e.g., DFW). Use this to cross-reference with the Airports endpoint.",
-            "nullable": true
-          },
-          "diagrams": {
-            "type": "array",
-            "description": "List of available airport diagram PDFs with time-limited download URLs.",
-            "items": {
-              "$ref": "#/components/schemas/AirportDiagramDto"
-            }
-          }
-        }
-      },
-      "AirportDiagramDto": {
-        "type": "object",
-        "description": "An airport diagram (e.g., Airport Diagram, Hot Spot, taxi chart) with a time-limited pre-signed URL for PDF download.",
-        "additionalProperties": false,
-        "properties": {
-          "chartName": {
-            "type": "string",
-            "description": "Name of the chart/diagram (e.g., \"AIRPORT DIAGRAM\", \"HOT SPOT\")."
-          },
-          "pdfUrl": {
-            "type": "string",
-            "description": "Pre-signed URL to download the diagram PDF. This URL expires after a limited time period; request a new URL if it has expired."
-          }
-        }
-      },
       "PaginatedResponseOfAirspaceDto": {
         "type": "object",
         "description": "Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the\npagination.nextCursor value as the cursor query parameter in your next request.\nContinue until pagination.hasMore is false.",
@@ -7105,6 +7072,11 @@
           "type": {
             "type": "string",
             "description": "NOTAM type (N=New, R=Replace, C=Cancel)",
+            "nullable": true
+          },
+          "feature": {
+            "type": "string",
+            "description": "Feature category: RWY, TWY, APRON, AD, OBST, NAV, COM, SVC, AIRSPACE, ODP, SID, STAR, CHART, DATA, DVA, IAP, VFP, ROUTE, SPECIAL, SECURITY",
             "nullable": true
           },
           "issued": {
@@ -8978,6 +8950,63 @@
             ]
           }
         }
+      },
+      "TerminalProceduresResponseDto": {
+        "type": "object",
+        "description": "Airport information with all available terminal procedure charts. Charts are FAA-published PDFs from the\nDigital Terminal Procedures Publication (d-TPP). The PDF URLs are time-limited pre-signed URLs.",
+        "additionalProperties": false,
+        "properties": {
+          "airportName": {
+            "type": "string",
+            "description": "Official airport name."
+          },
+          "icaoIdent": {
+            "type": "string",
+            "description": "ICAO identifier (e.g., KDFW). Use this to cross-reference with other endpoints such as METARs and TAFs.",
+            "nullable": true
+          },
+          "airportIdent": {
+            "type": "string",
+            "description": "FAA airport identifier (e.g., DFW). Use this to cross-reference with the Airports endpoint.",
+            "nullable": true
+          },
+          "procedures": {
+            "type": "array",
+            "description": "List of available terminal procedure chart PDFs with time-limited download URLs.",
+            "items": {
+              "$ref": "#/components/schemas/TerminalProcedureDto"
+            }
+          }
+        }
+      },
+      "TerminalProcedureDto": {
+        "type": "object",
+        "description": "A terminal procedure chart (IAP, DP, STAR, APD, MIN, HOT, etc.) with a time-limited pre-signed URL for PDF download.",
+        "additionalProperties": false,
+        "properties": {
+          "chartCode": {
+            "type": "string",
+            "description": "Chart code indicating the procedure type (e.g., \"IAP\", \"DP\", \"STAR\", \"APD\", \"MIN\", \"HOT\")."
+          },
+          "chartName": {
+            "type": "string",
+            "description": "Name of the chart (e.g., \"ILS OR LOC RWY 18L\", \"AIRPORT DIAGRAM\")."
+          },
+          "pdfUrl": {
+            "type": "string",
+            "description": "Pre-signed URL to download the chart PDF. This URL expires after a limited time period; request a new URL if it has expired."
+          },
+          "amendmentNumber": {
+            "type": "string",
+            "description": "Amendment number, if applicable.",
+            "nullable": true
+          },
+          "amendmentDate": {
+            "type": "string",
+            "description": "Amendment date, if applicable.",
+            "nullable": true
+          }
+        }
       }
     }
   },
@@ -8985,10 +9014,6 @@
     {
       "name": "Airports",
       "description": "Provides access to FAA airport data from the National Airspace System Resources (NASR) database. Airports can be queried by ICAO code, FAA identifier, state, or text search. Use an airport's ICAO code or identifier to query related data from other endpoints such as METARs, TAFs, runways, communication frequencies, airport diagrams, and chart supplements."
-    },
-    {
-      "name": "Airport Diagrams",
-      "description": "Provides access to FAA airport diagram PDFs. Airport diagrams show taxiways, runways, buildings, and other ground features. Diagrams are returned as time-limited pre-signed URLs for PDF download."
     },
     {
       "name": "Airspace",
@@ -9041,6 +9066,10 @@
     {
       "name": "Weather - TAFs",
       "description": "Provides access to decoded TAF (Terminal Aerodrome Forecast) products. TAFs are weather forecasts for airports, typically covering a 24-30 hour period with forecast periods describing expected wind, visibility, sky conditions, and weather phenomena. TAFs are issued approximately every 6 hours for airports with weather reporting capabilities."
+    },
+    {
+      "name": "Terminal Procedures",
+      "description": "Provides access to FAA terminal procedure chart PDFs from the Digital Terminal Procedures Publication (d-TPP). Includes Instrument Approach Procedures (IAP), Departure Procedures (DP), Standard Terminal Arrivals (STAR), Airport Diagrams (APD), Minimums (MIN), Hot Spots (HOT), and more. Charts are returned as time-limited pre-signed URLs for PDF download."
     }
   ]
 }

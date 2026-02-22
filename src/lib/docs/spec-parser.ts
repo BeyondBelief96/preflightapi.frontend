@@ -235,7 +235,7 @@ const tierPatterns: Array<{ pattern: RegExp; key: string }> = [
   { pattern: /\/airspaces/, key: 'airspace/controlled' },
   { pattern: /\/obstacles/, key: 'navigation/obstacles' },
   { pattern: /\/notams/, key: 'notams' },
-  { pattern: /\/airport-diagrams/, key: 'airports/diagrams' },
+  { pattern: /\/terminal-procedures/, key: 'terminal-procedures' },
   { pattern: /\/chart-supplements/, key: 'charts/supplements' },
   { pattern: /\/e6b\/crosswind/, key: 'e6b/crosswind' },
   { pattern: /\/e6b\/density-altitude/, key: 'e6b/density-altitude' },
