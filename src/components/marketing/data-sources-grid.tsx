@@ -2,7 +2,14 @@ import { Plus } from 'lucide-react'
 import { FadeIn } from '@/components/marketing/fade-in'
 import { Badge } from '@/components/ui/badge'
 
-const sources = [
+type DataSource = {
+  name: string;
+  description: string;
+  frequency: string;
+  format: string;
+}
+
+const sources: DataSource[] = [
   {
     name: 'FAA NASR',
     description:
@@ -28,20 +35,20 @@ const sources = [
     name: 'FAA NMS',
     description:
       'NOTAM Management System — active Notices to Air Missions for all US facilities.',
-    frequency: 'Every 3 minutes',
+    frequency: 'Daily + every 3 minutes',
     format: 'JSON',
   },
   {
-    name: 'aviationweather.gov',
+    name: 'Aviation Weather Center',
     description:
-      'METARs, TAFs, PIREPs, SIGMETs, G-AIRMETs, and winds aloft from the Aviation Weather Center.',
+      'METARs, TAFs, PIREPs, SIGMETs, G-AIRMETs, and winds aloft from the aviationweather.gov',
     frequency: '5–30 minutes',
     format: 'XML',
   },
   {
     name: 'FAA d-TPPs',
     description:
-      'Digital Terminal Procedures Publication — 7,500+ instrument approach, departure, and arrival charts.',
+      'Digital Terminal Procedures Publication - airport diagram PDFs',
     frequency: 'Every 28 days',
     format: 'PDF',
   },
@@ -63,7 +70,7 @@ export function DataSourcesGrid() {
             Where the data comes from
           </p>
           <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
-            7 Official FAA & AWC Sources
+            Official FAA & Aviation Weather Center Sources
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
             We ingest, normalize, and serve data from the authoritative sources
