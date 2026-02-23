@@ -103,7 +103,13 @@ function OverallBanner({ status }: { status: OverallStatus }) {
     <Card className={cn('border-2', config.bannerClass)}>
       <CardContent className="flex items-center gap-4 py-2">
         <Icon
-          className={cn('h-8 w-8 shrink-0', `text-${getStatusColor(status)}`)}
+          className={cn(
+            'h-8 w-8 shrink-0',
+            status === 'operational' && 'text-aviation-success',
+            status === 'degraded' && 'text-aviation-warning',
+            status === 'maintenance' && 'text-primary',
+            status === 'outage' && 'text-destructive',
+          )}
         />
         <div>
           <p className="text-lg font-semibold">{config.label}</p>
@@ -112,19 +118,6 @@ function OverallBanner({ status }: { status: OverallStatus }) {
       </CardContent>
     </Card>
   )
-}
-
-function getStatusColor(status: ServiceStatus): string {
-  switch (status) {
-    case 'operational':
-      return 'aviation-success'
-    case 'degraded':
-      return 'aviation-warning'
-    case 'maintenance':
-      return 'primary'
-    case 'outage':
-      return 'destructive'
-  }
 }
 
 const SERVICE_ICONS: Record<string, typeof Shield> = {
