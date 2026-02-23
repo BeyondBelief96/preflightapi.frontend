@@ -3,10 +3,10 @@ import { FadeIn } from '@/components/marketing/fade-in'
 import { Badge } from '@/components/ui/badge'
 
 type DataSource = {
-  name: string;
-  description: string;
-  frequency: string;
-  format: string;
+  name: string
+  description: string
+  frequency: string
+  format: string
 }
 
 const sources: Array<DataSource> = [

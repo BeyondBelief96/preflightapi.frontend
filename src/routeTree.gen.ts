@@ -26,6 +26,7 @@ import { Route as DocsDataFreshnessRouteImport } from './routes/docs/data-freshn
 import { Route as DocsAuthenticationRouteImport } from './routes/docs/authentication'
 import { Route as DocsApiReferenceRouteImport } from './routes/docs/api-reference'
 import { Route as DashboardGettingStartedRouteImport } from './routes/dashboard/getting-started'
+import { Route as MarketingStatusRouteImport } from './routes/_marketing/status'
 import { Route as MarketingPricingRouteImport } from './routes/_marketing/pricing'
 import { Route as MarketingContactRouteImport } from './routes/_marketing/contact'
 import { Route as MarketingAboutRouteImport } from './routes/_marketing/about'
@@ -124,6 +125,11 @@ const DashboardGettingStartedRoute = DashboardGettingStartedRouteImport.update({
   path: '/getting-started',
   getParentRoute: () => DashboardRoute,
 } as any)
+const MarketingStatusRoute = MarketingStatusRouteImport.update({
+  id: '/status',
+  path: '/status',
+  getParentRoute: () => MarketingRoute,
+} as any)
 const MarketingPricingRoute = MarketingPricingRouteImport.update({
   id: '/pricing',
   path: '/pricing',
@@ -201,6 +207,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof MarketingAboutRoute
   '/contact': typeof MarketingContactRoute
   '/pricing': typeof MarketingPricingRoute
+  '/status': typeof MarketingStatusRoute
   '/dashboard/getting-started': typeof DashboardGettingStartedRoute
   '/docs/api-reference': typeof DocsApiReferenceRoute
   '/docs/authentication': typeof DocsAuthenticationRoute
@@ -229,6 +236,7 @@ export interface FileRoutesByTo {
   '/about': typeof MarketingAboutRoute
   '/contact': typeof MarketingContactRoute
   '/pricing': typeof MarketingPricingRoute
+  '/status': typeof MarketingStatusRoute
   '/dashboard/getting-started': typeof DashboardGettingStartedRoute
   '/docs/api-reference': typeof DocsApiReferenceRoute
   '/docs/authentication': typeof DocsAuthenticationRoute
@@ -262,6 +270,7 @@ export interface FileRoutesById {
   '/_marketing/about': typeof MarketingAboutRoute
   '/_marketing/contact': typeof MarketingContactRoute
   '/_marketing/pricing': typeof MarketingPricingRoute
+  '/_marketing/status': typeof MarketingStatusRoute
   '/dashboard/getting-started': typeof DashboardGettingStartedRoute
   '/docs/api-reference': typeof DocsApiReferenceRoute
   '/docs/authentication': typeof DocsAuthenticationRoute
@@ -296,6 +305,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/pricing'
+    | '/status'
     | '/dashboard/getting-started'
     | '/docs/api-reference'
     | '/docs/authentication'
@@ -324,6 +334,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/pricing'
+    | '/status'
     | '/dashboard/getting-started'
     | '/docs/api-reference'
     | '/docs/authentication'
@@ -356,6 +367,7 @@ export interface FileRouteTypes {
     | '/_marketing/about'
     | '/_marketing/contact'
     | '/_marketing/pricing'
+    | '/_marketing/status'
     | '/dashboard/getting-started'
     | '/docs/api-reference'
     | '/docs/authentication'
@@ -509,6 +521,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardGettingStartedRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/_marketing/status': {
+      id: '/_marketing/status'
+      path: '/status'
+      fullPath: '/status'
+      preLoaderRoute: typeof MarketingStatusRouteImport
+      parentRoute: typeof MarketingRoute
+    }
     '/_marketing/pricing': {
       id: '/_marketing/pricing'
       path: '/pricing'
@@ -607,6 +626,7 @@ interface MarketingRouteChildren {
   MarketingAboutRoute: typeof MarketingAboutRoute
   MarketingContactRoute: typeof MarketingContactRoute
   MarketingPricingRoute: typeof MarketingPricingRoute
+  MarketingStatusRoute: typeof MarketingStatusRoute
   MarketingIndexRoute: typeof MarketingIndexRoute
   MarketingLegalCookiePolicyRoute: typeof MarketingLegalCookiePolicyRoute
   MarketingLegalPrivacyRoute: typeof MarketingLegalPrivacyRoute
@@ -617,6 +637,7 @@ const MarketingRouteChildren: MarketingRouteChildren = {
   MarketingAboutRoute: MarketingAboutRoute,
   MarketingContactRoute: MarketingContactRoute,
   MarketingPricingRoute: MarketingPricingRoute,
+  MarketingStatusRoute: MarketingStatusRoute,
   MarketingIndexRoute: MarketingIndexRoute,
   MarketingLegalCookiePolicyRoute: MarketingLegalCookiePolicyRoute,
   MarketingLegalPrivacyRoute: MarketingLegalPrivacyRoute,

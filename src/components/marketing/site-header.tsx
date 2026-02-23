@@ -11,6 +11,7 @@ const navLinks = [
   { label: 'Pricing', href: '/pricing' },
   { label: 'Docs', href: '/docs' },
   { label: 'About PreflightAPI', href: '/about' },
+  { label: 'Status', href: '/status' },
 ]
 
 export function SiteHeader() {
