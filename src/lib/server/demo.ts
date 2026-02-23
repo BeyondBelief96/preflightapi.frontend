@@ -85,6 +85,7 @@ async function demoFetch<T>(
   if (!env.DEMO_API_KEY) {
     throw new Error('Demo API is not configured')
   }
+  const apiKey = env.DEMO_API_KEY
 
   const gatewayUrl = env.VITE_APIM_GATEWAY_URL
   if (!gatewayUrl) {
@@ -123,7 +124,7 @@ async function demoFetch<T>(
     const start = performance.now()
 
     const headers: Record<string, string> = {
-      'Ocp-Apim-Subscription-Key': env.DEMO_API_KEY ?? '',
+      'Ocp-Apim-Subscription-Key': apiKey,
     }
     if (isPost) {
       headers['Content-Type'] = 'application/json'
