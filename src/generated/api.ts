@@ -4,6621 +4,6882 @@
  */
 
 export interface paths {
-    "/api/v1/airports": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Lists airports with optional search and state filtering
-         * @description Supports combinable query parameters for flexible filtering:
-         *
-         *     ``` GET /api/v1/airports — all airports (paginated) GET /api/v1/airports?search=Dallas — text search across name, city, ICAO, and FAA identifier GET /api/v1/airports?state=TX — airports in Texas GET /api/v1/airports?state=TX,OK,LA — airports in multiple states GET /api/v1/airports?search=Regional&state=TX — combined search + state filter ```
-         */
-        get: operations["Airport_GetAirports"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/airports/nearby": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Searches for airports near a geographic point
-         * @description Useful for finding diversion airports, fuel stops, or nearby facilities.
-         *
-         *     ``` GET /api/v1/airports/nearby?lat=32.897&lon=-97.038&radiusNm=30 ```
-         */
-        get: operations["Airport_SearchNearby"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/airports/{icaoCodeOrIdent}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Gets a specific airport by ICAO code or FAA identifier */
-        get: operations["Airport_GetAirportByIcaoCodeOrIdent"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/airports/batch": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Gets multiple airports by their ICAO codes or FAA identifiers
-         * @description Pass ICAO codes or FAA identifiers as a single comma-separated query parameter:
-         *
-         *     ``` GET /api/v1/airports/batch?ids=KDFW,KAUS,KHOU ```
-         *
-         *     Both ICAO codes (KDFW) and FAA identifiers (DFW) can be mixed in the same request.
-         */
-        get: operations["Airport_GetAirportsBatch"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/airports/{icaoCodeOrIdent}/runways": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Gets runways for a specific airport, including dimensions, surface type, lighting,
-         *     and detailed runway end information (approach types, markings, obstacles).
-         *     Runway heading data can be used with the E6B crosswind calculator endpoint.
-         */
-        get: operations["Airport_GetRunwaysByAirport"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/airspaces/by-classes": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Gets controlled airspaces filtered by airspace class (B, C, or D).
-         * @description ``` GET /api/v1/airspaces/by-classes?classes=B — all Class B airspaces GET /api/v1/airspaces/by-classes?classes=B,C,D — Class B, C, and D airspaces ```
-         */
-        get: operations["Airspace_GetByClasses"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/airspaces/by-cities": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Gets controlled airspaces filtered by city name.
-         * @description ``` GET /api/v1/airspaces/by-cities?cities=Dallas — airspaces for Dallas GET /api/v1/airspaces/by-cities?cities=Dallas,Houston — multiple cities ```
-         */
-        get: operations["Airspace_GetByCity"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/airspaces/by-states": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Gets controlled airspaces filtered by two-letter state code.
-         * @description ``` GET /api/v1/airspaces/by-states?states=TX — airspaces in Texas GET /api/v1/airspaces/by-states?states=TX,OK — airspaces in Texas and Oklahoma ```
-         */
-        get: operations["Airspace_GetByState"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/airspaces/special-use/by-type-codes": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Gets special use airspaces filtered by type code.
-         * @description **Type Codes**
-         *
-         *     - `R` — Restricted
-         *
-         *     - `P` — Prohibited
-         *
-         *     - `W` — Warning
-         *
-         *     - `A` — Alert
-         *
-         *     - `M` — MOA (Military Operations Area)
-         *
-         *     ``` GET /api/v1/airspaces/special-use/by-type-codes?typeCodes=R,P — restricted and prohibited GET /api/v1/airspaces/special-use/by-type-codes?typeCodes=M — MOAs only ```
-         */
-        get: operations["Airspace_GetByTypeCode"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/airspaces/by-icao-or-idents": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Gets controlled airspaces associated with specific airports by ICAO code or FAA identifier.
-         * @description Returns all controlled airspace boundaries (Class B, C, D) associated with the given airport identifiers. Each result includes the airspace classification, altitude limits, and boundary geometry. Pass multiple identifiers as a comma-separated list to retrieve airspaces for several airports in a single request.
-         */
-        get: operations["Airspace_GetByIcaoOrIdent"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/airspaces/by-global-ids": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Gets controlled airspaces by their global IDs. This endpoint is designed to be used with the
-         *     AirspaceGlobalIds returned by the navigation log endpoint (POST /api/v1/navlog/calculate)
-         *     to retrieve full details for airspaces along a planned route.
-         * @description ``` GET /api/v1/airspaces/by-global-ids?globalIds={guid1},{guid2} ```
-         */
-        get: operations["Airspace_GetByGlobalIds"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/airspaces/special-use/by-global-ids": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Gets special use airspaces by their global IDs. This endpoint is designed to be used with the
-         *     SpecialUseAirspaceGlobalIds returned by the navigation log endpoint (POST /api/v1/navlog/calculate)
-         *     to retrieve full details for special use airspaces along a planned route.
-         * @description ``` GET /api/v1/airspaces/special-use/by-global-ids?globalIds={guid1},{guid2} ```
-         */
-        get: operations["Airspace_GetSpecialUseByGlobalIds"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/briefing/route": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Generates a composite weather briefing for a flight route. Accepts a list of waypoints
-         *     (airport identifiers or lat/lon coordinates) and returns all weather products affecting
-         *     the route corridor: METARs and TAFs for airports along the route, PIREPs within the
-         *     corridor, SIGMETs and G-AIRMETs intersecting the route, and active NOTAMs.
-         * @description Each waypoint is either an airport identifier (ICAO or FAA) or a lat/lon coordinate. At least two waypoints are required. The corridor width controls how far from the route centerline to search for PIREPs, airports, and NOTAMs (default 25 NM each side).
-         *
-         *     **Airport-only route**
-         *
-         *     ``` { "waypoints": [ { "airportIdentifier": "KDFW" }, { "airportIdentifier": "KAUS" } ] } ```
-         *
-         *     **Mixed route with coordinate waypoints and custom corridor**
-         *
-         *     ``` { "waypoints": [ { "airportIdentifier": "KDFW" }, { "latitude": 31.5, "longitude": -97.2 }, { "airportIdentifier": "KAUS" } ], "corridorWidthNm": 30 } ```
-         *
-         *     **Response Contents**
-         *
-         *     - `Metars` — latest METARs for airports within the corridor
-         *
-         *     - `Tafs` — current TAFs for airports within the corridor
-         *
-         *     - `Pireps` — pilot reports within the corridor
-         *
-         *     - `Sigmets` — active SIGMETs whose boundaries intersect the route
-         *
-         *     - `GAirmets` — active G-AIRMETs whose boundaries intersect the route
-         *
-         *     - `Notams` — active NOTAMs for airports along the route
-         */
-        post: operations["Briefing_GetRouteBriefing"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/chart-supplements/{icaoCodeOrIdent}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Gets time-limited pre-signed URLs for all chart supplement pages for an airport.
-         *     Multi-page supplements will have one URL per page. The URLs expire after a limited period;
-         *     request new URLs if they have expired.
-         * @description Returns the airport's ICAO code, name, and a list of page URLs.
-         *
-         *     ``` GET /api/v1/chart-supplements/KDFW GET /api/v1/chart-supplements/DFW ```
-         */
-        get: operations["ChartSupplement_GetChartSupplements"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/communication-frequencies/{servicedFacility}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Gets all communication frequencies for a serviced facility (airport or ATC facility).
-         *     Returns frequencies including their intended use (e.g., TWR, GND, ATIS, APP, DEP),
-         *     call signs, operating hours, and sectorization details.
-         * @description The facility identifier is the FAA airport code — typically the ICAO code without the leading "K" prefix (e.g., `DFW` not `KDFW`). This corresponds to the `ArptId` field returned by the Airports endpoint.
-         *
-         *     ``` GET /api/v1/communication-frequencies/DFW GET /api/v1/communication-frequencies/AUS ```
-         */
-        get: operations["CommunicationFrequency_GetFrequenciesByServicedFacility"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/e6b/crosswind/{icaoCodeOrIdent}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Calculates crosswind and headwind components for every runway at an airport using live METAR wind data.
-         * @description Fetches the airport's latest METAR observation and computes wind components for each runway end. The response includes a `RecommendedRunway` — the runway end with the lowest crosswind that also has a headwind (not a tailwind).
-         *
-         *     **Sign Conventions**
-         *
-         *     - `CrosswindKt` — positive = wind from the right, negative = wind from the left
-         *
-         *     - `HeadwindKt` — positive = headwind (favorable), negative = tailwind (unfavorable)
-         *
-         *     If the METAR reports variable wind (VRB), `IsVariableWind` is true and crosswind components are calculated using the full wind speed for all runway ends. If gusts are reported, separate `GustCrosswindKt` and `GustHeadwindKt` fields show the worst-case gust components.
-         */
-        get: operations["E6b_GetCrosswindForAirport"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/e6b/crosswind/calculate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Calculates crosswind and headwind components from manually provided wind and runway heading values.
-         * @description Provide wind direction, wind speed, and a runway heading to compute the headwind and crosswind components. Optionally include a gust speed to also compute gust components.
-         *
-         *     **Sign Conventions**
-         *
-         *     - `CrosswindKt` — positive = wind from the right, negative = wind from the left
-         *
-         *     - `HeadwindKt` — positive = headwind (favorable), negative = tailwind (unfavorable)
-         */
-        post: operations["E6b_CalculateCrosswind"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/e6b/density-altitude/{icaoCodeOrIdent}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Calculates density altitude for an airport using live METAR data with optional overrides.
-         * @description Fetches the airport's latest METAR to obtain temperature and altimeter setting, then computes density altitude using the ISA model. You can optionally override either value via query parameters for "what if" scenarios (e.g., "what would density altitude be if the temperature reached 40°C?").
-         *
-         *     **Response Fields**
-         *
-         *     - `DensityAltitudeFt` — the effective altitude the aircraft "feels" based on air density
-         *
-         *     - `PressureAltitudeFt` — field elevation corrected for non-standard pressure
-         *
-         *     - `IsaTemperatureCelsius` — the standard (ISA) temperature expected at this pressure altitude
-         *
-         *     - `TemperatureDeviationCelsius` — how far the actual temperature deviates from ISA (positive = hotter than standard)
-         *
-         *     *Formula:*`DA = PA + 120 * (OAT - ISA_temp)`. This does not account for humidity, local pressure patterns, or non-standard lapse rates.
-         */
-        get: operations["E6b_GetDensityAltitudeForAirport"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/e6b/density-altitude/calculate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Calculates density altitude from manually provided field elevation, altimeter setting, and temperature.
-         * @description Provide your own values instead of relying on METAR data. Useful for any location, for planning with forecast temperatures, or when METAR data is not available.
-         *
-         *     **Response Fields**
-         *
-         *     - `DensityAltitudeFt` — the effective altitude the aircraft "feels" based on air density
-         *
-         *     - `PressureAltitudeFt` — field elevation corrected for non-standard pressure
-         *
-         *     - `IsaTemperatureCelsius` — the standard (ISA) temperature expected at this pressure altitude
-         *
-         *     - `TemperatureDeviationCelsius` — how far the actual temperature deviates from ISA (positive = hotter than standard)
-         *
-         *     *Formula:*`DA = PA + 120 * (OAT - ISA_temp)`. This does not account for humidity, local pressure patterns, or non-standard lapse rates.
-         */
-        post: operations["E6b_CalculateDensityAltitude"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/e6b/wind-triangle/calculate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Solves the wind triangle to compute true heading and ground speed.
-         * @description Given your desired true course, true airspeed, and the wind conditions, this calculates the heading you need to fly to stay on course and your resulting ground speed.
-         *
-         *     **Response Fields**
-         *
-         *     - `TrueHeadingDegrees` — the heading to fly (true course + wind correction angle)
-         *
-         *     - `GroundSpeedKt` — your speed over the ground after accounting for wind
-         *
-         *     - `WindCorrectionAngleDegrees` — the crab angle needed to stay on course (positive = correct to the right, negative = correct to the left)
-         *
-         *     - `HeadwindComponentKt` — positive = headwind, negative = tailwind
-         *
-         *     - `CrosswindComponentKt` — positive = from the right, negative = from the left
-         *
-         *     Wind direction is the direction the wind is blowing *from* (standard meteorological convention).
-         */
-        post: operations["E6b_CalculateWindTriangle"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/e6b/true-airspeed/calculate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Calculates true airspeed (TAS) from calibrated airspeed, pressure altitude, and outside air temperature.
-         * @description Uses the full compressible isentropic flow conversion (CAS to impact pressure to Mach to TAS), accurate from sea level through FL410+ including above the ISA tropopause at 36,089 ft. This is more accurate than the simplified `CAS / sqrt(sigma)` formula, which diverges significantly at higher altitudes.
-         *
-         *     **Response Fields**
-         *
-         *     - `TrueAirspeedKt` — the aircraft's actual speed through the air mass (knots)
-         *
-         *     - `DensityAltitudeFt` — density altitude at the given conditions (feet)
-         *
-         *     - `MachNumber` — the aircraft's speed as a fraction of the local speed of sound
-         *
-         *     *Note:* The ISA tropopause is modeled at 36,089 ft. The real tropopause varies from ~26,000 ft near the poles to ~55,000 ft near the equator, which affects accuracy at high altitudes in non-mid-latitude regions.
-         */
-        post: operations["E6b_CalculateTrueAirspeed"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/e6b/cloud-base/calculate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Estimates cloud base height AGL from surface temperature and dewpoint spread.
-         * @description Uses the standard pilot rule of thumb: `cloud base (ft AGL) = (temperature - dewpoint) * 400`. This approximates the lifting condensation level based on the average dry adiabatic lapse rate (~3°C/1000 ft) and dewpoint lapse rate (~0.5°C/1000 ft).
-         *
-         *     **Response Fields**
-         *
-         *     - `EstimatedCloudBaseFtAgl` — estimated height of the cloud base above ground level (feet)
-         *
-         *     - `TemperatureDewpointSpreadCelsius` — the difference between temperature and dewpoint (degrees Celsius)
-         *
-         *     *Note:* Actual cloud bases vary with humidity profiles, inversions, and local convective conditions. A small spread (less than 3°C) generally indicates a high likelihood of low ceilings or fog.
-         */
-        post: operations["E6b_CalculateCloudBase"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/e6b/pressure-altitude/calculate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Calculates pressure altitude from field elevation and altimeter setting.
-         * @description Pressure altitude is the altitude in the standard atmosphere where the pressure equals the current pressure at your location. It is the starting point for density altitude, TAS, and performance chart calculations.
-         *
-         *     *Formula:*`PA = FieldElevation + (29.92 - Altimeter) * 1000`
-         *
-         *     **Response Fields**
-         *
-         *     - `PressureAltitudeFt` — the calculated pressure altitude (feet)
-         *
-         *     - `AltimeterCorrectionFt` — the deviation from standard pressure expressed in feet (positive = lower pressure than standard, negative = higher)
-         *
-         *     *Note:* The 1 inHg = 1000 ft approximation is most accurate near sea level and diverges slightly at higher elevations and extreme altimeter settings.
-         */
-        post: operations["E6b_CalculatePressureAltitude"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/g-airmets": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Gets all current G-AIRMET advisories across all product types and hazards.
-         * @description Returns every active G-AIRMET regardless of product type (SIERRA, TANGO, ZULU) or hazard type. Each advisory includes the hazard, severity, affected altitude range, forecast valid time, and a geographic polygon defining the affected area. Use the `GET /product/{product}` or `GET /hazard/{hazardType}` endpoints to filter by specific product or hazard type.
-         */
-        get: operations["GAirmet_GetAllGAirmets"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/g-airmets/product/{product}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Gets G-AIRMETs filtered by product type.
-         * @description **Product Types**
-         *
-         *     - `SIERRA` — IFR conditions and mountain obscuration
-         *
-         *     - `TANGO` — turbulence, low-level wind shear, and strong surface winds
-         *
-         *     - `ZULU` — icing and freezing level
-         *
-         *     ``` GET /api/v1/g-airmets/product/SIERRA GET /api/v1/g-airmets/product/ZULU ```
-         */
-        get: operations["GAirmet_GetGAirmetsByProduct"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/g-airmets/hazard/{hazardType}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Gets G-AIRMETs filtered by hazard type.
-         * @description **Hazard Types**
-         *
-         *     - `IFR` — IFR conditions (ceiling below 1000 ft and/or visibility below 3 SM)
-         *
-         *     - `MT_OBSC` — mountain obscuration
-         *
-         *     - `TURB_LO` — low-level turbulence (below FL180)
-         *
-         *     - `TURB_HI` — high-level turbulence (FL180 and above)
-         *
-         *     - `LLWS` — low-level wind shear
-         *
-         *     - `SFC_WIND` — strong surface winds (30 kt or greater)
-         *
-         *     - `ICE` — icing
-         *
-         *     - `FZLVL` — freezing level
-         *
-         *     - `M_FZLVL` — multiple freezing levels
-         *
-         *     ``` GET /api/v1/g-airmets/hazard/ICE GET /api/v1/g-airmets/hazard/TURB_LO ```
-         */
-        get: operations["GAirmet_GetGAirmetsByHazardType"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/g-airmets/affecting": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Finds G-AIRMETs whose geographic boundary contains the given point. Returns advisories
-         *     that affect a specific location, answering "what G-AIRMETs are active at this position?"
-         * @description ``` GET /api/v1/g-airmets/affecting?lat=32.897&lon=-97.038 ```
-         */
-        get: operations["GAirmet_SearchAffecting"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/metars/{icaoCodeOrIdent}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Gets the most recent METAR observation for a specific airport.
-         *     Returns decoded weather data including wind, visibility, sky conditions, temperature, and flight category.
-         * @description ``` GET /api/v1/metars/KDFW — by ICAO code GET /api/v1/metars/DFW — by FAA identifier ```
-         */
-        get: operations["Metar_GetMetarForAirport"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/metars/batch": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Gets the most recent METAR observations for multiple airports in a single request.
-         *     Accepts ICAO codes or FAA identifiers. Identifiers that don't resolve to a METAR are silently skipped.
-         * @description Both ICAO codes and FAA identifiers can be mixed in the same request. Maximum 100 identifiers per request.
-         *
-         *     ``` GET /api/v1/metars/batch?ids=KDFW,KAUS,KHOU GET /api/v1/metars/batch?ids=DFW,AUS ```
-         */
-        get: operations["Metar_GetMetarsBatch"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/metars": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Gets METARs for airports in one or more states
-         * @description Pass state codes as a single comma-separated query parameter:
-         *
-         *     ``` GET /api/v1/metars?state=TX — METARs for Texas airports GET /api/v1/metars?state=TX,OK,LA — METARs for multiple states ```
-         */
-        get: operations["Metar_GetMetarsByState"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/navlog/calculate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Calculates a complete VFR navigation log for a cross-country flight.
-         * @description Provide an ordered list of waypoints (minimum 2) with aircraft performance data, a cruising altitude, and a departure time. The service calculates every leg of the route and returns detailed per-leg data including course, heading, ground speed, distance, estimated time, fuel burn, and wind information.
-         *
-         *     **Automatic Waypoint Insertion**
-         *
-         *     The service automatically inserts calculated waypoints into the route to model climb and descent phases:
-         *
-         *     - **Top of Climb (TOC)** — Inserted after departure (or after a refueling stop) at the point where the aircraft reaches cruising altitude. Position is calculated using the climb true airspeed and climb rate from your performance data. Legs before the TOC use climb airspeed and climb fuel burn rate.
-         *
-         *     - **Top of Descent (TOD)** — Inserted before the destination (or before a refueling stop) at the point where the aircraft should begin descending. Calculated using descent airspeed, descent rate, and a 3 NM final approach buffer. Legs after the TOD use descent airspeed and descent fuel burn rate.
-         *
-         *     - **Bottom of Descent (BOD)** — Inserted 3 NM before the destination airport at Traffic Pattern Altitude (airport elevation + 1000 ft, rounded to the nearest 100 ft). This marks the point where the aircraft levels off at pattern altitude for the approach.
-         *
-         *     **Wind Correction**
-         *
-         *     The service automatically fetches winds aloft forecast data based on your departure time and selects the nearest reporting station to each waypoint. Wind direction, speed, and temperature are interpolated to the leg's altitude. The magnetic heading returned for each leg is the actual heading to fly after accounting for both magnetic variation and wind correction. If wind data is unavailable, the calculation proceeds with zero-wind assumptions (ground speed equals true airspeed).
-         *
-         *     **Fuel Tracking**
-         *
-         *     Fuel is tracked across the entire route. Start/Taxi/Takeoff (STT) fuel is deducted at departure and again after each refueling stop. Each leg burns fuel at the rate matching its phase (climb, cruise, or descent). The `RemainingFuelGals` field on each leg shows usable fuel remaining at the end of that leg. Refueling stops can either add a specific number of gallons or refuel to full capacity.
-         *
-         *     **Refueling Stops**
-         *
-         *     Any intermediate waypoint can be marked as a refueling stop. When a refueling stop is present, the route is segmented so that each segment gets its own independent TOC, TOD, and BOD waypoints. This models a real multi-leg flight where you climb out after each stop and descend into each landing.
-         *
-         *     **Airspace and Obstacle Detection**
-         *
-         *     After calculating the route, the service queries the database for controlled airspaces (Class B, C, D, E), special use airspaces (Restricted, Prohibited, MOA, Warning, Alert), and obstacles along the route corridor. The response includes identifier collections that you can use with other endpoints to retrieve full details:
-         *
-         *     - `AirspaceGlobalIds` — use with `GET /api/v1/airspaces/by-global-ids`
-         *
-         *     - `SpecialUseAirspaceGlobalIds` — use with `GET /api/v1/airspaces/special-use/by-global-ids`
-         *
-         *     - `ObstacleOasNumbers` — use with `POST /api/v1/obstacles/by-oas-numbers`
-         */
-        post: operations["Navlog_CalculateNavlog"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/navlog/bearing-and-distance": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Calculates the great-circle bearing and distance between two geographic points.
-         * @description Provide a start and end point as latitude/longitude in decimal degrees. The service computes:
-         *
-         *     - **True Course** — The initial bearing from start to end referenced to True North (0-360 degrees), computed using WGS84 geodesic (great-circle) geometry.
-         *
-         *     - **Magnetic Course** — The true course adjusted for local magnetic variation at the start point. This is the course you would read on a magnetic compass (0-360 degrees).
-         *
-         *     - **Distance** — The great-circle distance between the two points in nautical miles.
-         *
-         *     This endpoint is useful for quick point-to-point calculations without building a full navigation log. Note that this returns *course* (direction of the route), not *heading* (direction the aircraft nose points). For wind-corrected headings, use the full navigation log endpoint.
-         */
-        post: operations["Navlog_CalculateBearingAndDistance"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/navlog/winds-aloft/{forecast}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Retrieves winds aloft (FB) forecast data for all reporting sites across the US.
-         * @description Returns wind direction, wind speed, and temperature at standard altitude levels for every winds aloft reporting station in the United States. This is the same raw forecast data that the navigation log calculator uses internally to compute wind-corrected headings and ground speeds.
-         *
-         *     **Altitude Levels**
-         *
-         *     Data is provided at the following standard levels (feet MSL): 3000, 6000, 9000, 12000, 18000, 24000, 30000, 34000, and 39000. Not all stations report temperature at every level. Wind direction and speed may be null for calm or light/variable conditions.
-         *
-         *     **Forecast Periods**
-         *
-         *     - **6-hour** — Short-range forecast, most accurate for near-term flights
-         *
-         *     - **12-hour** — Medium-range forecast for flights departing later in the day
-         *
-         *     - **24-hour** — Long-range forecast for next-day planning
-         *
-         *     **Response Structure**
-         *
-         *     The response includes the forecast validity window (`ValidTime`, `ForUseStartTime`, `ForUseEndTime`) and a list of reporting sites. Each site has an identifier, coordinates, and a dictionary of wind/temperature data keyed by altitude level (e.g., "3000", "6000"). Wind direction is in degrees true (the direction wind is blowing *from*), speed is in knots, and temperature is in degrees Celsius.
-         */
-        get: operations["Navlog_GetWindsAloftData"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/notams/number/{notamNumber}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Gets NOTAMs by NOTAM number in various formats.
-         * @description Searches the database for NOTAMs matching the given number. Unlike most NOTAM endpoints, this does *not* filter out cancelled or expired NOTAMs — so results may include recently expired or cancelled NOTAMs that have not yet been purged. This is *not* a historical archive; the database periodically purges stale NOTAMs.
-         *
-         *     **Supported Input Formats**
-         *
-         *     - **Bare number** — `3997`
-         *
-         *     - **Number/year** — `3997/2025` or `3997/25`
-         *
-         *     - **Month-prefix** — `03/420`
-         *
-         *     - **Domestic** — `BNA 420`, `BNA 03/420`, `!BNA 03/420`
-         *
-         *     - **FDC** — `FDC 4/3997`, `!FDC 4/3997`
-         *
-         *     - **ICAO** — `A1234/25`
-         *
-         *     **Disambiguation**
-         *
-         *     Bare numbers (e.g., `3997`) may match multiple NOTAMs across different accounts or years. Include the year, account ID, or full domestic format to narrow results.
-         *
-         *     **Examples**
-         *
-         *     ``` GET /api/v1/notams/number/3997 — bare number (may return multiple matches) GET /api/v1/notams/number/3997%2F2025 — number with year (%2F = /) GET /api/v1/notams/number/BNA%20420 — domestic format (%20 = space) GET /api/v1/notams/number/A1234%2F25 — ICAO format ```
-         */
-        get: operations["Notam_GetNotamsByNumber"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/notams/{icaoCodeOrIdent}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Gets all active NOTAMs for a specific airport.
-         * @description Returns NOTAMs matching the airport's FAA identifier or ICAO code. The identifier is case-insensitive — `kdfw`, `KDFW`, and `DFW` all match the same airport.
-         *
-         *     **Optional Filters**
-         *
-         *     All filter parameters are optional and can be combined to narrow results:
-         *
-         *     - `classification` — NOTAM classification: `INTERNATIONAL`, `MILITARY`, `LOCAL_MILITARY`, `DOMESTIC`, `FDC`
-         *
-         *     - `feature` — feature type: `RWY`, `TWY`, `APRON`, `AD`, `OBST`, `NAV`, `COM`, `SVC`, `AIRSPACE`, `ODP`, `SID`, `STAR`, `CHART`, `DATA`, `DVA`, `IAP`, `VFP`, `ROUTE`, `SPECIAL`, `SECURITY`
-         *
-         *     - `freeText` — text search within NOTAM text (max 80 characters, alphanumeric and `/.-( )` only)
-         *
-         *     - `effectiveStartDate` / `effectiveEndDate` — ISO 8601 date range (must be paired)
-         *
-         *     **Examples**
-         *
-         *     ``` GET /api/v1/notams/KDFW — all active NOTAMs for DFW GET /api/v1/notams/DFW?classification=FDC — only FDC NOTAMs GET /api/v1/notams/KDFW?feature=RWY — only runway-related NOTAMs GET /api/v1/notams/KDFW?freeText=CLOSED — text search within NOTAM text GET /api/v1/notams/KDFW?classification=DOMESTIC&feature=RWY — combined filters ```
-         */
-        get: operations["Notam_GetNotamsForAirport"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/notams/radius": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Gets NOTAMs within a radius of a geographic point.
-         * @description Performs a spatial query using PostGIS to find NOTAMs whose geometry falls within the specified radius of the given coordinates. Only NOTAMs with stored geometry are returned — NOTAMs that lack geographic data (no point or polygon in the source GeoJSON) are excluded from spatial queries.
-         *
-         *     The same optional filters available on the airport endpoint (`classification`, `feature`, `freeText`, `effectiveStartDate`/`effectiveEndDate`) can be combined with the spatial search.
-         *
-         *     **Examples**
-         *
-         *     ``` GET /api/v1/notams/radius?latitude=32.8998&longitude=-97.0403&radiusNm=25 GET /api/v1/notams/radius?latitude=32.8998&longitude=-97.0403&radiusNm=10&classification=DOMESTIC ```
-         */
-        get: operations["Notam_GetNotamsByRadius"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/notams/route": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Gets NOTAMs for a flight route (airports and/or waypoints).
-         * @description Queries NOTAMs for each point along a route, deduplicates them, and returns a single combined result.
-         *
-         *     **Option 1 — Airport identifiers only (simple)**
-         *
-         *     Provide a list of airport identifiers. Each airport is queried by identifier match (FAA or ICAO). Best for straightforward airport-to-airport routes with no en-route waypoints.
-         *
-         *     ``` { "airportIdentifiers": ["KDFW", "KAUS"] } ```
-         *
-         *     **Option 2 — Route points (airports + waypoints)**
-         *
-         *     Provide an ordered list of route points. Each point is either an airport (queried by identifier) or a geographic waypoint (queried by spatial radius around its coordinates). Use this when your route includes en-route waypoints or you need per-point radius control.
-         *
-         *     ``` { "routePoints": [ { "airportIdentifier": "KDFW" }, { "name": "Lake Travis", "latitude": 30.4082, "longitude": -97.8538 }, { "latitude": 30.1, "longitude": -97.6, "radiusNm": 15 }, { "airportIdentifier": "KAUS" } ], "corridorRadiusNm": 25, "filters": { "classification": "DOMESTIC", "feature": "RWY" } } ```
-         *
-         *     **How each point type is queried**
-         *
-         *     - **Airport points** — queried by identifier (same as the single-airport endpoint). Radius settings do not apply.
-         *
-         *     - **Waypoints** — queried by spatial radius. The radius used is: the point's own `radiusNm` if set, otherwise the request-level `corridorRadiusNm`, otherwise the server default (25 NM).
-         *
-         *     **Notes**
-         *
-         *     - If both `routePoints` and `airportIdentifiers` are provided, `routePoints` is used and `airportIdentifiers` is ignored.
-         *
-         *     - Duplicate NOTAMs appearing at multiple route points are returned only once.
-         *
-         *     - Optional `filters` (classification, feature, freeText, date range) are applied to every route point query.
-         */
-        post: operations["Notam_GetNotamsForRoute"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/notams/search": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Searches NOTAMs across all locations using filter criteria.
-         * @description Searches the entire active NOTAM database without requiring a specific airport or location. At least one filter parameter is required to prevent unbounded queries. Mirrors the FAA NMS API query parameters for flexible NOTAM filtering.
-         *
-         *     **Pagination**
-         *
-         *     Results are returned with cursor-based pagination. Pass the `pagination.nextCursor` value from a previous response as the `cursor` query parameter to retrieve the next page. The `limit` parameter controls page size (1–500, default 100).
-         *
-         *     **Parameter Pairing Rules**
-         *
-         *     - `notamNumber` must be paired with `location` or `accountability`
-         *
-         *     - `latitude`, `longitude`, and `radius` must all be provided together
-         *
-         *     - `effectiveStartDate` and `effectiveEndDate` must both be provided or both omitted
-         *
-         *     - `lastUpdatedDate`: when provided, returns both active and inactive NOTAMs modified since that time
-         *
-         *     **Examples**
-         *
-         *     ``` GET /api/v1/notams/search?classification=FDC — all active FDC NOTAMs GET /api/v1/notams/search?freeText=CLOSED&limit=50 — text search, 50 per page GET /api/v1/notams/search?feature=RWY&classification=DOMESTIC — combined filters GET /api/v1/notams/search?accountability=BNA — NOTAMs by issuing office GET /api/v1/notams/search?location=DFW — NOTAMs for a location GET /api/v1/notams/search?notamNumber=420&location=DFW — NOTAM by number + location GET /api/v1/notams/search?latitude=32.8998&longitude=-97.0403&radius=25 — spatial search GET /api/v1/notams/search?lastUpdatedDate=2025-03-01T00:00:00Z — recently modified (active + inactive) GET /api/v1/notams/search?classification=FDC&cursor=ABC123&limit=100 — next page ```
-         */
-        get: operations["Notam_SearchNotams"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/notams/id/{nmsId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Gets a single NOTAM by its NMS ID.
-         * @description Retrieves a specific NOTAM by its FAA NMS identifier. Unlike most NOTAM endpoints, this does *not* filter out cancelled or expired NOTAMs — so the result may be a recently expired or cancelled NOTAM that has not yet been purged. This is *not* a historical archive; the database periodically purges stale NOTAMs.
-         *
-         *     **Example**
-         *
-         *     ``` GET /api/v1/notams/id/1757609538792382 ```
-         */
-        get: operations["Notam_GetNotamByNmsId"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/obstacles/airport/{icaoCodeOrIdent}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Searches for obstacles near an airport. Looks up the airport coordinates, then finds
-         *     obstacles within the specified radius. Use minHeightAgl to filter out low obstacles.
-         * @description ``` GET /api/v1/obstacles/airport/KDFW — default 10 NM radius GET /api/v1/obstacles/airport/DFW?radiusNm=5&minHeightAgl=200 — towers 200+ ft AGL within 5 NM ```
-         */
-        get: operations["Obstacle_SearchNearAirport"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/obstacles/search": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Searches for obstacles near a geographic point.
-         * @description ``` GET /api/v1/obstacles/search?lat=32.897&lon=-97.038 — default 5 NM radius GET /api/v1/obstacles/search?lat=32.897&lon=-97.038&radiusNm=10&minHeightAgl=500 — tall obstacles within 10 NM ```
-         */
-        get: operations["Obstacle_SearchNearby"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/obstacles/state/{stateCode}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Gets obstacles in a specific state.
-         * @description ``` GET /api/v1/obstacles/state/TX — all obstacles in Texas GET /api/v1/obstacles/state/TX?minHeightAgl=1000 — obstacles 1000+ ft AGL in Texas ```
-         */
-        get: operations["Obstacle_GetByState"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/obstacles/{oasNumber}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Gets a single obstacle by its OAS (Obstacle Assessment Surface) number.
-         * @description ``` GET /api/v1/obstacles/12-345678 ```
-         */
-        get: operations["Obstacle_GetByOasNumber"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/obstacles/by-oas-numbers": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Gets multiple obstacles by their OAS numbers. This endpoint is designed to be used with the
-         *     ObstacleOasNumbers returned by the navigation log endpoint (POST /api/v1/navlog/calculate)
-         *     to retrieve full details for obstacles near a planned route.
-         * @description Send a JSON array of OAS number strings in the request body:
-         *
-         *     ``` ["12-345678", "12-345679", "12-345680"] ```
-         */
-        post: operations["Obstacle_GetByOasNumbers"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/obstacles/bbox": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Gets obstacles within a geographic bounding box.
-         * @description **Note:** The bounding box must not cross the antimeridian (i.e., `minLon` must be less than `maxLon`). Antimeridian-crossing queries are not supported.
-         *
-         *     ``` GET /api/v1/obstacles/bbox?minLat=32.5&maxLat=33.5&minLon=-97.5&maxLon=-96.5 GET /api/v1/obstacles/bbox?minLat=32.5&maxLat=33.5&minLon=-97.5&maxLon=-96.5&minHeightAgl=500 ```
-         */
-        get: operations["Obstacle_GetByBoundingBox"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/pireps": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Gets all current PIREPs. Returns all active pilot reports with reported conditions
-         *     including turbulence (type, intensity, altitude), icing (type, intensity, altitude),
-         *     and sky conditions. Each report includes the geographic coordinates and altitude where
-         *     the observation was made.
-         */
-        get: operations["Pirep_GetAllPireps"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/pireps/nearby": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Searches for PIREPs near a geographic point. Returns pilot reports within the specified
-         *     radius of the given coordinates, useful for checking conditions along a flight route.
-         * @description ``` GET /api/v1/pireps/nearby?lat=32.897&lon=-97.038 — default 50 NM radius GET /api/v1/pireps/nearby?lat=32.897&lon=-97.038&radiusNm=100 — custom radius ```
-         */
-        get: operations["Pirep_SearchNearby"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/pireps/airport/{icaoCodeOrIdent}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Searches for PIREPs near an airport. Looks up the airport coordinates by ICAO code or
-         *     FAA identifier, then returns pilot reports within the specified radius.
-         * @description ``` GET /api/v1/pireps/airport/KDFW — default 50 NM radius GET /api/v1/pireps/airport/DFW?radiusNm=100 — custom radius with FAA identifier ```
-         */
-        get: operations["Pirep_SearchNearAirport"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/sigmets": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Gets all current domestic SIGMET advisories across all hazard types.
-         * @description Returns every active domestic SIGMET regardless of hazard type. Each advisory includes the hazard (convective activity, severe turbulence, severe icing, IFR conditions, or mountain obscuration), severity, affected altitude range, and a geographic polygon defining the affected area. Use the `GET /hazard/{hazardType}` endpoint to filter by a specific hazard type.
-         */
-        get: operations["Sigmet_GetAllSigmets"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/sigmets/hazard/{hazardType}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Gets SIGMETs filtered by hazard type.
-         * @description **Hazard Types**
-         *
-         *     - `CONVECTIVE` — thunderstorms and convective activity
-         *
-         *     - `ICE` — severe icing
-         *
-         *     - `TURB` — severe turbulence
-         *
-         *     - `IFR` — widespread IFR conditions
-         *
-         *     - `MTN_OBSCN` — mountain obscuration
-         *
-         *     ``` GET /api/v1/sigmets/hazard/CONVECTIVE GET /api/v1/sigmets/hazard/TURB ```
-         */
-        get: operations["Sigmet_GetSigmetsByHazardType"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/sigmets/affecting": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Finds SIGMETs whose geographic boundary contains the given point. Returns advisories
-         *     that affect a specific location, answering "what SIGMETs are active at this position?"
-         * @description ``` GET /api/v1/sigmets/affecting?lat=32.897&lon=-97.038 ```
-         */
-        get: operations["Sigmet_SearchAffecting"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/sigmets/by-area": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Finds SIGMETs that intersect a geographic bounding box. Returns advisories whose
-         *     boundary overlaps the specified area, useful for checking conditions across a flight route.
-         * @description **Note:** The bounding box must not cross the antimeridian (i.e., `minLon` must be less than `maxLon`). Antimeridian-crossing queries are not supported. This endpoint covers domestic US SIGMETs within the contiguous United States.
-         *
-         *     ``` GET /api/v1/sigmets/by-area?minLat=30&maxLat=35&minLon=-100&maxLon=-95 ```
-         */
-        get: operations["Sigmet_SearchByArea"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/tafs/batch": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Gets the current TAFs for multiple airports in a single request.
-         *     Accepts ICAO codes or FAA identifiers. Identifiers that don't resolve to a TAF are silently skipped.
-         * @description Both ICAO codes and FAA identifiers can be mixed in the same request. Maximum 100 identifiers per request.
-         *
-         *     ``` GET /api/v1/tafs/batch?ids=KDFW,KAUS,KHOU GET /api/v1/tafs/batch?ids=DFW,AUS ```
-         */
-        get: operations["Taf_GetTafsBatch"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/tafs/{icaoCodeOrIdent}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Gets the current TAF for a specific airport, including all forecast periods with expected
-         *     weather conditions (wind, visibility, sky cover, precipitation, turbulence, and icing).
-         * @description ``` GET /api/v1/tafs/KDFW — by ICAO code GET /api/v1/tafs/DFW — by FAA identifier ```
-         */
-        get: operations["Taf_GetTafByIcaoCodeOrIdent"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/terminal-procedures/{icaoCodeOrIdent}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Gets time-limited pre-signed URLs for all available terminal procedure chart PDFs.
-         *     The URLs expire after a limited period; request new URLs if they have expired.
-         * @description Returns the airport's ICAO code, name, and a list of procedure chart URLs. Optionally filter by chart code (IAP, DP, STAR, APD, MIN, HOT, etc.).
-         *
-         *     ``` GET /api/v1/terminal-procedures/KDFW GET /api/v1/terminal-procedures/DFW?chartCode=IAP ```
-         */
-        get: operations["TerminalProcedure_GetTerminalProcedures"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
+  '/api/v1/airports': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Lists airports with optional search and state filtering
+     * @description Supports combinable query parameters for flexible filtering:
+     *
+     *     ``` GET /api/v1/airports — all airports (paginated) GET /api/v1/airports?search=Dallas — text search across name, city, ICAO, and FAA identifier GET /api/v1/airports?state=TX — airports in Texas GET /api/v1/airports?state=TX,OK,LA — airports in multiple states GET /api/v1/airports?search=Regional&state=TX — combined search + state filter ```
+     */
+    get: operations['Airport_GetAirports']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/airports/nearby': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Searches for airports near a geographic point
+     * @description Useful for finding diversion airports, fuel stops, or nearby facilities.
+     *
+     *     ``` GET /api/v1/airports/nearby?lat=32.897&lon=-97.038&radiusNm=30 ```
+     */
+    get: operations['Airport_SearchNearby']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/airports/{icaoCodeOrIdent}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** Gets a specific airport by ICAO code or FAA identifier */
+    get: operations['Airport_GetAirportByIcaoCodeOrIdent']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/airports/batch': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Gets multiple airports by their ICAO codes or FAA identifiers
+     * @description Pass ICAO codes or FAA identifiers as a single comma-separated query parameter:
+     *
+     *     ``` GET /api/v1/airports/batch?ids=KDFW,KAUS,KHOU ```
+     *
+     *     Both ICAO codes (KDFW) and FAA identifiers (DFW) can be mixed in the same request.
+     */
+    get: operations['Airport_GetAirportsBatch']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/airports/{icaoCodeOrIdent}/runways': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Gets runways for a specific airport, including dimensions, surface type, lighting,
+     *     and detailed runway end information (approach types, markings, obstacles).
+     *     Runway heading data can be used with the E6B crosswind calculator endpoint.
+     */
+    get: operations['Airport_GetRunwaysByAirport']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/airspaces/by-classes': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Gets controlled airspaces filtered by airspace class (B, C, or D).
+     * @description ``` GET /api/v1/airspaces/by-classes?classes=B — all Class B airspaces GET /api/v1/airspaces/by-classes?classes=B,C,D — Class B, C, and D airspaces ```
+     */
+    get: operations['Airspace_GetByClasses']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/airspaces/by-cities': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Gets controlled airspaces filtered by city name.
+     * @description ``` GET /api/v1/airspaces/by-cities?cities=Dallas — airspaces for Dallas GET /api/v1/airspaces/by-cities?cities=Dallas,Houston — multiple cities ```
+     */
+    get: operations['Airspace_GetByCity']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/airspaces/by-states': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Gets controlled airspaces filtered by two-letter state code.
+     * @description ``` GET /api/v1/airspaces/by-states?states=TX — airspaces in Texas GET /api/v1/airspaces/by-states?states=TX,OK — airspaces in Texas and Oklahoma ```
+     */
+    get: operations['Airspace_GetByState']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/airspaces/special-use/by-type-codes': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Gets special use airspaces filtered by type code.
+     * @description **Type Codes**
+     *
+     *     - `R` — Restricted
+     *
+     *     - `P` — Prohibited
+     *
+     *     - `W` — Warning
+     *
+     *     - `A` — Alert
+     *
+     *     - `M` — MOA (Military Operations Area)
+     *
+     *     ``` GET /api/v1/airspaces/special-use/by-type-codes?typeCodes=R,P — restricted and prohibited GET /api/v1/airspaces/special-use/by-type-codes?typeCodes=M — MOAs only ```
+     */
+    get: operations['Airspace_GetByTypeCode']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/airspaces/by-icao-or-idents': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Gets controlled airspaces associated with specific airports by ICAO code or FAA identifier.
+     * @description Returns all controlled airspace boundaries (Class B, C, D) associated with the given airport identifiers. Each result includes the airspace classification, altitude limits, and boundary geometry. Pass multiple identifiers as a comma-separated list to retrieve airspaces for several airports in a single request.
+     */
+    get: operations['Airspace_GetByIcaoOrIdent']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/airspaces/by-global-ids': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Gets controlled airspaces by their global IDs. This endpoint is designed to be used with the
+     *     AirspaceGlobalIds returned by the navigation log endpoint (POST /api/v1/navlog/calculate)
+     *     to retrieve full details for airspaces along a planned route.
+     * @description ``` GET /api/v1/airspaces/by-global-ids?globalIds={guid1},{guid2} ```
+     */
+    get: operations['Airspace_GetByGlobalIds']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/airspaces/special-use/by-global-ids': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Gets special use airspaces by their global IDs. This endpoint is designed to be used with the
+     *     SpecialUseAirspaceGlobalIds returned by the navigation log endpoint (POST /api/v1/navlog/calculate)
+     *     to retrieve full details for special use airspaces along a planned route.
+     * @description ``` GET /api/v1/airspaces/special-use/by-global-ids?globalIds={guid1},{guid2} ```
+     */
+    get: operations['Airspace_GetSpecialUseByGlobalIds']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/briefing/route': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Generates a composite weather briefing for a flight route. Accepts a list of waypoints
+     *     (airport identifiers or lat/lon coordinates) and returns all weather products affecting
+     *     the route corridor: METARs and TAFs for airports along the route, PIREPs within the
+     *     corridor, SIGMETs and G-AIRMETs intersecting the route, and active NOTAMs.
+     * @description Each waypoint is either an airport identifier (ICAO or FAA) or a lat/lon coordinate. At least two waypoints are required. The corridor width controls how far from the route centerline to search for PIREPs, airports, and NOTAMs (default 25 NM each side).
+     *
+     *     **Airport-only route**
+     *
+     *     ``` { "waypoints": [ { "airportIdentifier": "KDFW" }, { "airportIdentifier": "KAUS" } ] } ```
+     *
+     *     **Mixed route with coordinate waypoints and custom corridor**
+     *
+     *     ``` { "waypoints": [ { "airportIdentifier": "KDFW" }, { "latitude": 31.5, "longitude": -97.2 }, { "airportIdentifier": "KAUS" } ], "corridorWidthNm": 30 } ```
+     *
+     *     **Response Contents**
+     *
+     *     - `Metars` — latest METARs for airports within the corridor
+     *
+     *     - `Tafs` — current TAFs for airports within the corridor
+     *
+     *     - `Pireps` — pilot reports within the corridor
+     *
+     *     - `Sigmets` — active SIGMETs whose boundaries intersect the route
+     *
+     *     - `GAirmets` — active G-AIRMETs whose boundaries intersect the route
+     *
+     *     - `Notams` — active NOTAMs for airports along the route
+     */
+    post: operations['Briefing_GetRouteBriefing']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/chart-supplements/{icaoCodeOrIdent}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Gets time-limited pre-signed URLs for all chart supplement pages for an airport.
+     *     Multi-page supplements will have one URL per page. The URLs expire after a limited period;
+     *     request new URLs if they have expired.
+     * @description Returns the airport's ICAO code, name, and a list of page URLs.
+     *
+     *     ``` GET /api/v1/chart-supplements/KDFW GET /api/v1/chart-supplements/DFW ```
+     */
+    get: operations['ChartSupplement_GetChartSupplements']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/communication-frequencies/{servicedFacility}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Gets all communication frequencies for a serviced facility (airport or ATC facility).
+     *     Returns frequencies including their intended use (e.g., TWR, GND, ATIS, APP, DEP),
+     *     call signs, operating hours, and sectorization details.
+     * @description The facility identifier is the FAA airport code — typically the ICAO code without the leading "K" prefix (e.g., `DFW` not `KDFW`). This corresponds to the `ArptId` field returned by the Airports endpoint.
+     *
+     *     ``` GET /api/v1/communication-frequencies/DFW GET /api/v1/communication-frequencies/AUS ```
+     */
+    get: operations['CommunicationFrequency_GetFrequenciesByServicedFacility']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/e6b/crosswind/{icaoCodeOrIdent}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Calculates crosswind and headwind components for every runway at an airport using live METAR wind data.
+     * @description Fetches the airport's latest METAR observation and computes wind components for each runway end. The response includes a `RecommendedRunway` — the runway end with the lowest crosswind that also has a headwind (not a tailwind).
+     *
+     *     **Sign Conventions**
+     *
+     *     - `CrosswindKt` — positive = wind from the right, negative = wind from the left
+     *
+     *     - `HeadwindKt` — positive = headwind (favorable), negative = tailwind (unfavorable)
+     *
+     *     If the METAR reports variable wind (VRB), `IsVariableWind` is true and crosswind components are calculated using the full wind speed for all runway ends. If gusts are reported, separate `GustCrosswindKt` and `GustHeadwindKt` fields show the worst-case gust components.
+     */
+    get: operations['E6b_GetCrosswindForAirport']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/e6b/crosswind/calculate': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Calculates crosswind and headwind components from manually provided wind and runway heading values.
+     * @description Provide wind direction, wind speed, and a runway heading to compute the headwind and crosswind components. Optionally include a gust speed to also compute gust components.
+     *
+     *     **Sign Conventions**
+     *
+     *     - `CrosswindKt` — positive = wind from the right, negative = wind from the left
+     *
+     *     - `HeadwindKt` — positive = headwind (favorable), negative = tailwind (unfavorable)
+     */
+    post: operations['E6b_CalculateCrosswind']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/e6b/density-altitude/{icaoCodeOrIdent}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Calculates density altitude for an airport using live METAR data with optional overrides.
+     * @description Fetches the airport's latest METAR to obtain temperature and altimeter setting, then computes density altitude using the ISA model. You can optionally override either value via query parameters for "what if" scenarios (e.g., "what would density altitude be if the temperature reached 40°C?").
+     *
+     *     **Response Fields**
+     *
+     *     - `DensityAltitudeFt` — the effective altitude the aircraft "feels" based on air density
+     *
+     *     - `PressureAltitudeFt` — field elevation corrected for non-standard pressure
+     *
+     *     - `IsaTemperatureCelsius` — the standard (ISA) temperature expected at this pressure altitude
+     *
+     *     - `TemperatureDeviationCelsius` — how far the actual temperature deviates from ISA (positive = hotter than standard)
+     *
+     *     *Formula:*`DA = PA + 120 * (OAT - ISA_temp)`. This does not account for humidity, local pressure patterns, or non-standard lapse rates.
+     */
+    get: operations['E6b_GetDensityAltitudeForAirport']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/e6b/density-altitude/calculate': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Calculates density altitude from manually provided field elevation, altimeter setting, and temperature.
+     * @description Provide your own values instead of relying on METAR data. Useful for any location, for planning with forecast temperatures, or when METAR data is not available.
+     *
+     *     **Response Fields**
+     *
+     *     - `DensityAltitudeFt` — the effective altitude the aircraft "feels" based on air density
+     *
+     *     - `PressureAltitudeFt` — field elevation corrected for non-standard pressure
+     *
+     *     - `IsaTemperatureCelsius` — the standard (ISA) temperature expected at this pressure altitude
+     *
+     *     - `TemperatureDeviationCelsius` — how far the actual temperature deviates from ISA (positive = hotter than standard)
+     *
+     *     *Formula:*`DA = PA + 120 * (OAT - ISA_temp)`. This does not account for humidity, local pressure patterns, or non-standard lapse rates.
+     */
+    post: operations['E6b_CalculateDensityAltitude']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/e6b/wind-triangle/calculate': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Solves the wind triangle to compute true heading and ground speed.
+     * @description Given your desired true course, true airspeed, and the wind conditions, this calculates the heading you need to fly to stay on course and your resulting ground speed.
+     *
+     *     **Response Fields**
+     *
+     *     - `TrueHeadingDegrees` — the heading to fly (true course + wind correction angle)
+     *
+     *     - `GroundSpeedKt` — your speed over the ground after accounting for wind
+     *
+     *     - `WindCorrectionAngleDegrees` — the crab angle needed to stay on course (positive = correct to the right, negative = correct to the left)
+     *
+     *     - `HeadwindComponentKt` — positive = headwind, negative = tailwind
+     *
+     *     - `CrosswindComponentKt` — positive = from the right, negative = from the left
+     *
+     *     Wind direction is the direction the wind is blowing *from* (standard meteorological convention).
+     */
+    post: operations['E6b_CalculateWindTriangle']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/e6b/true-airspeed/calculate': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Calculates true airspeed (TAS) from calibrated airspeed, pressure altitude, and outside air temperature.
+     * @description Uses the full compressible isentropic flow conversion (CAS to impact pressure to Mach to TAS), accurate from sea level through FL410+ including above the ISA tropopause at 36,089 ft. This is more accurate than the simplified `CAS / sqrt(sigma)` formula, which diverges significantly at higher altitudes.
+     *
+     *     **Response Fields**
+     *
+     *     - `TrueAirspeedKt` — the aircraft's actual speed through the air mass (knots)
+     *
+     *     - `DensityAltitudeFt` — density altitude at the given conditions (feet)
+     *
+     *     - `MachNumber` — the aircraft's speed as a fraction of the local speed of sound
+     *
+     *     *Note:* The ISA tropopause is modeled at 36,089 ft. The real tropopause varies from ~26,000 ft near the poles to ~55,000 ft near the equator, which affects accuracy at high altitudes in non-mid-latitude regions.
+     */
+    post: operations['E6b_CalculateTrueAirspeed']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/e6b/cloud-base/calculate': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Estimates cloud base height AGL from surface temperature and dewpoint spread.
+     * @description Uses the standard pilot rule of thumb: `cloud base (ft AGL) = (temperature - dewpoint) * 400`. This approximates the lifting condensation level based on the average dry adiabatic lapse rate (~3°C/1000 ft) and dewpoint lapse rate (~0.5°C/1000 ft).
+     *
+     *     **Response Fields**
+     *
+     *     - `EstimatedCloudBaseFtAgl` — estimated height of the cloud base above ground level (feet)
+     *
+     *     - `TemperatureDewpointSpreadCelsius` — the difference between temperature and dewpoint (degrees Celsius)
+     *
+     *     *Note:* Actual cloud bases vary with humidity profiles, inversions, and local convective conditions. A small spread (less than 3°C) generally indicates a high likelihood of low ceilings or fog.
+     */
+    post: operations['E6b_CalculateCloudBase']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/e6b/pressure-altitude/calculate': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Calculates pressure altitude from field elevation and altimeter setting.
+     * @description Pressure altitude is the altitude in the standard atmosphere where the pressure equals the current pressure at your location. It is the starting point for density altitude, TAS, and performance chart calculations.
+     *
+     *     *Formula:*`PA = FieldElevation + (29.92 - Altimeter) * 1000`
+     *
+     *     **Response Fields**
+     *
+     *     - `PressureAltitudeFt` — the calculated pressure altitude (feet)
+     *
+     *     - `AltimeterCorrectionFt` — the deviation from standard pressure expressed in feet (positive = lower pressure than standard, negative = higher)
+     *
+     *     *Note:* The 1 inHg = 1000 ft approximation is most accurate near sea level and diverges slightly at higher elevations and extreme altimeter settings.
+     */
+    post: operations['E6b_CalculatePressureAltitude']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/g-airmets': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Gets all current G-AIRMET advisories across all product types and hazards.
+     * @description Returns every active G-AIRMET regardless of product type (SIERRA, TANGO, ZULU) or hazard type. Each advisory includes the hazard, severity, affected altitude range, forecast valid time, and a geographic polygon defining the affected area. Use the `GET /product/{product}` or `GET /hazard/{hazardType}` endpoints to filter by specific product or hazard type.
+     */
+    get: operations['GAirmet_GetAllGAirmets']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/g-airmets/product/{product}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Gets G-AIRMETs filtered by product type.
+     * @description **Product Types**
+     *
+     *     - `SIERRA` — IFR conditions and mountain obscuration
+     *
+     *     - `TANGO` — turbulence, low-level wind shear, and strong surface winds
+     *
+     *     - `ZULU` — icing and freezing level
+     *
+     *     ``` GET /api/v1/g-airmets/product/SIERRA GET /api/v1/g-airmets/product/ZULU ```
+     */
+    get: operations['GAirmet_GetGAirmetsByProduct']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/g-airmets/hazard/{hazardType}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Gets G-AIRMETs filtered by hazard type.
+     * @description **Hazard Types**
+     *
+     *     - `IFR` — IFR conditions (ceiling below 1000 ft and/or visibility below 3 SM)
+     *
+     *     - `MT_OBSC` — mountain obscuration
+     *
+     *     - `TURB_LO` — low-level turbulence (below FL180)
+     *
+     *     - `TURB_HI` — high-level turbulence (FL180 and above)
+     *
+     *     - `LLWS` — low-level wind shear
+     *
+     *     - `SFC_WIND` — strong surface winds (30 kt or greater)
+     *
+     *     - `ICE` — icing
+     *
+     *     - `FZLVL` — freezing level
+     *
+     *     - `M_FZLVL` — multiple freezing levels
+     *
+     *     ``` GET /api/v1/g-airmets/hazard/ICE GET /api/v1/g-airmets/hazard/TURB_LO ```
+     */
+    get: operations['GAirmet_GetGAirmetsByHazardType']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/g-airmets/affecting': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Finds G-AIRMETs whose geographic boundary contains the given point. Returns advisories
+     *     that affect a specific location, answering "what G-AIRMETs are active at this position?"
+     * @description ``` GET /api/v1/g-airmets/affecting?lat=32.897&lon=-97.038 ```
+     */
+    get: operations['GAirmet_SearchAffecting']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/metars/{icaoCodeOrIdent}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Gets the most recent METAR observation for a specific airport.
+     *     Returns decoded weather data including wind, visibility, sky conditions, temperature, and flight category.
+     * @description ``` GET /api/v1/metars/KDFW — by ICAO code GET /api/v1/metars/DFW — by FAA identifier ```
+     */
+    get: operations['Metar_GetMetarForAirport']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/metars/batch': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Gets the most recent METAR observations for multiple airports in a single request.
+     *     Accepts ICAO codes or FAA identifiers. Identifiers that don't resolve to a METAR are silently skipped.
+     * @description Both ICAO codes and FAA identifiers can be mixed in the same request. Maximum 100 identifiers per request.
+     *
+     *     ``` GET /api/v1/metars/batch?ids=KDFW,KAUS,KHOU GET /api/v1/metars/batch?ids=DFW,AUS ```
+     */
+    get: operations['Metar_GetMetarsBatch']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/metars': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Gets METARs for airports in one or more states
+     * @description Pass state codes as a single comma-separated query parameter:
+     *
+     *     ``` GET /api/v1/metars?state=TX — METARs for Texas airports GET /api/v1/metars?state=TX,OK,LA — METARs for multiple states ```
+     */
+    get: operations['Metar_GetMetarsByState']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/navlog/calculate': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Calculates a complete VFR navigation log for a cross-country flight.
+     * @description Provide an ordered list of waypoints (minimum 2) with aircraft performance data, a cruising altitude, and a departure time. The service calculates every leg of the route and returns detailed per-leg data including course, heading, ground speed, distance, estimated time, fuel burn, and wind information.
+     *
+     *     **Automatic Waypoint Insertion**
+     *
+     *     The service automatically inserts calculated waypoints into the route to model climb and descent phases:
+     *
+     *     - **Top of Climb (TOC)** — Inserted after departure (or after a refueling stop) at the point where the aircraft reaches cruising altitude. Position is calculated using the climb true airspeed and climb rate from your performance data. Legs before the TOC use climb airspeed and climb fuel burn rate.
+     *
+     *     - **Top of Descent (TOD)** — Inserted before the destination (or before a refueling stop) at the point where the aircraft should begin descending. Calculated using descent airspeed, descent rate, and a 3 NM final approach buffer. Legs after the TOD use descent airspeed and descent fuel burn rate.
+     *
+     *     - **Bottom of Descent (BOD)** — Inserted 3 NM before the destination airport at Traffic Pattern Altitude (airport elevation + 1000 ft, rounded to the nearest 100 ft). This marks the point where the aircraft levels off at pattern altitude for the approach.
+     *
+     *     **Wind Correction**
+     *
+     *     The service automatically fetches winds aloft forecast data based on your departure time and selects the nearest reporting station to each waypoint. Wind direction, speed, and temperature are interpolated to the leg's altitude. The magnetic heading returned for each leg is the actual heading to fly after accounting for both magnetic variation and wind correction. If wind data is unavailable, the calculation proceeds with zero-wind assumptions (ground speed equals true airspeed).
+     *
+     *     **Fuel Tracking**
+     *
+     *     Fuel is tracked across the entire route. Start/Taxi/Takeoff (STT) fuel is deducted at departure and again after each refueling stop. Each leg burns fuel at the rate matching its phase (climb, cruise, or descent). The `RemainingFuelGals` field on each leg shows usable fuel remaining at the end of that leg. Refueling stops can either add a specific number of gallons or refuel to full capacity.
+     *
+     *     **Refueling Stops**
+     *
+     *     Any intermediate waypoint can be marked as a refueling stop. When a refueling stop is present, the route is segmented so that each segment gets its own independent TOC, TOD, and BOD waypoints. This models a real multi-leg flight where you climb out after each stop and descend into each landing.
+     *
+     *     **Airspace and Obstacle Detection**
+     *
+     *     After calculating the route, the service queries the database for controlled airspaces (Class B, C, D, E), special use airspaces (Restricted, Prohibited, MOA, Warning, Alert), and obstacles along the route corridor. The response includes identifier collections that you can use with other endpoints to retrieve full details:
+     *
+     *     - `AirspaceGlobalIds` — use with `GET /api/v1/airspaces/by-global-ids`
+     *
+     *     - `SpecialUseAirspaceGlobalIds` — use with `GET /api/v1/airspaces/special-use/by-global-ids`
+     *
+     *     - `ObstacleOasNumbers` — use with `POST /api/v1/obstacles/by-oas-numbers`
+     */
+    post: operations['Navlog_CalculateNavlog']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/navlog/bearing-and-distance': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Calculates the great-circle bearing and distance between two geographic points.
+     * @description Provide a start and end point as latitude/longitude in decimal degrees. The service computes:
+     *
+     *     - **True Course** — The initial bearing from start to end referenced to True North (0-360 degrees), computed using WGS84 geodesic (great-circle) geometry.
+     *
+     *     - **Magnetic Course** — The true course adjusted for local magnetic variation at the start point. This is the course you would read on a magnetic compass (0-360 degrees).
+     *
+     *     - **Distance** — The great-circle distance between the two points in nautical miles.
+     *
+     *     This endpoint is useful for quick point-to-point calculations without building a full navigation log. Note that this returns *course* (direction of the route), not *heading* (direction the aircraft nose points). For wind-corrected headings, use the full navigation log endpoint.
+     */
+    post: operations['Navlog_CalculateBearingAndDistance']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/navlog/winds-aloft/{forecast}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Retrieves winds aloft (FB) forecast data for all reporting sites across the US.
+     * @description Returns wind direction, wind speed, and temperature at standard altitude levels for every winds aloft reporting station in the United States. This is the same raw forecast data that the navigation log calculator uses internally to compute wind-corrected headings and ground speeds.
+     *
+     *     **Altitude Levels**
+     *
+     *     Data is provided at the following standard levels (feet MSL): 3000, 6000, 9000, 12000, 18000, 24000, 30000, 34000, and 39000. Not all stations report temperature at every level. Wind direction and speed may be null for calm or light/variable conditions.
+     *
+     *     **Forecast Periods**
+     *
+     *     - **6-hour** — Short-range forecast, most accurate for near-term flights
+     *
+     *     - **12-hour** — Medium-range forecast for flights departing later in the day
+     *
+     *     - **24-hour** — Long-range forecast for next-day planning
+     *
+     *     **Response Structure**
+     *
+     *     The response includes the forecast validity window (`ValidTime`, `ForUseStartTime`, `ForUseEndTime`) and a list of reporting sites. Each site has an identifier, coordinates, and a dictionary of wind/temperature data keyed by altitude level (e.g., "3000", "6000"). Wind direction is in degrees true (the direction wind is blowing *from*), speed is in knots, and temperature is in degrees Celsius.
+     */
+    get: operations['Navlog_GetWindsAloftData']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/notams/number/{notamNumber}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Gets NOTAMs by NOTAM number in various formats.
+     * @description Searches the database for NOTAMs matching the given number. Unlike most NOTAM endpoints, this does *not* filter out cancelled or expired NOTAMs — so results may include recently expired or cancelled NOTAMs that have not yet been purged. This is *not* a historical archive; the database periodically purges stale NOTAMs.
+     *
+     *     **Supported Input Formats**
+     *
+     *     - **Bare number** — `3997`
+     *
+     *     - **Number/year** — `3997/2025` or `3997/25`
+     *
+     *     - **Month-prefix** — `03/420`
+     *
+     *     - **Domestic** — `BNA 420`, `BNA 03/420`, `!BNA 03/420`
+     *
+     *     - **FDC** — `FDC 4/3997`, `!FDC 4/3997`
+     *
+     *     - **ICAO** — `A1234/25`
+     *
+     *     **Disambiguation**
+     *
+     *     Bare numbers (e.g., `3997`) may match multiple NOTAMs across different accounts or years. Include the year, account ID, or full domestic format to narrow results.
+     *
+     *     **Examples**
+     *
+     *     ``` GET /api/v1/notams/number/3997 — bare number (may return multiple matches) GET /api/v1/notams/number/3997%2F2025 — number with year (%2F = /) GET /api/v1/notams/number/BNA%20420 — domestic format (%20 = space) GET /api/v1/notams/number/A1234%2F25 — ICAO format ```
+     */
+    get: operations['Notam_GetNotamsByNumber']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/notams/{icaoCodeOrIdent}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Gets all active NOTAMs for a specific airport.
+     * @description Returns NOTAMs matching the airport's FAA identifier or ICAO code. The identifier is case-insensitive — `kdfw`, `KDFW`, and `DFW` all match the same airport.
+     *
+     *     **Optional Filters**
+     *
+     *     All filter parameters are optional and can be combined to narrow results:
+     *
+     *     - `classification` — NOTAM classification: `INTERNATIONAL`, `MILITARY`, `LOCAL_MILITARY`, `DOMESTIC`, `FDC`
+     *
+     *     - `feature` — feature type: `RWY`, `TWY`, `APRON`, `AD`, `OBST`, `NAV`, `COM`, `SVC`, `AIRSPACE`, `ODP`, `SID`, `STAR`, `CHART`, `DATA`, `DVA`, `IAP`, `VFP`, `ROUTE`, `SPECIAL`, `SECURITY`
+     *
+     *     - `freeText` — text search within NOTAM text (max 80 characters, alphanumeric and `/.-( )` only)
+     *
+     *     - `effectiveStartDate` / `effectiveEndDate` — ISO 8601 date range (must be paired)
+     *
+     *     **Examples**
+     *
+     *     ``` GET /api/v1/notams/KDFW — all active NOTAMs for DFW GET /api/v1/notams/DFW?classification=FDC — only FDC NOTAMs GET /api/v1/notams/KDFW?feature=RWY — only runway-related NOTAMs GET /api/v1/notams/KDFW?freeText=CLOSED — text search within NOTAM text GET /api/v1/notams/KDFW?classification=DOMESTIC&feature=RWY — combined filters ```
+     */
+    get: operations['Notam_GetNotamsForAirport']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/notams/radius': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Gets NOTAMs within a radius of a geographic point.
+     * @description Performs a spatial query using PostGIS to find NOTAMs whose geometry falls within the specified radius of the given coordinates. Only NOTAMs with stored geometry are returned — NOTAMs that lack geographic data (no point or polygon in the source GeoJSON) are excluded from spatial queries.
+     *
+     *     The same optional filters available on the airport endpoint (`classification`, `feature`, `freeText`, `effectiveStartDate`/`effectiveEndDate`) can be combined with the spatial search.
+     *
+     *     **Examples**
+     *
+     *     ``` GET /api/v1/notams/radius?latitude=32.8998&longitude=-97.0403&radiusNm=25 GET /api/v1/notams/radius?latitude=32.8998&longitude=-97.0403&radiusNm=10&classification=DOMESTIC ```
+     */
+    get: operations['Notam_GetNotamsByRadius']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/notams/route': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Gets NOTAMs for a flight route (airports and/or waypoints).
+     * @description Queries NOTAMs for each point along a route, deduplicates them, and returns a single combined result.
+     *
+     *     **Option 1 — Airport identifiers only (simple)**
+     *
+     *     Provide a list of airport identifiers. Each airport is queried by identifier match (FAA or ICAO). Best for straightforward airport-to-airport routes with no en-route waypoints.
+     *
+     *     ``` { "airportIdentifiers": ["KDFW", "KAUS"] } ```
+     *
+     *     **Option 2 — Route points (airports + waypoints)**
+     *
+     *     Provide an ordered list of route points. Each point is either an airport (queried by identifier) or a geographic waypoint (queried by spatial radius around its coordinates). Use this when your route includes en-route waypoints or you need per-point radius control.
+     *
+     *     ``` { "routePoints": [ { "airportIdentifier": "KDFW" }, { "name": "Lake Travis", "latitude": 30.4082, "longitude": -97.8538 }, { "latitude": 30.1, "longitude": -97.6, "radiusNm": 15 }, { "airportIdentifier": "KAUS" } ], "corridorRadiusNm": 25, "filters": { "classification": "DOMESTIC", "feature": "RWY" } } ```
+     *
+     *     **How each point type is queried**
+     *
+     *     - **Airport points** — queried by identifier (same as the single-airport endpoint). Radius settings do not apply.
+     *
+     *     - **Waypoints** — queried by spatial radius. The radius used is: the point's own `radiusNm` if set, otherwise the request-level `corridorRadiusNm`, otherwise the server default (25 NM).
+     *
+     *     **Notes**
+     *
+     *     - If both `routePoints` and `airportIdentifiers` are provided, `routePoints` is used and `airportIdentifiers` is ignored.
+     *
+     *     - Duplicate NOTAMs appearing at multiple route points are returned only once.
+     *
+     *     - Optional `filters` (classification, feature, freeText, date range) are applied to every route point query.
+     */
+    post: operations['Notam_GetNotamsForRoute']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/notams/search': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Searches NOTAMs across all locations using filter criteria.
+     * @description Searches the entire active NOTAM database without requiring a specific airport or location. At least one filter parameter is required to prevent unbounded queries. Mirrors the FAA NMS API query parameters for flexible NOTAM filtering.
+     *
+     *     **Pagination**
+     *
+     *     Results are returned with cursor-based pagination. Pass the `pagination.nextCursor` value from a previous response as the `cursor` query parameter to retrieve the next page. The `limit` parameter controls page size (1–500, default 100).
+     *
+     *     **Parameter Pairing Rules**
+     *
+     *     - `notamNumber` must be paired with `location` or `accountability`
+     *
+     *     - `latitude`, `longitude`, and `radius` must all be provided together
+     *
+     *     - `effectiveStartDate` and `effectiveEndDate` must both be provided or both omitted
+     *
+     *     - `lastUpdatedDate`: when provided, returns both active and inactive NOTAMs modified since that time
+     *
+     *     **Examples**
+     *
+     *     ``` GET /api/v1/notams/search?classification=FDC — all active FDC NOTAMs GET /api/v1/notams/search?freeText=CLOSED&limit=50 — text search, 50 per page GET /api/v1/notams/search?feature=RWY&classification=DOMESTIC — combined filters GET /api/v1/notams/search?accountability=BNA — NOTAMs by issuing office GET /api/v1/notams/search?location=DFW — NOTAMs for a location GET /api/v1/notams/search?notamNumber=420&location=DFW — NOTAM by number + location GET /api/v1/notams/search?latitude=32.8998&longitude=-97.0403&radius=25 — spatial search GET /api/v1/notams/search?lastUpdatedDate=2025-03-01T00:00:00Z — recently modified (active + inactive) GET /api/v1/notams/search?classification=FDC&cursor=ABC123&limit=100 — next page ```
+     */
+    get: operations['Notam_SearchNotams']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/notams/id/{nmsId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Gets a single NOTAM by its NMS ID.
+     * @description Retrieves a specific NOTAM by its FAA NMS identifier. Unlike most NOTAM endpoints, this does *not* filter out cancelled or expired NOTAMs — so the result may be a recently expired or cancelled NOTAM that has not yet been purged. This is *not* a historical archive; the database periodically purges stale NOTAMs.
+     *
+     *     **Example**
+     *
+     *     ``` GET /api/v1/notams/id/1757609538792382 ```
+     */
+    get: operations['Notam_GetNotamByNmsId']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/obstacles/airport/{icaoCodeOrIdent}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Searches for obstacles near an airport. Looks up the airport coordinates, then finds
+     *     obstacles within the specified radius. Use minHeightAgl to filter out low obstacles.
+     * @description ``` GET /api/v1/obstacles/airport/KDFW — default 10 NM radius GET /api/v1/obstacles/airport/DFW?radiusNm=5&minHeightAgl=200 — towers 200+ ft AGL within 5 NM ```
+     */
+    get: operations['Obstacle_SearchNearAirport']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/obstacles/search': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Searches for obstacles near a geographic point.
+     * @description ``` GET /api/v1/obstacles/search?lat=32.897&lon=-97.038 — default 5 NM radius GET /api/v1/obstacles/search?lat=32.897&lon=-97.038&radiusNm=10&minHeightAgl=500 — tall obstacles within 10 NM ```
+     */
+    get: operations['Obstacle_SearchNearby']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/obstacles/state/{stateCode}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Gets obstacles in a specific state.
+     * @description ``` GET /api/v1/obstacles/state/TX — all obstacles in Texas GET /api/v1/obstacles/state/TX?minHeightAgl=1000 — obstacles 1000+ ft AGL in Texas ```
+     */
+    get: operations['Obstacle_GetByState']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/obstacles/{oasNumber}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Gets a single obstacle by its OAS (Obstacle Assessment Surface) number.
+     * @description ``` GET /api/v1/obstacles/12-345678 ```
+     */
+    get: operations['Obstacle_GetByOasNumber']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/obstacles/by-oas-numbers': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Gets multiple obstacles by their OAS numbers. This endpoint is designed to be used with the
+     *     ObstacleOasNumbers returned by the navigation log endpoint (POST /api/v1/navlog/calculate)
+     *     to retrieve full details for obstacles near a planned route.
+     * @description Send a JSON array of OAS number strings in the request body:
+     *
+     *     ``` ["12-345678", "12-345679", "12-345680"] ```
+     */
+    post: operations['Obstacle_GetByOasNumbers']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/obstacles/bbox': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Gets obstacles within a geographic bounding box.
+     * @description **Note:** The bounding box must not cross the antimeridian (i.e., `minLon` must be less than `maxLon`). Antimeridian-crossing queries are not supported.
+     *
+     *     ``` GET /api/v1/obstacles/bbox?minLat=32.5&maxLat=33.5&minLon=-97.5&maxLon=-96.5 GET /api/v1/obstacles/bbox?minLat=32.5&maxLat=33.5&minLon=-97.5&maxLon=-96.5&minHeightAgl=500 ```
+     */
+    get: operations['Obstacle_GetByBoundingBox']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/pireps': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Gets all current PIREPs. Returns all active pilot reports with reported conditions
+     *     including turbulence (type, intensity, altitude), icing (type, intensity, altitude),
+     *     and sky conditions. Each report includes the geographic coordinates and altitude where
+     *     the observation was made.
+     */
+    get: operations['Pirep_GetAllPireps']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/pireps/nearby': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Searches for PIREPs near a geographic point. Returns pilot reports within the specified
+     *     radius of the given coordinates, useful for checking conditions along a flight route.
+     * @description ``` GET /api/v1/pireps/nearby?lat=32.897&lon=-97.038 — default 50 NM radius GET /api/v1/pireps/nearby?lat=32.897&lon=-97.038&radiusNm=100 — custom radius ```
+     */
+    get: operations['Pirep_SearchNearby']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/pireps/airport/{icaoCodeOrIdent}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Searches for PIREPs near an airport. Looks up the airport coordinates by ICAO code or
+     *     FAA identifier, then returns pilot reports within the specified radius.
+     * @description ``` GET /api/v1/pireps/airport/KDFW — default 50 NM radius GET /api/v1/pireps/airport/DFW?radiusNm=100 — custom radius with FAA identifier ```
+     */
+    get: operations['Pirep_SearchNearAirport']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/sigmets': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Gets all current domestic SIGMET advisories across all hazard types.
+     * @description Returns every active domestic SIGMET regardless of hazard type. Each advisory includes the hazard (convective activity, severe turbulence, severe icing, IFR conditions, or mountain obscuration), severity, affected altitude range, and a geographic polygon defining the affected area. Use the `GET /hazard/{hazardType}` endpoint to filter by a specific hazard type.
+     */
+    get: operations['Sigmet_GetAllSigmets']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/sigmets/hazard/{hazardType}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Gets SIGMETs filtered by hazard type.
+     * @description **Hazard Types**
+     *
+     *     - `CONVECTIVE` — thunderstorms and convective activity
+     *
+     *     - `ICE` — severe icing
+     *
+     *     - `TURB` — severe turbulence
+     *
+     *     - `IFR` — widespread IFR conditions
+     *
+     *     - `MTN_OBSCN` — mountain obscuration
+     *
+     *     ``` GET /api/v1/sigmets/hazard/CONVECTIVE GET /api/v1/sigmets/hazard/TURB ```
+     */
+    get: operations['Sigmet_GetSigmetsByHazardType']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/sigmets/affecting': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Finds SIGMETs whose geographic boundary contains the given point. Returns advisories
+     *     that affect a specific location, answering "what SIGMETs are active at this position?"
+     * @description ``` GET /api/v1/sigmets/affecting?lat=32.897&lon=-97.038 ```
+     */
+    get: operations['Sigmet_SearchAffecting']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/sigmets/by-area': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Finds SIGMETs that intersect a geographic bounding box. Returns advisories whose
+     *     boundary overlaps the specified area, useful for checking conditions across a flight route.
+     * @description **Note:** The bounding box must not cross the antimeridian (i.e., `minLon` must be less than `maxLon`). Antimeridian-crossing queries are not supported. This endpoint covers domestic US SIGMETs within the contiguous United States.
+     *
+     *     ``` GET /api/v1/sigmets/by-area?minLat=30&maxLat=35&minLon=-100&maxLon=-95 ```
+     */
+    get: operations['Sigmet_SearchByArea']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/tafs/batch': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Gets the current TAFs for multiple airports in a single request.
+     *     Accepts ICAO codes or FAA identifiers. Identifiers that don't resolve to a TAF are silently skipped.
+     * @description Both ICAO codes and FAA identifiers can be mixed in the same request. Maximum 100 identifiers per request.
+     *
+     *     ``` GET /api/v1/tafs/batch?ids=KDFW,KAUS,KHOU GET /api/v1/tafs/batch?ids=DFW,AUS ```
+     */
+    get: operations['Taf_GetTafsBatch']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/tafs/{icaoCodeOrIdent}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Gets the current TAF for a specific airport, including all forecast periods with expected
+     *     weather conditions (wind, visibility, sky cover, precipitation, turbulence, and icing).
+     * @description ``` GET /api/v1/tafs/KDFW — by ICAO code GET /api/v1/tafs/DFW — by FAA identifier ```
+     */
+    get: operations['Taf_GetTafByIcaoCodeOrIdent']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/terminal-procedures/{icaoCodeOrIdent}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Gets time-limited pre-signed URLs for all available terminal procedure chart PDFs.
+     *     The URLs expire after a limited period; request new URLs if they have expired.
+     * @description Returns the airport's ICAO code, name, and a list of procedure chart URLs. Optionally filter by chart code (IAP, DP, STAR, APD, MIN, HOT, etc.).
+     *
+     *     ``` GET /api/v1/terminal-procedures/KDFW GET /api/v1/terminal-procedures/DFW?chartCode=IAP ```
+     */
+    get: operations['TerminalProcedure_GetTerminalProcedures']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
 }
-export type webhooks = Record<string, never>;
+export type webhooks = Record<string, never>
 export interface components {
-    schemas: {
-        /**
-         * @description Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the
-         *     pagination.nextCursor value as the cursor query parameter in your next request.
-         *     Continue until pagination.hasMore is false.
-         */
-        PaginatedResponseOfAirportDto: {
-            /** @description The current page of results. */
-            data?: components["schemas"]["AirportDto"][];
-            /** @description Pagination metadata including the cursor to fetch the next page. */
-            pagination?: components["schemas"]["PaginationMetadata"];
-        };
-        /**
-         * @description Airport data from the FAA National Airspace System Resources (NASR) database.
-         *     Combines data from APT_BASE, APT_ATT, and APT_CON CSV files.
-         *     Use the airport's IcaoId or ArptId to query related endpoints such as runways
-         *     (GET /api/v1/airports/{icaoCodeOrIdent}/runways), communication frequencies
-         *     (GET /api/v1/communication-frequencies/{servicedFacility}), METARs
-         *     (GET /api/v1/metars/{icaoCodeOrIdent}), TAFs (GET /api/v1/tafs/{icaoCodeOrIdent}),
-         *     airport diagrams (GET /api/v1/airport-diagrams/{icaoCodeOrIdent}), and
-         *     chart supplements (GET /api/v1/chart-supplements/{icaoCodeOrIdent}).
-         */
-        AirportDto: {
-            /** @description FAA NASR field: SITE_NO. Unique Site Number assigned by the FAA to identify the airport facility. */
-            siteNo?: string;
-            /** @description FAA NASR field: ICAO_ID. ICAO (International Civil Aviation Organization) identifier (e.g., KDFW, KLAX). */
-            icaoId?: string | null;
-            /** @description FAA NASR field: ARPT_ID. FAA location identifier (e.g., DFW, LAX, ORD). Up to 4 characters. */
-            arptId?: string | null;
-            /** @description FAA NASR field: ARPT_NAME. Official Facility Name. */
-            arptName?: string | null;
-            /**
-             * Format: date-time
-             * @description FAA NASR field: EFF_DATE. Effective date of the airport information.
-             */
-            effDate?: string;
-            /** @description FAA NASR field: SITE_TYPE_CODE. Landing facility type. */
-            siteType?: components["schemas"]["AirportSiteType"];
-            /** @description FAA NASR field: OWNERSHIP_TYPE_CODE. Airport ownership type. */
-            ownershipType?: components["schemas"]["AirportOwnershipType"];
-            /** @description FAA NASR field: FACILITY_USE_CODE. Facility use designation. */
-            facilityUse?: components["schemas"]["AirportFacilityUse"];
-            /** @description FAA NASR field: ARPT_STATUS. Airport operational status. */
-            arptStatus?: components["schemas"]["AirportStatus"];
-            /** @description FAA NASR field: NASP_CODE. NPIAS/Federal Agreements Code. A combination of 1 to 7 codes indicating the type of Federal agreements existing at the Airport. */
-            naspCode?: string | null;
-            /** @description FAA NASR field: CITY. Associated city name for the airport. */
-            city?: string | null;
-            /** @description FAA NASR field: STATE_CODE. Two-letter USPS state code where the airport is located. */
-            stateCode?: string | null;
-            /** @description FAA NASR field: COUNTRY_CODE. Two-letter country code. */
-            countryCode?: string | null;
-            /** @description FAA NASR field: STATE_NAME. Full state name where the airport is located. */
-            stateName?: string | null;
-            /** @description FAA NASR field: REGION_CODE. FAA region code (e.g., ASW, AEA, AWP). */
-            regionCode?: string | null;
-            /** @description FAA NASR field: ADO_CODE. FAA Airports District Office code. */
-            adoCode?: string | null;
-            /** @description FAA NASR field: COUNTY_NAME. County name where the airport is located. */
-            countyName?: string | null;
-            /** @description FAA NASR field: COUNTY_ASSOC_STATE. Two-letter state, territory, or country code associated with the county (e.g., US state codes, CN for Canada, GU for Guam, VI for Virgin Islands). */
-            countyAssocState?: string | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: DIST_CITY_TO_AIRPORT. Distance from Central Business District of the Associated City to the Airport.
-             */
-            distCityToAirport?: number | null;
-            /** @description FAA NASR field: DIRECTION_CODE. Direction of Airport from Central Business District of Associated City (Nearest 1/8 Compass Point). */
-            directionCode?: string | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: ACREAGE. Land Area Covered by Airport (Acres).
-             */
-            acreage?: number | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: LAT_DECIMAL. Latitude of airport reference point in decimal degrees.
-             */
-            latDecimal?: number | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: LONG_DECIMAL. Longitude of airport reference point in decimal degrees.
-             */
-            longDecimal?: number | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: LAT_DEG. Latitude degrees of airport reference point.
-             */
-            latDeg?: number | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: LAT_MIN. Latitude minutes of airport reference point.
-             */
-            latMin?: number | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: LAT_SEC. Latitude seconds of airport reference point.
-             */
-            latSec?: number | null;
-            /** @description FAA NASR field: LAT_HEMIS. Latitude hemisphere of airport reference point (N or S). */
-            latHemis?: string | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: LONG_DEG. Longitude degrees of airport reference point.
-             */
-            longDeg?: number | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: LONG_MIN. Longitude minutes of airport reference point.
-             */
-            longMin?: number | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: LONG_SEC. Longitude seconds of airport reference point.
-             */
-            longSec?: number | null;
-            /** @description FAA NASR field: LONG_HEMIS. Longitude hemisphere of airport reference point (E or W). */
-            longHemis?: string | null;
-            /** @description FAA NASR field: SURVEY_METHOD_CODE. Method used to determine the airport reference point position. */
-            positionSurveyMethod?: components["schemas"]["SurveyMethod"];
-            /** @description FAA NASR field: ARPT_PSN_SOURCE. Source of the airport position information. */
-            arptPsnSource?: string | null;
-            /**
-             * Format: date-time
-             * @description FAA NASR field: POSITION_SRC_DATE. Date the airport position information was determined.
-             */
-            positionSrcDate?: string | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: ELEV. Airport elevation in feet MSL, to the nearest tenth of a foot. Measured at the highest point on the centerline of the usable landing surface.
-             */
-            elev?: number | null;
-            /** @description FAA NASR field: ELEV_METHOD_CODE. Method used to determine the airport elevation. */
-            elevationSurveyMethod?: components["schemas"]["SurveyMethod"];
-            /** @description FAA NASR field: ARPT_ELEV_SOURCE. Source of the airport elevation information. */
-            arptElevSource?: string | null;
-            /**
-             * Format: date-time
-             * @description FAA NASR field: ELEVATION_SRC_DATE. Date the airport elevation information was determined.
-             */
-            elevationSrcDate?: string | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: MAG_VARN. Magnetic Variation in degrees.
-             */
-            magVarn?: number | null;
-            /** @description FAA NASR field: MAG_HEMIS. Magnetic Variation Direction (E or W). */
-            magHemis?: string | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: MAG_VARN_YEAR. Magnetic Variation Epoch Year.
-             */
-            magVarnYear?: number | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: TPA. Traffic Pattern Altitude (Whole Feet AGL).
-             */
-            tpa?: number | null;
-            /** @description FAA NASR field: CHART_NAME. Sectional aeronautical chart name on which the airport appears. */
-            chartName?: string | null;
-            /** @description FAA NASR field: RESP_ARTCC_ID. Responsible ARTCC Identifier. The Responsible ARTCC is the FAA Air Route Traffic Control Center that has control over the Airport. */
-            respArtccId?: string | null;
-            /** @description FAA NASR field: ARTCC_NAME. Name of the responsible ARTCC. */
-            artccName?: string | null;
-            /** @description FAA NASR field: TWR_TYPE_CODE. Air Traffic Control Tower Facility Type (ATCT, NON-ATCT, ATCT-A/C, ATCT-RAPCON, ATCT-RATCF, ATCT-TRACON, TRACON). */
-            twrTypeCode?: string | null;
-            /** @description FAA NASR field: FSS_ON_ARPT_FLAG. Tie-In FSS Physically Located On Facility. */
-            fssOnAirport?: boolean;
-            /** @description FAA NASR field: FSS_ID. Tie-In Flight Service Station (FSS) Identifier. */
-            fssId?: string | null;
-            /** @description FAA NASR field: FSS_NAME. Tie-In FSS Name. */
-            fssName?: string | null;
-            /** @description FAA NASR field: PHONE_NO. Local Phone Number from Airport to FSS for Administrative Services. */
-            fssPhoneNumber?: string | null;
-            /** @description FAA NASR field: TOLL_FREE_NO. Toll Free Phone Number from Airport to FSS for Pilot Briefing Services. */
-            tollFreeNumber?: string | null;
-            /** @description FAA NASR field: ALT_FSS_ID. Alternate FSS Identifier. Identifies a full-time FSS that assumes responsibility during the off hours of a part-time primary FSS. */
-            altFssId?: string | null;
-            /** @description FAA NASR field: ALT_FSS_NAME. Alternate Flight Service Station name. */
-            altFssName?: string | null;
-            /** @description FAA NASR field: ALT_TOLL_FREE_NO. Toll Free Phone Number from Airport to Alternate FSS for Pilot Briefing Services. */
-            altTollFreeNumber?: string | null;
-            /** @description FAA NASR field: NOTAM_ID. Identifier of the Facility responsible for issuing NOTAMs and Weather information for the Airport. */
-            notamId?: string | null;
-            /** @description FAA NASR field: NOTAM_FLAG. Availability of NOTAM 'D' Service at Airport. */
-            notamAvailable?: boolean;
-            /** @description FAA NASR field: CUST_FLAG. Facility designated by U.S. Department of Homeland Security as an International Airport of Entry for Customs. */
-            customsPortOfEntry?: boolean;
-            /** @description FAA NASR field: LNDG_RIGHTS_FLAG. Facility designated by U.S. Department of Homeland Security as a Customs Landing Rights Airport. */
-            customsLandingRights?: boolean;
-            /** @description FAA NASR field: JOINT_USE_FLAG. Facility has Military/Civil Joint Use Agreement that allows Civil Operations at a Military Airport. */
-            jointUse?: boolean;
-            /** @description FAA NASR field: MIL_LNDG_FLAG. Airport has entered into an Agreement that Grants Landing Rights to the Military. */
-            militaryLandingRights?: boolean;
-            /** @description FAA NASR field: INSPECT_METHOD_CODE. Airport inspection method. */
-            inspectionMethod?: components["schemas"]["AirportInspectionMethod"];
-            /** @description FAA NASR field: INSPECTOR_CODE. Agency/Group Performing Physical Inspection. */
-            inspectorAgency?: components["schemas"]["AirportInspectorAgency"];
-            /**
-             * Format: date-time
-             * @description FAA NASR field: LAST_INSPECTION. Date of the last physical inspection.
-             */
-            lastInspection?: string | null;
-            /**
-             * Format: date-time
-             * @description FAA NASR field: LAST_INFO_RESPONSE. Date of the last information request response.
-             */
-            lastInfoResponse?: string | null;
-            /** @description FAA NASR field: FUEL_TYPES. Fuel Types available for public use at the Airport (e.g., 100LL, A, A+, MOGAS, UL94). */
-            fuelTypes?: string | null;
-            /** @description FAA NASR field: CONTR_FUEL_AVBL. Whether contract fuel is available. */
-            contractFuelAvailable?: boolean;
-            /** @description FAA NASR field: AIRFRAME_REPAIR_SER_CODE. Airframe repair service availability. */
-            airframeRepairService?: components["schemas"]["RepairServiceAvailability"];
-            /** @description FAA NASR field: PWR_PLANT_REPAIR_SER. Power plant (engine) repair service availability. */
-            powerPlantRepairService?: components["schemas"]["RepairServiceAvailability"];
-            /** @description FAA NASR field: BOTTLED_OXY_TYPE. Type of bottled oxygen available. */
-            bottledOxygenType?: components["schemas"]["OxygenPressureType"];
-            /** @description FAA NASR field: BULK_OXY_TYPE. Type of bulk oxygen available. */
-            bulkOxygenType?: components["schemas"]["OxygenPressureType"];
-            /** @description FAA NASR field: OTHER_SERVICES. Other airport services available (comma-separated codes). */
-            otherServices?: string | null;
-            /** @description FAA NASR field: TRNS_STRG_BUOY_FLAG. Whether transient storage buoys are available. */
-            transientStorageBuoys?: boolean;
-            /** @description FAA NASR field: TRNS_STRG_HGR_FLAG. Whether transient storage hangars are available. */
-            transientStorageHangars?: boolean;
-            /** @description FAA NASR field: TRNS_STRG_TIE_FLAG. Whether transient storage tie-downs are available. */
-            transientStorageTiedowns?: boolean;
-            /** @description FAA NASR field: LGT_SKED. Airport Lighting Schedule. Beginning-ending times (local time) that Standard Airport Lights are operated. Value can be 'SS-SR' (sunset-sunrise), blank, or 'SEE RMK'. */
-            lgtSked?: string | null;
-            /** @description FAA NASR field: BCN_LGT_SKED. Beacon Lighting Schedule. Beginning-ending times (local time) that the Rotating Airport Beacon Light is operated. Value can be 'SS-SR' (sunset-sunrise), blank, or 'SEE RMK'. */
-            bcnLgtSked?: string | null;
-            /** @description FAA NASR field: BCN_LENS_COLOR. Airport beacon lens color. */
-            beaconLensColor?: components["schemas"]["BeaconLensColor"];
-            /** @description FAA NASR field: SEG_CIRCLE_MKR_FLAG. Segmented circle airport marker system. */
-            segmentedCircleMarker?: components["schemas"]["SegmentedCircleMarkerType"];
-            /** @description FAA NASR field: WIND_INDCR_FLAG. Wind indicator type. */
-            windIndicator?: components["schemas"]["WindIndicatorType"];
-            /** @description FAA NASR field: LNDG_FEE_FLAG. Landing Fee charged to Non-Commercial Users of Airport. */
-            landingFee?: boolean;
-            /** @description FAA NASR field: MEDICAL_USE_FLAG. Indicates that the Landing Facility is used for Medical Purposes. */
-            medicalUse?: boolean;
-            /** @description FAA NASR field: ACTIVATION_DATE. Airport Activation Date (YYYY/MM). Year and month the facility was added to the NFDC airport database. Only available for facilities opened since 1981. */
-            activationDate?: string | null;
-            /** @description FAA NASR field: MIN_OP_NETWORK. Minimum Operational Network (MON) designation. */
-            minOpNetwork?: string | null;
-            /** @description FAA NASR field: USER_FEE_FLAG. US Customs User Fee Airport designation. */
-            userFeeFlag?: string | null;
-            /** @description FAA NASR field: CTA. Cold Temperature Airport. Altitude correction required at or below the temperature given in Celsius. */
-            cta?: string | null;
-            /** @description FAA NASR field: COMPUTER_ID. Responsible ARTCC (FAA) Computer Identifier. */
-            computerId?: string | null;
-            /** @description FAA NASR field: FAR_139_TYPE_CODE. Airport ARFF Certification Type Code. Format is class code (I/II/III/IV) followed by A/B/C/D/E (full certificate) or L (limited certification). Blank if not certificated. */
-            far139TypeCode?: string | null;
-            /** @description FAA NASR field: FAR_139_CARRIER_SER_CODE. Airport ARFF Certification Carrier Service Code. S (scheduled service) or U (not receiving scheduled service). */
-            far139CarrierSerCode?: string | null;
-            /**
-             * Format: date-time
-             * @description FAA NASR field: ARFF_CERT_TYPE_DATE. Airport ARFF Certification Date (YYYY/MM).
-             */
-            arffCertTypeDate?: string | null;
-            /** @description FAA NASR field: ASP_ANLYS_DTRM_CODE. Airport Airspace Analysis Determination (CONDL, NOT ANALYZED, NO OBJECTION, OBJECTIONABLE). */
-            aspAnalysisDtrmCode?: string | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: SKED_SEQ_NO (APT_ATT). Attendance Schedule Sequence Number.
-             */
-            skedSeqNo?: number | null;
-            /** @description FAA NASR field: MONTH (APT_ATT). Months the facility is attended. May contain 'UNATNDD' for unattended facilities. */
-            attendanceMonth?: string | null;
-            /** @description FAA NASR field: DAY (APT_ATT). Days of the week the facility is open. */
-            attendanceDay?: string | null;
-            /** @description FAA NASR field: HOUR (APT_ATT). Hours within the day the facility is attended. */
-            attendanceHours?: string | null;
-            /** @description FAA NASR field: TITLE (APT_CON). Title of the facility contact (e.g., MANAGER, OWNER). */
-            contactTitle?: string | null;
-            /** @description FAA NASR field: NAME (APT_CON). Facility contact name. */
-            contactName?: string | null;
-            /** @description FAA NASR field: ADDRESS1 (APT_CON). Contact address line 1. */
-            contactAddress1?: string | null;
-            /** @description FAA NASR field: ADDRESS2 (APT_CON). Contact address line 2. */
-            contactAddress2?: string | null;
-            /** @description FAA NASR field: TITLE_CITY (APT_CON). Contact city. */
-            contactCity?: string | null;
-            /** @description FAA NASR field: STATE (APT_CON). Contact state. */
-            contactState?: string | null;
-            /** @description FAA NASR field: ZIP_CODE (APT_CON). Contact ZIP code. */
-            contactZipCode?: string | null;
-            /** @description FAA NASR field: ZIP_PLUS_FOUR (APT_CON). Contact ZIP+4 code. */
-            contactZipPlusFour?: string | null;
-            /** @description FAA NASR field: PHONE_NO (APT_CON). Contact phone number. */
-            contactPhoneNumber?: string | null;
-        };
-        /**
-         * @description Landing Facility Site Type. Corresponds to FAA NASR field SITE_TYPE_CODE (APT_BASE).
-         * @enum {string}
-         */
-        AirportSiteType: "Unknown" | "Airport" | "Heliport" | "SeaplaneBase" | "Gliderport" | "Ultralight";
-        /**
-         * @description Airport Ownership Type. Corresponds to FAA NASR field OWNERSHIP_TYPE_CODE (APT_BASE).
-         * @enum {string}
-         */
-        AirportOwnershipType: "Unknown" | "PubliclyOwned" | "PrivatelyOwned" | "AirForce" | "Navy" | "Army" | "CoastGuard";
-        /**
-         * @description Airport Facility Use. Corresponds to FAA NASR field FACILITY_USE_CODE (APT_BASE).
-         * @enum {string}
-         */
-        AirportFacilityUse: "Unknown" | "PublicUse" | "PrivateUse";
-        /**
-         * @description Airport Operational Status. Corresponds to FAA NASR field ARPT_STATUS (APT_BASE).
-         * @enum {string}
-         */
-        AirportStatus: "Unknown" | "Operational" | "ClosedIndefinitely" | "ClosedPermanently";
-        /**
-         * @description Survey Method for position or elevation determination. Corresponds to FAA NASR fields SURVEY_METHOD_CODE and ELEV_METHOD_CODE (APT_BASE).
-         * @enum {string}
-         */
-        SurveyMethod: "Unknown" | "Estimated" | "Surveyed";
-        /**
-         * @description Airport Inspection Method. Corresponds to FAA NASR field INSPECT_METHOD_CODE (APT_BASE).
-         * @enum {string}
-         */
-        AirportInspectionMethod: "Unknown" | "Federal" | "State" | "Contractor" | "PublicUseMailout" | "PrivateUseMailout";
-        /**
-         * @description Airport Inspector Agency. Corresponds to FAA NASR field INSPECTOR_CODE (APT_BASE).
-         * @enum {string}
-         */
-        AirportInspectorAgency: "Unknown" | "Faa" | "State" | "Contractor" | "Owner";
-        /**
-         * @description Repair Service Availability. Corresponds to FAA NASR fields AIRFRAME_REPAIR_SER_CODE and PWR_PLANT_REPAIR_SER (APT_BASE).
-         * @enum {string}
-         */
-        RepairServiceAvailability: "Unknown" | "None" | "Major" | "Minor";
-        /**
-         * @description Oxygen Pressure Type. Corresponds to FAA NASR fields BOTTLED_OXY_TYPE and BULK_OXY_TYPE (APT_BASE).
-         * @enum {string}
-         */
-        OxygenPressureType: "Unknown" | "None" | "High" | "Low" | "HighAndLow";
-        /**
-         * @description Airport Beacon Lens Color. Corresponds to FAA NASR field BCN_LENS_COLOR (APT_BASE).
-         * @enum {string}
-         */
-        BeaconLensColor: "Unknown" | "WhiteGreen" | "WhiteYellow" | "WhiteGreenYellow" | "SplitWhiteGreen" | "White" | "Yellow" | "Green" | "None";
-        /**
-         * @description Segmented Circle Airport Marker. Corresponds to FAA NASR field SEG_CIRCLE_MKR_FLAG (APT_BASE).
-         * @enum {string}
-         */
-        SegmentedCircleMarkerType: "Unknown" | "None" | "Yes" | "YesLighted";
-        /**
-         * @description Wind Indicator Type. Corresponds to FAA NASR field WIND_INDCR_FLAG (APT_BASE).
-         * @enum {string}
-         */
-        WindIndicatorType: "Unknown" | "None" | "Unlighted" | "Lighted";
-        /**
-         * @description Metadata for cursor-based pagination. Use nextCursor as the cursor query parameter
-         *     to fetch the next page of results. When hasMore is false, there are no more pages.
-         */
-        PaginationMetadata: {
-            /** @description Opaque cursor value to pass as the cursor query parameter to fetch the next page. Null when there are no more results. */
-            nextCursor?: string | null;
-            /** @description True if more results are available beyond this page; false if this is the last page. */
-            hasMore?: boolean;
-            /**
-             * Format: int32
-             * @description Maximum number of items returned per page (1-500, default 100).
-             */
-            limit?: number;
-        };
-        /** @description Standardized error response format for API errors. */
-        ApiErrorResponse: {
-            /** @description Machine-readable error code (e.g., "AIRCRAFT_NOT_FOUND"). */
-            code?: string;
-            /** @description Human-readable error message suitable for display. */
-            message?: string;
-            /** @description Additional error details (only included in development environment). */
-            details?: string | null;
-            /** @description Field-level validation errors (only for validation failures). */
-            validationErrors?: {
-                [key: string]: string[];
-            } | null;
-            /** @description UTC timestamp when the error occurred. */
-            timestamp?: string;
-            /** @description Correlation ID for tracing the request. */
-            traceId?: string | null;
-            /** @description Request path that generated the error. */
-            path?: string | null;
-        };
-        /**
-         * @description Runway data from the FAA NASR database, sourced from APT_RWY.
-         *     Includes dimensions, surface, lighting, and weight-bearing information.
-         */
-        RunwayDto: {
-            /**
-             * Format: guid
-             * @description System-generated unique identifier.
-             */
-            id?: string;
-            /** @description FAA NASR field: RWY_ID. Runway identification (e.g., "01/19", "09L/27R", "H1" for helipad). */
-            runwayId?: string;
-            /**
-             * Format: int32
-             * @description FAA NASR field: RWY_LEN. Physical runway length to the nearest foot.
-             */
-            length?: number | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: RWY_WIDTH. Physical runway width to the nearest foot.
-             */
-            width?: number | null;
-            /**
-             * @description FAA NASR field: SURFACE_TYPE_CODE. Runway surface type.
-             *     Common values: Concrete (CONC), Asphalt (ASPH), Turf (TURF), Dirt (DIRT), Gravel (GRAVEL), Water (WATER).
-             */
-            surfaceType?: components["schemas"]["RunwaySurfaceType"];
-            /**
-             * @description FAA NASR field: TREATMENT_CODE. Runway surface treatment.
-             *     Possible values: Grooved (GRVD), PorousFrictionCourse (PFC), AggregateFrictionSealCoat (AFSC),
-             *     RubberizedFrictionSealCoat (RFSC), WireComb (WC), None (NONE).
-             */
-            surfaceTreatment?: components["schemas"]["RunwaySurfaceTreatment"];
-            /** @description FAA NASR field: PCN. Pavement Classification Number. See FAA Advisory Circular 150/5335-5 for code definitions and PCN determination formula. */
-            pavementClassification?: string | null;
-            /**
-             * @description FAA NASR field: RWY_LGT_CODE. Runway lights edge intensity.
-             *     Possible values: High (HIGH), Medium (MED), Low (LOW), Flood (FLD), NonStandard (NSTD), Perimeter (PERI), Strobe (STRB), None (NONE).
-             */
-            edgeLightIntensity?: components["schemas"]["RunwayEdgeLightIntensity"];
-            /**
-             * Format: int32
-             * @description FAA NASR field: GROSS_WT_SW. Runway weight-bearing capacity for single wheel type landing gear, in pounds.
-             */
-            weightBearingSingleWheel?: number | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: GROSS_WT_DW. Runway weight-bearing capacity for dual wheel type landing gear, in pounds.
-             */
-            weightBearingDualWheel?: number | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: GROSS_WT_DTW. Runway weight-bearing capacity for two dual wheels in tandem type landing gear, in pounds.
-             */
-            weightBearingDualTandem?: number | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: GROSS_WT_DDTW. Runway weight-bearing capacity for two dual wheels in tandem/two dual wheels in double tandem body gear type landing gear, in pounds.
-             */
-            weightBearingDoubleDualTandem?: number | null;
-            /**
-             * @description FAA NASR field: COND. Runway Surface Condition.
-             *     Possible values: EXCELLENT, GOOD, FAIR, POOR, FAILED.
-             */
-            surfaceCondition?: string | null;
-            /**
-             * @description FAA NASR field: PAVEMENT_TYPE_CODE. Pavement Type.
-             *     Possible values: R (Rigid), F (Flexible).
-             */
-            pavementTypeCode?: string | null;
-            /** @description FAA NASR field: SUBGRADE_STRENGTH_CODE. Subgrade Strength (Letters A-F). */
-            subgradeStrengthCode?: string | null;
-            /** @description FAA NASR field: TIRE_PRES_CODE. Tire Pressure Code (Letters W-Z). */
-            tirePressureCode?: string | null;
-            /**
-             * @description FAA NASR field: DTRM_METHOD_CODE. Determination Method for pavement strength.
-             *     Possible values: T (Technical), U (Using Aircraft).
-             */
-            determinationMethodCode?: string | null;
-            /** @description FAA NASR field: RWY_LEN_SOURCE. Source of runway length information. */
-            runwayLengthSource?: string | null;
-            /**
-             * Format: date-time
-             * @description FAA NASR field: LENGTH_SOURCE_DATE. Date of runway length source information.
-             */
-            lengthSourceDate?: string | null;
-            /** @description Runway end details for each direction (typically two per runway). */
-            runwayEnds?: components["schemas"]["RunwayEndDto"][];
-        };
-        /**
-         * @description Runway Surface Type. Corresponds to FAA NASR field SURFACE_TYPE_CODE (APT_RWY).
-         *     The value will usually be one of the common types or a combination of two types
-         *     when the runway is composed of distinct sections.
-         * @enum {string}
-         */
-        RunwaySurfaceType: "Unknown" | "Concrete" | "Asphalt" | "Snow" | "Ice" | "Mats" | "Treated" | "Gravel" | "Turf" | "Dirt" | "PartiallyPaved" | "Rooftop" | "Water" | "Aluminum" | "Brick" | "Caliche" | "Coral" | "Deck" | "Grass" | "Metal" | "NonStandard" | "OilChip" | "Psp" | "Sand" | "Sod" | "Steel" | "Wood";
-        /**
-         * @description Runway Surface Treatment. Corresponds to FAA NASR field TREATMENT_CODE (APT_RWY).
-         * @enum {string}
-         */
-        RunwaySurfaceTreatment: "Unknown" | "None" | "Grooved" | "PorousFrictionCourse" | "AggregateFrictionSealCoat" | "RubberizedFrictionSealCoat" | "WireComb";
-        /**
-         * @description Runway Lights Edge Intensity. Corresponds to FAA NASR field RWY_LGT_CODE (APT_RWY).
-         * @enum {string}
-         */
-        RunwayEdgeLightIntensity: "Unknown" | "None" | "High" | "Medium" | "Low" | "Flood" | "NonStandard" | "Perimeter" | "Strobe";
-        /**
-         * @description Runway end data from the FAA NASR database, sourced from APT_RWY_END.
-         *     Includes approach, markings, lighting, and controlling obstacle information.
-         */
-        RunwayEndDto: {
-            /**
-             * Format: guid
-             * @description System-generated unique identifier.
-             */
-            id?: string;
-            /** @description FAA NASR field: RWY_END_ID. Runway end identifier (e.g., "01", "19", "09L", "27R"). */
-            runwayEndId?: string;
-            /**
-             * Format: int32
-             * @description FAA NASR field: TRUE_ALIGNMENT. Runway end true alignment. True heading of the runway to the nearest degree.
-             */
-            trueAlignment?: number | null;
-            /**
-             * @description FAA NASR field: ILS_TYPE. Instrument Landing System (ILS) type.
-             *     Possible values: Ils (ILS), Mls (MLS), Sdf (SDF), Localizer (LOCALIZER), Lda (LDA), Ismls (ISMLS),
-             *     IlsDme (ILS/DME), SdfDme (SDF/DME), LocDme (LOC/DME), LocGs (LOC/GS), LdaDme (LDA/DME).
-             */
-            approachType?: components["schemas"]["InstrumentApproachType"];
-            /** @description FAA NASR field: RIGHT_HAND_TRAFFIC_PAT_FLAG. Whether right-hand traffic pattern is in effect for landing aircraft. */
-            rightHandTrafficPattern?: boolean;
-            /**
-             * @description FAA NASR field: RWY_MARKING_TYPE_CODE. Runway markings type.
-             *     Possible values: PrecisionInstrument (PIR), NonPrecisionInstrument (NPI), Basic (BSC),
-             *     NumbersOnly (NRS), NonStandard (NSTD), Buoys (BUOY), Stol (STOL), None (NONE).
-             */
-            markingsType?: components["schemas"]["RunwayMarkingsType"];
-            /**
-             * @description FAA NASR field: RWY_MARKING_COND. Runway markings condition.
-             *     Possible values: Good (G), Fair (F), Poor (P).
-             */
-            markingsCondition?: components["schemas"]["RunwayMarkingsCondition"];
-            /**
-             * Format: decimal
-             * @description FAA NASR field: LAT_DECIMAL. Latitude of physical runway end in decimal degrees.
-             */
-            latitude?: number | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: LONG_DECIMAL. Longitude of physical runway end in decimal degrees.
-             */
-            longitude?: number | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: RWY_END_ELEV. Elevation at the physical runway end in feet MSL.
-             */
-            elevation?: number | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: THR_CROSSING_HGT. Threshold Crossing Height in feet AGL. Height that the effective visual glide path crosses above the runway threshold.
-             */
-            thresholdCrossingHeight?: number | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: VISUAL_GLIDE_PATH_ANGLE. Visual glide path angle in hundredths of degrees.
-             */
-            visualGlidePathAngle?: number | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: LAT_DISPLACED_THR_DECIMAL. Latitude of displaced threshold in decimal degrees.
-             */
-            displacedThresholdLatitude?: number | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: LONG_DISPLACED_THR_DECIMAL. Longitude of displaced threshold in decimal degrees.
-             */
-            displacedThresholdLongitude?: number | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: DISPLACED_THR_ELEV. Elevation at the displaced threshold in feet MSL.
-             */
-            displacedThresholdElevation?: number | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: DISPLACED_THR_LEN. Displaced threshold length in feet from the runway end.
-             */
-            displacedThresholdLength?: number | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: TDZ_ELEV. Elevation at the touchdown zone in feet MSL.
-             */
-            touchdownZoneElevation?: number | null;
-            /**
-             * @description FAA NASR field: VGSI_CODE. Visual Glide Slope Indicator type.
-             *     Common types: VASI (V2L/V4L/etc.), PAPI (P2L/P4L/etc.), SAVASI (S2L/S2R), Tri-Color, Pulsating, Panel systems.
-             */
-            visualGlideSlopeIndicator?: components["schemas"]["VisualGlideSlopeIndicatorType"];
-            /**
-             * @description FAA NASR field: RWY_VISUAL_RANGE_EQUIP_CODE. Runway Visual Range (RVR) equipment location.
-             *     Possible values: Touchdown (T), Midfield (M), Rollout (R), None (N), TouchdownMidfield (TM), TouchdownRollout (TR), MidfieldRollout (MR), TouchdownMidfieldRollout (TMR).
-             */
-            runwayVisualRangeEquipment?: components["schemas"]["RunwayVisualRangeEquipmentType"];
-            /** @description FAA NASR field: RWY_VSBY_VALUE_EQUIP_FLAG. Whether Runway Visibility Value (RVV) equipment is installed. */
-            runwayVisibilityValueEquipment?: boolean;
-            /**
-             * @description FAA NASR field: APCH_LGT_SYSTEM_CODE. Approach light system type.
-             *     See ApproachLightSystemType enum for all possible values and their FAA descriptions.
-             */
-            approachLightSystem?: components["schemas"]["ApproachLightSystemType"];
-            /** @description FAA NASR field: RWY_END_LGTS_FLAG. Whether Runway End Identifier Lights (REIL) are installed. */
-            hasRunwayEndLights?: boolean;
-            /** @description FAA NASR field: CNTRLN_LGTS_AVBL_FLAG. Whether runway centerline lights are installed. */
-            hasCenterlineLights?: boolean;
-            /** @description FAA NASR field: TDZ_LGT_AVBL_FLAG. Whether runway end touchdown zone lights are installed. */
-            hasTouchdownZoneLights?: boolean;
-            /** @description FAA NASR field: OBSTN_TYPE. Controlling object description (type of obstacle). */
-            controllingObjectDescription?: string | null;
-            /**
-             * @description FAA NASR field: OBSTN_MRKD_CODE. Controlling object marked/lighted status.
-             *     Possible values: Marked (M), Lighted (L), MarkedAndLighted (ML), None (NONE).
-             */
-            controllingObjectMarking?: components["schemas"]["ControllingObjectMarking"];
-            /**
-             * Format: int32
-             * @description FAA NASR field: OBSTN_CLNC_SLOPE. Controlling object clearance slope value, expressed as a ratio of N:1. If greater than 50:1, then 50 is entered.
-             */
-            controllingObjectClearanceSlope?: number | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: OBSTN_HGT. Controlling object height above the physical runway end in feet AGL.
-             */
-            controllingObjectHeightAboveRunway?: number | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: DIST_FROM_THR. Controlling object distance from the physical runway end in feet.
-             */
-            controllingObjectDistanceFromRunway?: number | null;
-            /** @description FAA NASR field: CNTRLN_OFFSET. Controlling object centerline offset distance in feet from the extended runway centerline. */
-            controllingObjectCenterlineOffset?: string | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: RWY_END_LAT_DEG. Runway end latitude degrees.
-             */
-            rwyEndLatDeg?: number | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: RWY_END_LAT_MIN. Runway end latitude minutes.
-             */
-            rwyEndLatMin?: number | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: RWY_END_LAT_SEC. Runway end latitude seconds.
-             */
-            rwyEndLatSec?: number | null;
-            /** @description FAA NASR field: RWY_END_LAT_HEMIS. Runway end latitude hemisphere (N or S). */
-            rwyEndLatHemis?: string | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: RWY_END_LONG_DEG. Runway end longitude degrees.
-             */
-            rwyEndLongDeg?: number | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: RWY_END_LONG_MIN. Runway end longitude minutes.
-             */
-            rwyEndLongMin?: number | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: RWY_END_LONG_SEC. Runway end longitude seconds.
-             */
-            rwyEndLongSec?: number | null;
-            /** @description FAA NASR field: RWY_END_LONG_HEMIS. Runway end longitude hemisphere (E or W). */
-            rwyEndLongHemis?: string | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: DISPLACED_THR_LAT_DEG. Displaced threshold latitude degrees.
-             */
-            displacedThrLatDeg?: number | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: DISPLACED_THR_LAT_MIN. Displaced threshold latitude minutes.
-             */
-            displacedThrLatMin?: number | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: DISPLACED_THR_LAT_SEC. Displaced threshold latitude seconds.
-             */
-            displacedThrLatSec?: number | null;
-            /** @description FAA NASR field: DISPLACED_THR_LAT_HEMIS. Displaced threshold latitude hemisphere (N or S). */
-            displacedThrLatHemis?: string | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: DISPLACED_THR_LONG_DEG. Displaced threshold longitude degrees.
-             */
-            displacedThrLongDeg?: number | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: DISPLACED_THR_LONG_MIN. Displaced threshold longitude minutes.
-             */
-            displacedThrLongMin?: number | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: DISPLACED_THR_LONG_SEC. Displaced threshold longitude seconds.
-             */
-            displacedThrLongSec?: number | null;
-            /** @description FAA NASR field: DISPLACED_THR_LONG_HEMIS. Displaced threshold longitude hemisphere (E or W). */
-            displacedThrLongHemis?: string | null;
-            /**
-             * @description FAA NASR field: FAR_PART_77_CODE. FAA CFR Part 77 (Objects Affecting Navigable Airspace) Runway Category.
-             *     Possible values: A(V) (Utility Runway with Visual Approach), B(V) (Other Than Utility with Visual Approach),
-             *     A(NP) (Utility with Nonprecision Approach), C (Other Than Utility with Nonprecision, visibility > 3/4 mile),
-             *     D (Other Than Utility with Nonprecision, visibility as low as 3/4 mile), PIR (Precision Instrument Runway).
-             */
-            farPart77Code?: string | null;
-            /** @description FAA NASR field: CNTRLN_DIR_CODE. Controlling Object Centerline Offset Direction. Indicates direction (left or right) to the object from the centerline as seen by an approaching pilot. */
-            centerlineDirectionCode?: string | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: RWY_GRAD. Runway End Gradient.
-             */
-            runwayGradient?: number | null;
-            /** @description FAA NASR field: RWY_GRAD_DIRECTION. Runway End Gradient Direction (Up or Down). */
-            runwayGradientDirection?: string | null;
-            /** @description FAA NASR field: RWY_END_PSN_SOURCE. Source of runway end position information. */
-            rwyEndPositionSource?: string | null;
-            /**
-             * Format: date-time
-             * @description FAA NASR field: RWY_END_PSN_DATE. Date of runway end position information.
-             */
-            rwyEndPositionDate?: string | null;
-            /** @description FAA NASR field: RWY_END_ELEV_SOURCE. Source of runway end elevation information. */
-            rwyEndElevationSource?: string | null;
-            /**
-             * Format: date-time
-             * @description FAA NASR field: RWY_END_ELEV_DATE. Date of runway end elevation information.
-             */
-            rwyEndElevationDate?: string | null;
-            /** @description FAA NASR field: DSPL_THR_PSN_SOURCE. Source of displaced threshold position information. */
-            displacedThrPositionSource?: string | null;
-            /**
-             * Format: date-time
-             * @description FAA NASR field: RWY_END_DSPL_THR_PSN_DATE. Date of displaced threshold position information.
-             */
-            displacedThrPositionDate?: string | null;
-            /** @description FAA NASR field: DSPL_THR_ELEV_SOURCE. Source of displaced threshold elevation information. */
-            displacedThrElevationSource?: string | null;
-            /**
-             * Format: date-time
-             * @description FAA NASR field: RWY_END_DSPL_THR_ELEV_DATE. Date of displaced threshold elevation information.
-             */
-            displacedThrElevationDate?: string | null;
-            /** @description FAA NASR field: TDZ_ELEV_SOURCE. Source of touchdown zone elevation information. */
-            touchdownZoneElevSource?: string | null;
-            /**
-             * Format: date-time
-             * @description FAA NASR field: RWY_END_TDZ_ELEV_DATE. Date of touchdown zone elevation information.
-             */
-            touchdownZoneElevDate?: string | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: TKOF_RUN_AVBL. Takeoff Run Available (TORA) in feet.
-             */
-            takeoffRunAvailable?: number | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: TKOF_DIST_AVBL. Takeoff Distance Available (TODA) in feet.
-             */
-            takeoffDistanceAvailable?: number | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: ACLT_STOP_DIST_AVBL. Accelerate-Stop Distance Available (ASDA) in feet.
-             */
-            accelerateStopDistAvailable?: number | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: LNDG_DIST_AVBL. Landing Distance Available (LDA) in feet.
-             */
-            landingDistanceAvailable?: number | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: LAHSO_ALD. Available Landing Distance for Land and Hold Short Operations (LAHSO), in feet.
-             */
-            lahsoAvailableLandingDistance?: number | null;
-            /** @description FAA NASR field: RWY_END_INTERSECT_LAHSO. ID of Intersecting Runway Defining Hold Short Point. */
-            lahsoIntersectingRunway?: string | null;
-            /** @description FAA NASR field: LAHSO_DESC. Description of Entity Defining Hold Short Point if not an Intersecting Runway. */
-            lahsoDescription?: string | null;
-            /** @description FAA NASR field: LAHSO_LAT. LAHSO hold short point latitude (DMS format). */
-            lahsoLatitude?: string | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: LAT_LAHSO_DECIMAL. LAHSO hold short point latitude in decimal degrees.
-             */
-            lahsoLatDecimal?: number | null;
-            /** @description FAA NASR field: LAHSO_LONG. LAHSO hold short point longitude (DMS format). */
-            lahsoLongitude?: string | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: LONG_LAHSO_DECIMAL. LAHSO hold short point longitude in decimal degrees.
-             */
-            lahsoLongDecimal?: number | null;
-            /** @description FAA NASR field: LAHSO_PSN_SOURCE. Source of LAHSO position information. */
-            lahsoPositionSource?: string | null;
-            /**
-             * Format: date-time
-             * @description FAA NASR field: RWY_END_LAHSO_PSN_DATE. Date of LAHSO position information.
-             */
-            lahsoPositionDate?: string | null;
-        };
-        /**
-         * @description Instrument Landing System (ILS) Type. Corresponds to FAA NASR field ILS_TYPE (APT_RWY_END).
-         * @enum {string}
-         */
-        InstrumentApproachType: "Unknown" | "None" | "Ils" | "Mls" | "Sdf" | "Localizer" | "Lda" | "Ismls" | "IlsDme" | "SdfDme" | "LocDme" | "LocGs" | "LdaDme";
-        /**
-         * @description Runway Markings Type. Corresponds to FAA NASR field RWY_MARKING_TYPE_CODE (APT_RWY_END).
-         * @enum {string}
-         */
-        RunwayMarkingsType: "Unknown" | "None" | "PrecisionInstrument" | "NonPrecisionInstrument" | "Basic" | "NumbersOnly" | "NonStandard" | "Buoys" | "Stol";
-        /**
-         * @description Runway Markings Condition. Corresponds to FAA NASR field RWY_MARKING_COND (APT_RWY_END).
-         * @enum {string}
-         */
-        RunwayMarkingsCondition: "Unknown" | "Good" | "Fair" | "Poor";
-        /**
-         * @description Visual Glide Slope Indicators. Corresponds to FAA NASR field VGSI_CODE (APT_RWY_END).
-         * @enum {string}
-         */
-        VisualGlideSlopeIndicatorType: "Unknown" | "None" | "Savasi2BoxLeft" | "Savasi2BoxRight" | "Vasi2BoxLeft" | "Vasi2BoxRight" | "Vasi4BoxLeft" | "Vasi4BoxRight" | "Vasi6BoxLeft" | "Vasi6BoxRight" | "Vasi12Box" | "Vasi16Box" | "Papi2LightLeft" | "Papi2LightRight" | "Papi4LightLeft" | "Papi4LightRight" | "TriColorLeft" | "TriColorRight" | "PulsatingLeft" | "PulsatingRight" | "PanelLeft" | "PanelRight" | "NonStandard" | "PrivateUse" | "NonSpecificVasi";
-        /**
-         * @description Runway Visual Range (RVR) Equipment Location. Corresponds to FAA NASR field RWY_VISUAL_RANGE_EQUIP_CODE (APT_RWY_END).
-         * @enum {string}
-         */
-        RunwayVisualRangeEquipmentType: "Unknown" | "None" | "Touchdown" | "Midfield" | "Rollout" | "TouchdownMidfield" | "TouchdownRollout" | "MidfieldRollout" | "TouchdownMidfieldRollout";
-        /**
-         * @description Approach Light System. Corresponds to FAA NASR field APCH_LGT_SYSTEM_CODE (APT_RWY_END).
-         * @enum {string}
-         */
-        ApproachLightSystemType: "Unknown" | "None" | "AirForceOverrun" | "Alsaf" | "Alsf1" | "Alsf2" | "Mals" | "Malsf" | "Malsr" | "Rail" | "Sals" | "Salsf" | "Ssals" | "Ssalf" | "Ssalr" | "Odals" | "Rlls" | "MilitaryOverrun" | "NonStandard";
-        /**
-         * @description Controlling Object Marked/Lighted. Corresponds to FAA NASR field OBSTN_MRKD_CODE (APT_RWY_END).
-         * @enum {string}
-         */
-        ControllingObjectMarking: "Unknown" | "None" | "Marked" | "Lighted" | "MarkedAndLighted";
-        /**
-         * @description Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the
-         *     pagination.nextCursor value as the cursor query parameter in your next request.
-         *     Continue until pagination.hasMore is false.
-         */
-        PaginatedResponseOfAirspaceDto: {
-            /** @description The current page of results. */
-            data?: components["schemas"]["AirspaceDto"][];
-            /** @description Pagination metadata including the cursor to fetch the next page. */
-            pagination?: components["schemas"]["PaginationMetadata"];
-        };
-        /**
-         * @description Controlled airspace data (Class B, C, D, E) sourced from FAA ArcGIS.
-         *     Use the GlobalId to cross-reference with navigation log results — the navlog response's
-         *     AirspaceGlobalIds field contains GlobalIds from this endpoint for airspaces along a planned route.
-         */
-        AirspaceDto: {
-            /** @description ArcGIS global unique identifier. This is the key used to look up airspaces returned by the navigation log endpoint's AirspaceGlobalIds field. */
-            globalId?: string | null;
-            /** @description FAA identifier. */
-            ident?: string | null;
-            /** @description ICAO identifier. */
-            icaoId?: string | null;
-            /** @description Airspace name. */
-            name?: string | null;
-            /** @description Upper altitude limit description. */
-            upperDesc?: string | null;
-            /**
-             * Format: double
-             * @description Upper altitude limit value.
-             */
-            upperVal?: number | null;
-            /** @description Upper altitude unit of measure (e.g., FT, FL). */
-            upperUom?: string | null;
-            /** @description Upper altitude reference code (e.g., MSL, AGL). */
-            upperCode?: string | null;
-            /** @description Lower altitude limit description. */
-            lowerDesc?: string | null;
-            /**
-             * Format: double
-             * @description Lower altitude limit value.
-             */
-            lowerVal?: number | null;
-            /** @description Lower altitude unit of measure (e.g., FT, FL). */
-            lowerUom?: string | null;
-            /** @description Lower altitude reference code (e.g., MSL, AGL). */
-            lowerCode?: string | null;
-            /** @description Airspace type code (e.g., CLASS_B, CLASS_C). */
-            typeCode?: string | null;
-            /** @description Local airspace type. */
-            localType?: string | null;
-            /** @description Airspace class (e.g., B, C, D, E). */
-            class?: string | null;
-            /** @description Military use code. */
-            milCode?: string | null;
-            /** @description Communications facility name. */
-            commName?: string | null;
-            /** @description Level designation (e.g., SURFACE, UPPER). */
-            level?: string | null;
-            /** @description Sector identifier. */
-            sector?: string | null;
-            /** @description Whether the airspace is onshore. */
-            onshore?: string | null;
-            /** @description Exclusion area indicator. */
-            exclusion?: string | null;
-            /** @description Working hours code. */
-            wkhrCode?: string | null;
-            /** @description Working hours remarks. */
-            wkhrRmk?: string | null;
-            /** @description Daylight saving time indicator. */
-            dst?: string | null;
-            /** @description GMT offset. */
-            gmtOffset?: string | null;
-            /** @description Controlling agency. */
-            contAgent?: string | null;
-            /** @description City associated with the airspace. */
-            city?: string | null;
-            /** @description State associated with the airspace. */
-            state?: string | null;
-            /** @description Country code. */
-            country?: string | null;
-            /** @description Associated aerodrome identifier. */
-            adhpId?: string | null;
-            /** @description GeoJSON boundary geometry. */
-            geometry?: components["schemas"]["GeoJsonGeometry"] | null;
-        };
-        /** @description GeoJSON geometry representing an airspace boundary. */
-        GeoJsonGeometry: {
-            /** @description Geometry type (e.g., Polygon, MultiPolygon). */
-            type?: string;
-            /** @description Coordinate array defining the geometry boundary. */
-            coordinates?: number[][][];
-        };
-        /**
-         * @description Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the
-         *     pagination.nextCursor value as the cursor query parameter in your next request.
-         *     Continue until pagination.hasMore is false.
-         */
-        PaginatedResponseOfSpecialUseAirspaceDto: {
-            /** @description The current page of results. */
-            data?: components["schemas"]["SpecialUseAirspaceDto"][];
-            /** @description Pagination metadata including the cursor to fetch the next page. */
-            pagination?: components["schemas"]["PaginationMetadata"];
-        };
-        /**
-         * @description Special use airspace data (restricted, prohibited, warning, MOA, alert) sourced from FAA ArcGIS.
-         *     Use the GlobalId to cross-reference with navigation log results — the navlog response's
-         *     SpecialUseAirspaceGlobalIds field contains GlobalIds from this endpoint for special use airspaces along a planned route.
-         */
-        SpecialUseAirspaceDto: {
-            /** @description ArcGIS global unique identifier. This is the key used to look up special use airspaces returned by the navigation log endpoint's SpecialUseAirspaceGlobalIds field. */
-            globalId?: string | null;
-            /** @description Airspace name. */
-            name?: string | null;
-            /** @description Type code (e.g., R for restricted, P for prohibited). */
-            typeCode?: string | null;
-            /** @description Airspace class. */
-            class?: string | null;
-            /** @description Upper altitude limit description. */
-            upperDesc?: string | null;
-            /** @description Upper altitude limit value. */
-            upperVal?: string | null;
-            /** @description Upper altitude unit of measure. */
-            upperUom?: string | null;
-            /** @description Upper altitude reference code. */
-            upperCode?: string | null;
-            /** @description Lower altitude limit description. */
-            lowerDesc?: string | null;
-            /** @description Lower altitude limit value. */
-            lowerVal?: string | null;
-            /** @description Lower altitude unit of measure. */
-            lowerUom?: string | null;
-            /** @description Lower altitude reference code. */
-            lowerCode?: string | null;
-            /** @description Level code. */
-            levelCode?: string | null;
-            /** @description City associated with the airspace. */
-            city?: string | null;
-            /** @description State associated with the airspace. */
-            state?: string | null;
-            /** @description Country code. */
-            country?: string | null;
-            /** @description Controlling agency. */
-            contAgent?: string | null;
-            /** @description Communications facility name. */
-            commName?: string | null;
-            /** @description Sector identifier. */
-            sector?: string | null;
-            /** @description Whether the airspace is onshore. */
-            onshore?: string | null;
-            /** @description Exclusion area indicator. */
-            exclusion?: string | null;
-            /** @description Times of use for the airspace. */
-            timesOfUse?: string | null;
-            /** @description GMT offset. */
-            gmtOffset?: string | null;
-            /** @description Daylight saving time code. */
-            dstCode?: string | null;
-            /** @description Additional remarks. */
-            remarks?: string | null;
-            /** @description GeoJSON boundary geometry. */
-            geometry?: components["schemas"]["GeoJsonGeometry"] | null;
-        };
-        /**
-         * @description Composite weather briefing for a flight route, containing all weather products
-         *     affecting the route corridor.
-         */
-        RouteBriefingResponse: {
-            /** @description Route description (e.g., "KDFW -> KAUS"). */
-            route?: string;
-            /**
-             * Format: double
-             * @description Corridor width in nautical miles used for the search.
-             */
-            corridorWidthNm?: number;
-            /**
-             * Format: date-time
-             * @description UTC timestamp when the briefing was generated.
-             */
-            generatedAt?: string;
-            /** @description METARs for airports found along the route corridor. */
-            metars?: components["schemas"]["MetarDto"][];
-            /** @description TAFs for airports found along the route corridor. */
-            tafs?: components["schemas"]["TafDto"][];
-            /** @description PIREPs within the route corridor. */
-            pireps?: components["schemas"]["PirepDto"][];
-            /** @description SIGMETs whose boundaries intersect the route. */
-            sigmets?: components["schemas"]["SigmetDto"][];
-            /** @description G-AIRMETs whose boundaries intersect the route. */
-            gAirmets?: components["schemas"]["GAirmetDto"][];
-            /** @description Active NOTAMs within the route corridor. */
-            notams?: components["schemas"]["NotamDto"][];
-            /** @description Summary counts for each weather product category. */
-            summary?: components["schemas"]["RouteBriefingSummary"];
-        };
-        /** @description METAR (Meteorological Aerodrome Report) observation data for an airport. */
-        MetarDto: {
-            /**
-             * Format: int32
-             * @description Database identifier.
-             */
-            id?: number;
-            /** @description Raw METAR text string as received from the source. */
-            rawText?: string | null;
-            /** @description ICAO station identifier (e.g., KDFW). */
-            stationId?: string | null;
-            /** @description Observation time in ISO 8601 format. */
-            observationTime?: string | null;
-            /**
-             * Format: float
-             * @description Station latitude in decimal degrees.
-             */
-            latitude?: number | null;
-            /**
-             * Format: float
-             * @description Station longitude in decimal degrees.
-             */
-            longitude?: number | null;
-            /**
-             * Format: float
-             * @description Temperature in degrees Celsius.
-             */
-            tempC?: number | null;
-            /**
-             * Format: float
-             * @description Dewpoint temperature in degrees Celsius.
-             */
-            dewpointC?: number | null;
-            /** @description Wind direction in degrees true, or "VRB" for variable. */
-            windDirDegrees?: string | null;
-            /**
-             * Format: int32
-             * @description Wind speed in knots.
-             */
-            windSpeedKt?: number | null;
-            /**
-             * Format: int32
-             * @description Wind gust speed in knots.
-             */
-            windGustKt?: number | null;
-            /** @description Visibility in statute miles. */
-            visibilityStatuteMi?: string | null;
-            /**
-             * Format: float
-             * @description Altimeter setting in inches of mercury.
-             */
-            altimInHg?: number | null;
-            /**
-             * Format: float
-             * @description Sea level pressure in millibars. ex: 1016.2
-             */
-            seaLevelPressureMb?: number | null;
-            /** @description Quality control flags for the observation. */
-            qualityControlFlags?: components["schemas"]["MetarQualityControlFlagsDto"] | null;
-            /** @description Present weather string (e.g., "-RA" for light rain). */
-            wxString?: string | null;
-            /** @description Sky condition layers (cloud cover and bases). */
-            skyCondition?: components["schemas"]["MetarSkyConditionDto"][] | null;
-            /** @description Flight category: VFR, MVFR, IFR, or LIFR. */
-            flightCategory?: string | null;
-        };
-        /** @description Quality control flags indicating METAR observation characteristics. */
-        MetarQualityControlFlagsDto: {
-            /** @description Indicates a corrected observation. */
-            corrected?: string | null;
-            /** @description Indicates an automated observation. */
-            auto?: string | null;
-            /** @description Indicates an automated station type. */
-            autoStation?: string | null;
-            /** @description Maintenance indicator is on. */
-            maintenanceIndicatorOn?: string | null;
-            /** @description No signal received. */
-            noSignal?: string | null;
-            /** @description Lightning sensor is off. */
-            lightningSensorOff?: string | null;
-            /** @description Freezing rain sensor is off. */
-            freezingRainSensorOff?: string | null;
-            /** @description Present weather sensor is off. */
-            presentWeatherSensorOff?: string | null;
-        };
-        /** @description A single sky condition layer in a METAR observation. */
-        MetarSkyConditionDto: {
-            /** @description Sky cover type: SKC (sky clear), CLR (clear below 12,000), FEW (few), SCT (scattered), BKN (broken), OVC (overcast), or OVX (obscured). */
-            skyCover?: string;
-            /**
-             * Format: int32
-             * @description Cloud base height in feet AGL. Null for SKC or CLR.
-             */
-            cloudBaseFtAgl?: number | null;
-        };
-        /** @description TAF (Terminal Aerodrome Forecast) data for an airport. */
-        TafDto: {
-            /** @description Raw TAF forecast text as received from the source. ex: KORD 061728Z 0618/0724 21012KT P6SM BKN250 */
-            rawText?: string | null;
-            /** @description ICAO station identifier (e.g., KDFW). */
-            stationId?: string | null;
-            /** @description Time the TAF was issued in ISO 8601 format. */
-            issueTime?: string | null;
-            /** @description Bulletin time in ISO 8601 format. */
-            bulletinTime?: string | null;
-            /** @description Start of the TAF valid period in ISO 8601 format. */
-            validTimeFrom?: string | null;
-            /** @description End of the TAF valid period in ISO 8601 format. */
-            validTimeTo?: string | null;
-            /** @description TAF remarks. */
-            remarks?: string | null;
-            /**
-             * Format: float
-             * @description Station latitude in decimal degrees.
-             */
-            latitude?: number | null;
-            /**
-             * Format: float
-             * @description Station longitude in decimal degrees.
-             */
-            longitude?: number | null;
-            /**
-             * Format: float
-             * @description Station elevation in meters.
-             */
-            elevationM?: number | null;
-            /** @description Forecast periods within the TAF. */
-            forecast?: components["schemas"]["TafForecast"][] | null;
-        };
-        /**
-         * @description A single forecast period within a TAF. Each TAF contains one or more forecast periods
-         *     covering different time ranges, with optional change indicators (TEMPO, BECMG, FM, PROB).
-         */
-        TafForecast: {
-            /** @description Start of this forecast period in ISO 8601 format (UTC). */
-            fcstTimeFrom?: string | null;
-            /** @description End of this forecast period in ISO 8601 format (UTC). */
-            fcstTimeTo?: string | null;
-            /** @description Change indicator: FM (from), BECMG (becoming), TEMPO (temporary), or PROB (probability). Null for the base forecast. */
-            changeIndicator?: string | null;
-            /** @description Time at which a BECMG (becoming) change completes, in ISO 8601 format (UTC). */
-            timeBecoming?: string | null;
-            /**
-             * Format: int32
-             * @description Probability percentage (e.g., 30 or 40) for PROB-type forecast periods.
-             */
-            probability?: number | null;
-            /** @description Forecast wind direction in degrees true, or "VRB" for variable winds. */
-            windDirDegrees?: string | null;
-            /**
-             * Format: int32
-             * @description Forecast wind speed in knots.
-             */
-            windSpeedKt?: number | null;
-            /**
-             * Format: int32
-             * @description Forecast wind gust speed in knots.
-             */
-            windGustKt?: number | null;
-            /** @description Low-level wind shear height in feet AGL. */
-            windShearHgtFtAgl?: number | null;
-            /** @description Low-level wind shear direction in degrees true. */
-            windShearDirDegrees?: number | null;
-            /**
-             * Format: int32
-             * @description Low-level wind shear speed in knots.
-             */
-            windShearSpeedKt?: number | null;
-            /** @description Forecast visibility in statute miles. May contain "6+" for visibility greater than 6 miles. */
-            visibilityStatuteMi?: string | null;
-            /**
-             * Format: float
-             * @description Forecast altimeter setting in inches of mercury.
-             */
-            altimInHg?: number | null;
-            /** @description Vertical visibility in feet, reported when the sky is obscured. */
-            vertVisFt?: number | null;
-            /** @description Forecast weather phenomena string (e.g., "-RA" for light rain, "+TSRA" for heavy thunderstorms with rain). */
-            wxString?: string | null;
-            /** @description Portion of the TAF text that could not be decoded by the parser. */
-            notDecoded?: string | null;
-            /** @description Forecast sky condition layers (cloud cover and bases) for this period. */
-            skyConditions?: components["schemas"]["TafSkyCondition"][] | null;
-            /** @description Forecast turbulence conditions for this period. */
-            turbulenceConditions?: components["schemas"]["TafTurbulenceCondition"][] | null;
-            /** @description Forecast icing conditions for this period. */
-            icingConditions?: components["schemas"]["TafIcingCondition"][] | null;
-            /** @description Forecast temperature data for this period. */
-            temperature?: components["schemas"]["TafTemperature"][] | null;
-        };
-        /** @description A single sky condition layer in a TAF forecast period. */
-        TafSkyCondition: {
-            /** @description Sky cover type: CLR (clear), CAVOK (ceiling and visibility OK), FEW (few), SCT (scattered), BKN (broken), OVC (overcast), or OVX (obscured). */
-            skyCover?: string;
-            /**
-             * Format: int32
-             * @description Cloud base height in feet AGL. Null for CLR or CAVOK.
-             */
-            cloudBaseFtAgl?: number | null;
-            /** @description Cloud type modifier (e.g., CB for cumulonimbus, TCU for towering cumulus). */
-            cloudType?: string | null;
-        };
-        /** @description Forecast turbulence condition within a TAF forecast period. */
-        TafTurbulenceCondition: {
-            /** @description Turbulence intensity code (integer 0-9 per TAF implementation table): 0 (none), 1 (light), 2 (moderate occasional), 3 (moderate frequent), 4 (severe), 5 (extreme), 6-8 (reserved), 9 (not specified), or X (mountain wave). */
-            turbulenceIntensity?: string | null;
-            /**
-             * Format: int32
-             * @description Bottom of the turbulence layer in feet AGL.
-             */
-            turbulenceMinAltFtAgl?: number | null;
-            /**
-             * Format: int32
-             * @description Top of the turbulence layer in feet AGL.
-             */
-            turbulenceMaxAltFtAgl?: number | null;
-        };
-        /** @description Forecast icing condition within a TAF forecast period. */
-        TafIcingCondition: {
-            /** @description Icing intensity code: 0 (none), 1 (light), 2 (light in clouds), 3 (light in precipitation), 4 (moderate), 5 (moderate in clouds), 6 (moderate in precipitation), 7 (severe), 8 (severe in clouds), 9 (severe in precipitation). */
-            icingIntensity?: string | null;
-            /**
-             * Format: int32
-             * @description Bottom of the icing layer in feet AGL.
-             */
-            icingMinAltFtAgl?: number | null;
-            /**
-             * Format: int32
-             * @description Top of the icing layer in feet AGL.
-             */
-            icingMaxAltFtAgl?: number | null;
-        };
-        /** @description Forecast temperature data within a TAF forecast period. */
-        TafTemperature: {
-            /** @description Valid time for this temperature forecast in ISO 8601 format (UTC). */
-            validTime?: string | null;
-            /**
-             * Format: float
-             * @description Forecast surface temperature in degrees Celsius.
-             */
-            sfcTempC?: number | null;
-            /** @description Forecast maximum temperature in degrees Celsius. */
-            maxTempC?: string | null;
-            /** @description Forecast minimum temperature in degrees Celsius. */
-            minTempC?: string | null;
-        };
-        /** @description PIREP (Pilot Report) data including turbulence, icing, and sky conditions. */
-        PirepDto: {
-            /**
-             * Format: int32
-             * @description Database identifier.
-             */
-            id?: number;
-            /** @description Raw PIREP text string. */
-            rawText?: string | null;
-            /** @description Time the PIREP was received. */
-            receiptTime?: string | null;
-            /** @description Time of the pilot observation. */
-            observationTime?: string | null;
-            /** @description Quality control flags for the report. */
-            qualityControlFlags?: components["schemas"]["PirepQualityControlFlags"] | null;
-            /** @description Aircraft type designation. ex: B738, C172 */
-            aircraftRef?: string | null;
-            /**
-             * Format: float
-             * @description Latitude of the report in decimal degrees.
-             */
-            latitude?: number | null;
-            /**
-             * Format: float
-             * @description Longitude of the report in decimal degrees.
-             */
-            longitude?: number | null;
-            /**
-             * Format: int32
-             * @description Altitude of the report in feet MSL.
-             */
-            altitudeFtMsl?: number | null;
-            /** @description Reported sky conditions. */
-            skyConditions?: components["schemas"]["PirepSkyCondition"][] | null;
-            /** @description Reported turbulence conditions. */
-            turbulenceConditions?: components["schemas"]["PirepTurbulenceCondition"][] | null;
-            /** @description Reported icing conditions. */
-            icingConditions?: components["schemas"]["PirepIcingCondition"][] | null;
-            /**
-             * Format: int32
-             * @description Flight visibility in statute miles.
-             */
-            visibilityStatuteMi?: number | null;
-            /** @description Present weather string. */
-            wxString?: string | null;
-            /**
-             * Format: float
-             * @description Temperature in degrees Celsius.
-             */
-            tempC?: number | null;
-            /**
-             * Format: int32
-             * @description Wind direction in degrees true.
-             */
-            windDirDegrees?: number | null;
-            /**
-             * Format: int32
-             * @description Wind speed in knots.
-             */
-            windSpeedKt?: number | null;
-            /**
-             * Format: int32
-             * @description Vertical gust speed in knots.
-             */
-            vertGustKt?: number | null;
-            /** @description Report type: UA (routine PIREP) or UUA (urgent PIREP). */
-            reportType?: string | null;
-        };
-        /** @description Quality control flags indicating potential data issues with a PIREP. */
-        PirepQualityControlFlags: {
-            /** @description The report location was assumed to be the midpoint of the route. */
-            midPointAssumed?: string | null;
-            /** @description The report had no timestamp and was assigned one by the system. */
-            noTimeStamp?: string | null;
-            /** @description The flight level was reported as a range rather than a single altitude. */
-            fltLvlRange?: string | null;
-            /** @description The altitude was indicated as AGL rather than the standard MSL. */
-            aboveGroundLevelIndicated?: string | null;
-            /** @description No flight level was reported. */
-            noFltLvl?: string | null;
-            /** @description The reported location could not be reliably decoded. */
-            badLocation?: string | null;
-        };
-        /** @description A sky condition layer reported by a pilot in a PIREP. */
-        PirepSkyCondition: {
-            /** @description Sky cover type: SKC (sky clear), CLR (clear), FEW (few), SCT (scattered), BKN (broken), OVC (overcast), or OVX (obscured). */
-            skyCover?: string;
-            /**
-             * Format: int32
-             * @description Cloud base altitude in feet MSL (note: PIREP altitudes are MSL, unlike TAF/METAR which use AGL).
-             */
-            cloudBaseFtMsl?: number | null;
-            /**
-             * Format: int32
-             * @description Cloud top altitude in feet MSL.
-             */
-            cloudTopFtMsl?: number | null;
-        };
-        /** @description A turbulence condition reported by a pilot in a PIREP. */
-        PirepTurbulenceCondition: {
-            /** @description Turbulence type: CAT (clear air), CHOP (chop), LLWS (low-level wind shear), or MWAVE (mountain wave). */
-            turbulenceType?: string | null;
-            /** @description Turbulence intensity: NEG (none), SMTH-LGT (smooth to light), LGT (light), LGT-MOD (light to moderate), MOD (moderate), MOD-SEV (moderate to severe), SEV (severe), SEV-EXTM (severe to extreme), or EXTM (extreme). */
-            turbulenceIntensity?: string | null;
-            /**
-             * Format: int32
-             * @description Bottom of the turbulence layer in feet MSL.
-             */
-            turbulenceBaseFtMsl?: number | null;
-            /**
-             * Format: int32
-             * @description Top of the turbulence layer in feet MSL.
-             */
-            turbulenceTopFtMsl?: number | null;
-            /** @description Turbulence frequency: ISOL (isolated), OCNL (occasional), or CONT (continuous). */
-            turbulenceFreq?: string | null;
-        };
-        /** @description An icing condition reported by a pilot in a PIREP. */
-        PirepIcingCondition: {
-            /** @description Icing type: RIME (rime ice), CLEAR (clear ice), or MIXED (mixed rime and clear). */
-            icingType?: string | null;
-            /** @description Icing intensity: NEG (none), NEGclr (none, clear of clouds), TRC (trace), TRC-LGT (trace to light), LGT (light), LGT-MOD (light to moderate), MOD (moderate), MOD-SEV (moderate to severe), HVY (heavy/severe), or SEV (severe). */
-            icingIntensity?: string | null;
-            /**
-             * Format: int32
-             * @description Bottom of the icing layer in feet MSL.
-             */
-            icingBaseFtMsl?: number | null;
-            /**
-             * Format: int32
-             * @description Top of the icing layer in feet MSL.
-             */
-            icingTopFtMsl?: number | null;
-        };
-        /** @description Domestic SIGMET advisory data including hazard information and affected area. */
-        SigmetDto: {
-            /**
-             * Format: int32
-             * @description Database identifier.
-             */
-            id?: number;
-            /** @description Raw SIGMET text. */
-            rawText?: string | null;
-            /** @description Start of the valid period in ISO 8601 format. */
-            validTimeFrom?: string | null;
-            /** @description End of the valid period in ISO 8601 format. */
-            validTimeTo?: string | null;
-            /** @description Altitude range of the advisory. */
-            altitude?: components["schemas"]["SigmetAltitude"] | null;
-            /**
-             * Format: int32
-             * @description Movement direction in degrees true.
-             */
-            movementDirDegrees?: number | null;
-            /**
-             * Format: int32
-             * @description Movement speed in knots.
-             */
-            movementSpeedKt?: number | null;
-            /** @description Hazard type and severity information. */
-            hazard?: components["schemas"]["SigmetHazardDto"] | null;
-            /** @description Advisory type: always SIGMET. */
-            sigmetType?: string | null;
-            /** @description Geographic areas affected by the advisory. */
-            areas?: components["schemas"]["SigmetArea"][] | null;
-        };
-        /** @description Altitude range for a SIGMET advisory. */
-        SigmetAltitude: {
-            /**
-             * Format: int32
-             * @description Minimum altitude in feet MSL for the advisory area.
-             */
-            minFtMsl?: number | null;
-            /**
-             * Format: int32
-             * @description Maximum altitude in feet MSL for the advisory area.
-             */
-            maxFtMsl?: number | null;
-        };
-        /** @description Hazard type and severity information for a SIGMET advisory. */
-        SigmetHazardDto: {
-            /** @description The weather hazard type: CONVECTIVE (thunderstorms/convection), ICE (icing), TURB (turbulence), IFR (instrument flight rules conditions), ASH (volcanic ash), or MTN_OBSCN (mountain obscuration). */
-            type?: components["schemas"]["SigmetHazardType"] | null;
-            /** @description Hazard severity: LGT (light), LT-MOD (light to moderate), MOD (moderate, typical for AIRMET), MOD-SEV (moderate to severe), SEV (severe, typical for SIGMET). Convective SIGMETs do not have a severity value. */
-            severity?: string | null;
-        };
-        /**
-         * @description SIGMET hazard types
-         * @enum {string}
-         */
-        SigmetHazardType: "CONVECTIVE" | "ICE" | "TURB" | "IFR" | "ASH" | "MTN_OBSCN";
-        /** @description Geographic area affected by a SIGMET, defined as a polygon of lat/lon points. */
-        SigmetArea: {
-            /**
-             * Format: int32
-             * @description Number of points defining the polygon boundary.
-             */
-            numPoints?: number;
-            /** @description Ordered list of lat/lon points forming the polygon boundary of the affected area. */
-            points?: components["schemas"]["SigmetPoint"][];
-        };
-        /** @description A geographic coordinate point forming part of a SIGMET area boundary polygon. */
-        SigmetPoint: {
-            /**
-             * Format: float
-             * @description Longitude in decimal degrees.
-             */
-            longitude?: number;
-            /**
-             * Format: float
-             * @description Latitude in decimal degrees.
-             */
-            latitude?: number;
-        };
-        /** @description G-AIRMET (Graphical AIRMET) advisory data with hazard, altitude, and area information. */
-        GAirmetDto: {
-            /**
-             * Format: int32
-             * @description Database identifier.
-             */
-            id?: number;
-            /**
-             * Format: date-time
-             * @description Time the advisory was received.
-             */
-            receiptTime?: string;
-            /**
-             * Format: date-time
-             * @description Time the advisory was issued.
-             */
-            issueTime?: string;
-            /**
-             * Format: date-time
-             * @description Time the advisory expires, typically 6 hours after issuance.
-             */
-            expireTime?: string;
-            /**
-             * Format: date-time
-             * @description The valid time of the G-AIRMET snapshot.
-             */
-            validTime?: string;
-            /** @description Product type: SIERRA, TANGO, or ZULU. */
-            product?: components["schemas"]["GAirmetProduct"];
-            /** @description Forecast component identifier tag. ex: 1C */
-            tag?: string | null;
-            /**
-             * Format: int32
-             * @description The forecast hour taken from initial product issuance. ex: 0, 3, 6, 9, 12
-             */
-            forecastHour?: number;
-            /** @description Hazard type: IFR, MT_OBSC, TURB_HI, TURB_LO, ICE, FZLVL, M_FZLVL, SFC_WIND, or LLWS. */
-            hazard?: components["schemas"]["GAirmetHazardType"] | null;
-            /** @description Hazard severity: MOD (moderate) or null. */
-            hazardSeverity?: string | null;
-            /** @description The geometry type: AREA or LINE. */
-            geometryType?: string | null;
-            /** @description Additional information, reason for the AIRMET. ex: CIG BLW 010/VIS BLW 3SM PCPN/BR/FG */
-            dueTo?: string | null;
-            /** @description Altitude ranges for the advisory in feet MSL. 0 indicates surface, -1 indicates freezing level. */
-            altitudes?: components["schemas"]["GAirmetAltitude"][] | null;
-            /** @description Geographic area affected by the advisory. */
-            area?: components["schemas"]["GAirmetArea"] | null;
-        };
-        /**
-         * @description G-AIRMET product types
-         * @enum {string}
-         */
-        GAirmetProduct: "SIERRA" | "TANGO" | "ZULU";
-        /**
-         * @description G-AIRMET hazard types
-         * @enum {string}
-         */
-        GAirmetHazardType: "MT_OBSC" | "IFR" | "TURB_LO" | "TURB_HI" | "LLWS" | "SFC_WIND" | "ICE" | "FZLVL" | "M_FZLVL";
-        /** @description Altitude information for a G-AIRMET advisory. Bottom/top levels valid in feet MSL; 0 indicates surface, -1 indicates freezing level. */
-        GAirmetAltitude: {
-            /** @description Minimum altitude in feet MSL. 0 indicates surface, -1 indicates freezing level. */
-            minFtMsl?: string | null;
-            /** @description Maximum altitude in feet MSL. */
-            maxFtMsl?: string | null;
-            /** @description Single level altitude in feet MSL (used for freezing level lines). */
-            levelFtMsl?: string | null;
-            /** @description Range of altitudes for freezing level within an icing AIRMET. */
-            fzlAltitude?: components["schemas"]["GAirmetFzlAltitude"] | null;
-        };
-        /** @description Range of altitudes for the freezing level within an icing G-AIRMET. */
-        GAirmetFzlAltitude: {
-            /** @description Minimum freezing level altitude in feet MSL. */
-            minFtMsl?: string | null;
-            /** @description Maximum freezing level altitude in feet MSL. */
-            maxFtMsl?: string | null;
-        };
-        /** @description Geographic area affected by a G-AIRMET, defined as a polygon of lat/lon points. */
-        GAirmetArea: {
-            /**
-             * Format: int32
-             * @description Number of points defining the polygon boundary.
-             */
-            numPoints?: number;
-            /** @description Ordered list of lat/lon points forming the polygon boundary of the affected area. */
-            points?: components["schemas"]["GAirmetPoint"][];
-        };
-        /** @description A geographic coordinate point forming part of a G-AIRMET area boundary polygon. */
-        GAirmetPoint: {
-            /**
-             * Format: double
-             * @description Longitude in decimal degrees.
-             */
-            longitude?: number;
-            /**
-             * Format: double
-             * @description Latitude in decimal degrees.
-             */
-            latitude?: number;
-        };
-        /**
-         * @description Represents a NOTAM as a GeoJSON Feature from the NMS API.
-         *     See nms-api.yaml NmsNotamData schema for full specification.
-         */
-        NotamDto: {
-            /** @description GeoJSON type, always "Feature". */
-            type?: string;
-            /** @description Unique NOTAM feature identifier. */
-            id?: string | null;
-            /** @description GeoJSON geometry representing the NOTAM's geographic location or affected area (Point, Polygon, or GeometryCollection). */
-            geometry?: components["schemas"]["NotamGeometryDto"] | null;
-            /** @description NOTAM properties containing the core NOTAM data, detail fields, and translations. */
-            properties?: components["schemas"]["NotamPropertiesDto"] | null;
-        };
-        /** @description GeoJSON geometry - can be Point, Polygon, or GeometryCollection */
-        NotamGeometryDto: {
-            type?: string;
-            /**
-             * @description For Point: [lon, lat] array
-             *     For Polygon: array of coordinate rings
-             *     For GeometryCollection: null (use Geometries instead)
-             */
-            coordinates?: unknown;
-            /** @description For GeometryCollection type - contains child geometries */
-            geometries?: components["schemas"]["NotamGeometryDto"][] | null;
-        };
-        /** @description Properties of a NOTAM GeoJSON Feature containing the core NOTAM data. */
-        NotamPropertiesDto: {
-            /** @description Core NOTAM data including the event metadata, detail fields, and translations. */
-            coreNOTAMData?: components["schemas"]["CoreNotamDataDto"] | null;
-        };
-        /** @description Core NOTAM data structure containing event metadata, the NOTAM detail, and any translations. */
-        CoreNotamDataDto: {
-            /** @description NOTAM event metadata (encoding format and scenario). */
-            notamEvent?: components["schemas"]["NotamEventDto"] | null;
-            /** @description The NOTAM detail fields including identifier, text, effective dates, location, and classification. */
-            notam?: components["schemas"]["NotamDetailDto"] | null;
-            /** @description NOTAM text translations in various formats (plain English, domestic format, ICAO format). */
-            notamTranslation?: components["schemas"]["NotamTranslationDto"][] | null;
-        };
-        /** @description NOTAM event metadata */
-        NotamEventDto: {
-            encoding?: string | null;
-            scenario?: string | null;
-        };
-        /**
-         * @description Core NOTAM detail fields per NMS API specification.
-         *     Classification values: INTERNATIONAL, MILITARY, LOCAL_MILITARY, DOMESTIC, FDC
-         *     Feature values: RWY, TWY, APRON, AD, OBST, NAV, COM, SVC, AIRSPACE, ODP, SID, STAR, CHART, DATA, DVA, IAP, VFP, ROUTE, SPECIAL, SECURITY
-         *     Series values: A, B, C, D, E, G, H, I, J, K, N, R, V, Z
-         */
-        NotamDetailDto: {
-            /** @description Unique 16-digit NMS identifier */
-            id?: string | null;
-            /**
-             * @description NOTAM number as returned by the NMS API. Typically a bare sequence number (e.g., "420", "3997")
-             *     but may include a month prefix (e.g., "01/123") for domestic NOTAMs or a series prefix
-             *     (e.g., "A1234/25") for ICAO NOTAMs. Stored as-is from the source; the denormalized
-             *     notam_number column on the entity strips any month prefix for indexed search.
-             */
-            number?: string | null;
-            /** @description ICAO series code (A, B, C, D, E, G, H, I, J, K, N, R, V, Z) */
-            series?: string | null;
-            /** @description 4-digit NOTAM year (e.g., "2025"). Denormalized to the notam_year entity column for indexed search. */
-            year?: string | null;
-            /** @description NOTAM type (N=New, R=Replace, C=Cancel) */
-            type?: string | null;
-            /** @description Feature category: RWY, TWY, APRON, AD, OBST, NAV, COM, SVC, AIRSPACE, ODP, SID, STAR, CHART, DATA, DVA, IAP, VFP, ROUTE, SPECIAL, SECURITY */
-            feature?: string | null;
-            /** @description Issuance timestamp (ISO 8601) */
-            issued?: string | null;
-            /** @description Affected FIR/ARTCC (e.g., "ZTL") */
-            affectedFir?: string | null;
-            /** @description Q-code selection code (e.g., "QXXX") */
-            selectionCode?: string | null;
-            /** @description Traffic type (I=IFR, V=VFR, IV=Both) */
-            traffic?: string | null;
-            /** @description Purpose code (e.g., "BO") */
-            purpose?: string | null;
-            /** @description Scope (A=Aerodrome, E=En-route, W=Navigation warning) */
-            scope?: string | null;
-            /** @description Minimum flight level (e.g., "000") */
-            minimumFl?: string | null;
-            /** @description Maximum flight level (e.g., "999") */
-            maximumFl?: string | null;
-            /** @description Domestic location identifier (e.g., "CLT") */
-            location?: string | null;
-            /** @description ICAO location identifier (e.g., "KCLT") */
-            icaoLocation?: string | null;
-            /** @description Airport/facility name (AIXM-only, e.g., "JOHN C TUNE"). Null for GeoJSON-sourced NOTAMs. */
-            airportName?: string | null;
-            /** @description Effective start timestamp (ISO 8601) */
-            effectiveStart?: string | null;
-            /** @description Effective end timestamp (ISO 8601) */
-            effectiveEnd?: string | null;
-            /** @description Whether end time is estimated ("true"/"false") */
-            estimated?: string | null;
-            /** @description NOTAM text content */
-            text?: string | null;
-            /** @description Classification: INTERNATIONAL, MILITARY, LOCAL_MILITARY, DOMESTIC, FDC */
-            classification?: string | null;
-            /** @description Cancellation date timestamp (ISO 8601) */
-            cancelationDate?: string | null;
-            /**
-             * @description Accountability ID — the issuing office code (e.g., "BNA", "FDC", "CLT").
-             *     3-4 characters for domestic NOTAMs, up to 8 characters for AFTN.
-             *     Denormalized to the account_id entity column for indexed search.
-             */
-            accountId?: string | null;
-            /** @description Origin identifier from FAA FNSE extension */
-            originId?: string | null;
-            /** @description Last updated timestamp (ISO 8601) */
-            lastUpdated?: string | null;
-            /** @description Schedule string (e.g., "Daily:1200-1230~DLY 1200-1230") */
-            schedule?: string | null;
-            /** @description Lower altitude limit (e.g., "SFC", "3000FT") */
-            lowerLimit?: string | null;
-            /** @description Upper altitude limit (e.g., "280M", "FL180") */
-            upperLimit?: string | null;
-            /** @description ICAO coordinates string (e.g., "3939N04302E") */
-            coordinates?: string | null;
-            /** @description Radius in nautical miles */
-            radius?: string | null;
-        };
-        /**
-         * @description NOTAM translation in various formats.
-         *     Type values: LOCAL_FORMAT, ICAO
-         */
-        NotamTranslationDto: {
-            /** @description Translation type: LOCAL_FORMAT or ICAO */
-            type?: string | null;
-            /** @description Simple text translation (plain English) */
-            simpleText?: string | null;
-            /** @description Domestic format message (for LOCAL_FORMAT type) */
-            domestic_message?: string | null;
-            /** @description ICAO format message (for ICAO type) */
-            icao_message?: string | null;
-            /** @description Formatted text (HTML or rich text) */
-            formattedText?: string | null;
-        };
-        /** @description Count summary for a route briefing response. */
-        RouteBriefingSummary: {
-            /** Format: int32 */
-            metarCount?: number;
-            /** Format: int32 */
-            tafCount?: number;
-            /** Format: int32 */
-            pirepCount?: number;
-            /** Format: int32 */
-            sigmetCount?: number;
-            /** Format: int32 */
-            gAirmetCount?: number;
-            /** Format: int32 */
-            notamCount?: number;
-        };
-        /** @description Request for a composite route weather briefing along a flight path. */
-        RouteBriefingRequest: {
-            /**
-             * @description Ordered list of waypoints defining the flight route. Each waypoint is either an
-             *     airport identifier (ICAO code or FAA identifier) or a lat/lon coordinate pair.
-             *     At least two waypoints are required to define a route.
-             */
-            waypoints?: components["schemas"]["BriefingWaypoint"][];
-            /**
-             * Format: double
-             * @description Corridor width in nautical miles on each side of the route centerline.
-             *     Used for PIREPs, NOTAMs, and airport searches. Default is 25 NM.
-             */
-            corridorWidthNm?: number;
-        };
-        /**
-         * @description A single waypoint in a briefing route. Specify either an airport identifier
-         *     or latitude/longitude coordinates.
-         */
-        BriefingWaypoint: {
-            /**
-             * @description Airport ICAO code (e.g., KDFW) or FAA identifier (e.g., DFW).
-             *     If provided, latitude and longitude are ignored and looked up from the database.
-             */
-            airportIdentifier?: string | null;
-            /**
-             * Format: decimal
-             * @description Latitude in decimal degrees (-90 to 90). Required when AirportIdentifier is null.
-             */
-            latitude?: number | null;
-            /**
-             * Format: decimal
-             * @description Longitude in decimal degrees (-180 to 180). Required when AirportIdentifier is null.
-             */
-            longitude?: number | null;
-        };
-        /**
-         * @description Airport information with all available chart supplement (formerly Airport/Facility Directory) pages.
-         *     Chart supplements contain detailed airport information including runway data, lighting, services,
-         *     NOTAMs, and other operational details published by the FAA. The PDF URLs are time-limited pre-signed URLs.
-         */
-        ChartSupplementsResponseDto: {
-            /** @description Official airport name. */
-            airportName?: string | null;
-            /** @description City the airport is associated with. */
-            airportCity?: string | null;
-            /** @description Airport ICAO code or FAA identifier used to query this data. */
-            airportCode?: string | null;
-            /** @description List of chart supplement PDF pages with time-limited download URLs. Multi-page supplements will have one entry per page. */
-            supplements?: components["schemas"]["ChartSupplementDto"][];
-        };
-        /** @description A single chart supplement page with a time-limited pre-signed URL for PDF download. */
-        ChartSupplementDto: {
-            /** @description Pre-signed URL to download the chart supplement PDF page. This URL expires after a limited time period; request a new URL if it has expired. */
-            pdfUrl?: string;
-        };
-        /**
-         * @description Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the
-         *     pagination.nextCursor value as the cursor query parameter in your next request.
-         *     Continue until pagination.hasMore is false.
-         */
-        PaginatedResponseOfCommunicationFrequencyDto: {
-            /** @description The current page of results. */
-            data?: components["schemas"]["CommunicationFrequencyDto"][];
-            /** @description Pagination metadata including the cursor to fetch the next page. */
-            pagination?: components["schemas"]["PaginationMetadata"];
-        };
-        /**
-         * @description Communication frequency data from the FAA NASR database, sourced from the FRQ CSV file.
-         *     Contains radio frequencies for ATC facilities, towers, approach/departure control, and other aviation communication services.
-         */
-        CommunicationFrequencyDto: {
-            /**
-             * Format: guid
-             * @description System-generated unique identifier.
-             */
-            id?: string;
-            /** @description FAA NASR field: FACILITY. Contains FACILITY ID except for FACILITY TYPE AFIS, CTAF, GCO, UNICOM and RCAG. The FACILITY NAME is used for RCAG sites. AFIS, CTAF, GCO and UNICOM are NULL. */
-            facilityCode?: string | null;
-            /**
-             * Format: date-time
-             * @description FAA NASR field: EFF_DATE. The 28 Day NASR Subscription Effective Date (YYYY/MM/DD).
-             */
-            effectiveDate?: string;
-            /** @description FAA NASR field: FAC_NAME. Official Facility Name. NULL for AFIS, CTAF, GCO, UNICOM (no FACILITY ID or NAME in NASR) and ASOS/AWOS (no FACILITY NAME in NASR). */
-            facilityName?: string | null;
-            /** @description FAA NASR field: FACILITY_TYPE. All records contain a FACILITY TYPE. Note: RCO and RCO1 serve the same function (remote communication outlet). An RCO1 may exist if two separate sites share the same identifier. */
-            facilityType?: string;
-            /** @description FAA NASR field: ARTCC_OR_FSS_ID. RCAG facilities contain an ARTCC ID; RCO/RCO1 facilities contain an FSS ID. Included for convenience to identify the parent ARTCC or FSS resource in NASR. */
-            artccOrFssId?: string | null;
-            /** @description FAA NASR field: CPDLC. A Controller Pilot Data Link Communications (CPDLC) remark associated with a FACILITY. */
-            cpdlc?: string | null;
-            /** @description FAA NASR field: TOWER_HRS. Tower operating hours. Only listed for ATCT FACILITY TYPEs where the FACILITY equals the SERVICED FACILITY. */
-            towerHours?: string | null;
-            /** @description FAA NASR field: SERVICED_FACILITY. The FACILITY ID (or FACILITY NAME if FACILITY TYPE is RCAG) that is serviced by the frequencies listed. This is a NON-NULL field. */
-            servicedFacility?: string;
-            /** @description FAA NASR field: SERVICED_FAC_NAME. The FACILITY NAME that is serviced by the frequencies listed. */
-            servicedFacilityName?: string | null;
-            /** @description FAA NASR field: SERVICED_SITE_TYPE. Facility Type of SERVICED FACILITY. */
-            servicedSiteType?: string | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: LAT_DECIMAL. Facility Reference Point Latitude in Decimal Format.
-             */
-            latitude?: number | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: LONG_DECIMAL. Facility Reference Point Longitude in Decimal Format.
-             */
-            longitude?: number | null;
-            /** @description FAA NASR field: SERVICED_CITY. Serviced Facility Associated City Name. */
-            servicedCity?: string | null;
-            /** @description FAA NASR field: SERVICED_STATE. Two-letter state ID of the SERVICED FACILITY. */
-            servicedState?: string | null;
-            /** @description FAA NASR field: SERVICED_COUNTRY. Country Post Office Code of Serviced Facility. */
-            servicedCountry?: string | null;
-            /** @description FAA NASR field: TOWER_OR_COMM_CALL. Radio call used by pilot to contact ATC or FSS facility. */
-            towerOrCommCall?: string | null;
-            /** @description FAA NASR field: PRIMARY_APPROACH_RADIO_CALL. Radio call of facility that furnishes primary approach control. */
-            primaryApproachRadioCall?: string | null;
-            /** @description FAA NASR field: FREQ. Frequency for SERVICED FACILITY use. In the case of a NAVAID with DME/TACAN Channel, the Frequency is displayed with the Channel (FREQ/CHAN). */
-            frequency?: string | null;
-            /** @description FAA NASR field: SECTORIZATION. Sectorization based on SERVICED FACILITY or airway boundaries, or limitations based on runway usage. For ARTCC and RCAG, identifies the Frequency Altitude as Low, High, Low/High or Ultra-High. */
-            sectorization?: string | null;
-            /** @description FAA NASR field: FREQ_USE. Intended use of the frequency (e.g., ATIS, LCL/P (Local/Tower), GND/P (Ground), CD/P (Clearance Delivery), APCH/P (Approach), DEP/P (Departure)). */
-            frequencyUse?: string | null;
-            /** @description FAA NASR field: REMARK. Remark Text (Free Form Text that further describes a specific Information Item). */
-            remark?: string | null;
-        };
-        /** @description Response DTO containing crosswind components for all runways at an airport */
-        AirportCrosswindResponseDto: {
-            /** @description ICAO code or identifier of the airport */
-            airportIdentifier?: string;
-            /**
-             * Format: int32
-             * @description Wind direction in degrees from METAR (null if variable)
-             */
-            windDirectionDegrees?: number | null;
-            /**
-             * Format: int32
-             * @description Wind speed in knots from METAR
-             */
-            windSpeedKt?: number;
-            /**
-             * Format: int32
-             * @description Wind gust speed in knots from METAR (if reported)
-             */
-            windGustKt?: number | null;
-            /** @description Whether the wind was reported as variable (VRB) */
-            isVariableWind?: boolean;
-            /** @description Raw METAR text for reference */
-            rawMetar?: string | null;
-            /** @description METAR observation time */
-            observationTime?: string | null;
-            /** @description Crosswind components for each runway end at the airport */
-            runways?: components["schemas"]["RunwayCrosswindComponentDto"][];
-            /** @description Recommended runway end identifier (lowest crosswind with headwind) */
-            recommendedRunway?: string | null;
-        };
-        /** @description Crosswind component data for a single runway end */
-        RunwayCrosswindComponentDto: {
-            /** @description Runway end identifier (e.g., "09", "27L") */
-            runwayEndId?: string;
-            /**
-             * Format: int32
-             * @description Runway heading in magnetic degrees
-             */
-            magneticHeadingDegrees?: number;
-            /**
-             * Format: double
-             * @description Crosswind component in knots. Positive = from the right, Negative = from the left
-             */
-            crosswindKt?: number;
-            /**
-             * Format: double
-             * @description Headwind component in knots. Positive = headwind, Negative = tailwind
-             */
-            headwindKt?: number;
-            /**
-             * Format: double
-             * @description Crosswind component from gusts in knots (if gust data available). Positive = from the right
-             */
-            gustCrosswindKt?: number | null;
-            /**
-             * Format: double
-             * @description Headwind component from gusts in knots (if gust data available). Positive = headwind
-             */
-            gustHeadwindKt?: number | null;
-            /**
-             * Format: double
-             * @description Absolute value of crosswind component (for comparison purposes)
-             */
-            absoluteCrosswindKt?: number;
-            /** @description Whether this runway has a headwind (favorable) vs tailwind */
-            hasHeadwind?: boolean;
-        };
-        /** @description Response DTO for a single crosswind calculation */
-        CrosswindCalculationResponseDto: {
-            /**
-             * Format: double
-             * @description Crosswind component in knots. Positive = from the right, Negative = from the left
-             */
-            crosswindKt?: number;
-            /**
-             * Format: double
-             * @description Headwind component in knots. Positive = headwind, Negative = tailwind
-             */
-            headwindKt?: number;
-            /**
-             * Format: double
-             * @description Crosswind component from gusts in knots (if gust data provided). Positive = from the right
-             */
-            gustCrosswindKt?: number | null;
-            /**
-             * Format: double
-             * @description Headwind component from gusts in knots (if gust data provided). Positive = headwind
-             */
-            gustHeadwindKt?: number | null;
-            /**
-             * Format: int32
-             * @description Wind direction used in calculation (degrees)
-             */
-            windDirectionDegrees?: number | null;
-            /**
-             * Format: int32
-             * @description Wind speed used in calculation (knots)
-             */
-            windSpeedKt?: number;
-            /**
-             * Format: int32
-             * @description Wind gust speed used in calculation (knots)
-             */
-            windGustKt?: number | null;
-            /**
-             * Format: int32
-             * @description Runway heading used in calculation (degrees)
-             */
-            runwayHeadingDegrees?: number;
-            /** @description Whether the wind was reported as variable (VRB) */
-            isVariableWind?: boolean;
-        };
-        /** @description Request DTO for manual crosswind calculation with user-provided parameters */
-        CrosswindCalculationRequestDto: {
-            /**
-             * Format: int32
-             * @description Wind direction in degrees (0-360, or null for variable)
-             */
-            windDirectionDegrees?: number | null;
-            /**
-             * Format: int32
-             * @description Wind speed in knots
-             */
-            windSpeedKt?: number;
-            /**
-             * Format: int32
-             * @description Wind gust speed in knots (optional)
-             */
-            windGustKt?: number | null;
-            /**
-             * Format: int32
-             * @description Runway heading in magnetic degrees (0-360)
-             */
-            runwayHeadingDegrees?: number;
-        };
-        /** @description Response DTO for density altitude calculation */
-        DensityAltitudeResponseDto: {
-            /** @description Airport identifier (for airport-based calculations) */
-            airportIdentifier?: string | null;
-            /**
-             * Format: double
-             * @description Field elevation in feet MSL
-             */
-            fieldElevationFt?: number;
-            /**
-             * Format: double
-             * @description Pressure altitude in feet
-             */
-            pressureAltitudeFt?: number;
-            /**
-             * Format: double
-             * @description Density altitude in feet
-             */
-            densityAltitudeFt?: number;
-            /**
-             * Format: double
-             * @description Standard (ISA) temperature at this pressure altitude in Celsius
-             */
-            isaTemperatureCelsius?: number;
-            /**
-             * Format: double
-             * @description Actual temperature in Celsius
-             */
-            actualTemperatureCelsius?: number;
-            /**
-             * Format: double
-             * @description Temperature deviation from ISA in Celsius
-             */
-            temperatureDeviationCelsius?: number;
-            /**
-             * Format: double
-             * @description Altimeter setting used in calculation (inHg)
-             */
-            altimeterInHg?: number;
-            /** @description Raw METAR text for reference (for airport-based calculations) */
-            rawMetar?: string | null;
-            /** @description METAR observation time (for airport-based calculations) */
-            observationTime?: string | null;
-        };
-        /** @description Request DTO for manual density altitude calculation */
-        DensityAltitudeRequestDto: {
-            /**
-             * Format: double
-             * @description Field elevation in feet MSL
-             */
-            fieldElevationFt?: number;
-            /**
-             * Format: double
-             * @description Altimeter setting in inches of mercury (inHg)
-             */
-            altimeterInHg?: number;
-            /**
-             * Format: double
-             * @description Temperature in degrees Celsius
-             */
-            temperatureCelsius?: number;
-        };
-        /** @description Response DTO for wind triangle calculation containing heading and ground speed results. */
-        WindTriangleResponseDto: {
-            /**
-             * Format: double
-             * @description True heading in degrees (0–360), corrected for wind
-             */
-            trueHeadingDegrees?: number;
-            /**
-             * Format: double
-             * @description Ground speed in knots
-             */
-            groundSpeedKt?: number;
-            /**
-             * Format: double
-             * @description Wind correction angle in degrees (positive = right correction, negative = left)
-             */
-            windCorrectionAngleDegrees?: number;
-            /**
-             * Format: double
-             * @description Headwind component in knots (positive = headwind, negative = tailwind)
-             */
-            headwindComponentKt?: number;
-            /**
-             * Format: double
-             * @description Crosswind component in knots (positive = from the right, negative = from the left)
-             */
-            crosswindComponentKt?: number;
-            /**
-             * Format: double
-             * @description True course used in calculation (degrees)
-             */
-            trueCourseDegrees?: number;
-            /**
-             * Format: double
-             * @description True airspeed used in calculation (knots)
-             */
-            trueAirspeedKt?: number;
-            /**
-             * Format: double
-             * @description Wind direction used in calculation (degrees)
-             */
-            windDirectionDegrees?: number;
-            /**
-             * Format: double
-             * @description Wind speed used in calculation (knots)
-             */
-            windSpeedKt?: number;
-        };
-        /** @description Request DTO for wind triangle (heading and ground speed) calculation. */
-        WindTriangleRequestDto: {
-            /**
-             * Format: double
-             * @description True course in degrees (0–360)
-             */
-            trueCourseDegrees?: number;
-            /**
-             * Format: double
-             * @description True airspeed in knots (must be greater than 0)
-             */
-            trueAirspeedKt?: number;
-            /**
-             * Format: double
-             * @description Wind direction in degrees (0–360)
-             */
-            windDirectionDegrees?: number;
-            /**
-             * Format: double
-             * @description Wind speed in knots (must be ≥ 0)
-             */
-            windSpeedKt?: number;
-        };
-        /** @description Response DTO for true airspeed calculation. */
-        TrueAirspeedResponseDto: {
-            /**
-             * Format: double
-             * @description Calculated true airspeed in knots
-             */
-            trueAirspeedKt?: number;
-            /**
-             * Format: double
-             * @description Density altitude in feet at the given conditions
-             */
-            densityAltitudeFt?: number;
-            /**
-             * Format: double
-             * @description Mach number at the given conditions
-             */
-            machNumber?: number;
-            /**
-             * Format: double
-             * @description Calibrated airspeed used in calculation (knots)
-             */
-            calibratedAirspeedKt?: number;
-            /**
-             * Format: double
-             * @description Pressure altitude used in calculation (feet)
-             */
-            pressureAltitudeFt?: number;
-            /**
-             * Format: double
-             * @description Outside air temperature used in calculation (°C)
-             */
-            outsideAirTemperatureCelsius?: number;
-        };
-        /** @description Request DTO for true airspeed (TAS) calculation. */
-        TrueAirspeedRequestDto: {
-            /**
-             * Format: double
-             * @description Calibrated (indicated) airspeed in knots (must be greater than 0)
-             */
-            calibratedAirspeedKt?: number;
-            /**
-             * Format: double
-             * @description Pressure altitude in feet (can be negative, e.g. Death Valley)
-             */
-            pressureAltitudeFt?: number;
-            /**
-             * Format: double
-             * @description Outside air temperature in degrees Celsius
-             */
-            outsideAirTemperatureCelsius?: number;
-        };
-        /** @description Response DTO for cloud base estimation. */
-        CloudBaseResponseDto: {
-            /**
-             * Format: double
-             * @description Estimated cloud base in feet AGL
-             */
-            estimatedCloudBaseFtAgl?: number;
-            /**
-             * Format: double
-             * @description Temperature/dewpoint spread in degrees Celsius
-             */
-            temperatureDewpointSpreadCelsius?: number;
-            /**
-             * Format: double
-             * @description Surface temperature used in calculation (°C)
-             */
-            temperatureCelsius?: number;
-            /**
-             * Format: double
-             * @description Dewpoint used in calculation (°C)
-             */
-            dewpointCelsius?: number;
-        };
-        /** @description Request DTO for cloud base estimation. */
-        CloudBaseRequestDto: {
-            /**
-             * Format: double
-             * @description Surface temperature in degrees Celsius
-             */
-            temperatureCelsius?: number;
-            /**
-             * Format: double
-             * @description Dewpoint temperature in degrees Celsius (must be ≤ temperature)
-             */
-            dewpointCelsius?: number;
-        };
-        /** @description Response DTO for standalone pressure altitude calculation. */
-        PressureAltitudeResponseDto: {
-            /**
-             * Format: double
-             * @description Calculated pressure altitude in feet
-             */
-            pressureAltitudeFt?: number;
-            /**
-             * Format: double
-             * @description Altimeter correction — deviation from standard pressure expressed in feet
-             */
-            altimeterCorrectionFt?: number;
-            /**
-             * Format: double
-             * @description Field elevation used in calculation (feet MSL)
-             */
-            fieldElevationFt?: number;
-            /**
-             * Format: double
-             * @description Altimeter setting used in calculation (inHg)
-             */
-            altimeterInHg?: number;
-        };
-        /** @description Request DTO for standalone pressure altitude calculation. */
-        PressureAltitudeRequestDto: {
-            /**
-             * Format: double
-             * @description Field elevation in feet MSL
-             */
-            fieldElevationFt?: number;
-            /**
-             * Format: double
-             * @description Altimeter setting in inches of mercury (must be between 25.0 and 35.0 inHg)
-             */
-            altimeterInHg?: number;
-        };
-        /**
-         * @description Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the
-         *     pagination.nextCursor value as the cursor query parameter in your next request.
-         *     Continue until pagination.hasMore is false.
-         */
-        PaginatedResponseOfGAirmetDto: {
-            /** @description The current page of results. */
-            data?: components["schemas"]["GAirmetDto"][];
-            /** @description Pagination metadata including the cursor to fetch the next page. */
-            pagination?: components["schemas"]["PaginationMetadata"];
-        };
-        /**
-         * @description Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the
-         *     pagination.nextCursor value as the cursor query parameter in your next request.
-         *     Continue until pagination.hasMore is false.
-         */
-        PaginatedResponseOfMetarDto: {
-            /** @description The current page of results. */
-            data?: components["schemas"]["MetarDto"][];
-            /** @description Pagination metadata including the cursor to fetch the next page. */
-            pagination?: components["schemas"]["PaginationMetadata"];
-        };
-        /**
-         * @description Complete navigation log calculation result for a VFR cross-country flight.
-         *     Includes per-leg calculations (course, speed, fuel, wind) and references to airspace and obstacle
-         *     data along the route. Use the returned identifiers with the Airspace and Obstacle endpoints to
-         *     retrieve full details about en-route hazards.
-         */
-        NavlogResponseDto: {
-            /**
-             * Format: double
-             * @description Total route distance in nautical miles (sum of all leg distances).
-             */
-            totalRouteDistance?: number;
-            /**
-             * Format: double
-             * @description Total estimated en-route time in hours (including climb and descent phases).
-             */
-            totalRouteTimeHours?: number;
-            /**
-             * Format: double
-             * @description Total fuel consumed for the entire route in gallons (including start/taxi/takeoff fuel).
-             */
-            totalFuelUsed?: number;
-            /**
-             * Format: double
-             * @description Average wind component across all legs in knots. Negative values indicate a net headwind; positive values indicate a net tailwind.
-             */
-            averageWindComponent?: number;
-            /** @description Ordered list of navigation legs between each pair of consecutive waypoints, containing computed course, speed, fuel, and wind data. */
-            legs?: components["schemas"]["NavigationLegDto"][];
-            /**
-             * @description Global IDs of controlled airspaces (Class B, C, D, E) that the route passes through.
-             *     Use these IDs with the GET /api/v1/airspaces/by-global-ids?globalIds=... endpoint to retrieve full airspace details including boundaries and altitude limits.
-             */
-            airspaceGlobalIds?: string[];
-            /**
-             * @description Global IDs of special use airspaces (restricted, prohibited, MOA, warning, alert) that the route passes through.
-             *     Use these IDs with the GET /api/v1/airspaces/special-use/by-global-ids?globalIds=... endpoint to retrieve full airspace details including boundaries and altitude limits.
-             */
-            specialUseAirspaceGlobalIds?: string[];
-            /**
-             * @description OAS (Obstacle Assessment Surface) numbers of obstacles near the route.
-             *     Use these numbers with the POST /api/v1/obstacles/by-oas-numbers endpoint to retrieve full obstacle details including type, height, and lighting.
-             */
-            obstacleOasNumbers?: string[];
-        };
-        /** @description A single navigation leg between two waypoints with computed flight data. */
-        NavigationLegDto: {
-            /** @description Starting waypoint for this leg. */
-            legStartPoint?: components["schemas"]["WaypointDto"];
-            /** @description Ending waypoint for this leg. */
-            legEndPoint?: components["schemas"]["WaypointDto"];
-            /**
-             * Format: double
-             * @description True course in degrees.
-             */
-            trueCourse?: number;
-            /**
-             * Format: double
-             * @description Magnetic heading in degrees (corrected for wind and variation).
-             */
-            magneticHeading?: number;
-            /**
-             * Format: double
-             * @description Magnetic course in degrees (corrected for variation only).
-             */
-            magneticCourse?: number;
-            /**
-             * Format: double
-             * @description Ground speed in knots.
-             */
-            groundSpeed?: number;
-            /**
-             * Format: double
-             * @description Leg distance in nautical miles.
-             */
-            legDistance?: number;
-            /**
-             * Format: double
-             * @description Remaining distance to destination in nautical miles.
-             */
-            distanceRemaining?: number;
-            /**
-             * Format: date-time
-             * @description Estimated time at the start of this leg (UTC).
-             */
-            startLegTime?: string;
-            /**
-             * Format: date-time
-             * @description Estimated time at the end of this leg (UTC).
-             */
-            endLegTime?: string;
-            /**
-             * Format: double
-             * @description Fuel burned during this leg in gallons.
-             */
-            legFuelBurnGals?: number;
-            /**
-             * Format: double
-             * @description Remaining fuel at the end of this leg in gallons.
-             */
-            remainingFuelGals?: number;
-            /**
-             * Format: int32
-             * @description Forecast wind direction in degrees true.
-             */
-            windDir?: number;
-            /**
-             * Format: int32
-             * @description Forecast wind speed in knots.
-             */
-            windSpeed?: number;
-            /**
-             * Format: double
-             * @description Headwind component in knots (negative = tailwind).
-             */
-            headwindComponent?: number;
-            /**
-             * Format: float
-             * @description Forecast temperature in degrees Celsius.
-             */
-            tempC?: number;
-        };
-        /** @description A waypoint along a navigation route. */
-        WaypointDto: {
-            /** @description Waypoint identifier (e.g., ICAO code or custom name). */
-            id?: string;
-            /** @description Display name of the waypoint. */
-            name?: string;
-            /**
-             * Format: double
-             * @description Latitude in decimal degrees.
-             */
-            latitude?: number;
-            /**
-             * Format: double
-             * @description Longitude in decimal degrees.
-             */
-            longitude?: number;
-            /**
-             * Format: double
-             * @description Altitude in feet MSL.
-             */
-            altitude?: number;
-            /** @description Type of waypoint (e.g., airport, navaid, user-defined). */
-            waypointType?: components["schemas"]["WaypointType"] | null;
-            /**
-             * Format: double
-             * @description Gallons to add during a refueling stop.
-             */
-            refuelGallons?: number | null;
-            /** @description Whether to refuel to full capacity at this stop. */
-            refuelToFull?: boolean | null;
-            /** @description Whether this waypoint is a refueling stop. */
-            isRefuelingStop?: boolean | null;
-        };
-        /** @enum {string} */
-        WaypointType: "Airport" | "Custom" | "CalculatedPoint" | "Navaid";
-        /** @description Request to calculate a VFR navigation log for a cross-country flight. */
-        NavlogRequestDto: {
-            /** @description Ordered list of waypoints defining the route. */
-            waypoints?: components["schemas"]["WaypointDto"][];
-            /** @description Aircraft performance parameters for the flight. */
-            performanceData?: components["schemas"]["NavlogPerformanceDataDto"];
-            /**
-             * Format: int32
-             * @description Planned cruising altitude in feet MSL.
-             */
-            plannedCruisingAltitude?: number;
-            /**
-             * Format: date-time
-             * @description Planned departure time in UTC.
-             */
-            timeOfDeparture?: string;
-        };
-        /** @description Aircraft performance data used for navigation log calculations. */
-        NavlogPerformanceDataDto: {
-            /**
-             * Format: int32
-             * @description True airspeed during climb in knots.
-             */
-            climbTrueAirspeed?: number;
-            /**
-             * Format: int32
-             * @description True airspeed during cruise in knots.
-             */
-            cruiseTrueAirspeed?: number;
-            /**
-             * Format: int32
-             * @description True airspeed during descent in knots.
-             */
-            descentTrueAirspeed?: number;
-            /**
-             * Format: int32
-             * @description Rate of climb in feet per minute.
-             */
-            climbFpm?: number;
-            /**
-             * Format: int32
-             * @description Rate of descent in feet per minute.
-             */
-            descentFpm?: number;
-            /**
-             * Format: double
-             * @description Fuel burn rate during climb in gallons per hour.
-             */
-            climbFuelBurn?: number;
-            /**
-             * Format: double
-             * @description Fuel burn rate during cruise in gallons per hour.
-             */
-            cruiseFuelBurn?: number;
-            /**
-             * Format: double
-             * @description Fuel burn rate during descent in gallons per hour.
-             */
-            descentFuelBurn?: number;
-            /**
-             * Format: double
-             * @description Fuel used during start, taxi, and takeoff in gallons.
-             */
-            sttFuelGals?: number;
-            /**
-             * Format: double
-             * @description Total fuel on board at departure in gallons.
-             */
-            fuelOnBoardGals?: number;
-        };
-        /** @description Result of a bearing and distance calculation between two points. */
-        BearingAndDistanceResponseDto: {
-            /**
-             * Format: double
-             * @description True course in degrees.
-             */
-            trueCourse?: number;
-            /**
-             * Format: double
-             * @description Magnetic course in degrees (adjusted for magnetic variation).
-             */
-            magneticCourse?: number;
-            /**
-             * Format: double
-             * @description Great-circle distance in nautical miles.
-             */
-            distance?: number;
-        };
-        /** @description Request to calculate bearing and distance between two geographic points. */
-        BearingAndDistanceRequestDto: {
-            /**
-             * Format: double
-             * @description Starting point latitude in decimal degrees.
-             */
-            startLatitude?: number;
-            /**
-             * Format: double
-             * @description Starting point longitude in decimal degrees.
-             */
-            startLongitude?: number;
-            /**
-             * Format: double
-             * @description Ending point latitude in decimal degrees.
-             */
-            endLatitude?: number;
-            /**
-             * Format: double
-             * @description Ending point longitude in decimal degrees.
-             */
-            endLongitude?: number;
-        };
-        /** @description Winds aloft forecast data for a specific forecast period. */
-        WindsAloftDto: {
-            /**
-             * Format: date-time
-             * @description Valid time for the forecast data.
-             */
-            validTime?: string;
-            /**
-             * Format: date-time
-             * @description Start of the forecast use period.
-             */
-            forUseStartTime?: string;
-            /**
-             * Format: date-time
-             * @description End of the forecast use period.
-             */
-            forUseEndTime?: string;
-            /** @description Wind and temperature data for each reporting site. */
-            windTemp?: components["schemas"]["WindsAloftSiteDto"][];
-        };
-        /** @description Winds aloft data for a single reporting site. */
-        WindsAloftSiteDto: {
-            /** @description Site identifier (e.g., DFW, ABI). */
-            id?: string;
-            /**
-             * Format: float
-             * @description Site latitude in decimal degrees.
-             */
-            lat?: number;
-            /**
-             * Format: float
-             * @description Site longitude in decimal degrees.
-             */
-            lon?: number;
-            /** @description Wind and temperature data keyed by altitude level (e.g., "3000", "6000"). */
-            windTemp?: {
-                [key: string]: components["schemas"]["WindTempDto"];
-            };
-        };
-        /** @description Wind direction, speed, and temperature at a specific altitude level. */
-        WindTempDto: {
-            /**
-             * Format: int32
-             * @description Wind direction in degrees true (null if calm or light/variable).
-             */
-            direction?: number | null;
-            /**
-             * Format: int32
-             * @description Wind speed in knots.
-             */
-            speed?: number;
-            /**
-             * Format: float
-             * @description Temperature in degrees Celsius (not available at all altitudes).
-             */
-            temperature?: number | null;
-        };
-        /**
-         * @description Response containing NOTAMs (Notices to Air Missions) matching a query.
-         *     Each NOTAM is a GeoJSON Feature with geographic geometry and detailed properties.
-         *     Used by the airport, radius, and route endpoints. The search endpoint uses cursor-based pagination instead.
-         */
-        NotamResponseDto: {
-            /** @description NOTAMs matching the query, each as a GeoJSON Feature with geometry and properties. */
-            notams?: components["schemas"]["NotamDto"][];
-            /**
-             * Format: int32
-             * @description Total number of NOTAMs returned in this response.
-             */
-            totalCount?: number;
-            /**
-             * Format: date-time
-             * @description UTC timestamp when the query was executed.
-             */
-            retrievedAt?: string;
-            /** @description Description of the queried location (e.g., "KDFW", "32.8970,-97.0380 (25nm)", or "KDFW -> KAUS"). */
-            queryLocation?: string | null;
-        };
-        /**
-         * @description Request body for querying NOTAMs along a flight route. Provide either AirportIdentifiers
-         *     (simple airport-only routes) or RoutePoints (mixed airports and waypoints).
-         *     If both are provided, RoutePoints is used and AirportIdentifiers is ignored.
-         *     NOTAMs from all route points are combined and deduplicated in the response.
-         */
-        NotamQueryByRouteRequest: {
-            /**
-             * @description Airport identifiers (ICAO codes or FAA identifiers) along the route, e.g. ["KDFW", "KAUS"].
-             *     Each airport is queried by identifier match. Use this when your entire route is airport-to-airport
-             *     with no en-route waypoints. Ignored when RoutePoints is provided.
-             */
-            airportIdentifiers?: string[];
-            /**
-             * @description Route points in flight order. Each point is either an airport (by identifier) or a geographic
-             *     waypoint (by lat/lon with radius search). Use this when your route includes en-route waypoints
-             *     or you need per-point radius control. When provided, AirportIdentifiers is ignored.
-             */
-            routePoints?: components["schemas"]["RoutePointDto"][];
-            /**
-             * Format: double
-             * @description Default search radius in nautical miles applied to any waypoint in RoutePoints that does not
-             *     specify its own RadiusNm. Has no effect on airport points or on AirportIdentifiers.
-             *     If omitted, the server default (25 NM) is used.
-             */
-            corridorRadiusNm?: number | null;
-            /** @description Optional filters (classification, feature, freeText, date range) applied to every route point query. */
-            filters?: components["schemas"]["NotamFilterDto"] | null;
-        };
-        /**
-         * @description A single point along a flight route. Each point is either an airport or a geographic waypoint:
-         *     Airport point: Set AirportIdentifier. NOTAMs are queried by identifier match (not spatial).
-         *     Waypoint: Set Latitude and Longitude. NOTAMs are queried by spatial radius search.
-         */
-        RoutePointDto: {
-            /**
-             * @description ICAO code (e.g., "KDFW") or FAA identifier (e.g., "DFW"). Case-insensitive.
-             *     If set, this point is treated as an airport and NOTAMs are matched by identifier.
-             *     Latitude, Longitude, and RadiusNm are ignored for airport points.
-             */
-            airportIdentifier?: string | null;
-            /**
-             * @description Optional display name for waypoints (e.g., "Lake Travis", "MAVER").
-             *     Appears in the response's queryLocation route description.
-             *     If omitted, coordinates are used instead (e.g., "30.4082N, 97.8538W").
-             */
-            name?: string | null;
-            /**
-             * Format: double
-             * @description Latitude in decimal degrees (-90 to 90). Required when AirportIdentifier is not set.
-             */
-            latitude?: number | null;
-            /**
-             * Format: double
-             * @description Longitude in decimal degrees (-180 to 180). Required when AirportIdentifier is not set.
-             */
-            longitude?: number | null;
-            /**
-             * Format: double
-             * @description Search radius in nautical miles for this waypoint (max 100). Only applies to waypoints.
-             *     If omitted, falls back to the request-level CorridorRadiusNm, then the server default (25 NM).
-             */
-            radiusNm?: number | null;
-        };
-        /**
-         * @description Optional filters for narrowing NOTAM query results. All filters are combinable — when
-         *     multiple filters are provided, results must match all of them (AND logic).
-         */
-        NotamFilterDto: {
-            /**
-             * @description Filter by NOTAM classification.
-             *     Valid values: INTERNATIONAL, MILITARY, LOCAL_MILITARY, DOMESTIC, FDC.
-             */
-            classification?: string | null;
-            /**
-             * @description Filter by NOTAM feature type (the aeronautical feature the NOTAM applies to).
-             *     Valid values: RWY, TWY, APRON, AD, OBST, NAV, COM, SVC, AIRSPACE, ODP, SID, STAR, CHART, DATA, DVA, IAP, VFP, ROUTE, SPECIAL, SECURITY.
-             */
-            feature?: string | null;
-            /**
-             * @description Case-insensitive text search within the NOTAM text field (e.g., "CLOSED", "RWY 18/36").
-             *     Max 80 characters. Allowed characters: letters, digits, spaces, and /.-().
-             */
-            freeText?: string | null;
-            /**
-             * @description Only include NOTAMs with an effective start on or after this date (ISO 8601).
-             *     Must be paired with EffectiveEndDate.
-             */
-            effectiveStartDate?: string | null;
-            /**
-             * @description Only include NOTAMs with an effective end on or before this date (ISO 8601).
-             *     Must be paired with EffectiveStartDate.
-             */
-            effectiveEndDate?: string | null;
-            /**
-             * @description Filter by accountability code (issuing office), e.g., "BNA", "FDC", "CLT".
-             *     Maps to the account_id column. Alphanumeric, max 10 characters.
-             */
-            accountability?: string | null;
-            /**
-             * @description Filter by location identifier (FAA domestic or ICAO code), e.g., "DFW" or "KDFW".
-             *     Matches against both the domestic location and ICAO location columns. Alphanumeric, max 10 characters.
-             */
-            location?: string | null;
-            /**
-             * @description ISO 8601 timestamp. When provided, returns NOTAMs modified between this time and now,
-             *     including both active and inactive NOTAMs (skips the active filter per FAA behavior).
-             */
-            lastUpdatedDate?: string | null;
-            /** @description NOTAM number in any supported format. Per FAA spec, must be paired with Location or Accountability. */
-            notamNumber?: string | null;
-            /**
-             * Format: double
-             * @description Latitude in decimal degrees [-90, 90]. Must be paired with Longitude and Radius.
-             */
-            latitude?: number | null;
-            /**
-             * Format: double
-             * @description Longitude in decimal degrees [-180, 180]. Must be paired with Latitude and Radius.
-             */
-            longitude?: number | null;
-            /**
-             * Format: double
-             * @description Search radius in nautical miles [0, 100]. Must be paired with Latitude and Longitude.
-             */
-            radius?: number | null;
-            /** @description Whether any filter values are set. */
-            hasFilters?: boolean;
-        };
-        /**
-         * @description Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the
-         *     pagination.nextCursor value as the cursor query parameter in your next request.
-         *     Continue until pagination.hasMore is false.
-         */
-        PaginatedResponseOfNotamDto: {
-            /** @description The current page of results. */
-            data?: components["schemas"]["NotamDto"][];
-            /** @description Pagination metadata including the cursor to fetch the next page. */
-            pagination?: components["schemas"]["PaginationMetadata"];
-        };
-        /**
-         * @description Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the
-         *     pagination.nextCursor value as the cursor query parameter in your next request.
-         *     Continue until pagination.hasMore is false.
-         */
-        PaginatedResponseOfObstacleDto: {
-            /** @description The current page of results. */
-            data?: components["schemas"]["ObstacleDto"][];
-            /** @description Pagination metadata including the cursor to fetch the next page. */
-            pagination?: components["schemas"]["PaginationMetadata"];
-        };
-        /**
-         * @description Obstacle data from the FAA Digital Obstacle File (DOF).
-         *     Use the OasNumber to cross-reference with navigation log results — the navlog response's
-         *     ObstacleOasNumbers field contains OAS numbers from this endpoint for obstacles near a planned route.
-         */
-        ObstacleDto: {
-            /** @description Obstacle Assessment Surface (OAS) number — the unique identifier for this obstacle. This is the key used to look up obstacles returned by the navigation log endpoint's ObstacleOasNumbers field. */
-            oasNumber?: string;
-            /** @description Two-letter state identifier. */
-            stateId?: string | null;
-            /** @description City nearest to the obstacle. */
-            cityName?: string | null;
-            /**
-             * Format: decimal
-             * @description Latitude in decimal degrees.
-             */
-            latitude?: number | null;
-            /**
-             * Format: decimal
-             * @description Longitude in decimal degrees.
-             */
-            longitude?: number | null;
-            /** @description Type of obstacle (e.g., TOWER, BLDG, STACK). */
-            obstacleType?: string | null;
-            /**
-             * Format: int32
-             * @description Number of obstacles at this location.
-             */
-            quantity?: number | null;
-            /**
-             * Format: int32
-             * @description Height above ground level in feet.
-             */
-            heightAgl?: number | null;
-            /**
-             * Format: int32
-             * @description Height above mean sea level in feet.
-             */
-            heightAmsl?: number | null;
-            /** @description Lighting type on the obstacle. */
-            lighting?: components["schemas"]["ObstacleLighting"];
-            /** @description Horizontal accuracy of the position data. */
-            horizontalAccuracy?: components["schemas"]["HorizontalAccuracy"];
-            /** @description Vertical accuracy of the height data. */
-            verticalAccuracy?: components["schemas"]["VerticalAccuracy"];
-            /** @description Marking type on the obstacle. */
-            marking?: components["schemas"]["ObstacleMarking"];
-            /** @description Verification status of the obstacle data. */
-            verificationStatus?: components["schemas"]["VerificationStatus"];
-        };
-        /** @enum {string} */
-        ObstacleLighting: "Unknown" | "Red" | "DualMediumWhiteStrobeRed" | "HighIntensityWhiteStrobeRed" | "MediumIntensityWhiteStrobe" | "HighIntensityWhiteStrobe" | "Flood" | "DualMediumCatenary" | "SynchronizedRedLighting" | "Lighted" | "None";
-        /** @enum {string} */
-        HorizontalAccuracy: "Unknown" | "Within20Feet" | "Within50Feet" | "Within100Feet" | "Within250Feet" | "Within500Feet" | "Within1000Feet" | "WithinHalfNauticalMile" | "Within1NauticalMile";
-        /** @enum {string} */
-        VerticalAccuracy: "Unknown" | "Within3Feet" | "Within10Feet" | "Within20Feet" | "Within50Feet" | "Within125Feet" | "Within250Feet" | "Within500Feet" | "Within1000Feet";
-        /** @enum {string} */
-        ObstacleMarking: "Unknown" | "OrangeOrOrangeWhitePaint" | "WhitePaintOnly" | "Marked" | "FlagMarker" | "SphericalMarker" | "None";
-        /** @enum {string} */
-        VerificationStatus: "Unknown" | "Verified" | "Unverified";
-        /**
-         * @description Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the
-         *     pagination.nextCursor value as the cursor query parameter in your next request.
-         *     Continue until pagination.hasMore is false.
-         */
-        PaginatedResponseOfPirepDto: {
-            /** @description The current page of results. */
-            data?: components["schemas"]["PirepDto"][];
-            /** @description Pagination metadata including the cursor to fetch the next page. */
-            pagination?: components["schemas"]["PaginationMetadata"];
-        };
-        /**
-         * @description Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the
-         *     pagination.nextCursor value as the cursor query parameter in your next request.
-         *     Continue until pagination.hasMore is false.
-         */
-        PaginatedResponseOfSigmetDto: {
-            /** @description The current page of results. */
-            data?: components["schemas"]["SigmetDto"][];
-            /** @description Pagination metadata including the cursor to fetch the next page. */
-            pagination?: components["schemas"]["PaginationMetadata"];
-        };
-        /**
-         * @description Airport information with all available terminal procedure charts. Charts are FAA-published PDFs from the
-         *     Digital Terminal Procedures Publication (d-TPP). The PDF URLs are time-limited pre-signed URLs.
-         */
-        TerminalProceduresResponseDto: {
-            /** @description Official airport name. */
-            airportName?: string;
-            /** @description ICAO identifier (e.g., KDFW). Use this to cross-reference with other endpoints such as METARs and TAFs. */
-            icaoIdent?: string | null;
-            /** @description FAA airport identifier (e.g., DFW). Use this to cross-reference with the Airports endpoint. */
-            airportIdent?: string | null;
-            /** @description List of available terminal procedure chart PDFs with time-limited download URLs. */
-            procedures?: components["schemas"]["TerminalProcedureDto"][];
-        };
-        /** @description A terminal procedure chart (IAP, DP, STAR, APD, MIN, HOT, etc.) with a time-limited pre-signed URL for PDF download. */
-        TerminalProcedureDto: {
-            /** @description Chart code indicating the procedure type (e.g., "IAP", "DP", "STAR", "APD", "MIN", "HOT"). */
-            chartCode?: string;
-            /** @description Name of the chart (e.g., "ILS OR LOC RWY 18L", "AIRPORT DIAGRAM"). */
-            chartName?: string;
-            /** @description Pre-signed URL to download the chart PDF. This URL expires after a limited time period; request a new URL if it has expired. */
-            pdfUrl?: string;
-            /** @description Amendment number, if applicable. */
-            amendmentNumber?: string | null;
-            /** @description Amendment date, if applicable. */
-            amendmentDate?: string | null;
-        };
-    };
-    responses: never;
-    parameters: never;
-    requestBodies: never;
-    headers: never;
-    pathItems: never;
+  schemas: {
+    /**
+     * @description Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the
+     *     pagination.nextCursor value as the cursor query parameter in your next request.
+     *     Continue until pagination.hasMore is false.
+     */
+    PaginatedResponseOfAirportDto: {
+      /** @description The current page of results. */
+      data?: components['schemas']['AirportDto'][]
+      /** @description Pagination metadata including the cursor to fetch the next page. */
+      pagination?: components['schemas']['PaginationMetadata']
+    }
+    /**
+     * @description Airport data from the FAA National Airspace System Resources (NASR) database.
+     *     Combines data from APT_BASE, APT_ATT, and APT_CON CSV files.
+     *     Use the airport's IcaoId or ArptId to query related endpoints such as runways
+     *     (GET /api/v1/airports/{icaoCodeOrIdent}/runways), communication frequencies
+     *     (GET /api/v1/communication-frequencies/{servicedFacility}), METARs
+     *     (GET /api/v1/metars/{icaoCodeOrIdent}), TAFs (GET /api/v1/tafs/{icaoCodeOrIdent}),
+     *     airport diagrams (GET /api/v1/airport-diagrams/{icaoCodeOrIdent}), and
+     *     chart supplements (GET /api/v1/chart-supplements/{icaoCodeOrIdent}).
+     */
+    AirportDto: {
+      /** @description FAA NASR field: SITE_NO. Unique Site Number assigned by the FAA to identify the airport facility. */
+      siteNo?: string
+      /** @description FAA NASR field: ICAO_ID. ICAO (International Civil Aviation Organization) identifier (e.g., KDFW, KLAX). */
+      icaoId?: string | null
+      /** @description FAA NASR field: ARPT_ID. FAA location identifier (e.g., DFW, LAX, ORD). Up to 4 characters. */
+      arptId?: string | null
+      /** @description FAA NASR field: ARPT_NAME. Official Facility Name. */
+      arptName?: string | null
+      /**
+       * Format: date-time
+       * @description FAA NASR field: EFF_DATE. Effective date of the airport information.
+       */
+      effDate?: string
+      /** @description FAA NASR field: SITE_TYPE_CODE. Landing facility type. */
+      siteType?: components['schemas']['AirportSiteType']
+      /** @description FAA NASR field: OWNERSHIP_TYPE_CODE. Airport ownership type. */
+      ownershipType?: components['schemas']['AirportOwnershipType']
+      /** @description FAA NASR field: FACILITY_USE_CODE. Facility use designation. */
+      facilityUse?: components['schemas']['AirportFacilityUse']
+      /** @description FAA NASR field: ARPT_STATUS. Airport operational status. */
+      arptStatus?: components['schemas']['AirportStatus']
+      /** @description FAA NASR field: NASP_CODE. NPIAS/Federal Agreements Code. A combination of 1 to 7 codes indicating the type of Federal agreements existing at the Airport. */
+      naspCode?: string | null
+      /** @description FAA NASR field: CITY. Associated city name for the airport. */
+      city?: string | null
+      /** @description FAA NASR field: STATE_CODE. Two-letter USPS state code where the airport is located. */
+      stateCode?: string | null
+      /** @description FAA NASR field: COUNTRY_CODE. Two-letter country code. */
+      countryCode?: string | null
+      /** @description FAA NASR field: STATE_NAME. Full state name where the airport is located. */
+      stateName?: string | null
+      /** @description FAA NASR field: REGION_CODE. FAA region code (e.g., ASW, AEA, AWP). */
+      regionCode?: string | null
+      /** @description FAA NASR field: ADO_CODE. FAA Airports District Office code. */
+      adoCode?: string | null
+      /** @description FAA NASR field: COUNTY_NAME. County name where the airport is located. */
+      countyName?: string | null
+      /** @description FAA NASR field: COUNTY_ASSOC_STATE. Two-letter state, territory, or country code associated with the county (e.g., US state codes, CN for Canada, GU for Guam, VI for Virgin Islands). */
+      countyAssocState?: string | null
+      /**
+       * Format: decimal
+       * @description FAA NASR field: DIST_CITY_TO_AIRPORT. Distance from Central Business District of the Associated City to the Airport.
+       */
+      distCityToAirport?: number | null
+      /** @description FAA NASR field: DIRECTION_CODE. Direction of Airport from Central Business District of Associated City (Nearest 1/8 Compass Point). */
+      directionCode?: string | null
+      /**
+       * Format: int32
+       * @description FAA NASR field: ACREAGE. Land Area Covered by Airport (Acres).
+       */
+      acreage?: number | null
+      /**
+       * Format: decimal
+       * @description FAA NASR field: LAT_DECIMAL. Latitude of airport reference point in decimal degrees.
+       */
+      latDecimal?: number | null
+      /**
+       * Format: decimal
+       * @description FAA NASR field: LONG_DECIMAL. Longitude of airport reference point in decimal degrees.
+       */
+      longDecimal?: number | null
+      /**
+       * Format: int32
+       * @description FAA NASR field: LAT_DEG. Latitude degrees of airport reference point.
+       */
+      latDeg?: number | null
+      /**
+       * Format: int32
+       * @description FAA NASR field: LAT_MIN. Latitude minutes of airport reference point.
+       */
+      latMin?: number | null
+      /**
+       * Format: decimal
+       * @description FAA NASR field: LAT_SEC. Latitude seconds of airport reference point.
+       */
+      latSec?: number | null
+      /** @description FAA NASR field: LAT_HEMIS. Latitude hemisphere of airport reference point (N or S). */
+      latHemis?: string | null
+      /**
+       * Format: int32
+       * @description FAA NASR field: LONG_DEG. Longitude degrees of airport reference point.
+       */
+      longDeg?: number | null
+      /**
+       * Format: int32
+       * @description FAA NASR field: LONG_MIN. Longitude minutes of airport reference point.
+       */
+      longMin?: number | null
+      /**
+       * Format: decimal
+       * @description FAA NASR field: LONG_SEC. Longitude seconds of airport reference point.
+       */
+      longSec?: number | null
+      /** @description FAA NASR field: LONG_HEMIS. Longitude hemisphere of airport reference point (E or W). */
+      longHemis?: string | null
+      /** @description FAA NASR field: SURVEY_METHOD_CODE. Method used to determine the airport reference point position. */
+      positionSurveyMethod?: components['schemas']['SurveyMethod']
+      /** @description FAA NASR field: ARPT_PSN_SOURCE. Source of the airport position information. */
+      arptPsnSource?: string | null
+      /**
+       * Format: date-time
+       * @description FAA NASR field: POSITION_SRC_DATE. Date the airport position information was determined.
+       */
+      positionSrcDate?: string | null
+      /**
+       * Format: decimal
+       * @description FAA NASR field: ELEV. Airport elevation in feet MSL, to the nearest tenth of a foot. Measured at the highest point on the centerline of the usable landing surface.
+       */
+      elev?: number | null
+      /** @description FAA NASR field: ELEV_METHOD_CODE. Method used to determine the airport elevation. */
+      elevationSurveyMethod?: components['schemas']['SurveyMethod']
+      /** @description FAA NASR field: ARPT_ELEV_SOURCE. Source of the airport elevation information. */
+      arptElevSource?: string | null
+      /**
+       * Format: date-time
+       * @description FAA NASR field: ELEVATION_SRC_DATE. Date the airport elevation information was determined.
+       */
+      elevationSrcDate?: string | null
+      /**
+       * Format: decimal
+       * @description FAA NASR field: MAG_VARN. Magnetic Variation in degrees.
+       */
+      magVarn?: number | null
+      /** @description FAA NASR field: MAG_HEMIS. Magnetic Variation Direction (E or W). */
+      magHemis?: string | null
+      /**
+       * Format: int32
+       * @description FAA NASR field: MAG_VARN_YEAR. Magnetic Variation Epoch Year.
+       */
+      magVarnYear?: number | null
+      /**
+       * Format: int32
+       * @description FAA NASR field: TPA. Traffic Pattern Altitude (Whole Feet AGL).
+       */
+      tpa?: number | null
+      /** @description FAA NASR field: CHART_NAME. Sectional aeronautical chart name on which the airport appears. */
+      chartName?: string | null
+      /** @description FAA NASR field: RESP_ARTCC_ID. Responsible ARTCC Identifier. The Responsible ARTCC is the FAA Air Route Traffic Control Center that has control over the Airport. */
+      respArtccId?: string | null
+      /** @description FAA NASR field: ARTCC_NAME. Name of the responsible ARTCC. */
+      artccName?: string | null
+      /** @description FAA NASR field: TWR_TYPE_CODE. Air Traffic Control Tower Facility Type (ATCT, NON-ATCT, ATCT-A/C, ATCT-RAPCON, ATCT-RATCF, ATCT-TRACON, TRACON). */
+      twrTypeCode?: string | null
+      /** @description FAA NASR field: FSS_ON_ARPT_FLAG. Tie-In FSS Physically Located On Facility. */
+      fssOnAirport?: boolean
+      /** @description FAA NASR field: FSS_ID. Tie-In Flight Service Station (FSS) Identifier. */
+      fssId?: string | null
+      /** @description FAA NASR field: FSS_NAME. Tie-In FSS Name. */
+      fssName?: string | null
+      /** @description FAA NASR field: PHONE_NO. Local Phone Number from Airport to FSS for Administrative Services. */
+      fssPhoneNumber?: string | null
+      /** @description FAA NASR field: TOLL_FREE_NO. Toll Free Phone Number from Airport to FSS for Pilot Briefing Services. */
+      tollFreeNumber?: string | null
+      /** @description FAA NASR field: ALT_FSS_ID. Alternate FSS Identifier. Identifies a full-time FSS that assumes responsibility during the off hours of a part-time primary FSS. */
+      altFssId?: string | null
+      /** @description FAA NASR field: ALT_FSS_NAME. Alternate Flight Service Station name. */
+      altFssName?: string | null
+      /** @description FAA NASR field: ALT_TOLL_FREE_NO. Toll Free Phone Number from Airport to Alternate FSS for Pilot Briefing Services. */
+      altTollFreeNumber?: string | null
+      /** @description FAA NASR field: NOTAM_ID. Identifier of the Facility responsible for issuing NOTAMs and Weather information for the Airport. */
+      notamId?: string | null
+      /** @description FAA NASR field: NOTAM_FLAG. Availability of NOTAM 'D' Service at Airport. */
+      notamAvailable?: boolean
+      /** @description FAA NASR field: CUST_FLAG. Facility designated by U.S. Department of Homeland Security as an International Airport of Entry for Customs. */
+      customsPortOfEntry?: boolean
+      /** @description FAA NASR field: LNDG_RIGHTS_FLAG. Facility designated by U.S. Department of Homeland Security as a Customs Landing Rights Airport. */
+      customsLandingRights?: boolean
+      /** @description FAA NASR field: JOINT_USE_FLAG. Facility has Military/Civil Joint Use Agreement that allows Civil Operations at a Military Airport. */
+      jointUse?: boolean
+      /** @description FAA NASR field: MIL_LNDG_FLAG. Airport has entered into an Agreement that Grants Landing Rights to the Military. */
+      militaryLandingRights?: boolean
+      /** @description FAA NASR field: INSPECT_METHOD_CODE. Airport inspection method. */
+      inspectionMethod?: components['schemas']['AirportInspectionMethod']
+      /** @description FAA NASR field: INSPECTOR_CODE. Agency/Group Performing Physical Inspection. */
+      inspectorAgency?: components['schemas']['AirportInspectorAgency']
+      /**
+       * Format: date-time
+       * @description FAA NASR field: LAST_INSPECTION. Date of the last physical inspection.
+       */
+      lastInspection?: string | null
+      /**
+       * Format: date-time
+       * @description FAA NASR field: LAST_INFO_RESPONSE. Date of the last information request response.
+       */
+      lastInfoResponse?: string | null
+      /** @description FAA NASR field: FUEL_TYPES. Fuel Types available for public use at the Airport (e.g., 100LL, A, A+, MOGAS, UL94). */
+      fuelTypes?: string | null
+      /** @description FAA NASR field: CONTR_FUEL_AVBL. Whether contract fuel is available. */
+      contractFuelAvailable?: boolean
+      /** @description FAA NASR field: AIRFRAME_REPAIR_SER_CODE. Airframe repair service availability. */
+      airframeRepairService?: components['schemas']['RepairServiceAvailability']
+      /** @description FAA NASR field: PWR_PLANT_REPAIR_SER. Power plant (engine) repair service availability. */
+      powerPlantRepairService?: components['schemas']['RepairServiceAvailability']
+      /** @description FAA NASR field: BOTTLED_OXY_TYPE. Type of bottled oxygen available. */
+      bottledOxygenType?: components['schemas']['OxygenPressureType']
+      /** @description FAA NASR field: BULK_OXY_TYPE. Type of bulk oxygen available. */
+      bulkOxygenType?: components['schemas']['OxygenPressureType']
+      /** @description FAA NASR field: OTHER_SERVICES. Other airport services available (comma-separated codes). */
+      otherServices?: string | null
+      /** @description FAA NASR field: TRNS_STRG_BUOY_FLAG. Whether transient storage buoys are available. */
+      transientStorageBuoys?: boolean
+      /** @description FAA NASR field: TRNS_STRG_HGR_FLAG. Whether transient storage hangars are available. */
+      transientStorageHangars?: boolean
+      /** @description FAA NASR field: TRNS_STRG_TIE_FLAG. Whether transient storage tie-downs are available. */
+      transientStorageTiedowns?: boolean
+      /** @description FAA NASR field: LGT_SKED. Airport Lighting Schedule. Beginning-ending times (local time) that Standard Airport Lights are operated. Value can be 'SS-SR' (sunset-sunrise), blank, or 'SEE RMK'. */
+      lgtSked?: string | null
+      /** @description FAA NASR field: BCN_LGT_SKED. Beacon Lighting Schedule. Beginning-ending times (local time) that the Rotating Airport Beacon Light is operated. Value can be 'SS-SR' (sunset-sunrise), blank, or 'SEE RMK'. */
+      bcnLgtSked?: string | null
+      /** @description FAA NASR field: BCN_LENS_COLOR. Airport beacon lens color. */
+      beaconLensColor?: components['schemas']['BeaconLensColor']
+      /** @description FAA NASR field: SEG_CIRCLE_MKR_FLAG. Segmented circle airport marker system. */
+      segmentedCircleMarker?: components['schemas']['SegmentedCircleMarkerType']
+      /** @description FAA NASR field: WIND_INDCR_FLAG. Wind indicator type. */
+      windIndicator?: components['schemas']['WindIndicatorType']
+      /** @description FAA NASR field: LNDG_FEE_FLAG. Landing Fee charged to Non-Commercial Users of Airport. */
+      landingFee?: boolean
+      /** @description FAA NASR field: MEDICAL_USE_FLAG. Indicates that the Landing Facility is used for Medical Purposes. */
+      medicalUse?: boolean
+      /** @description FAA NASR field: ACTIVATION_DATE. Airport Activation Date (YYYY/MM). Year and month the facility was added to the NFDC airport database. Only available for facilities opened since 1981. */
+      activationDate?: string | null
+      /** @description FAA NASR field: MIN_OP_NETWORK. Minimum Operational Network (MON) designation. */
+      minOpNetwork?: string | null
+      /** @description FAA NASR field: USER_FEE_FLAG. US Customs User Fee Airport designation. */
+      userFeeFlag?: string | null
+      /** @description FAA NASR field: CTA. Cold Temperature Airport. Altitude correction required at or below the temperature given in Celsius. */
+      cta?: string | null
+      /** @description FAA NASR field: COMPUTER_ID. Responsible ARTCC (FAA) Computer Identifier. */
+      computerId?: string | null
+      /** @description FAA NASR field: FAR_139_TYPE_CODE. Airport ARFF Certification Type Code. Format is class code (I/II/III/IV) followed by A/B/C/D/E (full certificate) or L (limited certification). Blank if not certificated. */
+      far139TypeCode?: string | null
+      /** @description FAA NASR field: FAR_139_CARRIER_SER_CODE. Airport ARFF Certification Carrier Service Code. S (scheduled service) or U (not receiving scheduled service). */
+      far139CarrierSerCode?: string | null
+      /**
+       * Format: date-time
+       * @description FAA NASR field: ARFF_CERT_TYPE_DATE. Airport ARFF Certification Date (YYYY/MM).
+       */
+      arffCertTypeDate?: string | null
+      /** @description FAA NASR field: ASP_ANLYS_DTRM_CODE. Airport Airspace Analysis Determination (CONDL, NOT ANALYZED, NO OBJECTION, OBJECTIONABLE). */
+      aspAnalysisDtrmCode?: string | null
+      /**
+       * Format: int32
+       * @description FAA NASR field: SKED_SEQ_NO (APT_ATT). Attendance Schedule Sequence Number.
+       */
+      skedSeqNo?: number | null
+      /** @description FAA NASR field: MONTH (APT_ATT). Months the facility is attended. May contain 'UNATNDD' for unattended facilities. */
+      attendanceMonth?: string | null
+      /** @description FAA NASR field: DAY (APT_ATT). Days of the week the facility is open. */
+      attendanceDay?: string | null
+      /** @description FAA NASR field: HOUR (APT_ATT). Hours within the day the facility is attended. */
+      attendanceHours?: string | null
+      /** @description FAA NASR field: TITLE (APT_CON). Title of the facility contact (e.g., MANAGER, OWNER). */
+      contactTitle?: string | null
+      /** @description FAA NASR field: NAME (APT_CON). Facility contact name. */
+      contactName?: string | null
+      /** @description FAA NASR field: ADDRESS1 (APT_CON). Contact address line 1. */
+      contactAddress1?: string | null
+      /** @description FAA NASR field: ADDRESS2 (APT_CON). Contact address line 2. */
+      contactAddress2?: string | null
+      /** @description FAA NASR field: TITLE_CITY (APT_CON). Contact city. */
+      contactCity?: string | null
+      /** @description FAA NASR field: STATE (APT_CON). Contact state. */
+      contactState?: string | null
+      /** @description FAA NASR field: ZIP_CODE (APT_CON). Contact ZIP code. */
+      contactZipCode?: string | null
+      /** @description FAA NASR field: ZIP_PLUS_FOUR (APT_CON). Contact ZIP+4 code. */
+      contactZipPlusFour?: string | null
+      /** @description FAA NASR field: PHONE_NO (APT_CON). Contact phone number. */
+      contactPhoneNumber?: string | null
+    }
+    /**
+     * @description Landing Facility Site Type. Corresponds to FAA NASR field SITE_TYPE_CODE (APT_BASE).
+     * @enum {string}
+     */
+    AirportSiteType:
+      | 'Unknown'
+      | 'Airport'
+      | 'Heliport'
+      | 'SeaplaneBase'
+      | 'Gliderport'
+      | 'Ultralight'
+    /**
+     * @description Airport Ownership Type. Corresponds to FAA NASR field OWNERSHIP_TYPE_CODE (APT_BASE).
+     * @enum {string}
+     */
+    AirportOwnershipType:
+      | 'Unknown'
+      | 'PubliclyOwned'
+      | 'PrivatelyOwned'
+      | 'AirForce'
+      | 'Navy'
+      | 'Army'
+      | 'CoastGuard'
+    /**
+     * @description Airport Facility Use. Corresponds to FAA NASR field FACILITY_USE_CODE (APT_BASE).
+     * @enum {string}
+     */
+    AirportFacilityUse: 'Unknown' | 'PublicUse' | 'PrivateUse'
+    /**
+     * @description Airport Operational Status. Corresponds to FAA NASR field ARPT_STATUS (APT_BASE).
+     * @enum {string}
+     */
+    AirportStatus:
+      | 'Unknown'
+      | 'Operational'
+      | 'ClosedIndefinitely'
+      | 'ClosedPermanently'
+    /**
+     * @description Survey Method for position or elevation determination. Corresponds to FAA NASR fields SURVEY_METHOD_CODE and ELEV_METHOD_CODE (APT_BASE).
+     * @enum {string}
+     */
+    SurveyMethod: 'Unknown' | 'Estimated' | 'Surveyed'
+    /**
+     * @description Airport Inspection Method. Corresponds to FAA NASR field INSPECT_METHOD_CODE (APT_BASE).
+     * @enum {string}
+     */
+    AirportInspectionMethod:
+      | 'Unknown'
+      | 'Federal'
+      | 'State'
+      | 'Contractor'
+      | 'PublicUseMailout'
+      | 'PrivateUseMailout'
+    /**
+     * @description Airport Inspector Agency. Corresponds to FAA NASR field INSPECTOR_CODE (APT_BASE).
+     * @enum {string}
+     */
+    AirportInspectorAgency: 'Unknown' | 'Faa' | 'State' | 'Contractor' | 'Owner'
+    /**
+     * @description Repair Service Availability. Corresponds to FAA NASR fields AIRFRAME_REPAIR_SER_CODE and PWR_PLANT_REPAIR_SER (APT_BASE).
+     * @enum {string}
+     */
+    RepairServiceAvailability: 'Unknown' | 'None' | 'Major' | 'Minor'
+    /**
+     * @description Oxygen Pressure Type. Corresponds to FAA NASR fields BOTTLED_OXY_TYPE and BULK_OXY_TYPE (APT_BASE).
+     * @enum {string}
+     */
+    OxygenPressureType: 'Unknown' | 'None' | 'High' | 'Low' | 'HighAndLow'
+    /**
+     * @description Airport Beacon Lens Color. Corresponds to FAA NASR field BCN_LENS_COLOR (APT_BASE).
+     * @enum {string}
+     */
+    BeaconLensColor:
+      | 'Unknown'
+      | 'WhiteGreen'
+      | 'WhiteYellow'
+      | 'WhiteGreenYellow'
+      | 'SplitWhiteGreen'
+      | 'White'
+      | 'Yellow'
+      | 'Green'
+      | 'None'
+    /**
+     * @description Segmented Circle Airport Marker. Corresponds to FAA NASR field SEG_CIRCLE_MKR_FLAG (APT_BASE).
+     * @enum {string}
+     */
+    SegmentedCircleMarkerType: 'Unknown' | 'None' | 'Yes' | 'YesLighted'
+    /**
+     * @description Wind Indicator Type. Corresponds to FAA NASR field WIND_INDCR_FLAG (APT_BASE).
+     * @enum {string}
+     */
+    WindIndicatorType: 'Unknown' | 'None' | 'Unlighted' | 'Lighted'
+    /**
+     * @description Metadata for cursor-based pagination. Use nextCursor as the cursor query parameter
+     *     to fetch the next page of results. When hasMore is false, there are no more pages.
+     */
+    PaginationMetadata: {
+      /** @description Opaque cursor value to pass as the cursor query parameter to fetch the next page. Null when there are no more results. */
+      nextCursor?: string | null
+      /** @description True if more results are available beyond this page; false if this is the last page. */
+      hasMore?: boolean
+      /**
+       * Format: int32
+       * @description Maximum number of items returned per page (1-500, default 100).
+       */
+      limit?: number
+    }
+    /** @description Standardized error response format for API errors. */
+    ApiErrorResponse: {
+      /** @description Machine-readable error code (e.g., "AIRCRAFT_NOT_FOUND"). */
+      code?: string
+      /** @description Human-readable error message suitable for display. */
+      message?: string
+      /** @description Additional error details (only included in development environment). */
+      details?: string | null
+      /** @description Field-level validation errors (only for validation failures). */
+      validationErrors?: {
+        [key: string]: string[]
+      } | null
+      /** @description UTC timestamp when the error occurred. */
+      timestamp?: string
+      /** @description Correlation ID for tracing the request. */
+      traceId?: string | null
+      /** @description Request path that generated the error. */
+      path?: string | null
+    }
+    /**
+     * @description Runway data from the FAA NASR database, sourced from APT_RWY.
+     *     Includes dimensions, surface, lighting, and weight-bearing information.
+     */
+    RunwayDto: {
+      /**
+       * Format: guid
+       * @description System-generated unique identifier.
+       */
+      id?: string
+      /** @description FAA NASR field: RWY_ID. Runway identification (e.g., "01/19", "09L/27R", "H1" for helipad). */
+      runwayId?: string
+      /**
+       * Format: int32
+       * @description FAA NASR field: RWY_LEN. Physical runway length to the nearest foot.
+       */
+      length?: number | null
+      /**
+       * Format: int32
+       * @description FAA NASR field: RWY_WIDTH. Physical runway width to the nearest foot.
+       */
+      width?: number | null
+      /**
+       * @description FAA NASR field: SURFACE_TYPE_CODE. Runway surface type.
+       *     Common values: Concrete (CONC), Asphalt (ASPH), Turf (TURF), Dirt (DIRT), Gravel (GRAVEL), Water (WATER).
+       */
+      surfaceType?: components['schemas']['RunwaySurfaceType']
+      /**
+       * @description FAA NASR field: TREATMENT_CODE. Runway surface treatment.
+       *     Possible values: Grooved (GRVD), PorousFrictionCourse (PFC), AggregateFrictionSealCoat (AFSC),
+       *     RubberizedFrictionSealCoat (RFSC), WireComb (WC), None (NONE).
+       */
+      surfaceTreatment?: components['schemas']['RunwaySurfaceTreatment']
+      /** @description FAA NASR field: PCN. Pavement Classification Number. See FAA Advisory Circular 150/5335-5 for code definitions and PCN determination formula. */
+      pavementClassification?: string | null
+      /**
+       * @description FAA NASR field: RWY_LGT_CODE. Runway lights edge intensity.
+       *     Possible values: High (HIGH), Medium (MED), Low (LOW), Flood (FLD), NonStandard (NSTD), Perimeter (PERI), Strobe (STRB), None (NONE).
+       */
+      edgeLightIntensity?: components['schemas']['RunwayEdgeLightIntensity']
+      /**
+       * Format: int32
+       * @description FAA NASR field: GROSS_WT_SW. Runway weight-bearing capacity for single wheel type landing gear, in pounds.
+       */
+      weightBearingSingleWheel?: number | null
+      /**
+       * Format: int32
+       * @description FAA NASR field: GROSS_WT_DW. Runway weight-bearing capacity for dual wheel type landing gear, in pounds.
+       */
+      weightBearingDualWheel?: number | null
+      /**
+       * Format: int32
+       * @description FAA NASR field: GROSS_WT_DTW. Runway weight-bearing capacity for two dual wheels in tandem type landing gear, in pounds.
+       */
+      weightBearingDualTandem?: number | null
+      /**
+       * Format: int32
+       * @description FAA NASR field: GROSS_WT_DDTW. Runway weight-bearing capacity for two dual wheels in tandem/two dual wheels in double tandem body gear type landing gear, in pounds.
+       */
+      weightBearingDoubleDualTandem?: number | null
+      /**
+       * @description FAA NASR field: COND. Runway Surface Condition.
+       *     Possible values: EXCELLENT, GOOD, FAIR, POOR, FAILED.
+       */
+      surfaceCondition?: string | null
+      /**
+       * @description FAA NASR field: PAVEMENT_TYPE_CODE. Pavement Type.
+       *     Possible values: R (Rigid), F (Flexible).
+       */
+      pavementTypeCode?: string | null
+      /** @description FAA NASR field: SUBGRADE_STRENGTH_CODE. Subgrade Strength (Letters A-F). */
+      subgradeStrengthCode?: string | null
+      /** @description FAA NASR field: TIRE_PRES_CODE. Tire Pressure Code (Letters W-Z). */
+      tirePressureCode?: string | null
+      /**
+       * @description FAA NASR field: DTRM_METHOD_CODE. Determination Method for pavement strength.
+       *     Possible values: T (Technical), U (Using Aircraft).
+       */
+      determinationMethodCode?: string | null
+      /** @description FAA NASR field: RWY_LEN_SOURCE. Source of runway length information. */
+      runwayLengthSource?: string | null
+      /**
+       * Format: date-time
+       * @description FAA NASR field: LENGTH_SOURCE_DATE. Date of runway length source information.
+       */
+      lengthSourceDate?: string | null
+      /** @description Runway end details for each direction (typically two per runway). */
+      runwayEnds?: components['schemas']['RunwayEndDto'][]
+    }
+    /**
+     * @description Runway Surface Type. Corresponds to FAA NASR field SURFACE_TYPE_CODE (APT_RWY).
+     *     The value will usually be one of the common types or a combination of two types
+     *     when the runway is composed of distinct sections.
+     * @enum {string}
+     */
+    RunwaySurfaceType:
+      | 'Unknown'
+      | 'Concrete'
+      | 'Asphalt'
+      | 'Snow'
+      | 'Ice'
+      | 'Mats'
+      | 'Treated'
+      | 'Gravel'
+      | 'Turf'
+      | 'Dirt'
+      | 'PartiallyPaved'
+      | 'Rooftop'
+      | 'Water'
+      | 'Aluminum'
+      | 'Brick'
+      | 'Caliche'
+      | 'Coral'
+      | 'Deck'
+      | 'Grass'
+      | 'Metal'
+      | 'NonStandard'
+      | 'OilChip'
+      | 'Psp'
+      | 'Sand'
+      | 'Sod'
+      | 'Steel'
+      | 'Wood'
+    /**
+     * @description Runway Surface Treatment. Corresponds to FAA NASR field TREATMENT_CODE (APT_RWY).
+     * @enum {string}
+     */
+    RunwaySurfaceTreatment:
+      | 'Unknown'
+      | 'None'
+      | 'Grooved'
+      | 'PorousFrictionCourse'
+      | 'AggregateFrictionSealCoat'
+      | 'RubberizedFrictionSealCoat'
+      | 'WireComb'
+    /**
+     * @description Runway Lights Edge Intensity. Corresponds to FAA NASR field RWY_LGT_CODE (APT_RWY).
+     * @enum {string}
+     */
+    RunwayEdgeLightIntensity:
+      | 'Unknown'
+      | 'None'
+      | 'High'
+      | 'Medium'
+      | 'Low'
+      | 'Flood'
+      | 'NonStandard'
+      | 'Perimeter'
+      | 'Strobe'
+    /**
+     * @description Runway end data from the FAA NASR database, sourced from APT_RWY_END.
+     *     Includes approach, markings, lighting, and controlling obstacle information.
+     */
+    RunwayEndDto: {
+      /**
+       * Format: guid
+       * @description System-generated unique identifier.
+       */
+      id?: string
+      /** @description FAA NASR field: RWY_END_ID. Runway end identifier (e.g., "01", "19", "09L", "27R"). */
+      runwayEndId?: string
+      /**
+       * Format: int32
+       * @description FAA NASR field: TRUE_ALIGNMENT. Runway end true alignment. True heading of the runway to the nearest degree.
+       */
+      trueAlignment?: number | null
+      /**
+       * @description FAA NASR field: ILS_TYPE. Instrument Landing System (ILS) type.
+       *     Possible values: Ils (ILS), Mls (MLS), Sdf (SDF), Localizer (LOCALIZER), Lda (LDA), Ismls (ISMLS),
+       *     IlsDme (ILS/DME), SdfDme (SDF/DME), LocDme (LOC/DME), LocGs (LOC/GS), LdaDme (LDA/DME).
+       */
+      approachType?: components['schemas']['InstrumentApproachType']
+      /** @description FAA NASR field: RIGHT_HAND_TRAFFIC_PAT_FLAG. Whether right-hand traffic pattern is in effect for landing aircraft. */
+      rightHandTrafficPattern?: boolean
+      /**
+       * @description FAA NASR field: RWY_MARKING_TYPE_CODE. Runway markings type.
+       *     Possible values: PrecisionInstrument (PIR), NonPrecisionInstrument (NPI), Basic (BSC),
+       *     NumbersOnly (NRS), NonStandard (NSTD), Buoys (BUOY), Stol (STOL), None (NONE).
+       */
+      markingsType?: components['schemas']['RunwayMarkingsType']
+      /**
+       * @description FAA NASR field: RWY_MARKING_COND. Runway markings condition.
+       *     Possible values: Good (G), Fair (F), Poor (P).
+       */
+      markingsCondition?: components['schemas']['RunwayMarkingsCondition']
+      /**
+       * Format: decimal
+       * @description FAA NASR field: LAT_DECIMAL. Latitude of physical runway end in decimal degrees.
+       */
+      latitude?: number | null
+      /**
+       * Format: decimal
+       * @description FAA NASR field: LONG_DECIMAL. Longitude of physical runway end in decimal degrees.
+       */
+      longitude?: number | null
+      /**
+       * Format: decimal
+       * @description FAA NASR field: RWY_END_ELEV. Elevation at the physical runway end in feet MSL.
+       */
+      elevation?: number | null
+      /**
+       * Format: decimal
+       * @description FAA NASR field: THR_CROSSING_HGT. Threshold Crossing Height in feet AGL. Height that the effective visual glide path crosses above the runway threshold.
+       */
+      thresholdCrossingHeight?: number | null
+      /**
+       * Format: decimal
+       * @description FAA NASR field: VISUAL_GLIDE_PATH_ANGLE. Visual glide path angle in hundredths of degrees.
+       */
+      visualGlidePathAngle?: number | null
+      /**
+       * Format: decimal
+       * @description FAA NASR field: LAT_DISPLACED_THR_DECIMAL. Latitude of displaced threshold in decimal degrees.
+       */
+      displacedThresholdLatitude?: number | null
+      /**
+       * Format: decimal
+       * @description FAA NASR field: LONG_DISPLACED_THR_DECIMAL. Longitude of displaced threshold in decimal degrees.
+       */
+      displacedThresholdLongitude?: number | null
+      /**
+       * Format: decimal
+       * @description FAA NASR field: DISPLACED_THR_ELEV. Elevation at the displaced threshold in feet MSL.
+       */
+      displacedThresholdElevation?: number | null
+      /**
+       * Format: int32
+       * @description FAA NASR field: DISPLACED_THR_LEN. Displaced threshold length in feet from the runway end.
+       */
+      displacedThresholdLength?: number | null
+      /**
+       * Format: decimal
+       * @description FAA NASR field: TDZ_ELEV. Elevation at the touchdown zone in feet MSL.
+       */
+      touchdownZoneElevation?: number | null
+      /**
+       * @description FAA NASR field: VGSI_CODE. Visual Glide Slope Indicator type.
+       *     Common types: VASI (V2L/V4L/etc.), PAPI (P2L/P4L/etc.), SAVASI (S2L/S2R), Tri-Color, Pulsating, Panel systems.
+       */
+      visualGlideSlopeIndicator?: components['schemas']['VisualGlideSlopeIndicatorType']
+      /**
+       * @description FAA NASR field: RWY_VISUAL_RANGE_EQUIP_CODE. Runway Visual Range (RVR) equipment location.
+       *     Possible values: Touchdown (T), Midfield (M), Rollout (R), None (N), TouchdownMidfield (TM), TouchdownRollout (TR), MidfieldRollout (MR), TouchdownMidfieldRollout (TMR).
+       */
+      runwayVisualRangeEquipment?: components['schemas']['RunwayVisualRangeEquipmentType']
+      /** @description FAA NASR field: RWY_VSBY_VALUE_EQUIP_FLAG. Whether Runway Visibility Value (RVV) equipment is installed. */
+      runwayVisibilityValueEquipment?: boolean
+      /**
+       * @description FAA NASR field: APCH_LGT_SYSTEM_CODE. Approach light system type.
+       *     See ApproachLightSystemType enum for all possible values and their FAA descriptions.
+       */
+      approachLightSystem?: components['schemas']['ApproachLightSystemType']
+      /** @description FAA NASR field: RWY_END_LGTS_FLAG. Whether Runway End Identifier Lights (REIL) are installed. */
+      hasRunwayEndLights?: boolean
+      /** @description FAA NASR field: CNTRLN_LGTS_AVBL_FLAG. Whether runway centerline lights are installed. */
+      hasCenterlineLights?: boolean
+      /** @description FAA NASR field: TDZ_LGT_AVBL_FLAG. Whether runway end touchdown zone lights are installed. */
+      hasTouchdownZoneLights?: boolean
+      /** @description FAA NASR field: OBSTN_TYPE. Controlling object description (type of obstacle). */
+      controllingObjectDescription?: string | null
+      /**
+       * @description FAA NASR field: OBSTN_MRKD_CODE. Controlling object marked/lighted status.
+       *     Possible values: Marked (M), Lighted (L), MarkedAndLighted (ML), None (NONE).
+       */
+      controllingObjectMarking?: components['schemas']['ControllingObjectMarking']
+      /**
+       * Format: int32
+       * @description FAA NASR field: OBSTN_CLNC_SLOPE. Controlling object clearance slope value, expressed as a ratio of N:1. If greater than 50:1, then 50 is entered.
+       */
+      controllingObjectClearanceSlope?: number | null
+      /**
+       * Format: int32
+       * @description FAA NASR field: OBSTN_HGT. Controlling object height above the physical runway end in feet AGL.
+       */
+      controllingObjectHeightAboveRunway?: number | null
+      /**
+       * Format: int32
+       * @description FAA NASR field: DIST_FROM_THR. Controlling object distance from the physical runway end in feet.
+       */
+      controllingObjectDistanceFromRunway?: number | null
+      /** @description FAA NASR field: CNTRLN_OFFSET. Controlling object centerline offset distance in feet from the extended runway centerline. */
+      controllingObjectCenterlineOffset?: string | null
+      /**
+       * Format: int32
+       * @description FAA NASR field: RWY_END_LAT_DEG. Runway end latitude degrees.
+       */
+      rwyEndLatDeg?: number | null
+      /**
+       * Format: int32
+       * @description FAA NASR field: RWY_END_LAT_MIN. Runway end latitude minutes.
+       */
+      rwyEndLatMin?: number | null
+      /**
+       * Format: decimal
+       * @description FAA NASR field: RWY_END_LAT_SEC. Runway end latitude seconds.
+       */
+      rwyEndLatSec?: number | null
+      /** @description FAA NASR field: RWY_END_LAT_HEMIS. Runway end latitude hemisphere (N or S). */
+      rwyEndLatHemis?: string | null
+      /**
+       * Format: int32
+       * @description FAA NASR field: RWY_END_LONG_DEG. Runway end longitude degrees.
+       */
+      rwyEndLongDeg?: number | null
+      /**
+       * Format: int32
+       * @description FAA NASR field: RWY_END_LONG_MIN. Runway end longitude minutes.
+       */
+      rwyEndLongMin?: number | null
+      /**
+       * Format: decimal
+       * @description FAA NASR field: RWY_END_LONG_SEC. Runway end longitude seconds.
+       */
+      rwyEndLongSec?: number | null
+      /** @description FAA NASR field: RWY_END_LONG_HEMIS. Runway end longitude hemisphere (E or W). */
+      rwyEndLongHemis?: string | null
+      /**
+       * Format: int32
+       * @description FAA NASR field: DISPLACED_THR_LAT_DEG. Displaced threshold latitude degrees.
+       */
+      displacedThrLatDeg?: number | null
+      /**
+       * Format: int32
+       * @description FAA NASR field: DISPLACED_THR_LAT_MIN. Displaced threshold latitude minutes.
+       */
+      displacedThrLatMin?: number | null
+      /**
+       * Format: decimal
+       * @description FAA NASR field: DISPLACED_THR_LAT_SEC. Displaced threshold latitude seconds.
+       */
+      displacedThrLatSec?: number | null
+      /** @description FAA NASR field: DISPLACED_THR_LAT_HEMIS. Displaced threshold latitude hemisphere (N or S). */
+      displacedThrLatHemis?: string | null
+      /**
+       * Format: int32
+       * @description FAA NASR field: DISPLACED_THR_LONG_DEG. Displaced threshold longitude degrees.
+       */
+      displacedThrLongDeg?: number | null
+      /**
+       * Format: int32
+       * @description FAA NASR field: DISPLACED_THR_LONG_MIN. Displaced threshold longitude minutes.
+       */
+      displacedThrLongMin?: number | null
+      /**
+       * Format: decimal
+       * @description FAA NASR field: DISPLACED_THR_LONG_SEC. Displaced threshold longitude seconds.
+       */
+      displacedThrLongSec?: number | null
+      /** @description FAA NASR field: DISPLACED_THR_LONG_HEMIS. Displaced threshold longitude hemisphere (E or W). */
+      displacedThrLongHemis?: string | null
+      /**
+       * @description FAA NASR field: FAR_PART_77_CODE. FAA CFR Part 77 (Objects Affecting Navigable Airspace) Runway Category.
+       *     Possible values: A(V) (Utility Runway with Visual Approach), B(V) (Other Than Utility with Visual Approach),
+       *     A(NP) (Utility with Nonprecision Approach), C (Other Than Utility with Nonprecision, visibility > 3/4 mile),
+       *     D (Other Than Utility with Nonprecision, visibility as low as 3/4 mile), PIR (Precision Instrument Runway).
+       */
+      farPart77Code?: string | null
+      /** @description FAA NASR field: CNTRLN_DIR_CODE. Controlling Object Centerline Offset Direction. Indicates direction (left or right) to the object from the centerline as seen by an approaching pilot. */
+      centerlineDirectionCode?: string | null
+      /**
+       * Format: decimal
+       * @description FAA NASR field: RWY_GRAD. Runway End Gradient.
+       */
+      runwayGradient?: number | null
+      /** @description FAA NASR field: RWY_GRAD_DIRECTION. Runway End Gradient Direction (Up or Down). */
+      runwayGradientDirection?: string | null
+      /** @description FAA NASR field: RWY_END_PSN_SOURCE. Source of runway end position information. */
+      rwyEndPositionSource?: string | null
+      /**
+       * Format: date-time
+       * @description FAA NASR field: RWY_END_PSN_DATE. Date of runway end position information.
+       */
+      rwyEndPositionDate?: string | null
+      /** @description FAA NASR field: RWY_END_ELEV_SOURCE. Source of runway end elevation information. */
+      rwyEndElevationSource?: string | null
+      /**
+       * Format: date-time
+       * @description FAA NASR field: RWY_END_ELEV_DATE. Date of runway end elevation information.
+       */
+      rwyEndElevationDate?: string | null
+      /** @description FAA NASR field: DSPL_THR_PSN_SOURCE. Source of displaced threshold position information. */
+      displacedThrPositionSource?: string | null
+      /**
+       * Format: date-time
+       * @description FAA NASR field: RWY_END_DSPL_THR_PSN_DATE. Date of displaced threshold position information.
+       */
+      displacedThrPositionDate?: string | null
+      /** @description FAA NASR field: DSPL_THR_ELEV_SOURCE. Source of displaced threshold elevation information. */
+      displacedThrElevationSource?: string | null
+      /**
+       * Format: date-time
+       * @description FAA NASR field: RWY_END_DSPL_THR_ELEV_DATE. Date of displaced threshold elevation information.
+       */
+      displacedThrElevationDate?: string | null
+      /** @description FAA NASR field: TDZ_ELEV_SOURCE. Source of touchdown zone elevation information. */
+      touchdownZoneElevSource?: string | null
+      /**
+       * Format: date-time
+       * @description FAA NASR field: RWY_END_TDZ_ELEV_DATE. Date of touchdown zone elevation information.
+       */
+      touchdownZoneElevDate?: string | null
+      /**
+       * Format: int32
+       * @description FAA NASR field: TKOF_RUN_AVBL. Takeoff Run Available (TORA) in feet.
+       */
+      takeoffRunAvailable?: number | null
+      /**
+       * Format: int32
+       * @description FAA NASR field: TKOF_DIST_AVBL. Takeoff Distance Available (TODA) in feet.
+       */
+      takeoffDistanceAvailable?: number | null
+      /**
+       * Format: int32
+       * @description FAA NASR field: ACLT_STOP_DIST_AVBL. Accelerate-Stop Distance Available (ASDA) in feet.
+       */
+      accelerateStopDistAvailable?: number | null
+      /**
+       * Format: int32
+       * @description FAA NASR field: LNDG_DIST_AVBL. Landing Distance Available (LDA) in feet.
+       */
+      landingDistanceAvailable?: number | null
+      /**
+       * Format: int32
+       * @description FAA NASR field: LAHSO_ALD. Available Landing Distance for Land and Hold Short Operations (LAHSO), in feet.
+       */
+      lahsoAvailableLandingDistance?: number | null
+      /** @description FAA NASR field: RWY_END_INTERSECT_LAHSO. ID of Intersecting Runway Defining Hold Short Point. */
+      lahsoIntersectingRunway?: string | null
+      /** @description FAA NASR field: LAHSO_DESC. Description of Entity Defining Hold Short Point if not an Intersecting Runway. */
+      lahsoDescription?: string | null
+      /** @description FAA NASR field: LAHSO_LAT. LAHSO hold short point latitude (DMS format). */
+      lahsoLatitude?: string | null
+      /**
+       * Format: decimal
+       * @description FAA NASR field: LAT_LAHSO_DECIMAL. LAHSO hold short point latitude in decimal degrees.
+       */
+      lahsoLatDecimal?: number | null
+      /** @description FAA NASR field: LAHSO_LONG. LAHSO hold short point longitude (DMS format). */
+      lahsoLongitude?: string | null
+      /**
+       * Format: decimal
+       * @description FAA NASR field: LONG_LAHSO_DECIMAL. LAHSO hold short point longitude in decimal degrees.
+       */
+      lahsoLongDecimal?: number | null
+      /** @description FAA NASR field: LAHSO_PSN_SOURCE. Source of LAHSO position information. */
+      lahsoPositionSource?: string | null
+      /**
+       * Format: date-time
+       * @description FAA NASR field: RWY_END_LAHSO_PSN_DATE. Date of LAHSO position information.
+       */
+      lahsoPositionDate?: string | null
+    }
+    /**
+     * @description Instrument Landing System (ILS) Type. Corresponds to FAA NASR field ILS_TYPE (APT_RWY_END).
+     * @enum {string}
+     */
+    InstrumentApproachType:
+      | 'Unknown'
+      | 'None'
+      | 'Ils'
+      | 'Mls'
+      | 'Sdf'
+      | 'Localizer'
+      | 'Lda'
+      | 'Ismls'
+      | 'IlsDme'
+      | 'SdfDme'
+      | 'LocDme'
+      | 'LocGs'
+      | 'LdaDme'
+    /**
+     * @description Runway Markings Type. Corresponds to FAA NASR field RWY_MARKING_TYPE_CODE (APT_RWY_END).
+     * @enum {string}
+     */
+    RunwayMarkingsType:
+      | 'Unknown'
+      | 'None'
+      | 'PrecisionInstrument'
+      | 'NonPrecisionInstrument'
+      | 'Basic'
+      | 'NumbersOnly'
+      | 'NonStandard'
+      | 'Buoys'
+      | 'Stol'
+    /**
+     * @description Runway Markings Condition. Corresponds to FAA NASR field RWY_MARKING_COND (APT_RWY_END).
+     * @enum {string}
+     */
+    RunwayMarkingsCondition: 'Unknown' | 'Good' | 'Fair' | 'Poor'
+    /**
+     * @description Visual Glide Slope Indicators. Corresponds to FAA NASR field VGSI_CODE (APT_RWY_END).
+     * @enum {string}
+     */
+    VisualGlideSlopeIndicatorType:
+      | 'Unknown'
+      | 'None'
+      | 'Savasi2BoxLeft'
+      | 'Savasi2BoxRight'
+      | 'Vasi2BoxLeft'
+      | 'Vasi2BoxRight'
+      | 'Vasi4BoxLeft'
+      | 'Vasi4BoxRight'
+      | 'Vasi6BoxLeft'
+      | 'Vasi6BoxRight'
+      | 'Vasi12Box'
+      | 'Vasi16Box'
+      | 'Papi2LightLeft'
+      | 'Papi2LightRight'
+      | 'Papi4LightLeft'
+      | 'Papi4LightRight'
+      | 'TriColorLeft'
+      | 'TriColorRight'
+      | 'PulsatingLeft'
+      | 'PulsatingRight'
+      | 'PanelLeft'
+      | 'PanelRight'
+      | 'NonStandard'
+      | 'PrivateUse'
+      | 'NonSpecificVasi'
+    /**
+     * @description Runway Visual Range (RVR) Equipment Location. Corresponds to FAA NASR field RWY_VISUAL_RANGE_EQUIP_CODE (APT_RWY_END).
+     * @enum {string}
+     */
+    RunwayVisualRangeEquipmentType:
+      | 'Unknown'
+      | 'None'
+      | 'Touchdown'
+      | 'Midfield'
+      | 'Rollout'
+      | 'TouchdownMidfield'
+      | 'TouchdownRollout'
+      | 'MidfieldRollout'
+      | 'TouchdownMidfieldRollout'
+    /**
+     * @description Approach Light System. Corresponds to FAA NASR field APCH_LGT_SYSTEM_CODE (APT_RWY_END).
+     * @enum {string}
+     */
+    ApproachLightSystemType:
+      | 'Unknown'
+      | 'None'
+      | 'AirForceOverrun'
+      | 'Alsaf'
+      | 'Alsf1'
+      | 'Alsf2'
+      | 'Mals'
+      | 'Malsf'
+      | 'Malsr'
+      | 'Rail'
+      | 'Sals'
+      | 'Salsf'
+      | 'Ssals'
+      | 'Ssalf'
+      | 'Ssalr'
+      | 'Odals'
+      | 'Rlls'
+      | 'MilitaryOverrun'
+      | 'NonStandard'
+    /**
+     * @description Controlling Object Marked/Lighted. Corresponds to FAA NASR field OBSTN_MRKD_CODE (APT_RWY_END).
+     * @enum {string}
+     */
+    ControllingObjectMarking:
+      | 'Unknown'
+      | 'None'
+      | 'Marked'
+      | 'Lighted'
+      | 'MarkedAndLighted'
+    /**
+     * @description Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the
+     *     pagination.nextCursor value as the cursor query parameter in your next request.
+     *     Continue until pagination.hasMore is false.
+     */
+    PaginatedResponseOfAirspaceDto: {
+      /** @description The current page of results. */
+      data?: components['schemas']['AirspaceDto'][]
+      /** @description Pagination metadata including the cursor to fetch the next page. */
+      pagination?: components['schemas']['PaginationMetadata']
+    }
+    /**
+     * @description Controlled airspace data (Class B, C, D, E) sourced from FAA ArcGIS.
+     *     Use the GlobalId to cross-reference with navigation log results — the navlog response's
+     *     AirspaceGlobalIds field contains GlobalIds from this endpoint for airspaces along a planned route.
+     */
+    AirspaceDto: {
+      /** @description ArcGIS global unique identifier. This is the key used to look up airspaces returned by the navigation log endpoint's AirspaceGlobalIds field. */
+      globalId?: string | null
+      /** @description FAA identifier. */
+      ident?: string | null
+      /** @description ICAO identifier. */
+      icaoId?: string | null
+      /** @description Airspace name. */
+      name?: string | null
+      /** @description Upper altitude limit description. */
+      upperDesc?: string | null
+      /**
+       * Format: double
+       * @description Upper altitude limit value.
+       */
+      upperVal?: number | null
+      /** @description Upper altitude unit of measure (e.g., FT, FL). */
+      upperUom?: string | null
+      /** @description Upper altitude reference code (e.g., MSL, AGL). */
+      upperCode?: string | null
+      /** @description Lower altitude limit description. */
+      lowerDesc?: string | null
+      /**
+       * Format: double
+       * @description Lower altitude limit value.
+       */
+      lowerVal?: number | null
+      /** @description Lower altitude unit of measure (e.g., FT, FL). */
+      lowerUom?: string | null
+      /** @description Lower altitude reference code (e.g., MSL, AGL). */
+      lowerCode?: string | null
+      /** @description Airspace type code (e.g., CLASS_B, CLASS_C). */
+      typeCode?: string | null
+      /** @description Local airspace type. */
+      localType?: string | null
+      /** @description Airspace class (e.g., B, C, D, E). */
+      class?: string | null
+      /** @description Military use code. */
+      milCode?: string | null
+      /** @description Communications facility name. */
+      commName?: string | null
+      /** @description Level designation (e.g., SURFACE, UPPER). */
+      level?: string | null
+      /** @description Sector identifier. */
+      sector?: string | null
+      /** @description Whether the airspace is onshore. */
+      onshore?: string | null
+      /** @description Exclusion area indicator. */
+      exclusion?: string | null
+      /** @description Working hours code. */
+      wkhrCode?: string | null
+      /** @description Working hours remarks. */
+      wkhrRmk?: string | null
+      /** @description Daylight saving time indicator. */
+      dst?: string | null
+      /** @description GMT offset. */
+      gmtOffset?: string | null
+      /** @description Controlling agency. */
+      contAgent?: string | null
+      /** @description City associated with the airspace. */
+      city?: string | null
+      /** @description State associated with the airspace. */
+      state?: string | null
+      /** @description Country code. */
+      country?: string | null
+      /** @description Associated aerodrome identifier. */
+      adhpId?: string | null
+      /** @description GeoJSON boundary geometry. */
+      geometry?: components['schemas']['GeoJsonGeometry'] | null
+    }
+    /** @description GeoJSON geometry representing an airspace boundary. */
+    GeoJsonGeometry: {
+      /** @description Geometry type (e.g., Polygon, MultiPolygon). */
+      type?: string
+      /** @description Coordinate array defining the geometry boundary. */
+      coordinates?: number[][][]
+    }
+    /**
+     * @description Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the
+     *     pagination.nextCursor value as the cursor query parameter in your next request.
+     *     Continue until pagination.hasMore is false.
+     */
+    PaginatedResponseOfSpecialUseAirspaceDto: {
+      /** @description The current page of results. */
+      data?: components['schemas']['SpecialUseAirspaceDto'][]
+      /** @description Pagination metadata including the cursor to fetch the next page. */
+      pagination?: components['schemas']['PaginationMetadata']
+    }
+    /**
+     * @description Special use airspace data (restricted, prohibited, warning, MOA, alert) sourced from FAA ArcGIS.
+     *     Use the GlobalId to cross-reference with navigation log results — the navlog response's
+     *     SpecialUseAirspaceGlobalIds field contains GlobalIds from this endpoint for special use airspaces along a planned route.
+     */
+    SpecialUseAirspaceDto: {
+      /** @description ArcGIS global unique identifier. This is the key used to look up special use airspaces returned by the navigation log endpoint's SpecialUseAirspaceGlobalIds field. */
+      globalId?: string | null
+      /** @description Airspace name. */
+      name?: string | null
+      /** @description Type code (e.g., R for restricted, P for prohibited). */
+      typeCode?: string | null
+      /** @description Airspace class. */
+      class?: string | null
+      /** @description Upper altitude limit description. */
+      upperDesc?: string | null
+      /** @description Upper altitude limit value. */
+      upperVal?: string | null
+      /** @description Upper altitude unit of measure. */
+      upperUom?: string | null
+      /** @description Upper altitude reference code. */
+      upperCode?: string | null
+      /** @description Lower altitude limit description. */
+      lowerDesc?: string | null
+      /** @description Lower altitude limit value. */
+      lowerVal?: string | null
+      /** @description Lower altitude unit of measure. */
+      lowerUom?: string | null
+      /** @description Lower altitude reference code. */
+      lowerCode?: string | null
+      /** @description Level code. */
+      levelCode?: string | null
+      /** @description City associated with the airspace. */
+      city?: string | null
+      /** @description State associated with the airspace. */
+      state?: string | null
+      /** @description Country code. */
+      country?: string | null
+      /** @description Controlling agency. */
+      contAgent?: string | null
+      /** @description Communications facility name. */
+      commName?: string | null
+      /** @description Sector identifier. */
+      sector?: string | null
+      /** @description Whether the airspace is onshore. */
+      onshore?: string | null
+      /** @description Exclusion area indicator. */
+      exclusion?: string | null
+      /** @description Times of use for the airspace. */
+      timesOfUse?: string | null
+      /** @description GMT offset. */
+      gmtOffset?: string | null
+      /** @description Daylight saving time code. */
+      dstCode?: string | null
+      /** @description Additional remarks. */
+      remarks?: string | null
+      /** @description GeoJSON boundary geometry. */
+      geometry?: components['schemas']['GeoJsonGeometry'] | null
+    }
+    /**
+     * @description Composite weather briefing for a flight route, containing all weather products
+     *     affecting the route corridor.
+     */
+    RouteBriefingResponse: {
+      /** @description Route description (e.g., "KDFW -> KAUS"). */
+      route?: string
+      /**
+       * Format: double
+       * @description Corridor width in nautical miles used for the search.
+       */
+      corridorWidthNm?: number
+      /**
+       * Format: date-time
+       * @description UTC timestamp when the briefing was generated.
+       */
+      generatedAt?: string
+      /** @description METARs for airports found along the route corridor. */
+      metars?: components['schemas']['MetarDto'][]
+      /** @description TAFs for airports found along the route corridor. */
+      tafs?: components['schemas']['TafDto'][]
+      /** @description PIREPs within the route corridor. */
+      pireps?: components['schemas']['PirepDto'][]
+      /** @description SIGMETs whose boundaries intersect the route. */
+      sigmets?: components['schemas']['SigmetDto'][]
+      /** @description G-AIRMETs whose boundaries intersect the route. */
+      gAirmets?: components['schemas']['GAirmetDto'][]
+      /** @description Active NOTAMs within the route corridor. */
+      notams?: components['schemas']['NotamDto'][]
+      /** @description Summary counts for each weather product category. */
+      summary?: components['schemas']['RouteBriefingSummary']
+    }
+    /** @description METAR (Meteorological Aerodrome Report) observation data for an airport. */
+    MetarDto: {
+      /**
+       * Format: int32
+       * @description Database identifier.
+       */
+      id?: number
+      /** @description Raw METAR text string as received from the source. */
+      rawText?: string | null
+      /** @description ICAO station identifier (e.g., KDFW). */
+      stationId?: string | null
+      /** @description Observation time in ISO 8601 format. */
+      observationTime?: string | null
+      /**
+       * Format: float
+       * @description Station latitude in decimal degrees.
+       */
+      latitude?: number | null
+      /**
+       * Format: float
+       * @description Station longitude in decimal degrees.
+       */
+      longitude?: number | null
+      /**
+       * Format: float
+       * @description Temperature in degrees Celsius.
+       */
+      tempC?: number | null
+      /**
+       * Format: float
+       * @description Dewpoint temperature in degrees Celsius.
+       */
+      dewpointC?: number | null
+      /** @description Wind direction in degrees true, or "VRB" for variable. */
+      windDirDegrees?: string | null
+      /**
+       * Format: int32
+       * @description Wind speed in knots.
+       */
+      windSpeedKt?: number | null
+      /**
+       * Format: int32
+       * @description Wind gust speed in knots.
+       */
+      windGustKt?: number | null
+      /** @description Visibility in statute miles. */
+      visibilityStatuteMi?: string | null
+      /**
+       * Format: float
+       * @description Altimeter setting in inches of mercury.
+       */
+      altimInHg?: number | null
+      /**
+       * Format: float
+       * @description Sea level pressure in millibars. ex: 1016.2
+       */
+      seaLevelPressureMb?: number | null
+      /** @description Quality control flags for the observation. */
+      qualityControlFlags?:
+        | components['schemas']['MetarQualityControlFlagsDto']
+        | null
+      /** @description Present weather string (e.g., "-RA" for light rain). */
+      wxString?: string | null
+      /** @description Sky condition layers (cloud cover and bases). */
+      skyCondition?: components['schemas']['MetarSkyConditionDto'][] | null
+      /** @description Flight category: VFR, MVFR, IFR, or LIFR. */
+      flightCategory?: string | null
+    }
+    /** @description Quality control flags indicating METAR observation characteristics. */
+    MetarQualityControlFlagsDto: {
+      /** @description Indicates a corrected observation. */
+      corrected?: string | null
+      /** @description Indicates an automated observation. */
+      auto?: string | null
+      /** @description Indicates an automated station type. */
+      autoStation?: string | null
+      /** @description Maintenance indicator is on. */
+      maintenanceIndicatorOn?: string | null
+      /** @description No signal received. */
+      noSignal?: string | null
+      /** @description Lightning sensor is off. */
+      lightningSensorOff?: string | null
+      /** @description Freezing rain sensor is off. */
+      freezingRainSensorOff?: string | null
+      /** @description Present weather sensor is off. */
+      presentWeatherSensorOff?: string | null
+    }
+    /** @description A single sky condition layer in a METAR observation. */
+    MetarSkyConditionDto: {
+      /** @description Sky cover type: SKC (sky clear), CLR (clear below 12,000), FEW (few), SCT (scattered), BKN (broken), OVC (overcast), or OVX (obscured). */
+      skyCover?: string
+      /**
+       * Format: int32
+       * @description Cloud base height in feet AGL. Null for SKC or CLR.
+       */
+      cloudBaseFtAgl?: number | null
+    }
+    /** @description TAF (Terminal Aerodrome Forecast) data for an airport. */
+    TafDto: {
+      /** @description Raw TAF forecast text as received from the source. ex: KORD 061728Z 0618/0724 21012KT P6SM BKN250 */
+      rawText?: string | null
+      /** @description ICAO station identifier (e.g., KDFW). */
+      stationId?: string | null
+      /** @description Time the TAF was issued in ISO 8601 format. */
+      issueTime?: string | null
+      /** @description Bulletin time in ISO 8601 format. */
+      bulletinTime?: string | null
+      /** @description Start of the TAF valid period in ISO 8601 format. */
+      validTimeFrom?: string | null
+      /** @description End of the TAF valid period in ISO 8601 format. */
+      validTimeTo?: string | null
+      /** @description TAF remarks. */
+      remarks?: string | null
+      /**
+       * Format: float
+       * @description Station latitude in decimal degrees.
+       */
+      latitude?: number | null
+      /**
+       * Format: float
+       * @description Station longitude in decimal degrees.
+       */
+      longitude?: number | null
+      /**
+       * Format: float
+       * @description Station elevation in meters.
+       */
+      elevationM?: number | null
+      /** @description Forecast periods within the TAF. */
+      forecast?: components['schemas']['TafForecast'][] | null
+    }
+    /**
+     * @description A single forecast period within a TAF. Each TAF contains one or more forecast periods
+     *     covering different time ranges, with optional change indicators (TEMPO, BECMG, FM, PROB).
+     */
+    TafForecast: {
+      /** @description Start of this forecast period in ISO 8601 format (UTC). */
+      fcstTimeFrom?: string | null
+      /** @description End of this forecast period in ISO 8601 format (UTC). */
+      fcstTimeTo?: string | null
+      /** @description Change indicator: FM (from), BECMG (becoming), TEMPO (temporary), or PROB (probability). Null for the base forecast. */
+      changeIndicator?: string | null
+      /** @description Time at which a BECMG (becoming) change completes, in ISO 8601 format (UTC). */
+      timeBecoming?: string | null
+      /**
+       * Format: int32
+       * @description Probability percentage (e.g., 30 or 40) for PROB-type forecast periods.
+       */
+      probability?: number | null
+      /** @description Forecast wind direction in degrees true, or "VRB" for variable winds. */
+      windDirDegrees?: string | null
+      /**
+       * Format: int32
+       * @description Forecast wind speed in knots.
+       */
+      windSpeedKt?: number | null
+      /**
+       * Format: int32
+       * @description Forecast wind gust speed in knots.
+       */
+      windGustKt?: number | null
+      /** @description Low-level wind shear height in feet AGL. */
+      windShearHgtFtAgl?: number | null
+      /** @description Low-level wind shear direction in degrees true. */
+      windShearDirDegrees?: number | null
+      /**
+       * Format: int32
+       * @description Low-level wind shear speed in knots.
+       */
+      windShearSpeedKt?: number | null
+      /** @description Forecast visibility in statute miles. May contain "6+" for visibility greater than 6 miles. */
+      visibilityStatuteMi?: string | null
+      /**
+       * Format: float
+       * @description Forecast altimeter setting in inches of mercury.
+       */
+      altimInHg?: number | null
+      /** @description Vertical visibility in feet, reported when the sky is obscured. */
+      vertVisFt?: number | null
+      /** @description Forecast weather phenomena string (e.g., "-RA" for light rain, "+TSRA" for heavy thunderstorms with rain). */
+      wxString?: string | null
+      /** @description Portion of the TAF text that could not be decoded by the parser. */
+      notDecoded?: string | null
+      /** @description Forecast sky condition layers (cloud cover and bases) for this period. */
+      skyConditions?: components['schemas']['TafSkyCondition'][] | null
+      /** @description Forecast turbulence conditions for this period. */
+      turbulenceConditions?:
+        | components['schemas']['TafTurbulenceCondition'][]
+        | null
+      /** @description Forecast icing conditions for this period. */
+      icingConditions?: components['schemas']['TafIcingCondition'][] | null
+      /** @description Forecast temperature data for this period. */
+      temperature?: components['schemas']['TafTemperature'][] | null
+    }
+    /** @description A single sky condition layer in a TAF forecast period. */
+    TafSkyCondition: {
+      /** @description Sky cover type: CLR (clear), CAVOK (ceiling and visibility OK), FEW (few), SCT (scattered), BKN (broken), OVC (overcast), or OVX (obscured). */
+      skyCover?: string
+      /**
+       * Format: int32
+       * @description Cloud base height in feet AGL. Null for CLR or CAVOK.
+       */
+      cloudBaseFtAgl?: number | null
+      /** @description Cloud type modifier (e.g., CB for cumulonimbus, TCU for towering cumulus). */
+      cloudType?: string | null
+    }
+    /** @description Forecast turbulence condition within a TAF forecast period. */
+    TafTurbulenceCondition: {
+      /** @description Turbulence intensity code (integer 0-9 per TAF implementation table): 0 (none), 1 (light), 2 (moderate occasional), 3 (moderate frequent), 4 (severe), 5 (extreme), 6-8 (reserved), 9 (not specified), or X (mountain wave). */
+      turbulenceIntensity?: string | null
+      /**
+       * Format: int32
+       * @description Bottom of the turbulence layer in feet AGL.
+       */
+      turbulenceMinAltFtAgl?: number | null
+      /**
+       * Format: int32
+       * @description Top of the turbulence layer in feet AGL.
+       */
+      turbulenceMaxAltFtAgl?: number | null
+    }
+    /** @description Forecast icing condition within a TAF forecast period. */
+    TafIcingCondition: {
+      /** @description Icing intensity code: 0 (none), 1 (light), 2 (light in clouds), 3 (light in precipitation), 4 (moderate), 5 (moderate in clouds), 6 (moderate in precipitation), 7 (severe), 8 (severe in clouds), 9 (severe in precipitation). */
+      icingIntensity?: string | null
+      /**
+       * Format: int32
+       * @description Bottom of the icing layer in feet AGL.
+       */
+      icingMinAltFtAgl?: number | null
+      /**
+       * Format: int32
+       * @description Top of the icing layer in feet AGL.
+       */
+      icingMaxAltFtAgl?: number | null
+    }
+    /** @description Forecast temperature data within a TAF forecast period. */
+    TafTemperature: {
+      /** @description Valid time for this temperature forecast in ISO 8601 format (UTC). */
+      validTime?: string | null
+      /**
+       * Format: float
+       * @description Forecast surface temperature in degrees Celsius.
+       */
+      sfcTempC?: number | null
+      /** @description Forecast maximum temperature in degrees Celsius. */
+      maxTempC?: string | null
+      /** @description Forecast minimum temperature in degrees Celsius. */
+      minTempC?: string | null
+    }
+    /** @description PIREP (Pilot Report) data including turbulence, icing, and sky conditions. */
+    PirepDto: {
+      /**
+       * Format: int32
+       * @description Database identifier.
+       */
+      id?: number
+      /** @description Raw PIREP text string. */
+      rawText?: string | null
+      /** @description Time the PIREP was received. */
+      receiptTime?: string | null
+      /** @description Time of the pilot observation. */
+      observationTime?: string | null
+      /** @description Quality control flags for the report. */
+      qualityControlFlags?:
+        | components['schemas']['PirepQualityControlFlags']
+        | null
+      /** @description Aircraft type designation. ex: B738, C172 */
+      aircraftRef?: string | null
+      /**
+       * Format: float
+       * @description Latitude of the report in decimal degrees.
+       */
+      latitude?: number | null
+      /**
+       * Format: float
+       * @description Longitude of the report in decimal degrees.
+       */
+      longitude?: number | null
+      /**
+       * Format: int32
+       * @description Altitude of the report in feet MSL.
+       */
+      altitudeFtMsl?: number | null
+      /** @description Reported sky conditions. */
+      skyConditions?: components['schemas']['PirepSkyCondition'][] | null
+      /** @description Reported turbulence conditions. */
+      turbulenceConditions?:
+        | components['schemas']['PirepTurbulenceCondition'][]
+        | null
+      /** @description Reported icing conditions. */
+      icingConditions?: components['schemas']['PirepIcingCondition'][] | null
+      /**
+       * Format: int32
+       * @description Flight visibility in statute miles.
+       */
+      visibilityStatuteMi?: number | null
+      /** @description Present weather string. */
+      wxString?: string | null
+      /**
+       * Format: float
+       * @description Temperature in degrees Celsius.
+       */
+      tempC?: number | null
+      /**
+       * Format: int32
+       * @description Wind direction in degrees true.
+       */
+      windDirDegrees?: number | null
+      /**
+       * Format: int32
+       * @description Wind speed in knots.
+       */
+      windSpeedKt?: number | null
+      /**
+       * Format: int32
+       * @description Vertical gust speed in knots.
+       */
+      vertGustKt?: number | null
+      /** @description Report type: UA (routine PIREP) or UUA (urgent PIREP). */
+      reportType?: string | null
+    }
+    /** @description Quality control flags indicating potential data issues with a PIREP. */
+    PirepQualityControlFlags: {
+      /** @description The report location was assumed to be the midpoint of the route. */
+      midPointAssumed?: string | null
+      /** @description The report had no timestamp and was assigned one by the system. */
+      noTimeStamp?: string | null
+      /** @description The flight level was reported as a range rather than a single altitude. */
+      fltLvlRange?: string | null
+      /** @description The altitude was indicated as AGL rather than the standard MSL. */
+      aboveGroundLevelIndicated?: string | null
+      /** @description No flight level was reported. */
+      noFltLvl?: string | null
+      /** @description The reported location could not be reliably decoded. */
+      badLocation?: string | null
+    }
+    /** @description A sky condition layer reported by a pilot in a PIREP. */
+    PirepSkyCondition: {
+      /** @description Sky cover type: SKC (sky clear), CLR (clear), FEW (few), SCT (scattered), BKN (broken), OVC (overcast), or OVX (obscured). */
+      skyCover?: string
+      /**
+       * Format: int32
+       * @description Cloud base altitude in feet MSL (note: PIREP altitudes are MSL, unlike TAF/METAR which use AGL).
+       */
+      cloudBaseFtMsl?: number | null
+      /**
+       * Format: int32
+       * @description Cloud top altitude in feet MSL.
+       */
+      cloudTopFtMsl?: number | null
+    }
+    /** @description A turbulence condition reported by a pilot in a PIREP. */
+    PirepTurbulenceCondition: {
+      /** @description Turbulence type: CAT (clear air), CHOP (chop), LLWS (low-level wind shear), or MWAVE (mountain wave). */
+      turbulenceType?: string | null
+      /** @description Turbulence intensity: NEG (none), SMTH-LGT (smooth to light), LGT (light), LGT-MOD (light to moderate), MOD (moderate), MOD-SEV (moderate to severe), SEV (severe), SEV-EXTM (severe to extreme), or EXTM (extreme). */
+      turbulenceIntensity?: string | null
+      /**
+       * Format: int32
+       * @description Bottom of the turbulence layer in feet MSL.
+       */
+      turbulenceBaseFtMsl?: number | null
+      /**
+       * Format: int32
+       * @description Top of the turbulence layer in feet MSL.
+       */
+      turbulenceTopFtMsl?: number | null
+      /** @description Turbulence frequency: ISOL (isolated), OCNL (occasional), or CONT (continuous). */
+      turbulenceFreq?: string | null
+    }
+    /** @description An icing condition reported by a pilot in a PIREP. */
+    PirepIcingCondition: {
+      /** @description Icing type: RIME (rime ice), CLEAR (clear ice), or MIXED (mixed rime and clear). */
+      icingType?: string | null
+      /** @description Icing intensity: NEG (none), NEGclr (none, clear of clouds), TRC (trace), TRC-LGT (trace to light), LGT (light), LGT-MOD (light to moderate), MOD (moderate), MOD-SEV (moderate to severe), HVY (heavy/severe), or SEV (severe). */
+      icingIntensity?: string | null
+      /**
+       * Format: int32
+       * @description Bottom of the icing layer in feet MSL.
+       */
+      icingBaseFtMsl?: number | null
+      /**
+       * Format: int32
+       * @description Top of the icing layer in feet MSL.
+       */
+      icingTopFtMsl?: number | null
+    }
+    /** @description Domestic SIGMET advisory data including hazard information and affected area. */
+    SigmetDto: {
+      /**
+       * Format: int32
+       * @description Database identifier.
+       */
+      id?: number
+      /** @description Raw SIGMET text. */
+      rawText?: string | null
+      /** @description Start of the valid period in ISO 8601 format. */
+      validTimeFrom?: string | null
+      /** @description End of the valid period in ISO 8601 format. */
+      validTimeTo?: string | null
+      /** @description Altitude range of the advisory. */
+      altitude?: components['schemas']['SigmetAltitude'] | null
+      /**
+       * Format: int32
+       * @description Movement direction in degrees true.
+       */
+      movementDirDegrees?: number | null
+      /**
+       * Format: int32
+       * @description Movement speed in knots.
+       */
+      movementSpeedKt?: number | null
+      /** @description Hazard type and severity information. */
+      hazard?: components['schemas']['SigmetHazardDto'] | null
+      /** @description Advisory type: always SIGMET. */
+      sigmetType?: string | null
+      /** @description Geographic areas affected by the advisory. */
+      areas?: components['schemas']['SigmetArea'][] | null
+    }
+    /** @description Altitude range for a SIGMET advisory. */
+    SigmetAltitude: {
+      /**
+       * Format: int32
+       * @description Minimum altitude in feet MSL for the advisory area.
+       */
+      minFtMsl?: number | null
+      /**
+       * Format: int32
+       * @description Maximum altitude in feet MSL for the advisory area.
+       */
+      maxFtMsl?: number | null
+    }
+    /** @description Hazard type and severity information for a SIGMET advisory. */
+    SigmetHazardDto: {
+      /** @description The weather hazard type: CONVECTIVE (thunderstorms/convection), ICE (icing), TURB (turbulence), IFR (instrument flight rules conditions), ASH (volcanic ash), or MTN_OBSCN (mountain obscuration). */
+      type?: components['schemas']['SigmetHazardType'] | null
+      /** @description Hazard severity: LGT (light), LT-MOD (light to moderate), MOD (moderate, typical for AIRMET), MOD-SEV (moderate to severe), SEV (severe, typical for SIGMET). Convective SIGMETs do not have a severity value. */
+      severity?: string | null
+    }
+    /**
+     * @description SIGMET hazard types
+     * @enum {string}
+     */
+    SigmetHazardType:
+      | 'CONVECTIVE'
+      | 'ICE'
+      | 'TURB'
+      | 'IFR'
+      | 'ASH'
+      | 'MTN_OBSCN'
+    /** @description Geographic area affected by a SIGMET, defined as a polygon of lat/lon points. */
+    SigmetArea: {
+      /**
+       * Format: int32
+       * @description Number of points defining the polygon boundary.
+       */
+      numPoints?: number
+      /** @description Ordered list of lat/lon points forming the polygon boundary of the affected area. */
+      points?: components['schemas']['SigmetPoint'][]
+    }
+    /** @description A geographic coordinate point forming part of a SIGMET area boundary polygon. */
+    SigmetPoint: {
+      /**
+       * Format: float
+       * @description Longitude in decimal degrees.
+       */
+      longitude?: number
+      /**
+       * Format: float
+       * @description Latitude in decimal degrees.
+       */
+      latitude?: number
+    }
+    /** @description G-AIRMET (Graphical AIRMET) advisory data with hazard, altitude, and area information. */
+    GAirmetDto: {
+      /**
+       * Format: int32
+       * @description Database identifier.
+       */
+      id?: number
+      /**
+       * Format: date-time
+       * @description Time the advisory was received.
+       */
+      receiptTime?: string
+      /**
+       * Format: date-time
+       * @description Time the advisory was issued.
+       */
+      issueTime?: string
+      /**
+       * Format: date-time
+       * @description Time the advisory expires, typically 6 hours after issuance.
+       */
+      expireTime?: string
+      /**
+       * Format: date-time
+       * @description The valid time of the G-AIRMET snapshot.
+       */
+      validTime?: string
+      /** @description Product type: SIERRA, TANGO, or ZULU. */
+      product?: components['schemas']['GAirmetProduct']
+      /** @description Forecast component identifier tag. ex: 1C */
+      tag?: string | null
+      /**
+       * Format: int32
+       * @description The forecast hour taken from initial product issuance. ex: 0, 3, 6, 9, 12
+       */
+      forecastHour?: number
+      /** @description Hazard type: IFR, MT_OBSC, TURB_HI, TURB_LO, ICE, FZLVL, M_FZLVL, SFC_WIND, or LLWS. */
+      hazard?: components['schemas']['GAirmetHazardType'] | null
+      /** @description Hazard severity: MOD (moderate) or null. */
+      hazardSeverity?: string | null
+      /** @description The geometry type: AREA or LINE. */
+      geometryType?: string | null
+      /** @description Additional information, reason for the AIRMET. ex: CIG BLW 010/VIS BLW 3SM PCPN/BR/FG */
+      dueTo?: string | null
+      /** @description Altitude ranges for the advisory in feet MSL. 0 indicates surface, -1 indicates freezing level. */
+      altitudes?: components['schemas']['GAirmetAltitude'][] | null
+      /** @description Geographic area affected by the advisory. */
+      area?: components['schemas']['GAirmetArea'] | null
+    }
+    /**
+     * @description G-AIRMET product types
+     * @enum {string}
+     */
+    GAirmetProduct: 'SIERRA' | 'TANGO' | 'ZULU'
+    /**
+     * @description G-AIRMET hazard types
+     * @enum {string}
+     */
+    GAirmetHazardType:
+      | 'MT_OBSC'
+      | 'IFR'
+      | 'TURB_LO'
+      | 'TURB_HI'
+      | 'LLWS'
+      | 'SFC_WIND'
+      | 'ICE'
+      | 'FZLVL'
+      | 'M_FZLVL'
+    /** @description Altitude information for a G-AIRMET advisory. Bottom/top levels valid in feet MSL; 0 indicates surface, -1 indicates freezing level. */
+    GAirmetAltitude: {
+      /** @description Minimum altitude in feet MSL. 0 indicates surface, -1 indicates freezing level. */
+      minFtMsl?: string | null
+      /** @description Maximum altitude in feet MSL. */
+      maxFtMsl?: string | null
+      /** @description Single level altitude in feet MSL (used for freezing level lines). */
+      levelFtMsl?: string | null
+      /** @description Range of altitudes for freezing level within an icing AIRMET. */
+      fzlAltitude?: components['schemas']['GAirmetFzlAltitude'] | null
+    }
+    /** @description Range of altitudes for the freezing level within an icing G-AIRMET. */
+    GAirmetFzlAltitude: {
+      /** @description Minimum freezing level altitude in feet MSL. */
+      minFtMsl?: string | null
+      /** @description Maximum freezing level altitude in feet MSL. */
+      maxFtMsl?: string | null
+    }
+    /** @description Geographic area affected by a G-AIRMET, defined as a polygon of lat/lon points. */
+    GAirmetArea: {
+      /**
+       * Format: int32
+       * @description Number of points defining the polygon boundary.
+       */
+      numPoints?: number
+      /** @description Ordered list of lat/lon points forming the polygon boundary of the affected area. */
+      points?: components['schemas']['GAirmetPoint'][]
+    }
+    /** @description A geographic coordinate point forming part of a G-AIRMET area boundary polygon. */
+    GAirmetPoint: {
+      /**
+       * Format: double
+       * @description Longitude in decimal degrees.
+       */
+      longitude?: number
+      /**
+       * Format: double
+       * @description Latitude in decimal degrees.
+       */
+      latitude?: number
+    }
+    /**
+     * @description Represents a NOTAM as a GeoJSON Feature from the NMS API.
+     *     See nms-api.yaml NmsNotamData schema for full specification.
+     */
+    NotamDto: {
+      /** @description GeoJSON type, always "Feature". */
+      type?: string
+      /** @description Unique NOTAM feature identifier. */
+      id?: string | null
+      /** @description GeoJSON geometry representing the NOTAM's geographic location or affected area (Point, Polygon, or GeometryCollection). */
+      geometry?: components['schemas']['NotamGeometryDto'] | null
+      /** @description NOTAM properties containing the core NOTAM data, detail fields, and translations. */
+      properties?: components['schemas']['NotamPropertiesDto'] | null
+    }
+    /** @description GeoJSON geometry - can be Point, Polygon, or GeometryCollection */
+    NotamGeometryDto: {
+      type?: string
+      /**
+       * @description For Point: [lon, lat] array
+       *     For Polygon: array of coordinate rings
+       *     For GeometryCollection: null (use Geometries instead)
+       */
+      coordinates?: unknown
+      /** @description For GeometryCollection type - contains child geometries */
+      geometries?: components['schemas']['NotamGeometryDto'][] | null
+    }
+    /** @description Properties of a NOTAM GeoJSON Feature containing the core NOTAM data. */
+    NotamPropertiesDto: {
+      /** @description Core NOTAM data including the event metadata, detail fields, and translations. */
+      coreNOTAMData?: components['schemas']['CoreNotamDataDto'] | null
+    }
+    /** @description Core NOTAM data structure containing event metadata, the NOTAM detail, and any translations. */
+    CoreNotamDataDto: {
+      /** @description NOTAM event metadata (encoding format and scenario). */
+      notamEvent?: components['schemas']['NotamEventDto'] | null
+      /** @description The NOTAM detail fields including identifier, text, effective dates, location, and classification. */
+      notam?: components['schemas']['NotamDetailDto'] | null
+      /** @description NOTAM text translations in various formats (plain English, domestic format, ICAO format). */
+      notamTranslation?: components['schemas']['NotamTranslationDto'][] | null
+    }
+    /** @description NOTAM event metadata */
+    NotamEventDto: {
+      encoding?: string | null
+      scenario?: string | null
+    }
+    /**
+     * @description Core NOTAM detail fields per NMS API specification.
+     *     Classification values: INTERNATIONAL, MILITARY, LOCAL_MILITARY, DOMESTIC, FDC
+     *     Feature values: RWY, TWY, APRON, AD, OBST, NAV, COM, SVC, AIRSPACE, ODP, SID, STAR, CHART, DATA, DVA, IAP, VFP, ROUTE, SPECIAL, SECURITY
+     *     Series values: A, B, C, D, E, G, H, I, J, K, N, R, V, Z
+     */
+    NotamDetailDto: {
+      /** @description Unique 16-digit NMS identifier */
+      id?: string | null
+      /**
+       * @description NOTAM number as returned by the NMS API. Typically a bare sequence number (e.g., "420", "3997")
+       *     but may include a month prefix (e.g., "01/123") for domestic NOTAMs or a series prefix
+       *     (e.g., "A1234/25") for ICAO NOTAMs. Stored as-is from the source; the denormalized
+       *     notam_number column on the entity strips any month prefix for indexed search.
+       */
+      number?: string | null
+      /** @description ICAO series code (A, B, C, D, E, G, H, I, J, K, N, R, V, Z) */
+      series?: string | null
+      /** @description 4-digit NOTAM year (e.g., "2025"). Denormalized to the notam_year entity column for indexed search. */
+      year?: string | null
+      /** @description NOTAM type (N=New, R=Replace, C=Cancel) */
+      type?: string | null
+      /** @description Feature category: RWY, TWY, APRON, AD, OBST, NAV, COM, SVC, AIRSPACE, ODP, SID, STAR, CHART, DATA, DVA, IAP, VFP, ROUTE, SPECIAL, SECURITY */
+      feature?: string | null
+      /** @description Issuance timestamp (ISO 8601) */
+      issued?: string | null
+      /** @description Affected FIR/ARTCC (e.g., "ZTL") */
+      affectedFir?: string | null
+      /** @description Q-code selection code (e.g., "QXXX") */
+      selectionCode?: string | null
+      /** @description Traffic type (I=IFR, V=VFR, IV=Both) */
+      traffic?: string | null
+      /** @description Purpose code (e.g., "BO") */
+      purpose?: string | null
+      /** @description Scope (A=Aerodrome, E=En-route, W=Navigation warning) */
+      scope?: string | null
+      /** @description Minimum flight level (e.g., "000") */
+      minimumFl?: string | null
+      /** @description Maximum flight level (e.g., "999") */
+      maximumFl?: string | null
+      /** @description Domestic location identifier (e.g., "CLT") */
+      location?: string | null
+      /** @description ICAO location identifier (e.g., "KCLT") */
+      icaoLocation?: string | null
+      /** @description Airport/facility name (AIXM-only, e.g., "JOHN C TUNE"). Null for GeoJSON-sourced NOTAMs. */
+      airportName?: string | null
+      /** @description Effective start timestamp (ISO 8601) */
+      effectiveStart?: string | null
+      /** @description Effective end timestamp (ISO 8601) */
+      effectiveEnd?: string | null
+      /** @description Whether end time is estimated ("true"/"false") */
+      estimated?: string | null
+      /** @description NOTAM text content */
+      text?: string | null
+      /** @description Classification: INTERNATIONAL, MILITARY, LOCAL_MILITARY, DOMESTIC, FDC */
+      classification?: string | null
+      /** @description Cancellation date timestamp (ISO 8601) */
+      cancelationDate?: string | null
+      /**
+       * @description Accountability ID — the issuing office code (e.g., "BNA", "FDC", "CLT").
+       *     3-4 characters for domestic NOTAMs, up to 8 characters for AFTN.
+       *     Denormalized to the account_id entity column for indexed search.
+       */
+      accountId?: string | null
+      /** @description Origin identifier from FAA FNSE extension */
+      originId?: string | null
+      /** @description Last updated timestamp (ISO 8601) */
+      lastUpdated?: string | null
+      /** @description Schedule string (e.g., "Daily:1200-1230~DLY 1200-1230") */
+      schedule?: string | null
+      /** @description Lower altitude limit (e.g., "SFC", "3000FT") */
+      lowerLimit?: string | null
+      /** @description Upper altitude limit (e.g., "280M", "FL180") */
+      upperLimit?: string | null
+      /** @description ICAO coordinates string (e.g., "3939N04302E") */
+      coordinates?: string | null
+      /** @description Radius in nautical miles */
+      radius?: string | null
+    }
+    /**
+     * @description NOTAM translation in various formats.
+     *     Type values: LOCAL_FORMAT, ICAO
+     */
+    NotamTranslationDto: {
+      /** @description Translation type: LOCAL_FORMAT or ICAO */
+      type?: string | null
+      /** @description Simple text translation (plain English) */
+      simpleText?: string | null
+      /** @description Domestic format message (for LOCAL_FORMAT type) */
+      domestic_message?: string | null
+      /** @description ICAO format message (for ICAO type) */
+      icao_message?: string | null
+      /** @description Formatted text (HTML or rich text) */
+      formattedText?: string | null
+    }
+    /** @description Count summary for a route briefing response. */
+    RouteBriefingSummary: {
+      /** Format: int32 */
+      metarCount?: number
+      /** Format: int32 */
+      tafCount?: number
+      /** Format: int32 */
+      pirepCount?: number
+      /** Format: int32 */
+      sigmetCount?: number
+      /** Format: int32 */
+      gAirmetCount?: number
+      /** Format: int32 */
+      notamCount?: number
+    }
+    /** @description Request for a composite route weather briefing along a flight path. */
+    RouteBriefingRequest: {
+      /**
+       * @description Ordered list of waypoints defining the flight route. Each waypoint is either an
+       *     airport identifier (ICAO code or FAA identifier) or a lat/lon coordinate pair.
+       *     At least two waypoints are required to define a route.
+       */
+      waypoints?: components['schemas']['BriefingWaypoint'][]
+      /**
+       * Format: double
+       * @description Corridor width in nautical miles on each side of the route centerline.
+       *     Used for PIREPs, NOTAMs, and airport searches. Default is 25 NM.
+       */
+      corridorWidthNm?: number
+    }
+    /**
+     * @description A single waypoint in a briefing route. Specify either an airport identifier
+     *     or latitude/longitude coordinates.
+     */
+    BriefingWaypoint: {
+      /**
+       * @description Airport ICAO code (e.g., KDFW) or FAA identifier (e.g., DFW).
+       *     If provided, latitude and longitude are ignored and looked up from the database.
+       */
+      airportIdentifier?: string | null
+      /**
+       * Format: decimal
+       * @description Latitude in decimal degrees (-90 to 90). Required when AirportIdentifier is null.
+       */
+      latitude?: number | null
+      /**
+       * Format: decimal
+       * @description Longitude in decimal degrees (-180 to 180). Required when AirportIdentifier is null.
+       */
+      longitude?: number | null
+    }
+    /**
+     * @description Airport information with all available chart supplement (formerly Airport/Facility Directory) pages.
+     *     Chart supplements contain detailed airport information including runway data, lighting, services,
+     *     NOTAMs, and other operational details published by the FAA. The PDF URLs are time-limited pre-signed URLs.
+     */
+    ChartSupplementsResponseDto: {
+      /** @description Official airport name. */
+      airportName?: string | null
+      /** @description City the airport is associated with. */
+      airportCity?: string | null
+      /** @description Airport ICAO code or FAA identifier used to query this data. */
+      airportCode?: string | null
+      /** @description List of chart supplement PDF pages with time-limited download URLs. Multi-page supplements will have one entry per page. */
+      supplements?: components['schemas']['ChartSupplementDto'][]
+    }
+    /** @description A single chart supplement page with a time-limited pre-signed URL for PDF download. */
+    ChartSupplementDto: {
+      /** @description Pre-signed URL to download the chart supplement PDF page. This URL expires after a limited time period; request a new URL if it has expired. */
+      pdfUrl?: string
+    }
+    /**
+     * @description Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the
+     *     pagination.nextCursor value as the cursor query parameter in your next request.
+     *     Continue until pagination.hasMore is false.
+     */
+    PaginatedResponseOfCommunicationFrequencyDto: {
+      /** @description The current page of results. */
+      data?: components['schemas']['CommunicationFrequencyDto'][]
+      /** @description Pagination metadata including the cursor to fetch the next page. */
+      pagination?: components['schemas']['PaginationMetadata']
+    }
+    /**
+     * @description Communication frequency data from the FAA NASR database, sourced from the FRQ CSV file.
+     *     Contains radio frequencies for ATC facilities, towers, approach/departure control, and other aviation communication services.
+     */
+    CommunicationFrequencyDto: {
+      /**
+       * Format: guid
+       * @description System-generated unique identifier.
+       */
+      id?: string
+      /** @description FAA NASR field: FACILITY. Contains FACILITY ID except for FACILITY TYPE AFIS, CTAF, GCO, UNICOM and RCAG. The FACILITY NAME is used for RCAG sites. AFIS, CTAF, GCO and UNICOM are NULL. */
+      facilityCode?: string | null
+      /**
+       * Format: date-time
+       * @description FAA NASR field: EFF_DATE. The 28 Day NASR Subscription Effective Date (YYYY/MM/DD).
+       */
+      effectiveDate?: string
+      /** @description FAA NASR field: FAC_NAME. Official Facility Name. NULL for AFIS, CTAF, GCO, UNICOM (no FACILITY ID or NAME in NASR) and ASOS/AWOS (no FACILITY NAME in NASR). */
+      facilityName?: string | null
+      /** @description FAA NASR field: FACILITY_TYPE. All records contain a FACILITY TYPE. Note: RCO and RCO1 serve the same function (remote communication outlet). An RCO1 may exist if two separate sites share the same identifier. */
+      facilityType?: string
+      /** @description FAA NASR field: ARTCC_OR_FSS_ID. RCAG facilities contain an ARTCC ID; RCO/RCO1 facilities contain an FSS ID. Included for convenience to identify the parent ARTCC or FSS resource in NASR. */
+      artccOrFssId?: string | null
+      /** @description FAA NASR field: CPDLC. A Controller Pilot Data Link Communications (CPDLC) remark associated with a FACILITY. */
+      cpdlc?: string | null
+      /** @description FAA NASR field: TOWER_HRS. Tower operating hours. Only listed for ATCT FACILITY TYPEs where the FACILITY equals the SERVICED FACILITY. */
+      towerHours?: string | null
+      /** @description FAA NASR field: SERVICED_FACILITY. The FACILITY ID (or FACILITY NAME if FACILITY TYPE is RCAG) that is serviced by the frequencies listed. This is a NON-NULL field. */
+      servicedFacility?: string
+      /** @description FAA NASR field: SERVICED_FAC_NAME. The FACILITY NAME that is serviced by the frequencies listed. */
+      servicedFacilityName?: string | null
+      /** @description FAA NASR field: SERVICED_SITE_TYPE. Facility Type of SERVICED FACILITY. */
+      servicedSiteType?: string | null
+      /**
+       * Format: decimal
+       * @description FAA NASR field: LAT_DECIMAL. Facility Reference Point Latitude in Decimal Format.
+       */
+      latitude?: number | null
+      /**
+       * Format: decimal
+       * @description FAA NASR field: LONG_DECIMAL. Facility Reference Point Longitude in Decimal Format.
+       */
+      longitude?: number | null
+      /** @description FAA NASR field: SERVICED_CITY. Serviced Facility Associated City Name. */
+      servicedCity?: string | null
+      /** @description FAA NASR field: SERVICED_STATE. Two-letter state ID of the SERVICED FACILITY. */
+      servicedState?: string | null
+      /** @description FAA NASR field: SERVICED_COUNTRY. Country Post Office Code of Serviced Facility. */
+      servicedCountry?: string | null
+      /** @description FAA NASR field: TOWER_OR_COMM_CALL. Radio call used by pilot to contact ATC or FSS facility. */
+      towerOrCommCall?: string | null
+      /** @description FAA NASR field: PRIMARY_APPROACH_RADIO_CALL. Radio call of facility that furnishes primary approach control. */
+      primaryApproachRadioCall?: string | null
+      /** @description FAA NASR field: FREQ. Frequency for SERVICED FACILITY use. In the case of a NAVAID with DME/TACAN Channel, the Frequency is displayed with the Channel (FREQ/CHAN). */
+      frequency?: string | null
+      /** @description FAA NASR field: SECTORIZATION. Sectorization based on SERVICED FACILITY or airway boundaries, or limitations based on runway usage. For ARTCC and RCAG, identifies the Frequency Altitude as Low, High, Low/High or Ultra-High. */
+      sectorization?: string | null
+      /** @description FAA NASR field: FREQ_USE. Intended use of the frequency (e.g., ATIS, LCL/P (Local/Tower), GND/P (Ground), CD/P (Clearance Delivery), APCH/P (Approach), DEP/P (Departure)). */
+      frequencyUse?: string | null
+      /** @description FAA NASR field: REMARK. Remark Text (Free Form Text that further describes a specific Information Item). */
+      remark?: string | null
+    }
+    /** @description Response DTO containing crosswind components for all runways at an airport */
+    AirportCrosswindResponseDto: {
+      /** @description ICAO code or identifier of the airport */
+      airportIdentifier?: string
+      /**
+       * Format: int32
+       * @description Wind direction in degrees from METAR (null if variable)
+       */
+      windDirectionDegrees?: number | null
+      /**
+       * Format: int32
+       * @description Wind speed in knots from METAR
+       */
+      windSpeedKt?: number
+      /**
+       * Format: int32
+       * @description Wind gust speed in knots from METAR (if reported)
+       */
+      windGustKt?: number | null
+      /** @description Whether the wind was reported as variable (VRB) */
+      isVariableWind?: boolean
+      /** @description Raw METAR text for reference */
+      rawMetar?: string | null
+      /** @description METAR observation time */
+      observationTime?: string | null
+      /** @description Crosswind components for each runway end at the airport */
+      runways?: components['schemas']['RunwayCrosswindComponentDto'][]
+      /** @description Recommended runway end identifier (lowest crosswind with headwind) */
+      recommendedRunway?: string | null
+    }
+    /** @description Crosswind component data for a single runway end */
+    RunwayCrosswindComponentDto: {
+      /** @description Runway end identifier (e.g., "09", "27L") */
+      runwayEndId?: string
+      /**
+       * Format: int32
+       * @description Runway heading in magnetic degrees
+       */
+      magneticHeadingDegrees?: number
+      /**
+       * Format: double
+       * @description Crosswind component in knots. Positive = from the right, Negative = from the left
+       */
+      crosswindKt?: number
+      /**
+       * Format: double
+       * @description Headwind component in knots. Positive = headwind, Negative = tailwind
+       */
+      headwindKt?: number
+      /**
+       * Format: double
+       * @description Crosswind component from gusts in knots (if gust data available). Positive = from the right
+       */
+      gustCrosswindKt?: number | null
+      /**
+       * Format: double
+       * @description Headwind component from gusts in knots (if gust data available). Positive = headwind
+       */
+      gustHeadwindKt?: number | null
+      /**
+       * Format: double
+       * @description Absolute value of crosswind component (for comparison purposes)
+       */
+      absoluteCrosswindKt?: number
+      /** @description Whether this runway has a headwind (favorable) vs tailwind */
+      hasHeadwind?: boolean
+    }
+    /** @description Response DTO for a single crosswind calculation */
+    CrosswindCalculationResponseDto: {
+      /**
+       * Format: double
+       * @description Crosswind component in knots. Positive = from the right, Negative = from the left
+       */
+      crosswindKt?: number
+      /**
+       * Format: double
+       * @description Headwind component in knots. Positive = headwind, Negative = tailwind
+       */
+      headwindKt?: number
+      /**
+       * Format: double
+       * @description Crosswind component from gusts in knots (if gust data provided). Positive = from the right
+       */
+      gustCrosswindKt?: number | null
+      /**
+       * Format: double
+       * @description Headwind component from gusts in knots (if gust data provided). Positive = headwind
+       */
+      gustHeadwindKt?: number | null
+      /**
+       * Format: int32
+       * @description Wind direction used in calculation (degrees)
+       */
+      windDirectionDegrees?: number | null
+      /**
+       * Format: int32
+       * @description Wind speed used in calculation (knots)
+       */
+      windSpeedKt?: number
+      /**
+       * Format: int32
+       * @description Wind gust speed used in calculation (knots)
+       */
+      windGustKt?: number | null
+      /**
+       * Format: int32
+       * @description Runway heading used in calculation (degrees)
+       */
+      runwayHeadingDegrees?: number
+      /** @description Whether the wind was reported as variable (VRB) */
+      isVariableWind?: boolean
+    }
+    /** @description Request DTO for manual crosswind calculation with user-provided parameters */
+    CrosswindCalculationRequestDto: {
+      /**
+       * Format: int32
+       * @description Wind direction in degrees (0-360, or null for variable)
+       */
+      windDirectionDegrees?: number | null
+      /**
+       * Format: int32
+       * @description Wind speed in knots
+       */
+      windSpeedKt?: number
+      /**
+       * Format: int32
+       * @description Wind gust speed in knots (optional)
+       */
+      windGustKt?: number | null
+      /**
+       * Format: int32
+       * @description Runway heading in magnetic degrees (0-360)
+       */
+      runwayHeadingDegrees?: number
+    }
+    /** @description Response DTO for density altitude calculation */
+    DensityAltitudeResponseDto: {
+      /** @description Airport identifier (for airport-based calculations) */
+      airportIdentifier?: string | null
+      /**
+       * Format: double
+       * @description Field elevation in feet MSL
+       */
+      fieldElevationFt?: number
+      /**
+       * Format: double
+       * @description Pressure altitude in feet
+       */
+      pressureAltitudeFt?: number
+      /**
+       * Format: double
+       * @description Density altitude in feet
+       */
+      densityAltitudeFt?: number
+      /**
+       * Format: double
+       * @description Standard (ISA) temperature at this pressure altitude in Celsius
+       */
+      isaTemperatureCelsius?: number
+      /**
+       * Format: double
+       * @description Actual temperature in Celsius
+       */
+      actualTemperatureCelsius?: number
+      /**
+       * Format: double
+       * @description Temperature deviation from ISA in Celsius
+       */
+      temperatureDeviationCelsius?: number
+      /**
+       * Format: double
+       * @description Altimeter setting used in calculation (inHg)
+       */
+      altimeterInHg?: number
+      /** @description Raw METAR text for reference (for airport-based calculations) */
+      rawMetar?: string | null
+      /** @description METAR observation time (for airport-based calculations) */
+      observationTime?: string | null
+    }
+    /** @description Request DTO for manual density altitude calculation */
+    DensityAltitudeRequestDto: {
+      /**
+       * Format: double
+       * @description Field elevation in feet MSL
+       */
+      fieldElevationFt?: number
+      /**
+       * Format: double
+       * @description Altimeter setting in inches of mercury (inHg)
+       */
+      altimeterInHg?: number
+      /**
+       * Format: double
+       * @description Temperature in degrees Celsius
+       */
+      temperatureCelsius?: number
+    }
+    /** @description Response DTO for wind triangle calculation containing heading and ground speed results. */
+    WindTriangleResponseDto: {
+      /**
+       * Format: double
+       * @description True heading in degrees (0–360), corrected for wind
+       */
+      trueHeadingDegrees?: number
+      /**
+       * Format: double
+       * @description Ground speed in knots
+       */
+      groundSpeedKt?: number
+      /**
+       * Format: double
+       * @description Wind correction angle in degrees (positive = right correction, negative = left)
+       */
+      windCorrectionAngleDegrees?: number
+      /**
+       * Format: double
+       * @description Headwind component in knots (positive = headwind, negative = tailwind)
+       */
+      headwindComponentKt?: number
+      /**
+       * Format: double
+       * @description Crosswind component in knots (positive = from the right, negative = from the left)
+       */
+      crosswindComponentKt?: number
+      /**
+       * Format: double
+       * @description True course used in calculation (degrees)
+       */
+      trueCourseDegrees?: number
+      /**
+       * Format: double
+       * @description True airspeed used in calculation (knots)
+       */
+      trueAirspeedKt?: number
+      /**
+       * Format: double
+       * @description Wind direction used in calculation (degrees)
+       */
+      windDirectionDegrees?: number
+      /**
+       * Format: double
+       * @description Wind speed used in calculation (knots)
+       */
+      windSpeedKt?: number
+    }
+    /** @description Request DTO for wind triangle (heading and ground speed) calculation. */
+    WindTriangleRequestDto: {
+      /**
+       * Format: double
+       * @description True course in degrees (0–360)
+       */
+      trueCourseDegrees?: number
+      /**
+       * Format: double
+       * @description True airspeed in knots (must be greater than 0)
+       */
+      trueAirspeedKt?: number
+      /**
+       * Format: double
+       * @description Wind direction in degrees (0–360)
+       */
+      windDirectionDegrees?: number
+      /**
+       * Format: double
+       * @description Wind speed in knots (must be ≥ 0)
+       */
+      windSpeedKt?: number
+    }
+    /** @description Response DTO for true airspeed calculation. */
+    TrueAirspeedResponseDto: {
+      /**
+       * Format: double
+       * @description Calculated true airspeed in knots
+       */
+      trueAirspeedKt?: number
+      /**
+       * Format: double
+       * @description Density altitude in feet at the given conditions
+       */
+      densityAltitudeFt?: number
+      /**
+       * Format: double
+       * @description Mach number at the given conditions
+       */
+      machNumber?: number
+      /**
+       * Format: double
+       * @description Calibrated airspeed used in calculation (knots)
+       */
+      calibratedAirspeedKt?: number
+      /**
+       * Format: double
+       * @description Pressure altitude used in calculation (feet)
+       */
+      pressureAltitudeFt?: number
+      /**
+       * Format: double
+       * @description Outside air temperature used in calculation (°C)
+       */
+      outsideAirTemperatureCelsius?: number
+    }
+    /** @description Request DTO for true airspeed (TAS) calculation. */
+    TrueAirspeedRequestDto: {
+      /**
+       * Format: double
+       * @description Calibrated (indicated) airspeed in knots (must be greater than 0)
+       */
+      calibratedAirspeedKt?: number
+      /**
+       * Format: double
+       * @description Pressure altitude in feet (can be negative, e.g. Death Valley)
+       */
+      pressureAltitudeFt?: number
+      /**
+       * Format: double
+       * @description Outside air temperature in degrees Celsius
+       */
+      outsideAirTemperatureCelsius?: number
+    }
+    /** @description Response DTO for cloud base estimation. */
+    CloudBaseResponseDto: {
+      /**
+       * Format: double
+       * @description Estimated cloud base in feet AGL
+       */
+      estimatedCloudBaseFtAgl?: number
+      /**
+       * Format: double
+       * @description Temperature/dewpoint spread in degrees Celsius
+       */
+      temperatureDewpointSpreadCelsius?: number
+      /**
+       * Format: double
+       * @description Surface temperature used in calculation (°C)
+       */
+      temperatureCelsius?: number
+      /**
+       * Format: double
+       * @description Dewpoint used in calculation (°C)
+       */
+      dewpointCelsius?: number
+    }
+    /** @description Request DTO for cloud base estimation. */
+    CloudBaseRequestDto: {
+      /**
+       * Format: double
+       * @description Surface temperature in degrees Celsius
+       */
+      temperatureCelsius?: number
+      /**
+       * Format: double
+       * @description Dewpoint temperature in degrees Celsius (must be ≤ temperature)
+       */
+      dewpointCelsius?: number
+    }
+    /** @description Response DTO for standalone pressure altitude calculation. */
+    PressureAltitudeResponseDto: {
+      /**
+       * Format: double
+       * @description Calculated pressure altitude in feet
+       */
+      pressureAltitudeFt?: number
+      /**
+       * Format: double
+       * @description Altimeter correction — deviation from standard pressure expressed in feet
+       */
+      altimeterCorrectionFt?: number
+      /**
+       * Format: double
+       * @description Field elevation used in calculation (feet MSL)
+       */
+      fieldElevationFt?: number
+      /**
+       * Format: double
+       * @description Altimeter setting used in calculation (inHg)
+       */
+      altimeterInHg?: number
+    }
+    /** @description Request DTO for standalone pressure altitude calculation. */
+    PressureAltitudeRequestDto: {
+      /**
+       * Format: double
+       * @description Field elevation in feet MSL
+       */
+      fieldElevationFt?: number
+      /**
+       * Format: double
+       * @description Altimeter setting in inches of mercury (must be between 25.0 and 35.0 inHg)
+       */
+      altimeterInHg?: number
+    }
+    /**
+     * @description Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the
+     *     pagination.nextCursor value as the cursor query parameter in your next request.
+     *     Continue until pagination.hasMore is false.
+     */
+    PaginatedResponseOfGAirmetDto: {
+      /** @description The current page of results. */
+      data?: components['schemas']['GAirmetDto'][]
+      /** @description Pagination metadata including the cursor to fetch the next page. */
+      pagination?: components['schemas']['PaginationMetadata']
+    }
+    /**
+     * @description Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the
+     *     pagination.nextCursor value as the cursor query parameter in your next request.
+     *     Continue until pagination.hasMore is false.
+     */
+    PaginatedResponseOfMetarDto: {
+      /** @description The current page of results. */
+      data?: components['schemas']['MetarDto'][]
+      /** @description Pagination metadata including the cursor to fetch the next page. */
+      pagination?: components['schemas']['PaginationMetadata']
+    }
+    /**
+     * @description Complete navigation log calculation result for a VFR cross-country flight.
+     *     Includes per-leg calculations (course, speed, fuel, wind) and references to airspace and obstacle
+     *     data along the route. Use the returned identifiers with the Airspace and Obstacle endpoints to
+     *     retrieve full details about en-route hazards.
+     */
+    NavlogResponseDto: {
+      /**
+       * Format: double
+       * @description Total route distance in nautical miles (sum of all leg distances).
+       */
+      totalRouteDistance?: number
+      /**
+       * Format: double
+       * @description Total estimated en-route time in hours (including climb and descent phases).
+       */
+      totalRouteTimeHours?: number
+      /**
+       * Format: double
+       * @description Total fuel consumed for the entire route in gallons (including start/taxi/takeoff fuel).
+       */
+      totalFuelUsed?: number
+      /**
+       * Format: double
+       * @description Average wind component across all legs in knots. Negative values indicate a net headwind; positive values indicate a net tailwind.
+       */
+      averageWindComponent?: number
+      /** @description Ordered list of navigation legs between each pair of consecutive waypoints, containing computed course, speed, fuel, and wind data. */
+      legs?: components['schemas']['NavigationLegDto'][]
+      /**
+       * @description Global IDs of controlled airspaces (Class B, C, D, E) that the route passes through.
+       *     Use these IDs with the GET /api/v1/airspaces/by-global-ids?globalIds=... endpoint to retrieve full airspace details including boundaries and altitude limits.
+       */
+      airspaceGlobalIds?: string[]
+      /**
+       * @description Global IDs of special use airspaces (restricted, prohibited, MOA, warning, alert) that the route passes through.
+       *     Use these IDs with the GET /api/v1/airspaces/special-use/by-global-ids?globalIds=... endpoint to retrieve full airspace details including boundaries and altitude limits.
+       */
+      specialUseAirspaceGlobalIds?: string[]
+      /**
+       * @description OAS (Obstacle Assessment Surface) numbers of obstacles near the route.
+       *     Use these numbers with the POST /api/v1/obstacles/by-oas-numbers endpoint to retrieve full obstacle details including type, height, and lighting.
+       */
+      obstacleOasNumbers?: string[]
+    }
+    /** @description A single navigation leg between two waypoints with computed flight data. */
+    NavigationLegDto: {
+      /** @description Starting waypoint for this leg. */
+      legStartPoint?: components['schemas']['WaypointDto']
+      /** @description Ending waypoint for this leg. */
+      legEndPoint?: components['schemas']['WaypointDto']
+      /**
+       * Format: double
+       * @description True course in degrees.
+       */
+      trueCourse?: number
+      /**
+       * Format: double
+       * @description Magnetic heading in degrees (corrected for wind and variation).
+       */
+      magneticHeading?: number
+      /**
+       * Format: double
+       * @description Magnetic course in degrees (corrected for variation only).
+       */
+      magneticCourse?: number
+      /**
+       * Format: double
+       * @description Ground speed in knots.
+       */
+      groundSpeed?: number
+      /**
+       * Format: double
+       * @description Leg distance in nautical miles.
+       */
+      legDistance?: number
+      /**
+       * Format: double
+       * @description Remaining distance to destination in nautical miles.
+       */
+      distanceRemaining?: number
+      /**
+       * Format: date-time
+       * @description Estimated time at the start of this leg (UTC).
+       */
+      startLegTime?: string
+      /**
+       * Format: date-time
+       * @description Estimated time at the end of this leg (UTC).
+       */
+      endLegTime?: string
+      /**
+       * Format: double
+       * @description Fuel burned during this leg in gallons.
+       */
+      legFuelBurnGals?: number
+      /**
+       * Format: double
+       * @description Remaining fuel at the end of this leg in gallons.
+       */
+      remainingFuelGals?: number
+      /**
+       * Format: int32
+       * @description Forecast wind direction in degrees true.
+       */
+      windDir?: number
+      /**
+       * Format: int32
+       * @description Forecast wind speed in knots.
+       */
+      windSpeed?: number
+      /**
+       * Format: double
+       * @description Headwind component in knots (negative = tailwind).
+       */
+      headwindComponent?: number
+      /**
+       * Format: float
+       * @description Forecast temperature in degrees Celsius.
+       */
+      tempC?: number
+    }
+    /** @description A waypoint along a navigation route. */
+    WaypointDto: {
+      /** @description Waypoint identifier (e.g., ICAO code or custom name). */
+      id?: string
+      /** @description Display name of the waypoint. */
+      name?: string
+      /**
+       * Format: double
+       * @description Latitude in decimal degrees.
+       */
+      latitude?: number
+      /**
+       * Format: double
+       * @description Longitude in decimal degrees.
+       */
+      longitude?: number
+      /**
+       * Format: double
+       * @description Altitude in feet MSL.
+       */
+      altitude?: number
+      /** @description Type of waypoint (e.g., airport, navaid, user-defined). */
+      waypointType?: components['schemas']['WaypointType'] | null
+      /**
+       * Format: double
+       * @description Gallons to add during a refueling stop.
+       */
+      refuelGallons?: number | null
+      /** @description Whether to refuel to full capacity at this stop. */
+      refuelToFull?: boolean | null
+      /** @description Whether this waypoint is a refueling stop. */
+      isRefuelingStop?: boolean | null
+    }
+    /** @enum {string} */
+    WaypointType: 'Airport' | 'Custom' | 'CalculatedPoint' | 'Navaid'
+    /** @description Request to calculate a VFR navigation log for a cross-country flight. */
+    NavlogRequestDto: {
+      /** @description Ordered list of waypoints defining the route. */
+      waypoints?: components['schemas']['WaypointDto'][]
+      /** @description Aircraft performance parameters for the flight. */
+      performanceData?: components['schemas']['NavlogPerformanceDataDto']
+      /**
+       * Format: int32
+       * @description Planned cruising altitude in feet MSL.
+       */
+      plannedCruisingAltitude?: number
+      /**
+       * Format: date-time
+       * @description Planned departure time in UTC.
+       */
+      timeOfDeparture?: string
+    }
+    /** @description Aircraft performance data used for navigation log calculations. */
+    NavlogPerformanceDataDto: {
+      /**
+       * Format: int32
+       * @description True airspeed during climb in knots.
+       */
+      climbTrueAirspeed?: number
+      /**
+       * Format: int32
+       * @description True airspeed during cruise in knots.
+       */
+      cruiseTrueAirspeed?: number
+      /**
+       * Format: int32
+       * @description True airspeed during descent in knots.
+       */
+      descentTrueAirspeed?: number
+      /**
+       * Format: int32
+       * @description Rate of climb in feet per minute.
+       */
+      climbFpm?: number
+      /**
+       * Format: int32
+       * @description Rate of descent in feet per minute.
+       */
+      descentFpm?: number
+      /**
+       * Format: double
+       * @description Fuel burn rate during climb in gallons per hour.
+       */
+      climbFuelBurn?: number
+      /**
+       * Format: double
+       * @description Fuel burn rate during cruise in gallons per hour.
+       */
+      cruiseFuelBurn?: number
+      /**
+       * Format: double
+       * @description Fuel burn rate during descent in gallons per hour.
+       */
+      descentFuelBurn?: number
+      /**
+       * Format: double
+       * @description Fuel used during start, taxi, and takeoff in gallons.
+       */
+      sttFuelGals?: number
+      /**
+       * Format: double
+       * @description Total fuel on board at departure in gallons.
+       */
+      fuelOnBoardGals?: number
+    }
+    /** @description Result of a bearing and distance calculation between two points. */
+    BearingAndDistanceResponseDto: {
+      /**
+       * Format: double
+       * @description True course in degrees.
+       */
+      trueCourse?: number
+      /**
+       * Format: double
+       * @description Magnetic course in degrees (adjusted for magnetic variation).
+       */
+      magneticCourse?: number
+      /**
+       * Format: double
+       * @description Great-circle distance in nautical miles.
+       */
+      distance?: number
+    }
+    /** @description Request to calculate bearing and distance between two geographic points. */
+    BearingAndDistanceRequestDto: {
+      /**
+       * Format: double
+       * @description Starting point latitude in decimal degrees.
+       */
+      startLatitude?: number
+      /**
+       * Format: double
+       * @description Starting point longitude in decimal degrees.
+       */
+      startLongitude?: number
+      /**
+       * Format: double
+       * @description Ending point latitude in decimal degrees.
+       */
+      endLatitude?: number
+      /**
+       * Format: double
+       * @description Ending point longitude in decimal degrees.
+       */
+      endLongitude?: number
+    }
+    /** @description Winds aloft forecast data for a specific forecast period. */
+    WindsAloftDto: {
+      /**
+       * Format: date-time
+       * @description Valid time for the forecast data.
+       */
+      validTime?: string
+      /**
+       * Format: date-time
+       * @description Start of the forecast use period.
+       */
+      forUseStartTime?: string
+      /**
+       * Format: date-time
+       * @description End of the forecast use period.
+       */
+      forUseEndTime?: string
+      /** @description Wind and temperature data for each reporting site. */
+      windTemp?: components['schemas']['WindsAloftSiteDto'][]
+    }
+    /** @description Winds aloft data for a single reporting site. */
+    WindsAloftSiteDto: {
+      /** @description Site identifier (e.g., DFW, ABI). */
+      id?: string
+      /**
+       * Format: float
+       * @description Site latitude in decimal degrees.
+       */
+      lat?: number
+      /**
+       * Format: float
+       * @description Site longitude in decimal degrees.
+       */
+      lon?: number
+      /** @description Wind and temperature data keyed by altitude level (e.g., "3000", "6000"). */
+      windTemp?: {
+        [key: string]: components['schemas']['WindTempDto']
+      }
+    }
+    /** @description Wind direction, speed, and temperature at a specific altitude level. */
+    WindTempDto: {
+      /**
+       * Format: int32
+       * @description Wind direction in degrees true (null if calm or light/variable).
+       */
+      direction?: number | null
+      /**
+       * Format: int32
+       * @description Wind speed in knots.
+       */
+      speed?: number
+      /**
+       * Format: float
+       * @description Temperature in degrees Celsius (not available at all altitudes).
+       */
+      temperature?: number | null
+    }
+    /**
+     * @description Response containing NOTAMs (Notices to Air Missions) matching a query.
+     *     Each NOTAM is a GeoJSON Feature with geographic geometry and detailed properties.
+     *     Used by the airport, radius, and route endpoints. The search endpoint uses cursor-based pagination instead.
+     */
+    NotamResponseDto: {
+      /** @description NOTAMs matching the query, each as a GeoJSON Feature with geometry and properties. */
+      notams?: components['schemas']['NotamDto'][]
+      /**
+       * Format: int32
+       * @description Total number of NOTAMs returned in this response.
+       */
+      totalCount?: number
+      /**
+       * Format: date-time
+       * @description UTC timestamp when the query was executed.
+       */
+      retrievedAt?: string
+      /** @description Description of the queried location (e.g., "KDFW", "32.8970,-97.0380 (25nm)", or "KDFW -> KAUS"). */
+      queryLocation?: string | null
+    }
+    /**
+     * @description Request body for querying NOTAMs along a flight route. Provide either AirportIdentifiers
+     *     (simple airport-only routes) or RoutePoints (mixed airports and waypoints).
+     *     If both are provided, RoutePoints is used and AirportIdentifiers is ignored.
+     *     NOTAMs from all route points are combined and deduplicated in the response.
+     */
+    NotamQueryByRouteRequest: {
+      /**
+       * @description Airport identifiers (ICAO codes or FAA identifiers) along the route, e.g. ["KDFW", "KAUS"].
+       *     Each airport is queried by identifier match. Use this when your entire route is airport-to-airport
+       *     with no en-route waypoints. Ignored when RoutePoints is provided.
+       */
+      airportIdentifiers?: string[]
+      /**
+       * @description Route points in flight order. Each point is either an airport (by identifier) or a geographic
+       *     waypoint (by lat/lon with radius search). Use this when your route includes en-route waypoints
+       *     or you need per-point radius control. When provided, AirportIdentifiers is ignored.
+       */
+      routePoints?: components['schemas']['RoutePointDto'][]
+      /**
+       * Format: double
+       * @description Default search radius in nautical miles applied to any waypoint in RoutePoints that does not
+       *     specify its own RadiusNm. Has no effect on airport points or on AirportIdentifiers.
+       *     If omitted, the server default (25 NM) is used.
+       */
+      corridorRadiusNm?: number | null
+      /** @description Optional filters (classification, feature, freeText, date range) applied to every route point query. */
+      filters?: components['schemas']['NotamFilterDto'] | null
+    }
+    /**
+     * @description A single point along a flight route. Each point is either an airport or a geographic waypoint:
+     *     Airport point: Set AirportIdentifier. NOTAMs are queried by identifier match (not spatial).
+     *     Waypoint: Set Latitude and Longitude. NOTAMs are queried by spatial radius search.
+     */
+    RoutePointDto: {
+      /**
+       * @description ICAO code (e.g., "KDFW") or FAA identifier (e.g., "DFW"). Case-insensitive.
+       *     If set, this point is treated as an airport and NOTAMs are matched by identifier.
+       *     Latitude, Longitude, and RadiusNm are ignored for airport points.
+       */
+      airportIdentifier?: string | null
+      /**
+       * @description Optional display name for waypoints (e.g., "Lake Travis", "MAVER").
+       *     Appears in the response's queryLocation route description.
+       *     If omitted, coordinates are used instead (e.g., "30.4082N, 97.8538W").
+       */
+      name?: string | null
+      /**
+       * Format: double
+       * @description Latitude in decimal degrees (-90 to 90). Required when AirportIdentifier is not set.
+       */
+      latitude?: number | null
+      /**
+       * Format: double
+       * @description Longitude in decimal degrees (-180 to 180). Required when AirportIdentifier is not set.
+       */
+      longitude?: number | null
+      /**
+       * Format: double
+       * @description Search radius in nautical miles for this waypoint (max 100). Only applies to waypoints.
+       *     If omitted, falls back to the request-level CorridorRadiusNm, then the server default (25 NM).
+       */
+      radiusNm?: number | null
+    }
+    /**
+     * @description Optional filters for narrowing NOTAM query results. All filters are combinable — when
+     *     multiple filters are provided, results must match all of them (AND logic).
+     */
+    NotamFilterDto: {
+      /**
+       * @description Filter by NOTAM classification.
+       *     Valid values: INTERNATIONAL, MILITARY, LOCAL_MILITARY, DOMESTIC, FDC.
+       */
+      classification?: string | null
+      /**
+       * @description Filter by NOTAM feature type (the aeronautical feature the NOTAM applies to).
+       *     Valid values: RWY, TWY, APRON, AD, OBST, NAV, COM, SVC, AIRSPACE, ODP, SID, STAR, CHART, DATA, DVA, IAP, VFP, ROUTE, SPECIAL, SECURITY.
+       */
+      feature?: string | null
+      /**
+       * @description Case-insensitive text search within the NOTAM text field (e.g., "CLOSED", "RWY 18/36").
+       *     Max 80 characters. Allowed characters: letters, digits, spaces, and /.-().
+       */
+      freeText?: string | null
+      /**
+       * @description Only include NOTAMs with an effective start on or after this date (ISO 8601).
+       *     Must be paired with EffectiveEndDate.
+       */
+      effectiveStartDate?: string | null
+      /**
+       * @description Only include NOTAMs with an effective end on or before this date (ISO 8601).
+       *     Must be paired with EffectiveStartDate.
+       */
+      effectiveEndDate?: string | null
+      /**
+       * @description Filter by accountability code (issuing office), e.g., "BNA", "FDC", "CLT".
+       *     Maps to the account_id column. Alphanumeric, max 10 characters.
+       */
+      accountability?: string | null
+      /**
+       * @description Filter by location identifier (FAA domestic or ICAO code), e.g., "DFW" or "KDFW".
+       *     Matches against both the domestic location and ICAO location columns. Alphanumeric, max 10 characters.
+       */
+      location?: string | null
+      /**
+       * @description ISO 8601 timestamp. When provided, returns NOTAMs modified between this time and now,
+       *     including both active and inactive NOTAMs (skips the active filter per FAA behavior).
+       */
+      lastUpdatedDate?: string | null
+      /** @description NOTAM number in any supported format. Per FAA spec, must be paired with Location or Accountability. */
+      notamNumber?: string | null
+      /**
+       * Format: double
+       * @description Latitude in decimal degrees [-90, 90]. Must be paired with Longitude and Radius.
+       */
+      latitude?: number | null
+      /**
+       * Format: double
+       * @description Longitude in decimal degrees [-180, 180]. Must be paired with Latitude and Radius.
+       */
+      longitude?: number | null
+      /**
+       * Format: double
+       * @description Search radius in nautical miles [0, 100]. Must be paired with Latitude and Longitude.
+       */
+      radius?: number | null
+      /** @description Whether any filter values are set. */
+      hasFilters?: boolean
+    }
+    /**
+     * @description Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the
+     *     pagination.nextCursor value as the cursor query parameter in your next request.
+     *     Continue until pagination.hasMore is false.
+     */
+    PaginatedResponseOfNotamDto: {
+      /** @description The current page of results. */
+      data?: components['schemas']['NotamDto'][]
+      /** @description Pagination metadata including the cursor to fetch the next page. */
+      pagination?: components['schemas']['PaginationMetadata']
+    }
+    /**
+     * @description Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the
+     *     pagination.nextCursor value as the cursor query parameter in your next request.
+     *     Continue until pagination.hasMore is false.
+     */
+    PaginatedResponseOfObstacleDto: {
+      /** @description The current page of results. */
+      data?: components['schemas']['ObstacleDto'][]
+      /** @description Pagination metadata including the cursor to fetch the next page. */
+      pagination?: components['schemas']['PaginationMetadata']
+    }
+    /**
+     * @description Obstacle data from the FAA Digital Obstacle File (DOF).
+     *     Use the OasNumber to cross-reference with navigation log results — the navlog response's
+     *     ObstacleOasNumbers field contains OAS numbers from this endpoint for obstacles near a planned route.
+     */
+    ObstacleDto: {
+      /** @description Obstacle Assessment Surface (OAS) number — the unique identifier for this obstacle. This is the key used to look up obstacles returned by the navigation log endpoint's ObstacleOasNumbers field. */
+      oasNumber?: string
+      /** @description Two-letter state identifier. */
+      stateId?: string | null
+      /** @description City nearest to the obstacle. */
+      cityName?: string | null
+      /**
+       * Format: decimal
+       * @description Latitude in decimal degrees.
+       */
+      latitude?: number | null
+      /**
+       * Format: decimal
+       * @description Longitude in decimal degrees.
+       */
+      longitude?: number | null
+      /** @description Type of obstacle (e.g., TOWER, BLDG, STACK). */
+      obstacleType?: string | null
+      /**
+       * Format: int32
+       * @description Number of obstacles at this location.
+       */
+      quantity?: number | null
+      /**
+       * Format: int32
+       * @description Height above ground level in feet.
+       */
+      heightAgl?: number | null
+      /**
+       * Format: int32
+       * @description Height above mean sea level in feet.
+       */
+      heightAmsl?: number | null
+      /** @description Lighting type on the obstacle. */
+      lighting?: components['schemas']['ObstacleLighting']
+      /** @description Horizontal accuracy of the position data. */
+      horizontalAccuracy?: components['schemas']['HorizontalAccuracy']
+      /** @description Vertical accuracy of the height data. */
+      verticalAccuracy?: components['schemas']['VerticalAccuracy']
+      /** @description Marking type on the obstacle. */
+      marking?: components['schemas']['ObstacleMarking']
+      /** @description Verification status of the obstacle data. */
+      verificationStatus?: components['schemas']['VerificationStatus']
+    }
+    /** @enum {string} */
+    ObstacleLighting:
+      | 'Unknown'
+      | 'Red'
+      | 'DualMediumWhiteStrobeRed'
+      | 'HighIntensityWhiteStrobeRed'
+      | 'MediumIntensityWhiteStrobe'
+      | 'HighIntensityWhiteStrobe'
+      | 'Flood'
+      | 'DualMediumCatenary'
+      | 'SynchronizedRedLighting'
+      | 'Lighted'
+      | 'None'
+    /** @enum {string} */
+    HorizontalAccuracy:
+      | 'Unknown'
+      | 'Within20Feet'
+      | 'Within50Feet'
+      | 'Within100Feet'
+      | 'Within250Feet'
+      | 'Within500Feet'
+      | 'Within1000Feet'
+      | 'WithinHalfNauticalMile'
+      | 'Within1NauticalMile'
+    /** @enum {string} */
+    VerticalAccuracy:
+      | 'Unknown'
+      | 'Within3Feet'
+      | 'Within10Feet'
+      | 'Within20Feet'
+      | 'Within50Feet'
+      | 'Within125Feet'
+      | 'Within250Feet'
+      | 'Within500Feet'
+      | 'Within1000Feet'
+    /** @enum {string} */
+    ObstacleMarking:
+      | 'Unknown'
+      | 'OrangeOrOrangeWhitePaint'
+      | 'WhitePaintOnly'
+      | 'Marked'
+      | 'FlagMarker'
+      | 'SphericalMarker'
+      | 'None'
+    /** @enum {string} */
+    VerificationStatus: 'Unknown' | 'Verified' | 'Unverified'
+    /**
+     * @description Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the
+     *     pagination.nextCursor value as the cursor query parameter in your next request.
+     *     Continue until pagination.hasMore is false.
+     */
+    PaginatedResponseOfPirepDto: {
+      /** @description The current page of results. */
+      data?: components['schemas']['PirepDto'][]
+      /** @description Pagination metadata including the cursor to fetch the next page. */
+      pagination?: components['schemas']['PaginationMetadata']
+    }
+    /**
+     * @description Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the
+     *     pagination.nextCursor value as the cursor query parameter in your next request.
+     *     Continue until pagination.hasMore is false.
+     */
+    PaginatedResponseOfSigmetDto: {
+      /** @description The current page of results. */
+      data?: components['schemas']['SigmetDto'][]
+      /** @description Pagination metadata including the cursor to fetch the next page. */
+      pagination?: components['schemas']['PaginationMetadata']
+    }
+    /**
+     * @description Airport information with all available terminal procedure charts. Charts are FAA-published PDFs from the
+     *     Digital Terminal Procedures Publication (d-TPP). The PDF URLs are time-limited pre-signed URLs.
+     */
+    TerminalProceduresResponseDto: {
+      /** @description Official airport name. */
+      airportName?: string
+      /** @description ICAO identifier (e.g., KDFW). Use this to cross-reference with other endpoints such as METARs and TAFs. */
+      icaoIdent?: string | null
+      /** @description FAA airport identifier (e.g., DFW). Use this to cross-reference with the Airports endpoint. */
+      airportIdent?: string | null
+      /** @description List of available terminal procedure chart PDFs with time-limited download URLs. */
+      procedures?: components['schemas']['TerminalProcedureDto'][]
+    }
+    /** @description A terminal procedure chart (IAP, DP, STAR, APD, MIN, HOT, etc.) with a time-limited pre-signed URL for PDF download. */
+    TerminalProcedureDto: {
+      /** @description Chart code indicating the procedure type (e.g., "IAP", "DP", "STAR", "APD", "MIN", "HOT"). */
+      chartCode?: string
+      /** @description Name of the chart (e.g., "ILS OR LOC RWY 18L", "AIRPORT DIAGRAM"). */
+      chartName?: string
+      /** @description Pre-signed URL to download the chart PDF. This URL expires after a limited time period; request a new URL if it has expired. */
+      pdfUrl?: string
+      /** @description Amendment number, if applicable. */
+      amendmentNumber?: string | null
+      /** @description Amendment date, if applicable. */
+      amendmentDate?: string | null
+    }
+  }
+  responses: never
+  parameters: never
+  requestBodies: never
+  headers: never
+  pathItems: never
 }
-export type PaginatedResponseOfAirportDto = components['schemas']['PaginatedResponseOfAirportDto'];
-export type AirportDto = components['schemas']['AirportDto'];
-export type AirportSiteType = components['schemas']['AirportSiteType'];
-export type AirportOwnershipType = components['schemas']['AirportOwnershipType'];
-export type AirportFacilityUse = components['schemas']['AirportFacilityUse'];
-export type AirportStatus = components['schemas']['AirportStatus'];
-export type SurveyMethod = components['schemas']['SurveyMethod'];
-export type AirportInspectionMethod = components['schemas']['AirportInspectionMethod'];
-export type AirportInspectorAgency = components['schemas']['AirportInspectorAgency'];
-export type RepairServiceAvailability = components['schemas']['RepairServiceAvailability'];
-export type OxygenPressureType = components['schemas']['OxygenPressureType'];
-export type BeaconLensColor = components['schemas']['BeaconLensColor'];
-export type SegmentedCircleMarkerType = components['schemas']['SegmentedCircleMarkerType'];
-export type WindIndicatorType = components['schemas']['WindIndicatorType'];
-export type PaginationMetadata = components['schemas']['PaginationMetadata'];
-export type ApiErrorResponse = components['schemas']['ApiErrorResponse'];
-export type RunwayDto = components['schemas']['RunwayDto'];
-export type RunwaySurfaceType = components['schemas']['RunwaySurfaceType'];
-export type RunwaySurfaceTreatment = components['schemas']['RunwaySurfaceTreatment'];
-export type RunwayEdgeLightIntensity = components['schemas']['RunwayEdgeLightIntensity'];
-export type RunwayEndDto = components['schemas']['RunwayEndDto'];
-export type InstrumentApproachType = components['schemas']['InstrumentApproachType'];
-export type RunwayMarkingsType = components['schemas']['RunwayMarkingsType'];
-export type RunwayMarkingsCondition = components['schemas']['RunwayMarkingsCondition'];
-export type VisualGlideSlopeIndicatorType = components['schemas']['VisualGlideSlopeIndicatorType'];
-export type RunwayVisualRangeEquipmentType = components['schemas']['RunwayVisualRangeEquipmentType'];
-export type ApproachLightSystemType = components['schemas']['ApproachLightSystemType'];
-export type ControllingObjectMarking = components['schemas']['ControllingObjectMarking'];
-export type PaginatedResponseOfAirspaceDto = components['schemas']['PaginatedResponseOfAirspaceDto'];
-export type AirspaceDto = components['schemas']['AirspaceDto'];
-export type GeoJsonGeometry = components['schemas']['GeoJsonGeometry'];
-export type PaginatedResponseOfSpecialUseAirspaceDto = components['schemas']['PaginatedResponseOfSpecialUseAirspaceDto'];
-export type SpecialUseAirspaceDto = components['schemas']['SpecialUseAirspaceDto'];
-export type RouteBriefingResponse = components['schemas']['RouteBriefingResponse'];
-export type MetarDto = components['schemas']['MetarDto'];
-export type MetarQualityControlFlagsDto = components['schemas']['MetarQualityControlFlagsDto'];
-export type MetarSkyConditionDto = components['schemas']['MetarSkyConditionDto'];
-export type TafDto = components['schemas']['TafDto'];
-export type TafForecast = components['schemas']['TafForecast'];
-export type TafSkyCondition = components['schemas']['TafSkyCondition'];
-export type TafTurbulenceCondition = components['schemas']['TafTurbulenceCondition'];
-export type TafIcingCondition = components['schemas']['TafIcingCondition'];
-export type TafTemperature = components['schemas']['TafTemperature'];
-export type PirepDto = components['schemas']['PirepDto'];
-export type PirepQualityControlFlags = components['schemas']['PirepQualityControlFlags'];
-export type PirepSkyCondition = components['schemas']['PirepSkyCondition'];
-export type PirepTurbulenceCondition = components['schemas']['PirepTurbulenceCondition'];
-export type PirepIcingCondition = components['schemas']['PirepIcingCondition'];
-export type SigmetDto = components['schemas']['SigmetDto'];
-export type SigmetAltitude = components['schemas']['SigmetAltitude'];
-export type SigmetHazardDto = components['schemas']['SigmetHazardDto'];
-export type SigmetHazardType = components['schemas']['SigmetHazardType'];
-export type SigmetArea = components['schemas']['SigmetArea'];
-export type SigmetPoint = components['schemas']['SigmetPoint'];
-export type GAirmetDto = components['schemas']['GAirmetDto'];
-export type GAirmetProduct = components['schemas']['GAirmetProduct'];
-export type GAirmetHazardType = components['schemas']['GAirmetHazardType'];
-export type GAirmetAltitude = components['schemas']['GAirmetAltitude'];
-export type GAirmetFzlAltitude = components['schemas']['GAirmetFzlAltitude'];
-export type GAirmetArea = components['schemas']['GAirmetArea'];
-export type GAirmetPoint = components['schemas']['GAirmetPoint'];
-export type NotamDto = components['schemas']['NotamDto'];
-export type NotamGeometryDto = components['schemas']['NotamGeometryDto'];
-export type NotamPropertiesDto = components['schemas']['NotamPropertiesDto'];
-export type CoreNotamDataDto = components['schemas']['CoreNotamDataDto'];
-export type NotamEventDto = components['schemas']['NotamEventDto'];
-export type NotamDetailDto = components['schemas']['NotamDetailDto'];
-export type NotamTranslationDto = components['schemas']['NotamTranslationDto'];
-export type RouteBriefingSummary = components['schemas']['RouteBriefingSummary'];
-export type RouteBriefingRequest = components['schemas']['RouteBriefingRequest'];
-export type BriefingWaypoint = components['schemas']['BriefingWaypoint'];
-export type ChartSupplementsResponseDto = components['schemas']['ChartSupplementsResponseDto'];
-export type ChartSupplementDto = components['schemas']['ChartSupplementDto'];
-export type PaginatedResponseOfCommunicationFrequencyDto = components['schemas']['PaginatedResponseOfCommunicationFrequencyDto'];
-export type CommunicationFrequencyDto = components['schemas']['CommunicationFrequencyDto'];
-export type AirportCrosswindResponseDto = components['schemas']['AirportCrosswindResponseDto'];
-export type RunwayCrosswindComponentDto = components['schemas']['RunwayCrosswindComponentDto'];
-export type CrosswindCalculationResponseDto = components['schemas']['CrosswindCalculationResponseDto'];
-export type CrosswindCalculationRequestDto = components['schemas']['CrosswindCalculationRequestDto'];
-export type DensityAltitudeResponseDto = components['schemas']['DensityAltitudeResponseDto'];
-export type DensityAltitudeRequestDto = components['schemas']['DensityAltitudeRequestDto'];
-export type WindTriangleResponseDto = components['schemas']['WindTriangleResponseDto'];
-export type WindTriangleRequestDto = components['schemas']['WindTriangleRequestDto'];
-export type TrueAirspeedResponseDto = components['schemas']['TrueAirspeedResponseDto'];
-export type TrueAirspeedRequestDto = components['schemas']['TrueAirspeedRequestDto'];
-export type CloudBaseResponseDto = components['schemas']['CloudBaseResponseDto'];
-export type CloudBaseRequestDto = components['schemas']['CloudBaseRequestDto'];
-export type PressureAltitudeResponseDto = components['schemas']['PressureAltitudeResponseDto'];
-export type PressureAltitudeRequestDto = components['schemas']['PressureAltitudeRequestDto'];
-export type PaginatedResponseOfGAirmetDto = components['schemas']['PaginatedResponseOfGAirmetDto'];
-export type PaginatedResponseOfMetarDto = components['schemas']['PaginatedResponseOfMetarDto'];
-export type NavlogResponseDto = components['schemas']['NavlogResponseDto'];
-export type NavigationLegDto = components['schemas']['NavigationLegDto'];
-export type WaypointDto = components['schemas']['WaypointDto'];
-export type WaypointType = components['schemas']['WaypointType'];
-export type NavlogRequestDto = components['schemas']['NavlogRequestDto'];
-export type NavlogPerformanceDataDto = components['schemas']['NavlogPerformanceDataDto'];
-export type BearingAndDistanceResponseDto = components['schemas']['BearingAndDistanceResponseDto'];
-export type BearingAndDistanceRequestDto = components['schemas']['BearingAndDistanceRequestDto'];
-export type WindsAloftDto = components['schemas']['WindsAloftDto'];
-export type WindsAloftSiteDto = components['schemas']['WindsAloftSiteDto'];
-export type WindTempDto = components['schemas']['WindTempDto'];
-export type NotamResponseDto = components['schemas']['NotamResponseDto'];
-export type NotamQueryByRouteRequest = components['schemas']['NotamQueryByRouteRequest'];
-export type RoutePointDto = components['schemas']['RoutePointDto'];
-export type NotamFilterDto = components['schemas']['NotamFilterDto'];
-export type PaginatedResponseOfNotamDto = components['schemas']['PaginatedResponseOfNotamDto'];
-export type PaginatedResponseOfObstacleDto = components['schemas']['PaginatedResponseOfObstacleDto'];
-export type ObstacleDto = components['schemas']['ObstacleDto'];
-export type ObstacleLighting = components['schemas']['ObstacleLighting'];
-export type HorizontalAccuracy = components['schemas']['HorizontalAccuracy'];
-export type VerticalAccuracy = components['schemas']['VerticalAccuracy'];
-export type ObstacleMarking = components['schemas']['ObstacleMarking'];
-export type VerificationStatus = components['schemas']['VerificationStatus'];
-export type PaginatedResponseOfPirepDto = components['schemas']['PaginatedResponseOfPirepDto'];
-export type PaginatedResponseOfSigmetDto = components['schemas']['PaginatedResponseOfSigmetDto'];
-export type TerminalProceduresResponseDto = components['schemas']['TerminalProceduresResponseDto'];
-export type TerminalProcedureDto = components['schemas']['TerminalProcedureDto'];
-export type $defs = Record<string, never>;
+export type PaginatedResponseOfAirportDto =
+  components['schemas']['PaginatedResponseOfAirportDto']
+export type AirportDto = components['schemas']['AirportDto']
+export type AirportSiteType = components['schemas']['AirportSiteType']
+export type AirportOwnershipType = components['schemas']['AirportOwnershipType']
+export type AirportFacilityUse = components['schemas']['AirportFacilityUse']
+export type AirportStatus = components['schemas']['AirportStatus']
+export type SurveyMethod = components['schemas']['SurveyMethod']
+export type AirportInspectionMethod =
+  components['schemas']['AirportInspectionMethod']
+export type AirportInspectorAgency =
+  components['schemas']['AirportInspectorAgency']
+export type RepairServiceAvailability =
+  components['schemas']['RepairServiceAvailability']
+export type OxygenPressureType = components['schemas']['OxygenPressureType']
+export type BeaconLensColor = components['schemas']['BeaconLensColor']
+export type SegmentedCircleMarkerType =
+  components['schemas']['SegmentedCircleMarkerType']
+export type WindIndicatorType = components['schemas']['WindIndicatorType']
+export type PaginationMetadata = components['schemas']['PaginationMetadata']
+export type ApiErrorResponse = components['schemas']['ApiErrorResponse']
+export type RunwayDto = components['schemas']['RunwayDto']
+export type RunwaySurfaceType = components['schemas']['RunwaySurfaceType']
+export type RunwaySurfaceTreatment =
+  components['schemas']['RunwaySurfaceTreatment']
+export type RunwayEdgeLightIntensity =
+  components['schemas']['RunwayEdgeLightIntensity']
+export type RunwayEndDto = components['schemas']['RunwayEndDto']
+export type InstrumentApproachType =
+  components['schemas']['InstrumentApproachType']
+export type RunwayMarkingsType = components['schemas']['RunwayMarkingsType']
+export type RunwayMarkingsCondition =
+  components['schemas']['RunwayMarkingsCondition']
+export type VisualGlideSlopeIndicatorType =
+  components['schemas']['VisualGlideSlopeIndicatorType']
+export type RunwayVisualRangeEquipmentType =
+  components['schemas']['RunwayVisualRangeEquipmentType']
+export type ApproachLightSystemType =
+  components['schemas']['ApproachLightSystemType']
+export type ControllingObjectMarking =
+  components['schemas']['ControllingObjectMarking']
+export type PaginatedResponseOfAirspaceDto =
+  components['schemas']['PaginatedResponseOfAirspaceDto']
+export type AirspaceDto = components['schemas']['AirspaceDto']
+export type GeoJsonGeometry = components['schemas']['GeoJsonGeometry']
+export type PaginatedResponseOfSpecialUseAirspaceDto =
+  components['schemas']['PaginatedResponseOfSpecialUseAirspaceDto']
+export type SpecialUseAirspaceDto =
+  components['schemas']['SpecialUseAirspaceDto']
+export type RouteBriefingResponse =
+  components['schemas']['RouteBriefingResponse']
+export type MetarDto = components['schemas']['MetarDto']
+export type MetarQualityControlFlagsDto =
+  components['schemas']['MetarQualityControlFlagsDto']
+export type MetarSkyConditionDto = components['schemas']['MetarSkyConditionDto']
+export type TafDto = components['schemas']['TafDto']
+export type TafForecast = components['schemas']['TafForecast']
+export type TafSkyCondition = components['schemas']['TafSkyCondition']
+export type TafTurbulenceCondition =
+  components['schemas']['TafTurbulenceCondition']
+export type TafIcingCondition = components['schemas']['TafIcingCondition']
+export type TafTemperature = components['schemas']['TafTemperature']
+export type PirepDto = components['schemas']['PirepDto']
+export type PirepQualityControlFlags =
+  components['schemas']['PirepQualityControlFlags']
+export type PirepSkyCondition = components['schemas']['PirepSkyCondition']
+export type PirepTurbulenceCondition =
+  components['schemas']['PirepTurbulenceCondition']
+export type PirepIcingCondition = components['schemas']['PirepIcingCondition']
+export type SigmetDto = components['schemas']['SigmetDto']
+export type SigmetAltitude = components['schemas']['SigmetAltitude']
+export type SigmetHazardDto = components['schemas']['SigmetHazardDto']
+export type SigmetHazardType = components['schemas']['SigmetHazardType']
+export type SigmetArea = components['schemas']['SigmetArea']
+export type SigmetPoint = components['schemas']['SigmetPoint']
+export type GAirmetDto = components['schemas']['GAirmetDto']
+export type GAirmetProduct = components['schemas']['GAirmetProduct']
+export type GAirmetHazardType = components['schemas']['GAirmetHazardType']
+export type GAirmetAltitude = components['schemas']['GAirmetAltitude']
+export type GAirmetFzlAltitude = components['schemas']['GAirmetFzlAltitude']
+export type GAirmetArea = components['schemas']['GAirmetArea']
+export type GAirmetPoint = components['schemas']['GAirmetPoint']
+export type NotamDto = components['schemas']['NotamDto']
+export type NotamGeometryDto = components['schemas']['NotamGeometryDto']
+export type NotamPropertiesDto = components['schemas']['NotamPropertiesDto']
+export type CoreNotamDataDto = components['schemas']['CoreNotamDataDto']
+export type NotamEventDto = components['schemas']['NotamEventDto']
+export type NotamDetailDto = components['schemas']['NotamDetailDto']
+export type NotamTranslationDto = components['schemas']['NotamTranslationDto']
+export type RouteBriefingSummary = components['schemas']['RouteBriefingSummary']
+export type RouteBriefingRequest = components['schemas']['RouteBriefingRequest']
+export type BriefingWaypoint = components['schemas']['BriefingWaypoint']
+export type ChartSupplementsResponseDto =
+  components['schemas']['ChartSupplementsResponseDto']
+export type ChartSupplementDto = components['schemas']['ChartSupplementDto']
+export type PaginatedResponseOfCommunicationFrequencyDto =
+  components['schemas']['PaginatedResponseOfCommunicationFrequencyDto']
+export type CommunicationFrequencyDto =
+  components['schemas']['CommunicationFrequencyDto']
+export type AirportCrosswindResponseDto =
+  components['schemas']['AirportCrosswindResponseDto']
+export type RunwayCrosswindComponentDto =
+  components['schemas']['RunwayCrosswindComponentDto']
+export type CrosswindCalculationResponseDto =
+  components['schemas']['CrosswindCalculationResponseDto']
+export type CrosswindCalculationRequestDto =
+  components['schemas']['CrosswindCalculationRequestDto']
+export type DensityAltitudeResponseDto =
+  components['schemas']['DensityAltitudeResponseDto']
+export type DensityAltitudeRequestDto =
+  components['schemas']['DensityAltitudeRequestDto']
+export type WindTriangleResponseDto =
+  components['schemas']['WindTriangleResponseDto']
+export type WindTriangleRequestDto =
+  components['schemas']['WindTriangleRequestDto']
+export type TrueAirspeedResponseDto =
+  components['schemas']['TrueAirspeedResponseDto']
+export type TrueAirspeedRequestDto =
+  components['schemas']['TrueAirspeedRequestDto']
+export type CloudBaseResponseDto = components['schemas']['CloudBaseResponseDto']
+export type CloudBaseRequestDto = components['schemas']['CloudBaseRequestDto']
+export type PressureAltitudeResponseDto =
+  components['schemas']['PressureAltitudeResponseDto']
+export type PressureAltitudeRequestDto =
+  components['schemas']['PressureAltitudeRequestDto']
+export type PaginatedResponseOfGAirmetDto =
+  components['schemas']['PaginatedResponseOfGAirmetDto']
+export type PaginatedResponseOfMetarDto =
+  components['schemas']['PaginatedResponseOfMetarDto']
+export type NavlogResponseDto = components['schemas']['NavlogResponseDto']
+export type NavigationLegDto = components['schemas']['NavigationLegDto']
+export type WaypointDto = components['schemas']['WaypointDto']
+export type WaypointType = components['schemas']['WaypointType']
+export type NavlogRequestDto = components['schemas']['NavlogRequestDto']
+export type NavlogPerformanceDataDto =
+  components['schemas']['NavlogPerformanceDataDto']
+export type BearingAndDistanceResponseDto =
+  components['schemas']['BearingAndDistanceResponseDto']
+export type BearingAndDistanceRequestDto =
+  components['schemas']['BearingAndDistanceRequestDto']
+export type WindsAloftDto = components['schemas']['WindsAloftDto']
+export type WindsAloftSiteDto = components['schemas']['WindsAloftSiteDto']
+export type WindTempDto = components['schemas']['WindTempDto']
+export type NotamResponseDto = components['schemas']['NotamResponseDto']
+export type NotamQueryByRouteRequest =
+  components['schemas']['NotamQueryByRouteRequest']
+export type RoutePointDto = components['schemas']['RoutePointDto']
+export type NotamFilterDto = components['schemas']['NotamFilterDto']
+export type PaginatedResponseOfNotamDto =
+  components['schemas']['PaginatedResponseOfNotamDto']
+export type PaginatedResponseOfObstacleDto =
+  components['schemas']['PaginatedResponseOfObstacleDto']
+export type ObstacleDto = components['schemas']['ObstacleDto']
+export type ObstacleLighting = components['schemas']['ObstacleLighting']
+export type HorizontalAccuracy = components['schemas']['HorizontalAccuracy']
+export type VerticalAccuracy = components['schemas']['VerticalAccuracy']
+export type ObstacleMarking = components['schemas']['ObstacleMarking']
+export type VerificationStatus = components['schemas']['VerificationStatus']
+export type PaginatedResponseOfPirepDto =
+  components['schemas']['PaginatedResponseOfPirepDto']
+export type PaginatedResponseOfSigmetDto =
+  components['schemas']['PaginatedResponseOfSigmetDto']
+export type TerminalProceduresResponseDto =
+  components['schemas']['TerminalProceduresResponseDto']
+export type TerminalProcedureDto = components['schemas']['TerminalProcedureDto']
+export type $defs = Record<string, never>
 export interface operations {
-    Airport_GetAirports: {
-        parameters: {
-            query?: {
-                /** @description Optional text search across airport name, city, ICAO code, and FAA identifier */
-                search?: string | null;
-                /** @description Optional comma-separated two-letter state codes (e.g., TX or TX,OK,LA) */
-                state?: string | null;
-                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
-                cursor?: string | null;
-                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the paginated airports */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponseOfAirportDto"];
-                };
-            };
-        };
-    };
-    Airport_SearchNearby: {
-        parameters: {
-            query?: {
-                /** @description Latitude in decimal degrees (-90 to 90) */
-                lat?: number;
-                /** @description Longitude in decimal degrees (-180 to 180) */
-                lon?: number;
-                /** @description Search radius in nautical miles (default 30, max 500) */
-                radiusNm?: number;
-                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
-                cursor?: string | null;
-                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the nearby airports */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponseOfAirportDto"];
-                };
-            };
-            /** @description If coordinates or radius are invalid */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Airport_GetAirportByIcaoCodeOrIdent: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description ICAO code or FAA identifier (e.g., KDFW, DFW) */
-                icaoCodeOrIdent: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the airport */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AirportDto"];
-                };
-            };
-            /** @description If the airport is not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Airport_GetAirportsBatch: {
-        parameters: {
-            query?: {
-                /** @description Comma-separated ICAO codes or FAA identifiers (e.g., KDFW,KAUS,KHOU) */
-                ids?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the matching airports */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AirportDto"][];
-                };
-            };
-            /** @description If the ids parameter is empty */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Airport_GetRunwaysByAirport: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description ICAO code or FAA identifier (e.g., KDFW, DFW) */
-                icaoCodeOrIdent: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the airport's runways */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RunwayDto"][];
-                };
-            };
-            /** @description If the airport is not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Airspace_GetByClasses: {
-        parameters: {
-            query?: {
-                /** @description Comma-separated airspace classes: B, C, or D */
-                classes?: string;
-                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
-                cursor?: string | null;
-                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the paginated airspaces */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponseOfAirspaceDto"];
-                };
-            };
-            /** @description If the classes parameter is empty */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Airspace_GetByCity: {
-        parameters: {
-            query?: {
-                /** @description Comma-separated city names (e.g., Dallas or Dallas,Houston) */
-                cities?: string;
-                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
-                cursor?: string | null;
-                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the paginated airspaces */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponseOfAirspaceDto"];
-                };
-            };
-            /** @description If the cities parameter is empty */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Airspace_GetByState: {
-        parameters: {
-            query?: {
-                /** @description Comma-separated two-letter state codes (e.g., TX or TX,OK) */
-                states?: string;
-                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
-                cursor?: string | null;
-                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the paginated airspaces */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponseOfAirspaceDto"];
-                };
-            };
-            /** @description If the states parameter is empty */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Airspace_GetByTypeCode: {
-        parameters: {
-            query?: {
-                /** @description Comma-separated type codes: R (restricted), P (prohibited), W (warning), A (alert), M (MOA) */
-                typeCodes?: string;
-                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
-                cursor?: string | null;
-                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the paginated special use airspaces */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponseOfSpecialUseAirspaceDto"];
-                };
-            };
-            /** @description If the type codes parameter is empty */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Airspace_GetByIcaoOrIdent: {
-        parameters: {
-            query?: {
-                /** @description Comma-separated ICAO codes or FAA identifiers (e.g., KDFW,KORD,KJFK) */
-                icaoOrIdents?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the matching airspaces */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AirspaceDto"][];
-                };
-            };
-            /** @description The identifiers parameter is empty */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Airspace_GetByGlobalIds: {
-        parameters: {
-            query?: {
-                /** @description Comma-separated global IDs (GUIDs from the navlog response's AirspaceGlobalIds field) */
-                globalIds?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the matching airspaces */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AirspaceDto"][];
-                };
-            };
-            /** @description If the global IDs parameter is empty */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Airspace_GetSpecialUseByGlobalIds: {
-        parameters: {
-            query?: {
-                /** @description Comma-separated global IDs (GUIDs from the navlog response's SpecialUseAirspaceGlobalIds field) */
-                globalIds?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the matching special use airspaces */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SpecialUseAirspaceDto"][];
-                };
-            };
-            /** @description If the global IDs parameter is empty */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Briefing_GetRouteBriefing: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * @description Route definition containing Waypoints (minimum 2, each with AirportIdentifier
-         *     or Latitude/Longitude) and optional CorridorWidthNm (default 25).
-         */
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RouteBriefingRequest"];
-            };
-        };
-        responses: {
-            /** @description Returns the route weather briefing */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RouteBriefingResponse"];
-                };
-            };
-            /** @description If the request is invalid (fewer than 2 waypoints, invalid coordinates, etc.) */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-            /** @description If an airport waypoint is not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    ChartSupplement_GetChartSupplements: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description ICAO code or FAA identifier (e.g., KDFW, DFW). Case-insensitive. */
-                icaoCodeOrIdent: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the chart supplements for the airport */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ChartSupplementsResponseDto"];
-                };
-            };
-            /** @description If no chart supplements are found for the given identifier */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    CommunicationFrequency_GetFrequenciesByServicedFacility: {
-        parameters: {
-            query?: {
-                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
-                cursor?: string | null;
-                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
-                limit?: number;
-            };
-            header?: never;
-            path: {
-                /** @description FAA facility identifier — the FAA airport code without the "K" prefix (e.g., DFW, AUS). Use the ArptId field from the Airports endpoint. */
-                servicedFacility: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the communication frequencies */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponseOfCommunicationFrequencyDto"];
-                };
-            };
-            /** @description If the serviced facility identifier is empty */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-            /** @description If the facility is not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    E6b_GetCrosswindForAirport: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description ICAO code (e.g., KDFW) or FAA identifier (e.g., DFW) */
-                icaoCodeOrIdent: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns crosswind data for all runways with a recommended runway */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AirportCrosswindResponseDto"];
-                };
-            };
-            /** @description The METAR is missing wind direction or wind speed data */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-            /** @description The airport was not found, or no current METAR is available for this airport */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    E6b_CalculateCrosswind: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * @description WindDirectionDegrees (0-360, or null for variable),
-         *     WindSpeedKt (knots),
-         *     WindGustKt (knots, optional),
-         *     RunwayHeadingDegrees (magnetic degrees, 0-360).
-         */
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CrosswindCalculationRequestDto"];
-            };
-        };
-        responses: {
-            /** @description Returns the calculated crosswind and headwind components */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CrosswindCalculationResponseDto"];
-                };
-            };
-            /** @description The request parameters are invalid (e.g., wind speed is negative) */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    E6b_GetDensityAltitudeForAirport: {
-        parameters: {
-            query?: {
-                /** @description Override temperature in Celsius (uses METAR if not provided) */
-                TemperatureCelsiusOverride?: number | null;
-                /** @description Override altimeter setting in inHg (uses METAR if not provided) */
-                AltimeterInHgOverride?: number | null;
-            };
-            header?: never;
-            path: {
-                /** @description ICAO code (e.g., KDFW) or FAA identifier (e.g., DFW) */
-                icaoCodeOrIdent: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns density altitude data for the airport */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["DensityAltitudeResponseDto"];
-                };
-            };
-            /** @description The METAR is missing temperature or altimeter data and no override was provided */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-            /** @description The airport was not found, or no current METAR is available */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    E6b_CalculateDensityAltitude: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * @description FieldElevationFt (feet MSL),
-         *     AltimeterInHg (inches of mercury),
-         *     TemperatureCelsius (degrees Celsius).
-         */
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["DensityAltitudeRequestDto"];
-            };
-        };
-        responses: {
-            /** @description Returns the calculated density altitude */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["DensityAltitudeResponseDto"];
-                };
-            };
-            /** @description The request parameters are invalid */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    E6b_CalculateWindTriangle: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * @description TrueCourseDegrees (0-360),
-         *     TrueAirspeedKt (knots, must be greater than 0),
-         *     WindDirectionDegrees (0-360, direction wind blows from),
-         *     WindSpeedKt (knots).
-         */
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["WindTriangleRequestDto"];
-            };
-        };
-        responses: {
-            /** @description Returns the wind triangle solution */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["WindTriangleResponseDto"];
-                };
-            };
-            /** @description The request parameters are invalid (e.g., TAS is zero or negative) */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    E6b_CalculateTrueAirspeed: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * @description CalibratedAirspeedKt (knots, must be greater than 0),
-         *     PressureAltitudeFt (feet, can be negative),
-         *     OutsideAirTemperatureCelsius (degrees Celsius).
-         */
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["TrueAirspeedRequestDto"];
-            };
-        };
-        responses: {
-            /** @description Returns the TAS calculation */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TrueAirspeedResponseDto"];
-                };
-            };
-            /** @description The request parameters are invalid (e.g., CAS is zero or negative) */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    E6b_CalculateCloudBase: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * @description TemperatureCelsius (surface temperature in °C) and
-         *     DewpointCelsius (dewpoint in °C, must be less than or equal to the temperature).
-         */
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CloudBaseRequestDto"];
-            };
-        };
-        responses: {
-            /** @description Returns the cloud base estimation */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CloudBaseResponseDto"];
-                };
-            };
-            /** @description The dewpoint exceeds the temperature, which is physically invalid */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    E6b_CalculatePressureAltitude: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * @description FieldElevationFt (feet MSL) and
-         *     AltimeterInHg (inches of mercury, must be between 25.0 and 35.0).
-         */
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["PressureAltitudeRequestDto"];
-            };
-        };
-        responses: {
-            /** @description Returns the pressure altitude calculation */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PressureAltitudeResponseDto"];
-                };
-            };
-            /** @description The altimeter setting is outside the valid range (25.0 - 35.0 inHg) */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    GAirmet_GetAllGAirmets: {
-        parameters: {
-            query?: {
-                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
-                cursor?: string | null;
-                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the paginated list of all current G-AIRMETs */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponseOfGAirmetDto"];
-                };
-            };
-        };
-    };
-    GAirmet_GetGAirmetsByProduct: {
-        parameters: {
-            query?: {
-                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
-                cursor?: string | null;
-                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
-                limit?: number;
-            };
-            header?: never;
-            path: {
-                /** @description Product type: SIERRA, TANGO, or ZULU */
-                product: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the filtered G-AIRMETs */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponseOfGAirmetDto"];
-                };
-            };
-            /** @description If the product type is invalid */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    GAirmet_GetGAirmetsByHazardType: {
-        parameters: {
-            query?: {
-                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
-                cursor?: string | null;
-                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
-                limit?: number;
-            };
-            header?: never;
-            path: {
-                /** @description Hazard type: MT_OBSC, IFR, TURB_LO, TURB_HI, LLWS, SFC_WIND, ICE, FZLVL, or M_FZLVL */
-                hazardType: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the filtered G-AIRMETs */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponseOfGAirmetDto"];
-                };
-            };
-            /** @description If the hazard type is invalid */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    GAirmet_SearchAffecting: {
-        parameters: {
-            query?: {
-                /** @description Latitude in decimal degrees (-90 to 90) */
-                lat?: number;
-                /** @description Longitude in decimal degrees (-180 to 180) */
-                lon?: number;
-                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
-                cursor?: string | null;
-                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the G-AIRMETs found */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponseOfGAirmetDto"];
-                };
-            };
-            /** @description If coordinates are invalid */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Metar_GetMetarForAirport: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description ICAO code or FAA identifier (e.g., KDFW, DFW). Case-insensitive. */
-                icaoCodeOrIdent: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the METAR observation */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["MetarDto"];
-                };
-            };
-            /** @description If no METAR is found for the airport */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Metar_GetMetarsBatch: {
-        parameters: {
-            query?: {
-                /** @description Comma-separated ICAO codes or FAA identifiers (e.g., KDFW,KAUS,KHOU). Maximum 100. */
-                ids?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the METAR observations */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["MetarDto"][];
-                };
-            };
-            /** @description If the ids parameter is empty or exceeds 100 identifiers */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Metar_GetMetarsByState: {
-        parameters: {
-            query?: {
-                /** @description Comma-separated two-letter state codes (e.g., TX or TX,OK,LA) */
-                state?: string;
-                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
-                cursor?: string | null;
-                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the paginated METARs */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponseOfMetarDto"];
-                };
-            };
-            /** @description If the state parameter is empty */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Navlog_CalculateNavlog: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * @description Navigation log request containing:
-         *     Waypoints (ordered route points with lat/lon/altitude, minimum 2),
-         *     PerformanceData (climb/cruise/descent airspeeds in knots, climb/descent rates in FPM,
-         *     fuel burn rates in GPH, STT fuel in gallons, and total fuel on board in gallons),
-         *     PlannedCruisingAltitude (feet MSL), and
-         *     TimeOfDeparture (UTC, used to select the appropriate winds aloft forecast).
-         */
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["NavlogRequestDto"];
-            };
-        };
-        responses: {
-            /** @description Returns the calculated navigation log */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NavlogResponseDto"];
-                };
-            };
-            /**
-             * @description The request data is invalid. Common causes: fewer than 2 waypoints, missing performance data,
-             *                  or invalid coordinate values.
-             */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-            /**
-             * @description An external service required for the calculation is temporarily unavailable.
-             *                  This can be the NOAA magnetic variation API or the winds aloft data source.
-             */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Navlog_CalculateBearingAndDistance: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * @description Start and end point coordinates. All values are in decimal degrees
-         *     (e.g., 36.1245 for latitude, -86.6782 for longitude).
-         */
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["BearingAndDistanceRequestDto"];
-            };
-        };
-        responses: {
-            /** @description Returns the bearing and distance calculation */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BearingAndDistanceResponseDto"];
-                };
-            };
-            /** @description The coordinates are invalid (e.g., latitude outside -90 to 90 range) */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-            /** @description The NOAA magnetic variation service is temporarily unavailable */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Navlog_GetWindsAloftData: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Forecast period in hours. Must be 6, 12, or 24. */
-                forecast: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the winds aloft forecast data */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["WindsAloftDto"];
-                };
-            };
-            /** @description The forecast period is not 6, 12, or 24 */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-            /** @description The winds aloft data source is temporarily unavailable */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Notam_GetNotamsByNumber: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description NOTAM number in any supported format (URL-encoded) */
-                notamNumber: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the matching NOTAMs */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotamDto"][];
-                };
-            };
-            /** @description If the input cannot be parsed or is invalid */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-            /** @description If no NOTAMs match the given number */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Notam_GetNotamsForAirport: {
-        parameters: {
-            query?: {
-                /** @description Optional NOTAM classification filter: INTERNATIONAL, MILITARY, LOCAL_MILITARY, DOMESTIC, FDC */
-                classification?: string | null;
-                /** @description Optional NOTAM feature type filter: RWY, TWY, APRON, AD, OBST, NAV, COM, SVC, AIRSPACE, ODP, SID, STAR, CHART, DATA, DVA, IAP, VFP, ROUTE, SPECIAL, SECURITY */
-                feature?: string | null;
-                /** @description Optional text search within NOTAM text (max 80 characters, alphanumeric and /.-() only) */
-                freeText?: string | null;
-                /** @description Optional effective start date filter (ISO 8601). Must be paired with effectiveEndDate. */
-                effectiveStartDate?: string | null;
-                /** @description Optional effective end date filter (ISO 8601). Must be paired with effectiveStartDate. */
-                effectiveEndDate?: string | null;
-            };
-            header?: never;
-            path: {
-                /** @description ICAO code (e.g., KDFW) or FAA identifier (e.g., DFW). Case-insensitive. */
-                icaoCodeOrIdent: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the NOTAMs for the airport */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotamResponseDto"];
-                };
-            };
-            /** @description If the airport identifier is missing or filter values are invalid */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Notam_GetNotamsByRadius: {
-        parameters: {
-            query?: {
-                /** @description Latitude in decimal degrees (-90 to 90) */
-                latitude?: number;
-                /** @description Longitude in decimal degrees (-180 to 180) */
-                longitude?: number;
-                /** @description Search radius in nautical miles (greater than 0, max 100) */
-                radiusNm?: number;
-                /** @description Optional NOTAM classification filter: INTERNATIONAL, MILITARY, LOCAL_MILITARY, DOMESTIC, FDC */
-                classification?: string | null;
-                /** @description Optional NOTAM feature type filter: RWY, TWY, APRON, AD, OBST, NAV, COM, SVC, AIRSPACE, ODP, SID, STAR, CHART, DATA, DVA, IAP, VFP, ROUTE, SPECIAL, SECURITY */
-                feature?: string | null;
-                /** @description Optional text search within NOTAM text (max 80 characters, alphanumeric and /.-() only) */
-                freeText?: string | null;
-                /** @description Optional effective start date filter (ISO 8601). Must be paired with effectiveEndDate. */
-                effectiveStartDate?: string | null;
-                /** @description Optional effective end date filter (ISO 8601). Must be paired with effectiveStartDate. */
-                effectiveEndDate?: string | null;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the NOTAMs within the search radius */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotamResponseDto"];
-                };
-            };
-            /** @description If coordinates, radius, or filter values are invalid */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Notam_GetNotamsForRoute: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Route query — provide either airportIdentifiers or routePoints, with optional corridorRadiusNm and filters */
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["NotamQueryByRouteRequest"];
-            };
-        };
-        responses: {
-            /** @description Returns the combined NOTAMs for the route */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotamResponseDto"];
-                };
-            };
-            /** @description If no airports or route points are provided, or if coordinates/filters are invalid */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Notam_SearchNotams: {
-        parameters: {
-            query?: {
-                /** @description Optional NOTAM classification filter: INTERNATIONAL, MILITARY, LOCAL_MILITARY, DOMESTIC, FDC */
-                classification?: string | null;
-                /** @description Optional NOTAM feature type filter: RWY, TWY, APRON, AD, OBST, NAV, COM, SVC, AIRSPACE, ODP, SID, STAR, CHART, DATA, DVA, IAP, VFP, ROUTE, SPECIAL, SECURITY */
-                feature?: string | null;
-                /** @description Optional text search within NOTAM text (max 80 characters, alphanumeric and /.-() only) */
-                freeText?: string | null;
-                /** @description Optional effective start date filter (ISO 8601). Must be paired with effectiveEndDate. */
-                effectiveStartDate?: string | null;
-                /** @description Optional effective end date filter (ISO 8601). Must be paired with effectiveStartDate. */
-                effectiveEndDate?: string | null;
-                /** @description Optional accountability code (issuing office) filter, e.g., "BNA", "FDC". Alphanumeric, max 10 characters. */
-                accountability?: string | null;
-                /** @description Optional location identifier filter (FAA domestic or ICAO code), e.g., "DFW" or "KDFW". Alphanumeric, max 10 characters. */
-                location?: string | null;
-                /** @description Optional NOTAM number filter. Must be paired with location or accountability. */
-                notamNumber?: string | null;
-                /** @description Optional latitude in decimal degrees (-90 to 90). Must be paired with longitude and radius. */
-                latitude?: number | null;
-                /** @description Optional longitude in decimal degrees (-180 to 180). Must be paired with latitude and radius. */
-                longitude?: number | null;
-                /** @description Optional search radius in nautical miles (0 to 100). Must be paired with latitude and longitude. */
-                radius?: number | null;
-                /** @description Optional ISO 8601 timestamp. Returns NOTAMs modified since this time, including inactive NOTAMs. */
-                lastUpdatedDate?: string | null;
-                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
-                cursor?: string | null;
-                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the paginated matching NOTAMs */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponseOfNotamDto"];
-                };
-            };
-            /** @description If no filters are provided, or if filter values are invalid */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Notam_GetNotamByNmsId: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Numeric NMS NOTAM identifier (1–64 digits) */
-                nmsId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the NOTAM */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NotamDto"];
-                };
-            };
-            /** @description If the NMS ID is not a valid numeric string */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-            /** @description If no NOTAM exists with the given NMS ID */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Obstacle_SearchNearAirport: {
-        parameters: {
-            query?: {
-                /** @description Search radius in nautical miles (default 10, must be greater than 0) */
-                radiusNm?: number;
-                /** @description Optional minimum height AGL in feet — only return obstacles at or above this height */
-                minHeightAgl?: number | null;
-                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
-                cursor?: string | null;
-                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
-                limit?: number;
-            };
-            header?: never;
-            path: {
-                /** @description ICAO code (e.g., KDFW) or FAA identifier (e.g., DFW) */
-                icaoCodeOrIdent: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the obstacles found */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponseOfObstacleDto"];
-                };
-            };
-            /** @description If the radius is invalid or the airport has no coordinates on record */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-            /** @description If the airport is not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Obstacle_SearchNearby: {
-        parameters: {
-            query?: {
-                /** @description Latitude in decimal degrees (-90 to 90) */
-                lat?: number;
-                /** @description Longitude in decimal degrees (-180 to 180) */
-                lon?: number;
-                /** @description Search radius in nautical miles (default 5, must be greater than 0) */
-                radiusNm?: number;
-                /** @description Optional minimum height AGL in feet — only return obstacles at or above this height */
-                minHeightAgl?: number | null;
-                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
-                cursor?: string | null;
-                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the obstacles found */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponseOfObstacleDto"];
-                };
-            };
-            /** @description If coordinates or radius are invalid */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Obstacle_GetByState: {
-        parameters: {
-            query?: {
-                /** @description Optional minimum height AGL in feet — only return obstacles at or above this height */
-                minHeightAgl?: number | null;
-                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
-                cursor?: string | null;
-                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
-                limit?: number;
-            };
-            header?: never;
-            path: {
-                /** @description Two-letter state code (e.g., TX, CA) */
-                stateCode: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the obstacles */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponseOfObstacleDto"];
-                };
-            };
-            /** @description If the state code is empty */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Obstacle_GetByOasNumber: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Obstacle Assessment Surface number (e.g., 12-345678) */
-                oasNumber: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the obstacle */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ObstacleDto"];
-                };
-            };
-            /** @description If the obstacle is not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Obstacle_GetByOasNumbers: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description JSON array of OAS number strings (maximum 1000) */
-        requestBody: {
-            content: {
-                "application/json": string[];
-            };
-        };
-        responses: {
-            /** @description Returns the matching obstacles */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ObstacleDto"][];
-                };
-            };
-            /** @description If the list is empty or exceeds 1000 items */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Obstacle_GetByBoundingBox: {
-        parameters: {
-            query?: {
-                /** @description Southwest corner latitude (-90 to 90) */
-                minLat?: number;
-                /** @description Northeast corner latitude (-90 to 90, must be greater than minLat) */
-                maxLat?: number;
-                /** @description Southwest corner longitude (-180 to 180) */
-                minLon?: number;
-                /** @description Northeast corner longitude (-180 to 180, must be greater than minLon) */
-                maxLon?: number;
-                /** @description Optional minimum height AGL in feet — only return obstacles at or above this height */
-                minHeightAgl?: number | null;
-                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
-                cursor?: string | null;
-                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the obstacles found */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponseOfObstacleDto"];
-                };
-            };
-            /** @description If coordinates are invalid, minLat >= maxLat, or the box crosses the antimeridian */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Pirep_GetAllPireps: {
-        parameters: {
-            query?: {
-                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
-                cursor?: string | null;
-                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the paginated list of PIREPs */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponseOfPirepDto"];
-                };
-            };
-        };
-    };
-    Pirep_SearchNearby: {
-        parameters: {
-            query?: {
-                /** @description Latitude in decimal degrees (-90 to 90) */
-                lat?: number;
-                /** @description Longitude in decimal degrees (-180 to 180) */
-                lon?: number;
-                /** @description Search radius in nautical miles (default 50, max 500) */
-                radiusNm?: number;
-                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
-                cursor?: string | null;
-                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the PIREPs found */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponseOfPirepDto"];
-                };
-            };
-            /** @description If coordinates or radius are invalid */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Pirep_SearchNearAirport: {
-        parameters: {
-            query?: {
-                /** @description Search radius in nautical miles (default 50, max 500) */
-                radiusNm?: number;
-                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
-                cursor?: string | null;
-                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
-                limit?: number;
-            };
-            header?: never;
-            path: {
-                /** @description ICAO code (e.g., KDFW) or FAA identifier (e.g., DFW) */
-                icaoCodeOrIdent: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the PIREPs found */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponseOfPirepDto"];
-                };
-            };
-            /** @description If the radius is invalid or the airport has no coordinates on record */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-            /** @description If the airport is not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Sigmet_GetAllSigmets: {
-        parameters: {
-            query?: {
-                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
-                cursor?: string | null;
-                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the paginated list of all current domestic SIGMETs */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponseOfSigmetDto"];
-                };
-            };
-        };
-    };
-    Sigmet_GetSigmetsByHazardType: {
-        parameters: {
-            query?: {
-                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
-                cursor?: string | null;
-                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
-                limit?: number;
-            };
-            header?: never;
-            path: {
-                /** @description Hazard type: CONVECTIVE, ICE, TURB, IFR, or MTN_OBSCN */
-                hazardType: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the filtered SIGMETs */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponseOfSigmetDto"];
-                };
-            };
-            /** @description If the hazard type is invalid */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Sigmet_SearchAffecting: {
-        parameters: {
-            query?: {
-                /** @description Latitude in decimal degrees (-90 to 90) */
-                lat?: number;
-                /** @description Longitude in decimal degrees (-180 to 180) */
-                lon?: number;
-                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
-                cursor?: string | null;
-                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the SIGMETs found */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponseOfSigmetDto"];
-                };
-            };
-            /** @description If coordinates are invalid */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Sigmet_SearchByArea: {
-        parameters: {
-            query?: {
-                /** @description Minimum latitude (-90 to 90) */
-                minLat?: number;
-                /** @description Maximum latitude (-90 to 90) */
-                maxLat?: number;
-                /** @description Minimum longitude (-180 to 180) */
-                minLon?: number;
-                /** @description Maximum longitude (-180 to 180) */
-                maxLon?: number;
-                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
-                cursor?: string | null;
-                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the SIGMETs found */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedResponseOfSigmetDto"];
-                };
-            };
-            /** @description If coordinates are invalid or the bounding box crosses the antimeridian */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Taf_GetTafsBatch: {
-        parameters: {
-            query?: {
-                /** @description Comma-separated ICAO codes or FAA identifiers (e.g., KDFW,KAUS,KHOU). Maximum 100. */
-                ids?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the TAFs with all forecast periods */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TafDto"][];
-                };
-            };
-            /** @description If the ids parameter is empty or exceeds 100 identifiers */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Taf_GetTafByIcaoCodeOrIdent: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description ICAO code or FAA identifier (e.g., KDFW, DFW). Case-insensitive. */
-                icaoCodeOrIdent: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the TAF with all forecast periods */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TafDto"];
-                };
-            };
-            /** @description If no TAF is found for the airport */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    TerminalProcedure_GetTerminalProcedures: {
-        parameters: {
-            query?: {
-                /** @description Optional chart code filter (e.g., IAP, DP, STAR, APD, MIN, HOT). Case-insensitive. */
-                chartCode?: string | null;
-            };
-            header?: never;
-            path: {
-                /** @description ICAO code or FAA identifier (e.g., KDFW, DFW). Case-insensitive. */
-                icaoCodeOrIdent: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the terminal procedures */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TerminalProceduresResponseDto"];
-                };
-            };
-            /** @description If no terminal procedures are found for the given identifier */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
+  Airport_GetAirports: {
+    parameters: {
+      query?: {
+        /** @description Optional text search across airport name, city, ICAO code, and FAA identifier */
+        search?: string | null
+        /** @description Optional comma-separated two-letter state codes (e.g., TX or TX,OK,LA) */
+        state?: string | null
+        /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+        cursor?: string | null
+        /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+        limit?: number
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the paginated airports */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedResponseOfAirportDto']
+        }
+      }
+    }
+  }
+  Airport_SearchNearby: {
+    parameters: {
+      query?: {
+        /** @description Latitude in decimal degrees (-90 to 90) */
+        lat?: number
+        /** @description Longitude in decimal degrees (-180 to 180) */
+        lon?: number
+        /** @description Search radius in nautical miles (default 30, max 500) */
+        radiusNm?: number
+        /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+        cursor?: string | null
+        /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+        limit?: number
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the nearby airports */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedResponseOfAirportDto']
+        }
+      }
+      /** @description If coordinates or radius are invalid */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  Airport_GetAirportByIcaoCodeOrIdent: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description ICAO code or FAA identifier (e.g., KDFW, DFW) */
+        icaoCodeOrIdent: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the airport */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AirportDto']
+        }
+      }
+      /** @description If the airport is not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  Airport_GetAirportsBatch: {
+    parameters: {
+      query?: {
+        /** @description Comma-separated ICAO codes or FAA identifiers (e.g., KDFW,KAUS,KHOU) */
+        ids?: string
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the matching airports */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AirportDto'][]
+        }
+      }
+      /** @description If the ids parameter is empty */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  Airport_GetRunwaysByAirport: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description ICAO code or FAA identifier (e.g., KDFW, DFW) */
+        icaoCodeOrIdent: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the airport's runways */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['RunwayDto'][]
+        }
+      }
+      /** @description If the airport is not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  Airspace_GetByClasses: {
+    parameters: {
+      query?: {
+        /** @description Comma-separated airspace classes: B, C, or D */
+        classes?: string
+        /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+        cursor?: string | null
+        /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+        limit?: number
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the paginated airspaces */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedResponseOfAirspaceDto']
+        }
+      }
+      /** @description If the classes parameter is empty */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  Airspace_GetByCity: {
+    parameters: {
+      query?: {
+        /** @description Comma-separated city names (e.g., Dallas or Dallas,Houston) */
+        cities?: string
+        /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+        cursor?: string | null
+        /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+        limit?: number
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the paginated airspaces */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedResponseOfAirspaceDto']
+        }
+      }
+      /** @description If the cities parameter is empty */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  Airspace_GetByState: {
+    parameters: {
+      query?: {
+        /** @description Comma-separated two-letter state codes (e.g., TX or TX,OK) */
+        states?: string
+        /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+        cursor?: string | null
+        /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+        limit?: number
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the paginated airspaces */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedResponseOfAirspaceDto']
+        }
+      }
+      /** @description If the states parameter is empty */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  Airspace_GetByTypeCode: {
+    parameters: {
+      query?: {
+        /** @description Comma-separated type codes: R (restricted), P (prohibited), W (warning), A (alert), M (MOA) */
+        typeCodes?: string
+        /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+        cursor?: string | null
+        /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+        limit?: number
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the paginated special use airspaces */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedResponseOfSpecialUseAirspaceDto']
+        }
+      }
+      /** @description If the type codes parameter is empty */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  Airspace_GetByIcaoOrIdent: {
+    parameters: {
+      query?: {
+        /** @description Comma-separated ICAO codes or FAA identifiers (e.g., KDFW,KORD,KJFK) */
+        icaoOrIdents?: string
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the matching airspaces */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AirspaceDto'][]
+        }
+      }
+      /** @description The identifiers parameter is empty */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  Airspace_GetByGlobalIds: {
+    parameters: {
+      query?: {
+        /** @description Comma-separated global IDs (GUIDs from the navlog response's AirspaceGlobalIds field) */
+        globalIds?: string
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the matching airspaces */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AirspaceDto'][]
+        }
+      }
+      /** @description If the global IDs parameter is empty */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  Airspace_GetSpecialUseByGlobalIds: {
+    parameters: {
+      query?: {
+        /** @description Comma-separated global IDs (GUIDs from the navlog response's SpecialUseAirspaceGlobalIds field) */
+        globalIds?: string
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the matching special use airspaces */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['SpecialUseAirspaceDto'][]
+        }
+      }
+      /** @description If the global IDs parameter is empty */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  Briefing_GetRouteBriefing: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * @description Route definition containing Waypoints (minimum 2, each with AirportIdentifier
+     *     or Latitude/Longitude) and optional CorridorWidthNm (default 25).
+     */
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RouteBriefingRequest']
+      }
+    }
+    responses: {
+      /** @description Returns the route weather briefing */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['RouteBriefingResponse']
+        }
+      }
+      /** @description If the request is invalid (fewer than 2 waypoints, invalid coordinates, etc.) */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+      /** @description If an airport waypoint is not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  ChartSupplement_GetChartSupplements: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description ICAO code or FAA identifier (e.g., KDFW, DFW). Case-insensitive. */
+        icaoCodeOrIdent: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the chart supplements for the airport */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ChartSupplementsResponseDto']
+        }
+      }
+      /** @description If no chart supplements are found for the given identifier */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  CommunicationFrequency_GetFrequenciesByServicedFacility: {
+    parameters: {
+      query?: {
+        /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+        cursor?: string | null
+        /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+        limit?: number
+      }
+      header?: never
+      path: {
+        /** @description FAA facility identifier — the FAA airport code without the "K" prefix (e.g., DFW, AUS). Use the ArptId field from the Airports endpoint. */
+        servicedFacility: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the communication frequencies */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedResponseOfCommunicationFrequencyDto']
+        }
+      }
+      /** @description If the serviced facility identifier is empty */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+      /** @description If the facility is not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  E6b_GetCrosswindForAirport: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description ICAO code (e.g., KDFW) or FAA identifier (e.g., DFW) */
+        icaoCodeOrIdent: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns crosswind data for all runways with a recommended runway */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['AirportCrosswindResponseDto']
+        }
+      }
+      /** @description The METAR is missing wind direction or wind speed data */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+      /** @description The airport was not found, or no current METAR is available for this airport */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  E6b_CalculateCrosswind: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * @description WindDirectionDegrees (0-360, or null for variable),
+     *     WindSpeedKt (knots),
+     *     WindGustKt (knots, optional),
+     *     RunwayHeadingDegrees (magnetic degrees, 0-360).
+     */
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CrosswindCalculationRequestDto']
+      }
+    }
+    responses: {
+      /** @description Returns the calculated crosswind and headwind components */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['CrosswindCalculationResponseDto']
+        }
+      }
+      /** @description The request parameters are invalid (e.g., wind speed is negative) */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  E6b_GetDensityAltitudeForAirport: {
+    parameters: {
+      query?: {
+        /** @description Override temperature in Celsius (uses METAR if not provided) */
+        TemperatureCelsiusOverride?: number | null
+        /** @description Override altimeter setting in inHg (uses METAR if not provided) */
+        AltimeterInHgOverride?: number | null
+      }
+      header?: never
+      path: {
+        /** @description ICAO code (e.g., KDFW) or FAA identifier (e.g., DFW) */
+        icaoCodeOrIdent: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns density altitude data for the airport */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['DensityAltitudeResponseDto']
+        }
+      }
+      /** @description The METAR is missing temperature or altimeter data and no override was provided */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+      /** @description The airport was not found, or no current METAR is available */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  E6b_CalculateDensityAltitude: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * @description FieldElevationFt (feet MSL),
+     *     AltimeterInHg (inches of mercury),
+     *     TemperatureCelsius (degrees Celsius).
+     */
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['DensityAltitudeRequestDto']
+      }
+    }
+    responses: {
+      /** @description Returns the calculated density altitude */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['DensityAltitudeResponseDto']
+        }
+      }
+      /** @description The request parameters are invalid */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  E6b_CalculateWindTriangle: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * @description TrueCourseDegrees (0-360),
+     *     TrueAirspeedKt (knots, must be greater than 0),
+     *     WindDirectionDegrees (0-360, direction wind blows from),
+     *     WindSpeedKt (knots).
+     */
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['WindTriangleRequestDto']
+      }
+    }
+    responses: {
+      /** @description Returns the wind triangle solution */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['WindTriangleResponseDto']
+        }
+      }
+      /** @description The request parameters are invalid (e.g., TAS is zero or negative) */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  E6b_CalculateTrueAirspeed: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * @description CalibratedAirspeedKt (knots, must be greater than 0),
+     *     PressureAltitudeFt (feet, can be negative),
+     *     OutsideAirTemperatureCelsius (degrees Celsius).
+     */
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['TrueAirspeedRequestDto']
+      }
+    }
+    responses: {
+      /** @description Returns the TAS calculation */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['TrueAirspeedResponseDto']
+        }
+      }
+      /** @description The request parameters are invalid (e.g., CAS is zero or negative) */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  E6b_CalculateCloudBase: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * @description TemperatureCelsius (surface temperature in °C) and
+     *     DewpointCelsius (dewpoint in °C, must be less than or equal to the temperature).
+     */
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CloudBaseRequestDto']
+      }
+    }
+    responses: {
+      /** @description Returns the cloud base estimation */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['CloudBaseResponseDto']
+        }
+      }
+      /** @description The dewpoint exceeds the temperature, which is physically invalid */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  E6b_CalculatePressureAltitude: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * @description FieldElevationFt (feet MSL) and
+     *     AltimeterInHg (inches of mercury, must be between 25.0 and 35.0).
+     */
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PressureAltitudeRequestDto']
+      }
+    }
+    responses: {
+      /** @description Returns the pressure altitude calculation */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PressureAltitudeResponseDto']
+        }
+      }
+      /** @description The altimeter setting is outside the valid range (25.0 - 35.0 inHg) */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  GAirmet_GetAllGAirmets: {
+    parameters: {
+      query?: {
+        /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+        cursor?: string | null
+        /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+        limit?: number
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the paginated list of all current G-AIRMETs */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedResponseOfGAirmetDto']
+        }
+      }
+    }
+  }
+  GAirmet_GetGAirmetsByProduct: {
+    parameters: {
+      query?: {
+        /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+        cursor?: string | null
+        /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+        limit?: number
+      }
+      header?: never
+      path: {
+        /** @description Product type: SIERRA, TANGO, or ZULU */
+        product: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the filtered G-AIRMETs */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedResponseOfGAirmetDto']
+        }
+      }
+      /** @description If the product type is invalid */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  GAirmet_GetGAirmetsByHazardType: {
+    parameters: {
+      query?: {
+        /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+        cursor?: string | null
+        /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+        limit?: number
+      }
+      header?: never
+      path: {
+        /** @description Hazard type: MT_OBSC, IFR, TURB_LO, TURB_HI, LLWS, SFC_WIND, ICE, FZLVL, or M_FZLVL */
+        hazardType: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the filtered G-AIRMETs */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedResponseOfGAirmetDto']
+        }
+      }
+      /** @description If the hazard type is invalid */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  GAirmet_SearchAffecting: {
+    parameters: {
+      query?: {
+        /** @description Latitude in decimal degrees (-90 to 90) */
+        lat?: number
+        /** @description Longitude in decimal degrees (-180 to 180) */
+        lon?: number
+        /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+        cursor?: string | null
+        /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+        limit?: number
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the G-AIRMETs found */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedResponseOfGAirmetDto']
+        }
+      }
+      /** @description If coordinates are invalid */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  Metar_GetMetarForAirport: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description ICAO code or FAA identifier (e.g., KDFW, DFW). Case-insensitive. */
+        icaoCodeOrIdent: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the METAR observation */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['MetarDto']
+        }
+      }
+      /** @description If no METAR is found for the airport */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  Metar_GetMetarsBatch: {
+    parameters: {
+      query?: {
+        /** @description Comma-separated ICAO codes or FAA identifiers (e.g., KDFW,KAUS,KHOU). Maximum 100. */
+        ids?: string
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the METAR observations */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['MetarDto'][]
+        }
+      }
+      /** @description If the ids parameter is empty or exceeds 100 identifiers */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  Metar_GetMetarsByState: {
+    parameters: {
+      query?: {
+        /** @description Comma-separated two-letter state codes (e.g., TX or TX,OK,LA) */
+        state?: string
+        /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+        cursor?: string | null
+        /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+        limit?: number
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the paginated METARs */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedResponseOfMetarDto']
+        }
+      }
+      /** @description If the state parameter is empty */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  Navlog_CalculateNavlog: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * @description Navigation log request containing:
+     *     Waypoints (ordered route points with lat/lon/altitude, minimum 2),
+     *     PerformanceData (climb/cruise/descent airspeeds in knots, climb/descent rates in FPM,
+     *     fuel burn rates in GPH, STT fuel in gallons, and total fuel on board in gallons),
+     *     PlannedCruisingAltitude (feet MSL), and
+     *     TimeOfDeparture (UTC, used to select the appropriate winds aloft forecast).
+     */
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['NavlogRequestDto']
+      }
+    }
+    responses: {
+      /** @description Returns the calculated navigation log */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['NavlogResponseDto']
+        }
+      }
+      /**
+       * @description The request data is invalid. Common causes: fewer than 2 waypoints, missing performance data,
+       *                  or invalid coordinate values.
+       */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+      /**
+       * @description An external service required for the calculation is temporarily unavailable.
+       *                  This can be the NOAA magnetic variation API or the winds aloft data source.
+       */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  Navlog_CalculateBearingAndDistance: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * @description Start and end point coordinates. All values are in decimal degrees
+     *     (e.g., 36.1245 for latitude, -86.6782 for longitude).
+     */
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['BearingAndDistanceRequestDto']
+      }
+    }
+    responses: {
+      /** @description Returns the bearing and distance calculation */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['BearingAndDistanceResponseDto']
+        }
+      }
+      /** @description The coordinates are invalid (e.g., latitude outside -90 to 90 range) */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+      /** @description The NOAA magnetic variation service is temporarily unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  Navlog_GetWindsAloftData: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description Forecast period in hours. Must be 6, 12, or 24. */
+        forecast: number
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the winds aloft forecast data */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['WindsAloftDto']
+        }
+      }
+      /** @description The forecast period is not 6, 12, or 24 */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+      /** @description The winds aloft data source is temporarily unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  Notam_GetNotamsByNumber: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description NOTAM number in any supported format (URL-encoded) */
+        notamNumber: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the matching NOTAMs */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['NotamDto'][]
+        }
+      }
+      /** @description If the input cannot be parsed or is invalid */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+      /** @description If no NOTAMs match the given number */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  Notam_GetNotamsForAirport: {
+    parameters: {
+      query?: {
+        /** @description Optional NOTAM classification filter: INTERNATIONAL, MILITARY, LOCAL_MILITARY, DOMESTIC, FDC */
+        classification?: string | null
+        /** @description Optional NOTAM feature type filter: RWY, TWY, APRON, AD, OBST, NAV, COM, SVC, AIRSPACE, ODP, SID, STAR, CHART, DATA, DVA, IAP, VFP, ROUTE, SPECIAL, SECURITY */
+        feature?: string | null
+        /** @description Optional text search within NOTAM text (max 80 characters, alphanumeric and /.-() only) */
+        freeText?: string | null
+        /** @description Optional effective start date filter (ISO 8601). Must be paired with effectiveEndDate. */
+        effectiveStartDate?: string | null
+        /** @description Optional effective end date filter (ISO 8601). Must be paired with effectiveStartDate. */
+        effectiveEndDate?: string | null
+      }
+      header?: never
+      path: {
+        /** @description ICAO code (e.g., KDFW) or FAA identifier (e.g., DFW). Case-insensitive. */
+        icaoCodeOrIdent: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the NOTAMs for the airport */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['NotamResponseDto']
+        }
+      }
+      /** @description If the airport identifier is missing or filter values are invalid */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  Notam_GetNotamsByRadius: {
+    parameters: {
+      query?: {
+        /** @description Latitude in decimal degrees (-90 to 90) */
+        latitude?: number
+        /** @description Longitude in decimal degrees (-180 to 180) */
+        longitude?: number
+        /** @description Search radius in nautical miles (greater than 0, max 100) */
+        radiusNm?: number
+        /** @description Optional NOTAM classification filter: INTERNATIONAL, MILITARY, LOCAL_MILITARY, DOMESTIC, FDC */
+        classification?: string | null
+        /** @description Optional NOTAM feature type filter: RWY, TWY, APRON, AD, OBST, NAV, COM, SVC, AIRSPACE, ODP, SID, STAR, CHART, DATA, DVA, IAP, VFP, ROUTE, SPECIAL, SECURITY */
+        feature?: string | null
+        /** @description Optional text search within NOTAM text (max 80 characters, alphanumeric and /.-() only) */
+        freeText?: string | null
+        /** @description Optional effective start date filter (ISO 8601). Must be paired with effectiveEndDate. */
+        effectiveStartDate?: string | null
+        /** @description Optional effective end date filter (ISO 8601). Must be paired with effectiveStartDate. */
+        effectiveEndDate?: string | null
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the NOTAMs within the search radius */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['NotamResponseDto']
+        }
+      }
+      /** @description If coordinates, radius, or filter values are invalid */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  Notam_GetNotamsForRoute: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** @description Route query — provide either airportIdentifiers or routePoints, with optional corridorRadiusNm and filters */
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['NotamQueryByRouteRequest']
+      }
+    }
+    responses: {
+      /** @description Returns the combined NOTAMs for the route */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['NotamResponseDto']
+        }
+      }
+      /** @description If no airports or route points are provided, or if coordinates/filters are invalid */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  Notam_SearchNotams: {
+    parameters: {
+      query?: {
+        /** @description Optional NOTAM classification filter: INTERNATIONAL, MILITARY, LOCAL_MILITARY, DOMESTIC, FDC */
+        classification?: string | null
+        /** @description Optional NOTAM feature type filter: RWY, TWY, APRON, AD, OBST, NAV, COM, SVC, AIRSPACE, ODP, SID, STAR, CHART, DATA, DVA, IAP, VFP, ROUTE, SPECIAL, SECURITY */
+        feature?: string | null
+        /** @description Optional text search within NOTAM text (max 80 characters, alphanumeric and /.-() only) */
+        freeText?: string | null
+        /** @description Optional effective start date filter (ISO 8601). Must be paired with effectiveEndDate. */
+        effectiveStartDate?: string | null
+        /** @description Optional effective end date filter (ISO 8601). Must be paired with effectiveStartDate. */
+        effectiveEndDate?: string | null
+        /** @description Optional accountability code (issuing office) filter, e.g., "BNA", "FDC". Alphanumeric, max 10 characters. */
+        accountability?: string | null
+        /** @description Optional location identifier filter (FAA domestic or ICAO code), e.g., "DFW" or "KDFW". Alphanumeric, max 10 characters. */
+        location?: string | null
+        /** @description Optional NOTAM number filter. Must be paired with location or accountability. */
+        notamNumber?: string | null
+        /** @description Optional latitude in decimal degrees (-90 to 90). Must be paired with longitude and radius. */
+        latitude?: number | null
+        /** @description Optional longitude in decimal degrees (-180 to 180). Must be paired with latitude and radius. */
+        longitude?: number | null
+        /** @description Optional search radius in nautical miles (0 to 100). Must be paired with latitude and longitude. */
+        radius?: number | null
+        /** @description Optional ISO 8601 timestamp. Returns NOTAMs modified since this time, including inactive NOTAMs. */
+        lastUpdatedDate?: string | null
+        /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+        cursor?: string | null
+        /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+        limit?: number
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the paginated matching NOTAMs */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedResponseOfNotamDto']
+        }
+      }
+      /** @description If no filters are provided, or if filter values are invalid */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  Notam_GetNotamByNmsId: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description Numeric NMS NOTAM identifier (1–64 digits) */
+        nmsId: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the NOTAM */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['NotamDto']
+        }
+      }
+      /** @description If the NMS ID is not a valid numeric string */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+      /** @description If no NOTAM exists with the given NMS ID */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+      503: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  Obstacle_SearchNearAirport: {
+    parameters: {
+      query?: {
+        /** @description Search radius in nautical miles (default 10, must be greater than 0) */
+        radiusNm?: number
+        /** @description Optional minimum height AGL in feet — only return obstacles at or above this height */
+        minHeightAgl?: number | null
+        /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+        cursor?: string | null
+        /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+        limit?: number
+      }
+      header?: never
+      path: {
+        /** @description ICAO code (e.g., KDFW) or FAA identifier (e.g., DFW) */
+        icaoCodeOrIdent: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the obstacles found */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedResponseOfObstacleDto']
+        }
+      }
+      /** @description If the radius is invalid or the airport has no coordinates on record */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+      /** @description If the airport is not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  Obstacle_SearchNearby: {
+    parameters: {
+      query?: {
+        /** @description Latitude in decimal degrees (-90 to 90) */
+        lat?: number
+        /** @description Longitude in decimal degrees (-180 to 180) */
+        lon?: number
+        /** @description Search radius in nautical miles (default 5, must be greater than 0) */
+        radiusNm?: number
+        /** @description Optional minimum height AGL in feet — only return obstacles at or above this height */
+        minHeightAgl?: number | null
+        /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+        cursor?: string | null
+        /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+        limit?: number
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the obstacles found */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedResponseOfObstacleDto']
+        }
+      }
+      /** @description If coordinates or radius are invalid */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  Obstacle_GetByState: {
+    parameters: {
+      query?: {
+        /** @description Optional minimum height AGL in feet — only return obstacles at or above this height */
+        minHeightAgl?: number | null
+        /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+        cursor?: string | null
+        /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+        limit?: number
+      }
+      header?: never
+      path: {
+        /** @description Two-letter state code (e.g., TX, CA) */
+        stateCode: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the obstacles */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedResponseOfObstacleDto']
+        }
+      }
+      /** @description If the state code is empty */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  Obstacle_GetByOasNumber: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description Obstacle Assessment Surface number (e.g., 12-345678) */
+        oasNumber: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the obstacle */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ObstacleDto']
+        }
+      }
+      /** @description If the obstacle is not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  Obstacle_GetByOasNumbers: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** @description JSON array of OAS number strings (maximum 1000) */
+    requestBody: {
+      content: {
+        'application/json': string[]
+      }
+    }
+    responses: {
+      /** @description Returns the matching obstacles */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ObstacleDto'][]
+        }
+      }
+      /** @description If the list is empty or exceeds 1000 items */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  Obstacle_GetByBoundingBox: {
+    parameters: {
+      query?: {
+        /** @description Southwest corner latitude (-90 to 90) */
+        minLat?: number
+        /** @description Northeast corner latitude (-90 to 90, must be greater than minLat) */
+        maxLat?: number
+        /** @description Southwest corner longitude (-180 to 180) */
+        minLon?: number
+        /** @description Northeast corner longitude (-180 to 180, must be greater than minLon) */
+        maxLon?: number
+        /** @description Optional minimum height AGL in feet — only return obstacles at or above this height */
+        minHeightAgl?: number | null
+        /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+        cursor?: string | null
+        /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+        limit?: number
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the obstacles found */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedResponseOfObstacleDto']
+        }
+      }
+      /** @description If coordinates are invalid, minLat >= maxLat, or the box crosses the antimeridian */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  Pirep_GetAllPireps: {
+    parameters: {
+      query?: {
+        /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+        cursor?: string | null
+        /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+        limit?: number
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the paginated list of PIREPs */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedResponseOfPirepDto']
+        }
+      }
+    }
+  }
+  Pirep_SearchNearby: {
+    parameters: {
+      query?: {
+        /** @description Latitude in decimal degrees (-90 to 90) */
+        lat?: number
+        /** @description Longitude in decimal degrees (-180 to 180) */
+        lon?: number
+        /** @description Search radius in nautical miles (default 50, max 500) */
+        radiusNm?: number
+        /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+        cursor?: string | null
+        /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+        limit?: number
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the PIREPs found */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedResponseOfPirepDto']
+        }
+      }
+      /** @description If coordinates or radius are invalid */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  Pirep_SearchNearAirport: {
+    parameters: {
+      query?: {
+        /** @description Search radius in nautical miles (default 50, max 500) */
+        radiusNm?: number
+        /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+        cursor?: string | null
+        /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+        limit?: number
+      }
+      header?: never
+      path: {
+        /** @description ICAO code (e.g., KDFW) or FAA identifier (e.g., DFW) */
+        icaoCodeOrIdent: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the PIREPs found */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedResponseOfPirepDto']
+        }
+      }
+      /** @description If the radius is invalid or the airport has no coordinates on record */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+      /** @description If the airport is not found */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  Sigmet_GetAllSigmets: {
+    parameters: {
+      query?: {
+        /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+        cursor?: string | null
+        /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+        limit?: number
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the paginated list of all current domestic SIGMETs */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedResponseOfSigmetDto']
+        }
+      }
+    }
+  }
+  Sigmet_GetSigmetsByHazardType: {
+    parameters: {
+      query?: {
+        /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+        cursor?: string | null
+        /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+        limit?: number
+      }
+      header?: never
+      path: {
+        /** @description Hazard type: CONVECTIVE, ICE, TURB, IFR, or MTN_OBSCN */
+        hazardType: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the filtered SIGMETs */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedResponseOfSigmetDto']
+        }
+      }
+      /** @description If the hazard type is invalid */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  Sigmet_SearchAffecting: {
+    parameters: {
+      query?: {
+        /** @description Latitude in decimal degrees (-90 to 90) */
+        lat?: number
+        /** @description Longitude in decimal degrees (-180 to 180) */
+        lon?: number
+        /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+        cursor?: string | null
+        /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+        limit?: number
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the SIGMETs found */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedResponseOfSigmetDto']
+        }
+      }
+      /** @description If coordinates are invalid */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  Sigmet_SearchByArea: {
+    parameters: {
+      query?: {
+        /** @description Minimum latitude (-90 to 90) */
+        minLat?: number
+        /** @description Maximum latitude (-90 to 90) */
+        maxLat?: number
+        /** @description Minimum longitude (-180 to 180) */
+        minLon?: number
+        /** @description Maximum longitude (-180 to 180) */
+        maxLon?: number
+        /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+        cursor?: string | null
+        /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+        limit?: number
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the SIGMETs found */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedResponseOfSigmetDto']
+        }
+      }
+      /** @description If coordinates are invalid or the bounding box crosses the antimeridian */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  Taf_GetTafsBatch: {
+    parameters: {
+      query?: {
+        /** @description Comma-separated ICAO codes or FAA identifiers (e.g., KDFW,KAUS,KHOU). Maximum 100. */
+        ids?: string
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the TAFs with all forecast periods */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['TafDto'][]
+        }
+      }
+      /** @description If the ids parameter is empty or exceeds 100 identifiers */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  Taf_GetTafByIcaoCodeOrIdent: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description ICAO code or FAA identifier (e.g., KDFW, DFW). Case-insensitive. */
+        icaoCodeOrIdent: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the TAF with all forecast periods */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['TafDto']
+        }
+      }
+      /** @description If no TAF is found for the airport */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
+  TerminalProcedure_GetTerminalProcedures: {
+    parameters: {
+      query?: {
+        /** @description Optional chart code filter (e.g., IAP, DP, STAR, APD, MIN, HOT). Case-insensitive. */
+        chartCode?: string | null
+      }
+      header?: never
+      path: {
+        /** @description ICAO code or FAA identifier (e.g., KDFW, DFW). Case-insensitive. */
+        icaoCodeOrIdent: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Returns the terminal procedures */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['TerminalProceduresResponseDto']
+        }
+      }
+      /** @description If no terminal procedures are found for the given identifier */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ApiErrorResponse']
+        }
+      }
+    }
+  }
 }

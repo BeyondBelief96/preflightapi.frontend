@@ -260,8 +260,6 @@ export const fetchDemoNavlog = createServerFn().handler(async () => {
   })
 })
 
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Generated GeoJSON `coordinates?: unknown` conflicts with TanStack Start's type serialization that narrows unknown → {}
 export const fetchDemoRouteBriefing = createServerFn().handler(async () => {
   return demoFetch<RouteBriefingResponse>(
     '/briefing/route',
