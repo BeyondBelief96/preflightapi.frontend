@@ -9,14 +9,16 @@ export type OverallStatus = ServiceStatus
 export interface BackendHealthCheck {
   name: string
   status: string
-  duration: string
-  tags?: Array<string>
+  duration: number
+  tags: Array<string>
+  description: string | null
+  exception: string | null
 }
 
 export interface BackendHealthResponse {
   status: string
   version: string
-  totalDuration: string
+  totalDuration: number
   checks: Array<BackendHealthCheck>
 }
 
