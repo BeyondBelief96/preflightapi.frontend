@@ -10,7 +10,7 @@ export const Route = createFileRoute('/_marketing/about')({
     ...createPageHead({
       title: 'About',
       description:
-        'The story behind PreflightAPI — built by a pilot and software engineer who needed a better way to access aviation data.',
+        'PreflightAPI was built by a pilot and software engineer who got tired of wrangling scattered FAA and NOAA data. One REST API for all US aviation data.',
       path: '/about',
     }),
     links: [

@@ -35,7 +35,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       {
         name: 'description',
         content:
-          'Access real-time aviation data including METAR, TAF, NOTAMs, airport information, airspace data, and flight planning tools through a modern REST API.',
+          'PreflightAPI unifies 7 FAA and NOAA sources into 40+ REST endpoints. METARs, airports, NOTAMs, airspace, obstacles, and flight planning — one API key, free tier included.',
       },
       {
         property: 'og:title',
@@ -44,7 +44,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       {
         property: 'og:description',
         content:
-          'Access real-time aviation data including METAR, TAF, NOTAMs, airport information, airspace data, and flight planning tools through a modern REST API.',
+          'PreflightAPI unifies 7 FAA and NOAA sources into 40+ REST endpoints. METARs, airports, NOTAMs, airspace, obstacles, and flight planning — one API key, free tier included.',
       },
       { property: 'og:type', content: 'website' },
       { property: 'og:site_name', content: 'PreflightAPI' },
@@ -52,11 +52,11 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       { property: 'og:url', content: 'https://preflightapi.io' },
       {
         property: 'og:image',
-        content: 'https://preflightapi.io/preflight_logo_with_text_1.png',
+        content: 'https://preflightapi.io/Facebook_cover-01.jpg',
       },
       { property: 'og:image:width', content: '1200' },
       { property: 'og:image:height', content: '630' },
-      { property: 'og:image:type', content: 'image/png' },
+      { property: 'og:image:type', content: 'image/jpeg' },
       { name: 'twitter:card', content: 'summary_large_image' },
       {
         name: 'twitter:title',
@@ -65,11 +65,11 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       {
         name: 'twitter:description',
         content:
-          'Access real-time aviation data including METAR, TAF, NOTAMs, airport information, airspace data, and flight planning tools through a modern REST API.',
+          'PreflightAPI unifies 7 FAA and NOAA sources into 40+ REST endpoints. METARs, airports, NOTAMs, airspace, obstacles, and flight planning — one API key, free tier included.',
       },
       {
         name: 'twitter:image',
-        content: 'https://preflightapi.io/preflight_logo_with_text_1.png',
+        content: 'https://preflightapi.io/Facebook_cover-01.jpg',
       },
     ],
     scripts: [
@@ -138,7 +138,7 @@ const jsonLd = JSON.stringify({
       name: 'PreflightAPI',
       url: 'https://preflightapi.io',
       description:
-        'Access real-time aviation data including METAR, TAF, NOTAMs, airport information, airspace data, and flight planning tools through a modern REST API.',
+        'PreflightAPI unifies 7 FAA and NOAA sources into 40+ REST endpoints. METARs, airports, NOTAMs, airspace, obstacles, and flight planning — one API key, free tier included.',
       potentialAction: {
         '@type': 'SearchAction',
         target: 'https://preflightapi.io/docs?q={search_term_string}',

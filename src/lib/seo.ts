@@ -10,7 +10,7 @@ interface PageHeadOptions {
 
 export function createPageHead(options: PageHeadOptions) {
   const fullTitle = `${options.title} | ${SITE_CONFIG.name}`
-  const ogImage = `${SITE_CONFIG.url}${options.ogImage ?? '/preflight_logo_with_text_1.png'}`
+  const ogImage = `${SITE_CONFIG.url}${options.ogImage ?? '/Facebook_cover-01.jpg'}`
   const url = options.path ? `${SITE_CONFIG.url}${options.path}` : undefined
 
   return {
@@ -26,7 +26,7 @@ export function createPageHead(options: PageHeadOptions) {
       { property: 'og:image', content: ogImage },
       { property: 'og:image:width', content: '1200' },
       { property: 'og:image:height', content: '630' },
-      { property: 'og:image:type', content: 'image/png' },
+      { property: 'og:image:type', content: 'image/jpeg' },
       { name: 'twitter:card', content: 'summary_large_image' },
       { name: 'twitter:title', content: options.title },
       { name: 'twitter:description', content: options.description },
