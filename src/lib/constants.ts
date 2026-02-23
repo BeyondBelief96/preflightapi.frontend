@@ -41,7 +41,6 @@ export const TIER_FEATURES: Record<string, Array<string>> = {
     'Controlled & special-use airspace with geospatial boundaries',
     'Full FAA obstacle database',
     'Always up-to-date with the latest FAA data',
-    '99.95% uptime SLA',
   ],
   commercial: [
     'Everything in Private Pilot',
@@ -61,7 +60,6 @@ export const TIER_FEATURES: Record<string, Array<string>> = {
     'Built for production workloads',
     'Always up-to-date with the latest FAA data',
     'Priority support',
-    '99.95% uptime SLA',
   ],
 }
 
