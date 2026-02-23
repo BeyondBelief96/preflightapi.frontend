@@ -18,7 +18,7 @@ export const Route = createFileRoute('/_marketing/')({
     createPageHead({
       title: 'Aviation Data API for Developers',
       description:
-        "Aviation data shouldn't be this hard. 7 FAA and NOAA sources, 40+ REST endpoints. METARs, airports, NOTAMs, airspace, obstacles, and flight planning tools. Start free.",
+        'PreflightAPI unifies 7 FAA and NOAA data sources into 40+ REST endpoints. METARs, airports, NOTAMs, airspace, obstacles, and flight planning tools — one API key. Start free.',
       path: '/',
     }),
   component: LandingPage,

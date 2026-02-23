@@ -27,7 +27,7 @@ export const Route = createFileRoute('/docs')({
     createPageHead({
       title: 'Documentation',
       description:
-        'Complete API reference for PreflightAPI. Learn how to integrate aviation data into your application.',
+        'API reference for METARs, TAFs, airports, NOTAMs, airspace, obstacles, and flight planning. Code examples, data models, and OpenAPI spec included.',
       path: '/docs',
     }),
   component: DocsLayout,
