@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { UserButton } from '@clerk/clerk-react'
 import {
+  Activity,
   BookOpen,
   CreditCard,
   Key,
@@ -76,6 +77,14 @@ function SidebarContent({
         >
           <MessageSquare className="h-4 w-4" />
           Contact Us
+        </Link>
+        <Link
+          to="/status"
+          className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+          onClick={onNavigate}
+        >
+          <Activity className="h-4 w-4" />
+          System Status
         </Link>
       </div>
 

@@ -18,6 +18,11 @@ export const apimKeys = {
   tierConfig: () => [...apimKeys.all, 'tier-config'] as const,
 }
 
+export const healthKeys = {
+  all: ['health'] as const,
+  system: () => [...healthKeys.all, 'system'] as const,
+}
+
 export const stripeKeys = {
   all: ['stripe'] as const,
   subscription: (userId: string) =>
