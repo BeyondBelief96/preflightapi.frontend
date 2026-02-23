@@ -2180,11 +2180,11 @@
           "NOTAMs"
         ],
         "summary": "Gets NOTAMs for a flight route (airports and/or waypoints).",
-        "description": "Fetches NOTAMs for each point along a route, deduplicates them, and returns a single combined result. The route can be specified in two ways:\n\n**Option 1 — Airport identifiers only**\n\nThe simplest form — provide an array of airport identifiers. Each airport is queried by identifier.\n\n``` { \"airportIdentifiers\": [\"KDFW\", \"KAUS\"] } ```\n\n**Option 2 — Route points (airports + waypoints)**\n\nMix airport identifiers and geographic waypoints with coordinates. Waypoints use spatial (radius) queries while airports query by identifier.\n\n``` { \"routePoints\": [ { \"airportIdentifier\": \"KDFW\" }, { \"name\": \"Lake Travis\", \"latitude\": 30.4082, \"longitude\": -97.8538 }, { \"latitude\": 30.1, \"longitude\": -97.6, \"radiusNm\": 15 }, { \"airportIdentifier\": \"KAUS\" } ], \"corridorRadiusNm\": 25, \"filters\": { \"classification\": \"DOMESTIC\", \"feature\": \"RWY\" } } ```\n\n**Radius Resolution**\n\nIf both `routePoints` and `airportIdentifiers` are provided, `routePoints` takes precedence. Each waypoint uses its own `radiusNm` if specified, otherwise falls back to `corridorRadiusNm`, then to the server default (25 NM). Airport points query by identifier, not radius. Optional filters narrow results across all route points.",
+        "description": "Queries NOTAMs for each point along a route, deduplicates them, and returns a single combined result.\n\n**Option 1 — Airport identifiers only (simple)**\n\nProvide a list of airport identifiers. Each airport is queried by identifier match (FAA or ICAO). Best for straightforward airport-to-airport routes with no en-route waypoints.\n\n``` { \"airportIdentifiers\": [\"KDFW\", \"KAUS\"] } ```\n\n**Option 2 — Route points (airports + waypoints)**\n\nProvide an ordered list of route points. Each point is either an airport (queried by identifier) or a geographic waypoint (queried by spatial radius around its coordinates). Use this when your route includes en-route waypoints or you need per-point radius control.\n\n``` { \"routePoints\": [ { \"airportIdentifier\": \"KDFW\" }, { \"name\": \"Lake Travis\", \"latitude\": 30.4082, \"longitude\": -97.8538 }, { \"latitude\": 30.1, \"longitude\": -97.6, \"radiusNm\": 15 }, { \"airportIdentifier\": \"KAUS\" } ], \"corridorRadiusNm\": 25, \"filters\": { \"classification\": \"DOMESTIC\", \"feature\": \"RWY\" } } ```\n\n**How each point type is queried**\n\n- **Airport points** — queried by identifier (same as the single-airport endpoint). Radius settings do not apply.\n\n- **Waypoints** — queried by spatial radius. The radius used is: the point's own `radiusNm` if set, otherwise the request-level `corridorRadiusNm`, otherwise the server default (25 NM).\n\n**Notes**\n\n- If both `routePoints` and `airportIdentifiers` are provided, `routePoints` is used and `airportIdentifiers` is ignored.\n\n- Duplicate NOTAMs appearing at multiple route points are returned only once.\n\n- Optional `filters` (classification, feature, freeText, date range) are applied to every route point query.",
         "operationId": "Notam_GetNotamsForRoute",
         "requestBody": {
           "x-name": "request",
-          "description": "Route query with airport identifiers and/or route points, optional corridor radius, and optional filters",
+          "description": "Route query — provide either airportIdentifiers or routePoints, with optional corridorRadiusNm and filters",
           "content": {
             "application/json": {
               "schema": {
@@ -7309,10 +7309,6 @@
             "description": "Longitude in decimal degrees (-180 to 180). Required when AirportIdentifier is null.",
             "format": "decimal",
             "nullable": true
-          },
-          "isAirport": {
-            "type": "boolean",
-            "description": "Whether this waypoint specifies an airport identifier."
           }
         }
       },
@@ -8498,35 +8494,31 @@
       },
       "NotamQueryByRouteRequest": {
         "type": "object",
-        "description": "Request DTO for querying NOTAMs along a flight route",
+        "description": "Request body for querying NOTAMs along a flight route. Provide either AirportIdentifiers\n(simple airport-only routes) or RoutePoints (mixed airports and waypoints).\nIf both are provided, RoutePoints is used and AirportIdentifiers is ignored.\nNOTAMs from all route points are combined and deduplicated in the response.",
         "additionalProperties": false,
         "properties": {
           "airportIdentifiers": {
             "type": "array",
-            "description": "List of airport identifiers (ICAO codes or FAA identifiers) along the route.\nUse this for simple airport-only queries. For mixed airport/waypoint routes, use RoutePoints instead.",
+            "description": "Airport identifiers (ICAO codes or FAA identifiers) along the route, e.g. [\"KDFW\", \"KAUS\"].\nEach airport is queried by identifier match. Use this when your entire route is airport-to-airport\nwith no en-route waypoints. Ignored when RoutePoints is provided.",
             "items": {
               "type": "string"
             }
           },
           "routePoints": {
             "type": "array",
-            "description": "Ordered list of route points (airports and/or waypoints) in flight sequence.\nEach point can be either an airport (by identifier) or a waypoint (by lat/lon).\nIf both AirportIdentifiers and RoutePoints are provided, RoutePoints takes precedence.",
+            "description": "Route points in flight order. Each point is either an airport (by identifier) or a geographic\nwaypoint (by lat/lon with radius search). Use this when your route includes en-route waypoints\nor you need per-point radius control. When provided, AirportIdentifiers is ignored.",
             "items": {
               "$ref": "#/components/schemas/RoutePointDto"
             }
           },
           "corridorRadiusNm": {
             "type": "number",
-            "description": "Default radius in nautical miles for waypoints without a specific radius.\nIf not specified, uses default from settings.",
+            "description": "Default search radius in nautical miles applied to any waypoint in RoutePoints that does not\nspecify its own RadiusNm. Has no effect on airport points or on AirportIdentifiers.\nIf omitted, the server default (25 NM) is used.",
             "format": "double",
             "nullable": true
           },
-          "includeCorridorNotams": {
-            "type": "boolean",
-            "description": "Whether to include NOTAMs from corridor sampling points between route points (future feature)"
-          },
           "filters": {
-            "description": "Optional NMS query filters applied to all route point queries.",
+            "description": "Optional filters (classification, feature, freeText, date range) applied to every route point query.",
             "nullable": true,
             "oneOf": [
               {
@@ -8538,40 +8530,36 @@
       },
       "RoutePointDto": {
         "type": "object",
-        "description": "Represents a point along a flight route - either an airport (by identifier) or a waypoint (by coordinates)",
+        "description": "A single point along a flight route. Each point is either an airport or a geographic waypoint:\nAirport point: Set AirportIdentifier. NOTAMs are queried by identifier match (not spatial).\nWaypoint: Set Latitude and Longitude. NOTAMs are queried by spatial radius search.",
         "additionalProperties": false,
         "properties": {
           "airportIdentifier": {
             "type": "string",
-            "description": "Airport identifier (ICAO or FAA). If provided, this point is an airport.",
+            "description": "ICAO code (e.g., \"KDFW\") or FAA identifier (e.g., \"DFW\"). Case-insensitive.\nIf set, this point is treated as an airport and NOTAMs are matched by identifier.\nLatitude, Longitude, and RadiusNm are ignored for airport points.",
             "nullable": true
           },
           "name": {
             "type": "string",
-            "description": "Optional name for waypoints (used in route description)",
+            "description": "Optional display name for waypoints (e.g., \"Lake Travis\", \"MAVER\").\nAppears in the response's queryLocation route description.\nIf omitted, coordinates are used instead (e.g., \"30.4082N, 97.8538W\").",
             "nullable": true
           },
           "latitude": {
             "type": "number",
-            "description": "Latitude in decimal degrees. Required for waypoints (when AirportIdentifier is null).",
+            "description": "Latitude in decimal degrees (-90 to 90). Required when AirportIdentifier is not set.",
             "format": "double",
             "nullable": true
           },
           "longitude": {
             "type": "number",
-            "description": "Longitude in decimal degrees. Required for waypoints (when AirportIdentifier is null).",
+            "description": "Longitude in decimal degrees (-180 to 180). Required when AirportIdentifier is not set.",
             "format": "double",
             "nullable": true
           },
           "radiusNm": {
             "type": "number",
-            "description": "Optional radius in nautical miles for waypoints (max 100). Ignored for airports.",
+            "description": "Search radius in nautical miles for this waypoint (max 100). Only applies to waypoints.\nIf omitted, falls back to the request-level CorridorRadiusNm, then the server default (25 NM).",
             "format": "double",
             "nullable": true
-          },
-          "isAirport": {
-            "type": "boolean",
-            "description": "Returns true if this is an airport point, false if waypoint"
           }
         }
       },
