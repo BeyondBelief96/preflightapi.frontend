@@ -14,7 +14,9 @@ const log = createLogger('health')
 
 const TIMEOUT_MS = 10_000
 
-function deriveOverallStatus(services: Array<ServiceHealthStatus>): OverallStatus {
+function deriveOverallStatus(
+  services: Array<ServiceHealthStatus>,
+): OverallStatus {
   const statuses = services.map((s) => s.status)
   if (statuses.every((s) => s === 'operational')) return 'operational'
   if (statuses.some((s) => s === 'outage')) return 'outage'

@@ -20,9 +20,7 @@ const swaggerSpec = JSON.parse(
 
 const config = defineConfig({
   define: {
-    __API_VERSION__: JSON.stringify(
-      swaggerSpec.info.version.split(' ')[0],
-    ),
+    __API_VERSION__: JSON.stringify(swaggerSpec.info.version.split(' ')[0]),
   },
   resolve: {
     alias: {

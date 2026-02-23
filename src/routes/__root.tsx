@@ -37,6 +37,40 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         content:
           'Access real-time aviation data including METAR, TAF, NOTAMs, airport information, airspace data, and flight planning tools through a modern REST API.',
       },
+      {
+        property: 'og:title',
+        content: 'PreflightAPI - Aviation Data API for Developers',
+      },
+      {
+        property: 'og:description',
+        content:
+          'Access real-time aviation data including METAR, TAF, NOTAMs, airport information, airspace data, and flight planning tools through a modern REST API.',
+      },
+      { property: 'og:type', content: 'website' },
+      { property: 'og:site_name', content: 'PreflightAPI' },
+      { property: 'og:locale', content: 'en_US' },
+      { property: 'og:url', content: 'https://preflightapi.io' },
+      {
+        property: 'og:image',
+        content: 'https://preflightapi.io/preflight_logo_with_text_1.png',
+      },
+      { property: 'og:image:width', content: '1200' },
+      { property: 'og:image:height', content: '630' },
+      { property: 'og:image:type', content: 'image/png' },
+      { name: 'twitter:card', content: 'summary_large_image' },
+      {
+        name: 'twitter:title',
+        content: 'PreflightAPI - Aviation Data API for Developers',
+      },
+      {
+        name: 'twitter:description',
+        content:
+          'Access real-time aviation data including METAR, TAF, NOTAMs, airport information, airspace data, and flight planning tools through a modern REST API.',
+      },
+      {
+        name: 'twitter:image',
+        content: 'https://preflightapi.io/preflight_logo_with_text_1.png',
+      },
     ],
     scripts: [
       {
@@ -120,7 +154,7 @@ const jsonLd = JSON.stringify({
         '@type': 'Offer',
         price: '0',
         priceCurrency: 'USD',
-        description: 'Free tier with 500 API calls per month',
+        description: 'Free tier with 5,000 API calls per month',
       },
     },
   ],
