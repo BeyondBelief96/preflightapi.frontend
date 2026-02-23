@@ -55,6 +55,25 @@ async function checkGateway(): Promise<ServiceHealthStatus> {
       }
     }
 
+    if (res.status === 502) {
+      try {
+        const body = (await res.json()) as {
+          status?: string
+          message?: string
+        }
+        if (body.status === 'outage') {
+          return {
+            name: 'API Gateway',
+            status: 'outage' as ServiceStatus,
+            description: body.message ?? 'Backend is unreachable',
+            responseTimeMs: elapsed,
+          }
+        }
+      } catch {
+        // Not JSON — fall through to generic degraded
+      }
+    }
+
     log.warn({ status: res.status }, 'Gateway returned non-OK status')
     return {
       name: 'API Gateway',
@@ -104,7 +123,11 @@ async function checkApi(): Promise<{
     if (res.ok) {
       const body = (await res.json()) as BackendHealthResponse
       const status: ServiceStatus =
-        body.status === 'Healthy' ? 'operational' : 'degraded'
+        body.status === 'Healthy'
+          ? 'operational'
+          : body.status === 'Degraded'
+            ? 'degraded'
+            : 'degraded'
       return {
         service: {
           name: 'API Backend',
@@ -112,27 +135,25 @@ async function checkApi(): Promise<{
           description:
             status === 'operational'
               ? `Healthy (v${body.version})`
-              : `Degraded — ${body.status}`,
+              : `Degraded — ${body.status} (v${body.version})`,
           responseTimeMs: elapsed,
         },
         checks: body.checks ?? [],
       }
     }
 
-    // Check for maintenance mode (503 with JSON body)
+    // 503 from /health means genuinely Unhealthy (bypasses maintenance mode)
     if (res.status === 503) {
       try {
         const body = (await res.json()) as BackendHealthResponse
-        if (body.status?.toLowerCase() === 'maintenance') {
-          return {
-            service: {
-              name: 'API Backend',
-              status: 'maintenance',
-              description: 'Scheduled maintenance in progress',
-              responseTimeMs: elapsed,
-            },
-            checks: body.checks ?? [],
-          }
+        return {
+          service: {
+            name: 'API Backend',
+            status: 'outage',
+            description: `Unhealthy — ${body.status} (v${body.version})`,
+            responseTimeMs: elapsed,
+          },
+          checks: body.checks ?? [],
         }
       } catch {
         // Not JSON — fall through to generic degraded

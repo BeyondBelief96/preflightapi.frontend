@@ -9,7 +9,11 @@ import {
   Wrench,
   XCircle,
 } from 'lucide-react'
-import type { OverallStatus, ServiceStatus } from '@/types/health'
+import type {
+  BackendHealthCheck,
+  OverallStatus,
+  ServiceStatus,
+} from '@/types/health'
 import { createPageHead } from '@/lib/seo'
 import { fetchSystemHealth } from '@/lib/server/health'
 import { healthKeys } from '@/lib/server/apim-queries'
@@ -125,6 +129,79 @@ const SERVICE_ICONS: Record<string, typeof Shield> = {
   'API Backend': Server,
 }
 
+function checkStatusToServiceStatus(status: string): ServiceStatus {
+  if (status === 'Healthy' || status === 'healthy') return 'operational'
+  if (status === 'Unhealthy' || status === 'unhealthy') return 'outage'
+  return 'degraded'
+}
+
+function renderChecks(checks: Array<BackendHealthCheck>) {
+  return checks.map((check) => {
+    const serviceStatus = checkStatusToServiceStatus(check.status)
+    return (
+      <div key={check.name} className="space-y-1">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <StatusDot status={serviceStatus} />
+            <span className="text-sm capitalize">{check.name}</span>
+          </div>
+          <span className="text-xs text-muted-foreground">
+            {Math.round(check.duration)} ms
+          </span>
+        </div>
+        {check.description && (
+          <p className="ml-6 text-xs text-muted-foreground">
+            {check.description}
+          </p>
+        )}
+      </div>
+    )
+  })
+}
+
+function HealthCheckGroups({ checks }: { checks: Array<BackendHealthCheck> }) {
+  const ready = checks.filter((c) => c.tags?.includes('ready'))
+  const external = checks.filter((c) => c.tags?.includes('external'))
+  const other = checks.filter(
+    (c) => !c.tags?.includes('ready') && !c.tags?.includes('external'),
+  )
+
+  return (
+    <div className="space-y-4">
+      {ready.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Core Services</CardTitle>
+          </CardHeader>
+          <CardContent className="-mt-2 space-y-3">
+            {renderChecks(ready)}
+          </CardContent>
+        </Card>
+      )}
+      {external.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">External Dependencies</CardTitle>
+          </CardHeader>
+          <CardContent className="-mt-2 space-y-3">
+            {renderChecks(external)}
+          </CardContent>
+        </Card>
+      )}
+      {other.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Other Checks</CardTitle>
+          </CardHeader>
+          <CardContent className="-mt-2 space-y-3">
+            {renderChecks(other)}
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  )
+}
+
 function StatusPage() {
   const { data, isLoading } = useQuery({
     queryKey: healthKeys.system(),
@@ -191,35 +268,9 @@ function StatusPage() {
               })}
         </div>
 
-        {/* Backend health checks detail */}
+        {/* Backend health checks detail — grouped by tags */}
         {data && data.backendChecks.length > 0 && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">Health Checks</CardTitle>
-            </CardHeader>
-            <CardContent className="-mt-2 space-y-3">
-              {data.backendChecks.map((check) => {
-                const isHealthy =
-                  check.status === 'Healthy' || check.status === 'healthy'
-                return (
-                  <div
-                    key={check.name}
-                    className="flex items-center justify-between"
-                  >
-                    <div className="flex items-center gap-3">
-                      <StatusDot
-                        status={isHealthy ? 'operational' : 'degraded'}
-                      />
-                      <span className="text-sm capitalize">{check.name}</span>
-                    </div>
-                    <span className="text-xs text-muted-foreground">
-                      {Math.round(Number(check.duration))} ms
-                    </span>
-                  </div>
-                )
-              })}
-            </CardContent>
-          </Card>
+          <HealthCheckGroups checks={data.backendChecks} />
         )}
 
         {/* Footer info */}
