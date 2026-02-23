@@ -43,6 +43,7 @@ export const env = createEnv({
     APIM_ATP_PRODUCT_ID: z.string().optional().default('atp'),
     CLERK_WEBHOOK_SECRET: z.string().optional(),
     APIM_HEALTH_CHECK_PATH: z.string().optional(),
+    ADMIN_EMAILS: z.string().optional(),
   },
 
   /**

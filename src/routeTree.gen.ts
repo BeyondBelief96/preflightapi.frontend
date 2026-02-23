@@ -26,6 +26,7 @@ import { Route as DocsDataFreshnessRouteImport } from './routes/docs/data-freshn
 import { Route as DocsAuthenticationRouteImport } from './routes/docs/authentication'
 import { Route as DocsApiReferenceRouteImport } from './routes/docs/api-reference'
 import { Route as DashboardGettingStartedRouteImport } from './routes/dashboard/getting-started'
+import { Route as DashboardAdminRouteImport } from './routes/dashboard/admin'
 import { Route as MarketingStatusRouteImport } from './routes/_marketing/status'
 import { Route as MarketingPricingRouteImport } from './routes/_marketing/pricing'
 import { Route as MarketingContactRouteImport } from './routes/_marketing/contact'
@@ -35,11 +36,15 @@ import { Route as DocsCategoryIndexRouteImport } from './routes/docs/$category/i
 import { Route as DashboardSettingsIndexRouteImport } from './routes/dashboard/settings/index'
 import { Route as DashboardKeysIndexRouteImport } from './routes/dashboard/keys/index'
 import { Route as DashboardBillingIndexRouteImport } from './routes/dashboard/billing/index'
+import { Route as DashboardAdminIndexRouteImport } from './routes/dashboard/admin/index'
 import { Route as DocsDataModelsGroupRouteImport } from './routes/docs/data-models/$group'
 import { Route as DocsCategoryOperationIdRouteImport } from './routes/docs/$category/$operationId'
+import { Route as DashboardAdminAbuseRouteImport } from './routes/dashboard/admin/abuse'
 import { Route as MarketingLegalTermsRouteImport } from './routes/_marketing/legal/terms'
 import { Route as MarketingLegalPrivacyRouteImport } from './routes/_marketing/legal/privacy'
 import { Route as MarketingLegalCookiePolicyRouteImport } from './routes/_marketing/legal/cookie-policy'
+import { Route as DashboardAdminUsersIndexRouteImport } from './routes/dashboard/admin/users/index'
+import { Route as DashboardAdminUsersUserIdRouteImport } from './routes/dashboard/admin/users/$userId'
 
 const WaitlistRoute = WaitlistRouteImport.update({
   id: '/waitlist',
@@ -125,6 +130,11 @@ const DashboardGettingStartedRoute = DashboardGettingStartedRouteImport.update({
   path: '/getting-started',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardAdminRoute = DashboardAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const MarketingStatusRoute = MarketingStatusRouteImport.update({
   id: '/status',
   path: '/status',
@@ -170,6 +180,11 @@ const DashboardBillingIndexRoute = DashboardBillingIndexRouteImport.update({
   path: '/billing/',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardAdminIndexRoute = DashboardAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardAdminRoute,
+} as any)
 const DocsDataModelsGroupRoute = DocsDataModelsGroupRouteImport.update({
   id: '/data-models/$group',
   path: '/data-models/$group',
@@ -179,6 +194,11 @@ const DocsCategoryOperationIdRoute = DocsCategoryOperationIdRouteImport.update({
   id: '/$category/$operationId',
   path: '/$category/$operationId',
   getParentRoute: () => DocsRoute,
+} as any)
+const DashboardAdminAbuseRoute = DashboardAdminAbuseRouteImport.update({
+  id: '/abuse',
+  path: '/abuse',
+  getParentRoute: () => DashboardAdminRoute,
 } as any)
 const MarketingLegalTermsRoute = MarketingLegalTermsRouteImport.update({
   id: '/legal/terms',
@@ -196,6 +216,18 @@ const MarketingLegalCookiePolicyRoute =
     path: '/legal/cookie-policy',
     getParentRoute: () => MarketingRoute,
   } as any)
+const DashboardAdminUsersIndexRoute =
+  DashboardAdminUsersIndexRouteImport.update({
+    id: '/users/',
+    path: '/users/',
+    getParentRoute: () => DashboardAdminRoute,
+  } as any)
+const DashboardAdminUsersUserIdRoute =
+  DashboardAdminUsersUserIdRouteImport.update({
+    id: '/users/$userId',
+    path: '/users/$userId',
+    getParentRoute: () => DashboardAdminRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof MarketingIndexRoute
@@ -208,6 +240,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof MarketingContactRoute
   '/pricing': typeof MarketingPricingRoute
   '/status': typeof MarketingStatusRoute
+  '/dashboard/admin': typeof DashboardAdminRouteWithChildren
   '/dashboard/getting-started': typeof DashboardGettingStartedRoute
   '/docs/api-reference': typeof DocsApiReferenceRoute
   '/docs/authentication': typeof DocsAuthenticationRoute
@@ -221,13 +254,17 @@ export interface FileRoutesByFullPath {
   '/legal/cookie-policy': typeof MarketingLegalCookiePolicyRoute
   '/legal/privacy': typeof MarketingLegalPrivacyRoute
   '/legal/terms': typeof MarketingLegalTermsRoute
+  '/dashboard/admin/abuse': typeof DashboardAdminAbuseRoute
   '/docs/$category/$operationId': typeof DocsCategoryOperationIdRoute
   '/docs/data-models/$group': typeof DocsDataModelsGroupRoute
+  '/dashboard/admin/': typeof DashboardAdminIndexRoute
   '/dashboard/billing/': typeof DashboardBillingIndexRoute
   '/dashboard/keys/': typeof DashboardKeysIndexRoute
   '/dashboard/settings/': typeof DashboardSettingsIndexRoute
   '/docs/$category/': typeof DocsCategoryIndexRoute
   '/docs/data-models/': typeof DocsDataModelsIndexRoute
+  '/dashboard/admin/users/$userId': typeof DashboardAdminUsersUserIdRoute
+  '/dashboard/admin/users/': typeof DashboardAdminUsersIndexRoute
 }
 export interface FileRoutesByTo {
   '/sign-in': typeof SignInRoute
@@ -251,13 +288,17 @@ export interface FileRoutesByTo {
   '/legal/cookie-policy': typeof MarketingLegalCookiePolicyRoute
   '/legal/privacy': typeof MarketingLegalPrivacyRoute
   '/legal/terms': typeof MarketingLegalTermsRoute
+  '/dashboard/admin/abuse': typeof DashboardAdminAbuseRoute
   '/docs/$category/$operationId': typeof DocsCategoryOperationIdRoute
   '/docs/data-models/$group': typeof DocsDataModelsGroupRoute
+  '/dashboard/admin': typeof DashboardAdminIndexRoute
   '/dashboard/billing': typeof DashboardBillingIndexRoute
   '/dashboard/keys': typeof DashboardKeysIndexRoute
   '/dashboard/settings': typeof DashboardSettingsIndexRoute
   '/docs/$category': typeof DocsCategoryIndexRoute
   '/docs/data-models': typeof DocsDataModelsIndexRoute
+  '/dashboard/admin/users/$userId': typeof DashboardAdminUsersUserIdRoute
+  '/dashboard/admin/users': typeof DashboardAdminUsersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -271,6 +312,7 @@ export interface FileRoutesById {
   '/_marketing/contact': typeof MarketingContactRoute
   '/_marketing/pricing': typeof MarketingPricingRoute
   '/_marketing/status': typeof MarketingStatusRoute
+  '/dashboard/admin': typeof DashboardAdminRouteWithChildren
   '/dashboard/getting-started': typeof DashboardGettingStartedRoute
   '/docs/api-reference': typeof DocsApiReferenceRoute
   '/docs/authentication': typeof DocsAuthenticationRoute
@@ -285,13 +327,17 @@ export interface FileRoutesById {
   '/_marketing/legal/cookie-policy': typeof MarketingLegalCookiePolicyRoute
   '/_marketing/legal/privacy': typeof MarketingLegalPrivacyRoute
   '/_marketing/legal/terms': typeof MarketingLegalTermsRoute
+  '/dashboard/admin/abuse': typeof DashboardAdminAbuseRoute
   '/docs/$category/$operationId': typeof DocsCategoryOperationIdRoute
   '/docs/data-models/$group': typeof DocsDataModelsGroupRoute
+  '/dashboard/admin/': typeof DashboardAdminIndexRoute
   '/dashboard/billing/': typeof DashboardBillingIndexRoute
   '/dashboard/keys/': typeof DashboardKeysIndexRoute
   '/dashboard/settings/': typeof DashboardSettingsIndexRoute
   '/docs/$category/': typeof DocsCategoryIndexRoute
   '/docs/data-models/': typeof DocsDataModelsIndexRoute
+  '/dashboard/admin/users/$userId': typeof DashboardAdminUsersUserIdRoute
+  '/dashboard/admin/users/': typeof DashboardAdminUsersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -306,6 +352,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/pricing'
     | '/status'
+    | '/dashboard/admin'
     | '/dashboard/getting-started'
     | '/docs/api-reference'
     | '/docs/authentication'
@@ -319,13 +366,17 @@ export interface FileRouteTypes {
     | '/legal/cookie-policy'
     | '/legal/privacy'
     | '/legal/terms'
+    | '/dashboard/admin/abuse'
     | '/docs/$category/$operationId'
     | '/docs/data-models/$group'
+    | '/dashboard/admin/'
     | '/dashboard/billing/'
     | '/dashboard/keys/'
     | '/dashboard/settings/'
     | '/docs/$category/'
     | '/docs/data-models/'
+    | '/dashboard/admin/users/$userId'
+    | '/dashboard/admin/users/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/sign-in'
@@ -349,13 +400,17 @@ export interface FileRouteTypes {
     | '/legal/cookie-policy'
     | '/legal/privacy'
     | '/legal/terms'
+    | '/dashboard/admin/abuse'
     | '/docs/$category/$operationId'
     | '/docs/data-models/$group'
+    | '/dashboard/admin'
     | '/dashboard/billing'
     | '/dashboard/keys'
     | '/dashboard/settings'
     | '/docs/$category'
     | '/docs/data-models'
+    | '/dashboard/admin/users/$userId'
+    | '/dashboard/admin/users'
   id:
     | '__root__'
     | '/_marketing'
@@ -368,6 +423,7 @@ export interface FileRouteTypes {
     | '/_marketing/contact'
     | '/_marketing/pricing'
     | '/_marketing/status'
+    | '/dashboard/admin'
     | '/dashboard/getting-started'
     | '/docs/api-reference'
     | '/docs/authentication'
@@ -382,13 +438,17 @@ export interface FileRouteTypes {
     | '/_marketing/legal/cookie-policy'
     | '/_marketing/legal/privacy'
     | '/_marketing/legal/terms'
+    | '/dashboard/admin/abuse'
     | '/docs/$category/$operationId'
     | '/docs/data-models/$group'
+    | '/dashboard/admin/'
     | '/dashboard/billing/'
     | '/dashboard/keys/'
     | '/dashboard/settings/'
     | '/docs/$category/'
     | '/docs/data-models/'
+    | '/dashboard/admin/users/$userId'
+    | '/dashboard/admin/users/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -521,6 +581,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardGettingStartedRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/admin': {
+      id: '/dashboard/admin'
+      path: '/admin'
+      fullPath: '/dashboard/admin'
+      preLoaderRoute: typeof DashboardAdminRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/_marketing/status': {
       id: '/_marketing/status'
       path: '/status'
@@ -584,6 +651,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardBillingIndexRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/admin/': {
+      id: '/dashboard/admin/'
+      path: '/'
+      fullPath: '/dashboard/admin/'
+      preLoaderRoute: typeof DashboardAdminIndexRouteImport
+      parentRoute: typeof DashboardAdminRoute
+    }
     '/docs/data-models/$group': {
       id: '/docs/data-models/$group'
       path: '/data-models/$group'
@@ -597,6 +671,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/docs/$category/$operationId'
       preLoaderRoute: typeof DocsCategoryOperationIdRouteImport
       parentRoute: typeof DocsRoute
+    }
+    '/dashboard/admin/abuse': {
+      id: '/dashboard/admin/abuse'
+      path: '/abuse'
+      fullPath: '/dashboard/admin/abuse'
+      preLoaderRoute: typeof DashboardAdminAbuseRouteImport
+      parentRoute: typeof DashboardAdminRoute
     }
     '/_marketing/legal/terms': {
       id: '/_marketing/legal/terms'
@@ -618,6 +699,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/legal/cookie-policy'
       preLoaderRoute: typeof MarketingLegalCookiePolicyRouteImport
       parentRoute: typeof MarketingRoute
+    }
+    '/dashboard/admin/users/': {
+      id: '/dashboard/admin/users/'
+      path: '/users'
+      fullPath: '/dashboard/admin/users/'
+      preLoaderRoute: typeof DashboardAdminUsersIndexRouteImport
+      parentRoute: typeof DashboardAdminRoute
+    }
+    '/dashboard/admin/users/$userId': {
+      id: '/dashboard/admin/users/$userId'
+      path: '/users/$userId'
+      fullPath: '/dashboard/admin/users/$userId'
+      preLoaderRoute: typeof DashboardAdminUsersUserIdRouteImport
+      parentRoute: typeof DashboardAdminRoute
     }
   }
 }
@@ -648,7 +743,26 @@ const MarketingRouteWithChildren = MarketingRoute._addFileChildren(
   MarketingRouteChildren,
 )
 
+interface DashboardAdminRouteChildren {
+  DashboardAdminAbuseRoute: typeof DashboardAdminAbuseRoute
+  DashboardAdminIndexRoute: typeof DashboardAdminIndexRoute
+  DashboardAdminUsersUserIdRoute: typeof DashboardAdminUsersUserIdRoute
+  DashboardAdminUsersIndexRoute: typeof DashboardAdminUsersIndexRoute
+}
+
+const DashboardAdminRouteChildren: DashboardAdminRouteChildren = {
+  DashboardAdminAbuseRoute: DashboardAdminAbuseRoute,
+  DashboardAdminIndexRoute: DashboardAdminIndexRoute,
+  DashboardAdminUsersUserIdRoute: DashboardAdminUsersUserIdRoute,
+  DashboardAdminUsersIndexRoute: DashboardAdminUsersIndexRoute,
+}
+
+const DashboardAdminRouteWithChildren = DashboardAdminRoute._addFileChildren(
+  DashboardAdminRouteChildren,
+)
+
 interface DashboardRouteChildren {
+  DashboardAdminRoute: typeof DashboardAdminRouteWithChildren
   DashboardGettingStartedRoute: typeof DashboardGettingStartedRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
   DashboardBillingIndexRoute: typeof DashboardBillingIndexRoute
@@ -657,6 +771,7 @@ interface DashboardRouteChildren {
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardAdminRoute: DashboardAdminRouteWithChildren,
   DashboardGettingStartedRoute: DashboardGettingStartedRoute,
   DashboardIndexRoute: DashboardIndexRoute,
   DashboardBillingIndexRoute: DashboardBillingIndexRoute,

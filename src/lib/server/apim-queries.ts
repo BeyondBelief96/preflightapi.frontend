@@ -23,6 +23,22 @@ export const healthKeys = {
   system: () => [...healthKeys.all, 'system'] as const,
 }
 
+export const adminKeys = {
+  all: ['admin'] as const,
+  isAdmin: () => [...adminKeys.all, 'is-admin'] as const,
+  overview: () => [...adminKeys.all, 'overview'] as const,
+  dailyTrend: () => [...adminKeys.all, 'daily-trend'] as const,
+  topEndpoints: () => [...adminKeys.all, 'top-endpoints'] as const,
+  users: (page: number, search: string) =>
+    [...adminKeys.all, 'users', page, search] as const,
+  userDetail: (userId: string) =>
+    [...adminKeys.all, 'user-detail', userId] as const,
+  userAnalytics: (subscriptionId: string) =>
+    [...adminKeys.all, 'user-analytics', subscriptionId] as const,
+  abuse: () => [...adminKeys.all, 'abuse'] as const,
+  revenue: () => [...adminKeys.all, 'revenue'] as const,
+}
+
 export const stripeKeys = {
   all: ['stripe'] as const,
   subscription: (userId: string) =>

@@ -194,28 +194,23 @@ const ZERO_REPORT: ApimUsageReport = {
   apiTimeMax: 0,
 }
 
-export const getUsageAnalytics = createServerFn({ method: 'GET' })
-  .inputValidator(
-    z.object({
-      subscriptionId: subscriptionIdSchema,
-      fromDate: isoDateTimeSchema,
-      toDate: isoDateTimeSchema,
-    }).parse,
-  )
-  .handler(async ({ data }) => {
-    const userId = await requireAuth()
-    requireOwnership(userId, data.subscriptionId)
+// --- Internal KQL helpers (reused by admin server functions) ---
 
-    if (!env.APIM_LOG_ANALYTICS_WORKSPACE_ID) {
-      log.warn('LOG_ANALYTICS_WORKSPACE_ID not configured — returning zeros')
-      return ZERO_REPORT
-    }
+/**
+ * @param subscriptionFilter — e.g. `and ApimSubscriptionId == 'sub-id'` or `''` for system-wide
+ */
+export async function _queryUsageReport(
+  subscriptionFilter: string,
+  fromDate: string,
+  toDate: string,
+): Promise<ApimUsageReport> {
+  if (!env.APIM_LOG_ANALYTICS_WORKSPACE_ID) return ZERO_REPORT
 
-    const kql = `
+  const kql = `
 ApiManagementGatewayLogs
-| where TimeGenerated >= datetime('${data.fromDate}')
-  and TimeGenerated < datetime('${data.toDate}')
-  and ApimSubscriptionId == '${data.subscriptionId}'
+| where TimeGenerated >= datetime('${fromDate}')
+  and TimeGenerated < datetime('${toDate}')
+  ${subscriptionFilter}
 | summarize
     callCountTotal = count(),
     callCountSuccess = countif(ResponseCode >= 200 and ResponseCode < 300),
@@ -228,44 +223,191 @@ ApiManagementGatewayLogs
     apiTimeMax = max(TotalTime)
 `.trim()
 
-    try {
-      const result = await logAnalyticsQuery(kql)
+  try {
+    const result = await logAnalyticsQuery(kql)
+    const table = result.tables[0]
+    if (!table || table.rows.length === 0) return ZERO_REPORT
 
-      const table = result.tables[0]
-      if (!table || table.rows.length === 0) {
-        return ZERO_REPORT
-      }
+    const columns = table.columns.map((c) => c.name)
+    const row = table.rows[0]
 
-      const columns = table.columns.map((c) => c.name)
-      const row = table.rows[0]
-
-      function col(name: string): number {
-        const idx = columns.indexOf(name)
-        if (idx === -1) return 0
-        return Number(row[idx]) || 0
-      }
-
-      return {
-        callCountTotal: col('callCountTotal'),
-        callCountSuccess: col('callCountSuccess'),
-        callCountBlocked: col('callCountBlocked'),
-        callCountFailed: col('callCountFailed'),
-        callCountOther: col('callCountOther'),
-        bandwidth: col('bandwidth'),
-        apiTimeAvg: col('apiTimeAvg'),
-        apiTimeMin: col('apiTimeMin'),
-        apiTimeMax: col('apiTimeMax'),
-      } satisfies ApimUsageReport
-    } catch (err) {
-      log.error(
-        { err, subscriptionId: data.subscriptionId },
-        'Failed to query Log Analytics for usage data',
-      )
-      return ZERO_REPORT
+    function col(name: string): number {
+      const idx = columns.indexOf(name)
+      if (idx === -1) return 0
+      return Number(row[idx]) || 0
     }
-  })
 
-// --- Daily Usage Trend (via Azure Monitor Log Analytics) ---
+    return {
+      callCountTotal: col('callCountTotal'),
+      callCountSuccess: col('callCountSuccess'),
+      callCountBlocked: col('callCountBlocked'),
+      callCountFailed: col('callCountFailed'),
+      callCountOther: col('callCountOther'),
+      bandwidth: col('bandwidth'),
+      apiTimeAvg: col('apiTimeAvg'),
+      apiTimeMin: col('apiTimeMin'),
+      apiTimeMax: col('apiTimeMax'),
+    } satisfies ApimUsageReport
+  } catch (err) {
+    log.error({ err }, 'Failed to query Log Analytics for usage data')
+    return ZERO_REPORT
+  }
+}
+
+export async function _queryDailyTrend(
+  subscriptionFilter: string,
+): Promise<Array<DailyUsagePoint>> {
+  if (!env.APIM_LOG_ANALYTICS_WORKSPACE_ID) return []
+
+  const kql = `
+ApiManagementGatewayLogs
+| where TimeGenerated >= ago(30d)
+  ${subscriptionFilter}
+| summarize calls = count() by bin(TimeGenerated, 1d)
+| order by TimeGenerated asc
+`.trim()
+
+  try {
+    const result = await logAnalyticsQuery(kql)
+    const table = result.tables[0]
+    if (!table || table.rows.length === 0) return []
+
+    const columns = table.columns.map((c) => c.name)
+    const dateIdx = columns.indexOf('TimeGenerated')
+    const callsIdx = columns.indexOf('calls')
+
+    return table.rows.map((row) => ({
+      date: String(row[dateIdx]).split('T')[0],
+      calls: Number(row[callsIdx]) || 0,
+    }))
+  } catch (err) {
+    log.error({ err }, 'Failed to query Log Analytics for daily trend')
+    return []
+  }
+}
+
+export async function _queryEndpointBreakdown(
+  subscriptionFilter: string,
+  topN = 10,
+): Promise<Array<EndpointBreakdownItem>> {
+  if (!env.APIM_LOG_ANALYTICS_WORKSPACE_ID) return []
+
+  const kql = `
+ApiManagementGatewayLogs
+| where TimeGenerated >= ago(30d)
+  ${subscriptionFilter}
+  and isnotempty(OperationId)
+| summarize calls = count() by OperationId
+| top ${topN} by calls desc
+`.trim()
+
+  try {
+    const result = await logAnalyticsQuery(kql)
+    const table = result.tables[0]
+    if (!table || table.rows.length === 0) return []
+
+    const columns = table.columns.map((c) => c.name)
+    const endpointIdx = columns.indexOf('OperationId')
+    const callsIdx = columns.indexOf('calls')
+
+    return table.rows.map((row) => ({
+      endpoint: String(row[endpointIdx]),
+      calls: Number(row[callsIdx]) || 0,
+    }))
+  } catch (err) {
+    log.error({ err }, 'Failed to query Log Analytics for endpoint breakdown')
+    return []
+  }
+}
+
+export async function _queryErrorBreakdown(
+  subscriptionFilter: string,
+): Promise<Array<ErrorCodeBreakdownItem>> {
+  if (!env.APIM_LOG_ANALYTICS_WORKSPACE_ID) return []
+
+  const kql = `
+ApiManagementGatewayLogs
+| where TimeGenerated >= ago(30d)
+  ${subscriptionFilter}
+  and ResponseCode >= 400
+| summarize count = count() by ResponseCode
+| top 10 by count desc
+`.trim()
+
+  try {
+    const result = await logAnalyticsQuery(kql)
+    const table = result.tables[0]
+    if (!table || table.rows.length === 0) return []
+
+    const columns = table.columns.map((c) => c.name)
+    const codeIdx = columns.indexOf('ResponseCode')
+    const countIdx = columns.indexOf('count')
+
+    return table.rows.map((row) => ({
+      statusCode: Number(row[codeIdx]) || 0,
+      count: Number(row[countIdx]) || 0,
+    }))
+  } catch (err) {
+    log.error({ err }, 'Failed to query Log Analytics for error breakdown')
+    return []
+  }
+}
+
+export async function _queryRecentErrors(
+  subscriptionFilter: string,
+): Promise<Array<RecentError>> {
+  if (!env.APIM_LOG_ANALYTICS_WORKSPACE_ID) return []
+
+  const kql = `
+ApiManagementGatewayLogs
+| where TimeGenerated >= ago(24h)
+  ${subscriptionFilter}
+  and ResponseCode >= 400
+| project TimeGenerated, OperationId, ResponseCode, Method
+| order by TimeGenerated desc
+| take 20
+`.trim()
+
+  try {
+    const result = await logAnalyticsQuery(kql)
+    const table = result.tables[0]
+    if (!table || table.rows.length === 0) return []
+
+    const columns = table.columns.map((c) => c.name)
+    const timeIdx = columns.indexOf('TimeGenerated')
+    const opIdx = columns.indexOf('OperationId')
+    const codeIdx = columns.indexOf('ResponseCode')
+    const methodIdx = columns.indexOf('Method')
+
+    return table.rows.map((row) => ({
+      timestamp: String(row[timeIdx]),
+      endpoint: String(row[opIdx]),
+      statusCode: Number(row[codeIdx]) || 0,
+      method: String(row[methodIdx]),
+    }))
+  } catch (err) {
+    log.error({ err }, 'Failed to query Log Analytics for recent errors')
+    return []
+  }
+}
+
+// --- Server Functions (delegate to internal helpers) ---
+
+export const getUsageAnalytics = createServerFn({ method: 'GET' })
+  .inputValidator(
+    z.object({
+      subscriptionId: subscriptionIdSchema,
+      fromDate: isoDateTimeSchema,
+      toDate: isoDateTimeSchema,
+    }).parse,
+  )
+  .handler(async ({ data }) => {
+    const userId = await requireAuth()
+    requireOwnership(userId, data.subscriptionId)
+
+    const filter = `and ApimSubscriptionId == '${data.subscriptionId}'`
+    return _queryUsageReport(filter, data.fromDate, data.toDate)
+  })
 
 export const getDailyUsageTrend = createServerFn({ method: 'GET' })
   .inputValidator(z.object({ subscriptionId: subscriptionIdSchema }).parse)
@@ -273,47 +415,9 @@ export const getDailyUsageTrend = createServerFn({ method: 'GET' })
     const userId = await requireAuth()
     requireOwnership(userId, data.subscriptionId)
 
-    if (!env.APIM_LOG_ANALYTICS_WORKSPACE_ID) {
-      log.warn(
-        'LOG_ANALYTICS_WORKSPACE_ID not configured — returning empty trend',
-      )
-      return []
-    }
-
-    const kql = `
-ApiManagementGatewayLogs
-| where TimeGenerated >= ago(30d)
-  and ApimSubscriptionId == '${data.subscriptionId}'
-| summarize calls = count() by bin(TimeGenerated, 1d)
-| order by TimeGenerated asc
-`.trim()
-
-    try {
-      const result = await logAnalyticsQuery(kql)
-
-      const table = result.tables[0]
-      if (!table || table.rows.length === 0) {
-        return []
-      }
-
-      const columns = table.columns.map((c) => c.name)
-      const dateIdx = columns.indexOf('TimeGenerated')
-      const callsIdx = columns.indexOf('calls')
-
-      return table.rows.map((row) => ({
-        date: String(row[dateIdx]).split('T')[0],
-        calls: Number(row[callsIdx]) || 0,
-      }))
-    } catch (err) {
-      log.error(
-        { err, subscriptionId: data.subscriptionId },
-        'Failed to query Log Analytics for daily trend',
-      )
-      return []
-    }
+    const filter = `and ApimSubscriptionId == '${data.subscriptionId}'`
+    return _queryDailyTrend(filter)
   })
-
-// --- Endpoint Breakdown (via Azure Monitor Log Analytics) ---
 
 export const getEndpointBreakdown = createServerFn({ method: 'GET' })
   .inputValidator(z.object({ subscriptionId: subscriptionIdSchema }).parse)
@@ -321,48 +425,9 @@ export const getEndpointBreakdown = createServerFn({ method: 'GET' })
     const userId = await requireAuth()
     requireOwnership(userId, data.subscriptionId)
 
-    if (!env.APIM_LOG_ANALYTICS_WORKSPACE_ID) {
-      log.warn(
-        'LOG_ANALYTICS_WORKSPACE_ID not configured — returning empty breakdown',
-      )
-      return []
-    }
-
-    const kql = `
-ApiManagementGatewayLogs
-| where TimeGenerated >= ago(30d)
-  and ApimSubscriptionId == '${data.subscriptionId}'
-  and isnotempty(OperationId)
-| summarize calls = count() by OperationId
-| top 10 by calls desc
-`.trim()
-
-    try {
-      const result = await logAnalyticsQuery(kql)
-
-      const table = result.tables[0]
-      if (!table || table.rows.length === 0) {
-        return []
-      }
-
-      const columns = table.columns.map((c) => c.name)
-      const endpointIdx = columns.indexOf('OperationId')
-      const callsIdx = columns.indexOf('calls')
-
-      return table.rows.map((row) => ({
-        endpoint: String(row[endpointIdx]),
-        calls: Number(row[callsIdx]) || 0,
-      }))
-    } catch (err) {
-      log.error(
-        { err, subscriptionId: data.subscriptionId },
-        'Failed to query Log Analytics for endpoint breakdown',
-      )
-      return []
-    }
+    const filter = `and ApimSubscriptionId == '${data.subscriptionId}'`
+    return _queryEndpointBreakdown(filter)
   })
-
-// --- Error Breakdown (via Azure Monitor Log Analytics) ---
 
 export const getErrorBreakdown = createServerFn({ method: 'GET' })
   .inputValidator(z.object({ subscriptionId: subscriptionIdSchema }).parse)
@@ -370,48 +435,9 @@ export const getErrorBreakdown = createServerFn({ method: 'GET' })
     const userId = await requireAuth()
     requireOwnership(userId, data.subscriptionId)
 
-    if (!env.APIM_LOG_ANALYTICS_WORKSPACE_ID) {
-      log.warn(
-        'LOG_ANALYTICS_WORKSPACE_ID not configured — returning empty error breakdown',
-      )
-      return []
-    }
-
-    const kql = `
-ApiManagementGatewayLogs
-| where TimeGenerated >= ago(30d)
-  and ApimSubscriptionId == '${data.subscriptionId}'
-  and ResponseCode >= 400
-| summarize count = count() by ResponseCode
-| top 10 by count desc
-`.trim()
-
-    try {
-      const result = await logAnalyticsQuery(kql)
-
-      const table = result.tables[0]
-      if (!table || table.rows.length === 0) {
-        return []
-      }
-
-      const columns = table.columns.map((c) => c.name)
-      const codeIdx = columns.indexOf('ResponseCode')
-      const countIdx = columns.indexOf('count')
-
-      return table.rows.map((row) => ({
-        statusCode: Number(row[codeIdx]) || 0,
-        count: Number(row[countIdx]) || 0,
-      }))
-    } catch (err) {
-      log.error(
-        { err, subscriptionId: data.subscriptionId },
-        'Failed to query Log Analytics for error breakdown',
-      )
-      return []
-    }
+    const filter = `and ApimSubscriptionId == '${data.subscriptionId}'`
+    return _queryErrorBreakdown(filter)
   })
-
-// --- Recent Errors (via Azure Monitor Log Analytics) ---
 
 export const getRecentErrors = createServerFn({ method: 'GET' })
   .inputValidator(z.object({ subscriptionId: subscriptionIdSchema }).parse)
@@ -419,50 +445,8 @@ export const getRecentErrors = createServerFn({ method: 'GET' })
     const userId = await requireAuth()
     requireOwnership(userId, data.subscriptionId)
 
-    if (!env.APIM_LOG_ANALYTICS_WORKSPACE_ID) {
-      log.warn(
-        'LOG_ANALYTICS_WORKSPACE_ID not configured — returning empty recent errors',
-      )
-      return []
-    }
-
-    const kql = `
-ApiManagementGatewayLogs
-| where TimeGenerated >= ago(24h)
-  and ApimSubscriptionId == '${data.subscriptionId}'
-  and ResponseCode >= 400
-| project TimeGenerated, OperationId, ResponseCode, Method
-| order by TimeGenerated desc
-| take 20
-`.trim()
-
-    try {
-      const result = await logAnalyticsQuery(kql)
-
-      const table = result.tables[0]
-      if (!table || table.rows.length === 0) {
-        return []
-      }
-
-      const columns = table.columns.map((c) => c.name)
-      const timeIdx = columns.indexOf('TimeGenerated')
-      const opIdx = columns.indexOf('OperationId')
-      const codeIdx = columns.indexOf('ResponseCode')
-      const methodIdx = columns.indexOf('Method')
-
-      return table.rows.map((row) => ({
-        timestamp: String(row[timeIdx]),
-        endpoint: String(row[opIdx]),
-        statusCode: Number(row[codeIdx]) || 0,
-        method: String(row[methodIdx]),
-      }))
-    } catch (err) {
-      log.error(
-        { err, subscriptionId: data.subscriptionId },
-        'Failed to query Log Analytics for recent errors',
-      )
-      return []
-    }
+    const filter = `and ApimSubscriptionId == '${data.subscriptionId}'`
+    return _queryRecentErrors(filter)
   })
 
 // --- Tier Configuration (public, no auth required) ---

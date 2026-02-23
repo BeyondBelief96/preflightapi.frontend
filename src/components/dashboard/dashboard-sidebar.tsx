@@ -1,7 +1,9 @@
 import { Link } from '@tanstack/react-router'
 import { UserButton } from '@clerk/clerk-react'
+import { useQuery } from '@tanstack/react-query'
 import {
   Activity,
+  AlertTriangle,
   BookOpen,
   CreditCard,
   Key,
@@ -9,9 +11,13 @@ import {
   MessageSquare,
   Rocket,
   Settings,
+  Shield,
+  Users,
 } from 'lucide-react'
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet'
 import { PlaneAnimation } from '@/components/plane-animation'
+import { checkIsAdmin } from '@/lib/server/admin'
+import { adminKeys } from '@/lib/server/apim-queries'
 
 const sidebarLinks = [
   { label: 'Overview', href: '/dashboard', icon: LayoutDashboard },
@@ -25,6 +31,16 @@ const sidebarLinks = [
   { label: 'Settings', href: '/dashboard/settings', icon: Settings },
 ]
 
+const adminLinks = [
+  { label: 'System Overview', href: '/dashboard/admin', icon: Shield },
+  { label: 'Users', href: '/dashboard/admin/users', icon: Users },
+  {
+    label: 'Abuse Detection',
+    href: '/dashboard/admin/abuse',
+    icon: AlertTriangle,
+  },
+]
+
 function SidebarContent({
   onNavigate,
   showUserProfile,
@@ -32,6 +48,12 @@ function SidebarContent({
   onNavigate?: () => void
   showUserProfile?: boolean
 }) {
+  const { data: isAdmin } = useQuery({
+    queryKey: adminKeys.isAdmin(),
+    queryFn: () => checkIsAdmin(),
+    staleTime: 10 * 60 * 1000,
+  })
+
   return (
     <div className="flex h-full flex-col">
       {/* Logo */}
@@ -58,6 +80,33 @@ function SidebarContent({
             {link.label}
           </Link>
         ))}
+
+        {isAdmin && (
+          <>
+            <div className="my-3 border-t" />
+            <p className="px-3 pb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Admin
+            </p>
+            {adminLinks.map((link) => (
+              <Link
+                key={link.href}
+                to={link.href}
+                className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                activeProps={{
+                  className:
+                    'bg-sidebar-accent text-sidebar-accent-foreground',
+                }}
+                activeOptions={{
+                  exact: link.href === '/dashboard/admin',
+                }}
+                onClick={onNavigate}
+              >
+                <link.icon className="h-4 w-4" />
+                {link.label}
+              </Link>
+            ))}
+          </>
+        )}
       </nav>
 
       {/* Docs & Contact links */}
