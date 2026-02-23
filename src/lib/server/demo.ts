@@ -123,7 +123,7 @@ async function demoFetch<T>(
     const start = performance.now()
 
     const headers: Record<string, string> = {
-      'Ocp-Apim-Subscription-Key': env.DEMO_API_KEY,
+      'Ocp-Apim-Subscription-Key': env.DEMO_API_KEY ?? '',
     }
     if (isPost) {
       headers['Content-Type'] = 'application/json'
@@ -259,6 +259,8 @@ export const fetchDemoNavlog = createServerFn().handler(async () => {
   })
 })
 
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Generated GeoJSON `coordinates?: unknown` conflicts with TanStack Start's type serialization that narrows unknown → {}
 export const fetchDemoRouteBriefing = createServerFn().handler(async () => {
   return demoFetch<RouteBriefingResponse>(
     '/briefing/route',
@@ -274,7 +276,7 @@ export const fetchDemoRouteBriefing = createServerFn().handler(async () => {
         corridorWidthNm: 25,
       },
     },
-  )
+  ) as any
 })
 
 export const fetchDemoWindsAloft = createServerFn().handler(async () => {
