@@ -28,7 +28,7 @@ export function WelcomeEmail({ name }: WelcomeEmailProps) {
 
           <Text style={paragraph}>
             Thanks for signing up. You now have access to our free Student Pilot
-            tier with 500 API calls per month.
+            tier with 5000 API calls per month.
           </Text>
 
           <Text style={paragraph}>Here&apos;s how to get started:</Text>
@@ -36,8 +36,8 @@ export function WelcomeEmail({ name }: WelcomeEmailProps) {
           <Section style={steps}>
             <Text style={step}>
               <strong>1.</strong> Head to your{' '}
-              <Link href={`${baseUrl}/dashboard/getting-started`} style={link}>
-                Getting Started guide
+              <Link href={`${baseUrl}/docs/getting-started`} style={link}>
+                Quick Start guide
               </Link>
             </Text>
             <Text style={step}>
