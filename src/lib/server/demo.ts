@@ -122,8 +122,6 @@ async function demoFetch<T>(
     const url = `${gatewayUrl}${API_BASE_PATH}${path}`
     const start = performance.now()
 
-    console.log('url', url)
-    console.log('env.DEMO_API_KEY', env.DEMO_API_KEY)
     const headers: Record<string, string> = {
       'Ocp-Apim-Subscription-Key': env.DEMO_API_KEY ?? '',
     }
