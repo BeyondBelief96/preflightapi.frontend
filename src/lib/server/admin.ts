@@ -389,7 +389,8 @@ export const getAdminUserDetail = createServerFn({ method: 'GET' })
           ? new Date(resetEpoch * 1000)
           : new Date(activeSub.createdDate)
 
-        const filter = `and ApimSubscriptionId == '${activeSub.id}'`
+        const safeId = subscriptionIdSchema.parse(activeSub.id)
+        const filter = `and ApimSubscriptionId == '${safeId}'`
         const usageReport = await _queryUsageReport(
           filter,
           resetDate.toISOString(),
