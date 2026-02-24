@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { Plus, Search } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type {EmailRecipient} from '@/lib/server/admin-email';
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -43,6 +43,8 @@ export function RecipientSelector({ value, onChange }: RecipientSelectorProps) {
   const [tier, setTier] = useState('all')
   const [search, setSearch] = useState('')
   const [manualEmail, setManualEmail] = useState('')
+  const onChangeRef = useRef(onChange)
+  onChangeRef.current = onChange
 
   const { data: recipients, isLoading, error } = useQuery({
     queryKey: adminKeys.emailRecipients(tier),
@@ -53,14 +55,14 @@ export function RecipientSelector({ value, onChange }: RecipientSelectorProps) {
   // Pre-select all recipients when tier changes
   useEffect(() => {
     if (recipients) {
-      onChange(
+      onChangeRef.current(
         recipients.map((r) => ({
           email: r.email,
           name: [r.firstName, r.lastName].filter(Boolean).join(' ') || undefined,
         })),
       )
     }
-  }, [recipients]) // intentionally omitting onChange to avoid loops
+  }, [recipients])
 
   const filtered = useMemo(() => {
     if (!recipients) return []

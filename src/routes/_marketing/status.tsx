@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import {
   Activity,
   AlertTriangle,
+  CalendarDays,
   CheckCircle,
   Clock,
   Database,
@@ -284,6 +285,15 @@ function formatRelativeTime(isoDate: string | null): string {
   return `${diffDays}d ago`
 }
 
+function formatCycleDate(isoDate: string | null): string {
+  if (!isoDate) return 'Unknown'
+  return new Date(isoDate).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  })
+}
+
 function formatSyncTypeName(syncType: string): string {
   // Convert PascalCase to spaced words
   return syncType.replace(/([A-Z])/g, ' $1').trim()
@@ -317,27 +327,32 @@ function DataFreshnessEntryRow({ entry }: { entry: DataFreshnessEntry }) {
 
   return (
     <div className="space-y-1">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <SeverityDot severity={entry.severity} />
-          <span className="text-sm">{formatSyncTypeName(entry.syncType)}</span>
-        </div>
-        <div className="flex items-center gap-3">
-          <span
-            className={cn(
-              'rounded-full px-2 py-0.5 text-xs font-medium',
-              entry.isFresh
-                ? 'bg-aviation-success/10 text-aviation-success'
-                : `bg-current/10 ${severityConfig.textClass}`,
-            )}
-          >
-            {severityConfig.label}
+      <div className="flex items-center gap-3">
+        <SeverityDot severity={entry.severity} />
+        <span className="min-w-0 flex-1 truncate text-sm">
+          {formatSyncTypeName(entry.syncType)}
+        </span>
+        <span
+          className={cn(
+            'w-[4.5rem] shrink-0 rounded-full px-2 py-0.5 text-center text-xs font-medium',
+            entry.isFresh
+              ? 'bg-aviation-success/10 text-aviation-success'
+              : `bg-current/10 ${severityConfig.textClass}`,
+          )}
+        >
+          {severityConfig.label}
+        </span>
+        {entry.stalenessMode === 'CycleBased' ? (
+          <span className="flex w-[7.5rem] shrink-0 items-center justify-end gap-1 text-xs text-muted-foreground">
+            <CalendarDays className="h-3 w-3" />
+            {formatCycleDate(entry.currentCycleDate)}
           </span>
-          <span className="flex items-center gap-1 text-xs text-muted-foreground">
+        ) : (
+          <span className="flex w-[4.5rem] shrink-0 items-center justify-end gap-1 text-xs text-muted-foreground">
             <Clock className="h-3 w-3" />
             {formatRelativeTime(entry.lastSuccessfulSync)}
           </span>
-        </div>
+        )}
       </div>
       {!entry.isFresh && (
         <p className="ml-6 text-xs text-muted-foreground">{entry.message}</p>
