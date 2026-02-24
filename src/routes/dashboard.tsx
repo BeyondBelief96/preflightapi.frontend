@@ -16,16 +16,35 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useSubscriptionSync } from '@/hooks/use-subscription-sync'
 
 const getAuthState = createServerFn().handler(async () => {
-  const { auth } = await import('@clerk/tanstack-react-start/server')
+  const { auth, clerkClient } = await import(
+    '@clerk/tanstack-react-start/server'
+  )
   const session = await auth()
-  return { userId: session?.userId ?? null }
+  if (!session?.userId) return { userId: null, onboardingComplete: false }
+
+  const clerk = clerkClient()
+  const user = await clerk.users.getUser(session.userId)
+  const pub = user.publicMetadata as { onboardingComplete?: boolean }
+  const unsafe = user.unsafeMetadata as { onboardingComplete?: boolean }
+
+  return {
+    userId: session.userId,
+    onboardingComplete:
+      pub.onboardingComplete === true || unsafe.onboardingComplete === true,
+  }
 })
 
 export const Route = createFileRoute('/dashboard')({
-  beforeLoad: async () => {
-    const { userId } = await getAuthState()
+  beforeLoad: async ({ location }) => {
+    const { userId, onboardingComplete } = await getAuthState()
     if (!userId) {
       throw redirect({ to: '/sign-in' })
+    }
+    if (
+      !onboardingComplete &&
+      location.pathname !== '/dashboard/getting-started'
+    ) {
+      throw redirect({ to: '/dashboard/getting-started' })
     }
   },
   component: DashboardLayout,

@@ -1,6 +1,6 @@
 import { Check } from 'lucide-react'
 
-const STEP_LABELS = ['Welcome', 'API Key', 'Try It', 'Complete']
+const STEP_LABELS = ['Welcome', 'Use Case', 'API Key', 'Try It', 'Complete']
 
 interface StepIndicatorProps {
   currentStep: number

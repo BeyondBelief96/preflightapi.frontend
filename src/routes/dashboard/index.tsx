@@ -1,10 +1,7 @@
-import { Link, createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { useAuth, useUser } from '@clerk/clerk-react'
-import { ArrowRight, Rocket } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { createPageHead } from '@/lib/seo'
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
 import { getUsageAnalytics, getUserSubscription } from '@/lib/server/apim'
 import { getStripeSubscription } from '@/lib/server/stripe'
 import { apimKeys, stripeKeys } from '@/lib/server/apim-queries'
@@ -28,19 +25,6 @@ function DashboardOverview() {
   const { user } = useUser()
   const { userId } = useAuth()
   const { plans } = usePlans()
-
-  const onboardingComplete =
-    (user?.unsafeMetadata as { onboardingComplete?: boolean })
-      ?.onboardingComplete ?? false
-
-  const handleDismissOnboarding = () => {
-    user?.update({
-      unsafeMetadata: {
-        ...user.unsafeMetadata,
-        onboardingComplete: true,
-      },
-    })
-  }
 
   // Stripe is the source of truth for billing state
   const stripeSubQuery = useQuery({
@@ -144,42 +128,6 @@ function DashboardOverview() {
           Here is an overview of your API usage and account.
         </p>
       </div>
-
-      {/* Onboarding banner */}
-      {!onboardingComplete && (
-        <Card className="border-l-4 border-l-aviation-sky">
-          <CardContent className="flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-3">
-              <Rocket className="h-5 w-5 shrink-0 text-aviation-sky" />
-              <div>
-                <p className="font-semibold">Complete your setup</p>
-                <p className="text-sm text-muted-foreground">
-                  Finish the getting started guide to make your first API
-                  request.
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleDismissOnboarding}
-              >
-                Dismiss
-              </Button>
-              <Link
-                to="/dashboard/getting-started"
-                className="flex-1 sm:flex-initial"
-              >
-                <Button size="sm" className="w-full gap-2 sm:w-auto">
-                  Continue Setup
-                  <ArrowRight className="h-3 w-3" />
-                </Button>
-              </Link>
-            </div>
-          </CardContent>
-        </Card>
-      )}
 
       <PlanOverviewCard
         isLoading={stripeSubQuery.isLoading}

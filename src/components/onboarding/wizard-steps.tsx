@@ -3,12 +3,18 @@ import {
   ArrowRight,
   BookOpen,
   Check,
+  CloudSun,
   CreditCard,
   Eye,
   EyeOff,
+  FlaskConical,
+  GraduationCap,
   Key,
   LayoutDashboard,
+  Plane,
   Rocket,
+  Sparkles,
+  Tablet,
   Zap,
 } from 'lucide-react'
 import type { ParsedEndpoint } from '@/lib/docs/types'
@@ -65,6 +71,62 @@ export function WelcomeStep({
 
         <Button onClick={onNext} className="gap-2">
           Let's Get Started
+          <ArrowRight className="h-4 w-4" />
+        </Button>
+      </CardContent>
+    </Card>
+  )
+}
+
+const USE_CASE_OPTIONS = [
+  { value: 'flight-school', label: 'Flight School / Training', icon: GraduationCap },
+  { value: 'efb', label: 'Electronic Flight Bag', icon: Tablet },
+  { value: 'weather', label: 'Weather Briefing Tool', icon: CloudSun },
+  { value: 'drone', label: 'Drone / UAV Operations', icon: Plane },
+  { value: 'research', label: 'Aviation Research', icon: FlaskConical },
+  { value: 'other', label: 'Something Else', icon: Sparkles },
+] as const
+
+export function UseCaseStep({
+  selectedUseCase,
+  onSelect,
+  onNext,
+}: {
+  selectedUseCase: string | null
+  onSelect: (value: string) => void
+  onNext: () => void
+}) {
+  return (
+    <Card>
+      <CardContent className="space-y-6 p-8">
+        <div>
+          <h2 className="text-2xl font-bold">What Are You Building?</h2>
+          <p className="mt-2 text-muted-foreground">
+            This helps us understand how you're using PreflightAPI. You can skip this if you
+            prefer.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          {USE_CASE_OPTIONS.map(({ value, label, icon: Icon }) => (
+            <button
+              key={value}
+              type="button"
+              onClick={() => onSelect(value)}
+              className={`flex flex-col items-center gap-2 rounded-lg border p-4 text-center transition-all hover:border-accent/50 hover:bg-accent/5 ${
+                selectedUseCase === value
+                  ? 'border-accent bg-accent/10 ring-2 ring-accent/30'
+                  : 'border-border'
+              }`}
+            >
+              <Icon className="h-6 w-6 text-accent" />
+              <span className="text-sm font-medium">{label}</span>
+            </button>
+          ))}
+        </div>
+
+        <Button onClick={onNext} className="gap-2">
+          Continue
           <ArrowRight className="h-4 w-4" />
         </Button>
       </CardContent>
