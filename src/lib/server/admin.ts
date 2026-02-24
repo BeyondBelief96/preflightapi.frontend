@@ -176,7 +176,7 @@ export const getAdminUsers = createServerFn({ method: 'POST' })
       page: z.number().min(1).default(1),
       pageSize: z.number().min(1).max(100).default(20),
       search: z.string().optional().default(''),
-    }).parse,
+    }),
   )
   .handler(
     async ({
@@ -292,7 +292,7 @@ export interface AdminUserDetail {
 }
 
 export const getAdminUserDetail = createServerFn({ method: 'GET' })
-  .inputValidator(z.object({ userId: z.string() }).parse)
+  .inputValidator(z.object({ userId: z.string() }))
   .handler(async ({ data }): Promise<AdminUserDetail> => {
     await requireAdmin()
 
@@ -433,7 +433,7 @@ const subscriptionIdSchema = z
 const planIdSchema = z.enum(['student', 'private', 'commercial', 'atp'])
 
 export const getAdminUserAnalytics = createServerFn({ method: 'GET' })
-  .inputValidator(z.object({ subscriptionId: subscriptionIdSchema }).parse)
+  .inputValidator(z.object({ subscriptionId: subscriptionIdSchema }))
   .handler(async ({ data }) => {
     await requireAdmin()
 
@@ -606,7 +606,7 @@ ApiManagementGatewayLogs
 
 export const adminChangeTier = createServerFn({ method: 'POST' })
   .inputValidator(
-    z.object({ userId: z.string(), planId: planIdSchema }).parse,
+    z.object({ userId: z.string(), planId: planIdSchema }),
   )
   .handler(async ({ data }) => {
     await requireAdmin()
@@ -657,7 +657,7 @@ export const adminChangeTier = createServerFn({ method: 'POST' })
   })
 
 export const adminCancelSubscription = createServerFn({ method: 'POST' })
-  .inputValidator(z.object({ userId: z.string() }).parse)
+  .inputValidator(z.object({ userId: z.string() }))
   .handler(async ({ data }) => {
     await requireAdmin()
 
@@ -718,7 +718,7 @@ export const adminCancelSubscription = createServerFn({ method: 'POST' })
   })
 
 export const adminResetQuota = createServerFn({ method: 'POST' })
-  .inputValidator(z.object({ userId: z.string() }).parse)
+  .inputValidator(z.object({ userId: z.string() }))
   .handler(async ({ data }) => {
     await requireAdmin()
 
