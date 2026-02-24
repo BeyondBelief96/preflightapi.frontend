@@ -4,6 +4,7 @@ import { useAuth, useUser } from '@clerk/clerk-react'
 import { useQuery } from '@tanstack/react-query'
 import { createPageHead } from '@/lib/seo'
 import { getSubscriptionKeys, getUserSubscription } from '@/lib/server/apim'
+import { completeOnboarding } from '@/lib/server/onboarding'
 import { apimKeys } from '@/lib/server/apim-queries'
 import { allEndpoints } from '@/lib/docs/spec-parser'
 import { API_BASE_PATH } from '@/lib/api-metadata'
@@ -12,6 +13,7 @@ import {
   ApiKeyStep,
   CompleteStep,
   TryItStep,
+  UseCaseStep,
   WelcomeStep,
 } from '@/components/onboarding/wizard-steps'
 import { WizardNavigation } from '@/components/onboarding/wizard-navigation'
@@ -34,6 +36,7 @@ function GettingStartedPage() {
   const topRef = useRef<HTMLDivElement>(null)
   const [currentStep, setCurrentStep] = useState(0)
   const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set())
+  const [useCase, setUseCase] = useState<string | null>(null)
   const [revealKey, setRevealKey] = useState(false)
   const [hasFirstSuccess, setHasFirstSuccess] = useState(false)
 
@@ -80,16 +83,9 @@ function GettingStartedPage() {
   )
 
   const handleComplete = useCallback(async () => {
-    if (user) {
-      await user.update({
-        unsafeMetadata: {
-          ...user.unsafeMetadata,
-          onboardingComplete: true,
-        },
-      })
-    }
+    await completeOnboarding({ data: { useCase } })
     navigate({ to: '/dashboard' })
-  }, [user, navigate])
+  }, [useCase, navigate])
 
   const handleTryItSuccess = useCallback(() => {
     setHasFirstSuccess(true)
@@ -111,6 +107,14 @@ function GettingStartedPage() {
         )}
 
         {currentStep === 1 && (
+          <UseCaseStep
+            selectedUseCase={useCase}
+            onSelect={setUseCase}
+            onNext={() => goToStep(2)}
+          />
+        )}
+
+        {currentStep === 2 && (
           <ApiKeyStep
             isLoading={isDataLoading}
             primaryKey={primaryKey}
@@ -119,7 +123,7 @@ function GettingStartedPage() {
           />
         )}
 
-        {currentStep === 2 && (
+        {currentStep === 3 && (
           <TryItStep
             endpoint={metarEndpoint}
             apiKey={primaryKey}
@@ -128,7 +132,7 @@ function GettingStartedPage() {
           />
         )}
 
-        {currentStep === 3 && <CompleteStep onComplete={handleComplete} />}
+        {currentStep === 4 && <CompleteStep onComplete={handleComplete} />}
       </div>
 
       <WizardNavigation
