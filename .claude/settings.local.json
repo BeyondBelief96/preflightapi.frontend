@@ -55,7 +55,8 @@
       "Bash(npx vitest:*)",
       "Bash(node --experimental-vm-modules:*)",
       "Bash(npx tsx:*)",
-      "Bash(npm run sync-api:*)"
+      "Bash(npm run sync-api:*)",
+      "WebFetch(domain:resend.com)"
     ]
   }
 }
