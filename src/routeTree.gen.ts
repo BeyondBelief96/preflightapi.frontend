@@ -39,6 +39,7 @@ import { Route as DashboardBillingIndexRouteImport } from './routes/dashboard/bi
 import { Route as DashboardAdminIndexRouteImport } from './routes/dashboard/admin/index'
 import { Route as DocsDataModelsGroupRouteImport } from './routes/docs/data-models/$group'
 import { Route as DocsCategoryOperationIdRouteImport } from './routes/docs/$category/$operationId'
+import { Route as DashboardAdminEmailRouteImport } from './routes/dashboard/admin/email'
 import { Route as DashboardAdminAbuseRouteImport } from './routes/dashboard/admin/abuse'
 import { Route as MarketingLegalTermsRouteImport } from './routes/_marketing/legal/terms'
 import { Route as MarketingLegalPrivacyRouteImport } from './routes/_marketing/legal/privacy'
@@ -195,6 +196,11 @@ const DocsCategoryOperationIdRoute = DocsCategoryOperationIdRouteImport.update({
   path: '/$category/$operationId',
   getParentRoute: () => DocsRoute,
 } as any)
+const DashboardAdminEmailRoute = DashboardAdminEmailRouteImport.update({
+  id: '/email',
+  path: '/email',
+  getParentRoute: () => DashboardAdminRoute,
+} as any)
 const DashboardAdminAbuseRoute = DashboardAdminAbuseRouteImport.update({
   id: '/abuse',
   path: '/abuse',
@@ -255,6 +261,7 @@ export interface FileRoutesByFullPath {
   '/legal/privacy': typeof MarketingLegalPrivacyRoute
   '/legal/terms': typeof MarketingLegalTermsRoute
   '/dashboard/admin/abuse': typeof DashboardAdminAbuseRoute
+  '/dashboard/admin/email': typeof DashboardAdminEmailRoute
   '/docs/$category/$operationId': typeof DocsCategoryOperationIdRoute
   '/docs/data-models/$group': typeof DocsDataModelsGroupRoute
   '/dashboard/admin/': typeof DashboardAdminIndexRoute
@@ -289,6 +296,7 @@ export interface FileRoutesByTo {
   '/legal/privacy': typeof MarketingLegalPrivacyRoute
   '/legal/terms': typeof MarketingLegalTermsRoute
   '/dashboard/admin/abuse': typeof DashboardAdminAbuseRoute
+  '/dashboard/admin/email': typeof DashboardAdminEmailRoute
   '/docs/$category/$operationId': typeof DocsCategoryOperationIdRoute
   '/docs/data-models/$group': typeof DocsDataModelsGroupRoute
   '/dashboard/admin': typeof DashboardAdminIndexRoute
@@ -328,6 +336,7 @@ export interface FileRoutesById {
   '/_marketing/legal/privacy': typeof MarketingLegalPrivacyRoute
   '/_marketing/legal/terms': typeof MarketingLegalTermsRoute
   '/dashboard/admin/abuse': typeof DashboardAdminAbuseRoute
+  '/dashboard/admin/email': typeof DashboardAdminEmailRoute
   '/docs/$category/$operationId': typeof DocsCategoryOperationIdRoute
   '/docs/data-models/$group': typeof DocsDataModelsGroupRoute
   '/dashboard/admin/': typeof DashboardAdminIndexRoute
@@ -367,6 +376,7 @@ export interface FileRouteTypes {
     | '/legal/privacy'
     | '/legal/terms'
     | '/dashboard/admin/abuse'
+    | '/dashboard/admin/email'
     | '/docs/$category/$operationId'
     | '/docs/data-models/$group'
     | '/dashboard/admin/'
@@ -401,6 +411,7 @@ export interface FileRouteTypes {
     | '/legal/privacy'
     | '/legal/terms'
     | '/dashboard/admin/abuse'
+    | '/dashboard/admin/email'
     | '/docs/$category/$operationId'
     | '/docs/data-models/$group'
     | '/dashboard/admin'
@@ -439,6 +450,7 @@ export interface FileRouteTypes {
     | '/_marketing/legal/privacy'
     | '/_marketing/legal/terms'
     | '/dashboard/admin/abuse'
+    | '/dashboard/admin/email'
     | '/docs/$category/$operationId'
     | '/docs/data-models/$group'
     | '/dashboard/admin/'
@@ -672,6 +684,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DocsCategoryOperationIdRouteImport
       parentRoute: typeof DocsRoute
     }
+    '/dashboard/admin/email': {
+      id: '/dashboard/admin/email'
+      path: '/email'
+      fullPath: '/dashboard/admin/email'
+      preLoaderRoute: typeof DashboardAdminEmailRouteImport
+      parentRoute: typeof DashboardAdminRoute
+    }
     '/dashboard/admin/abuse': {
       id: '/dashboard/admin/abuse'
       path: '/abuse'
@@ -745,6 +764,7 @@ const MarketingRouteWithChildren = MarketingRoute._addFileChildren(
 
 interface DashboardAdminRouteChildren {
   DashboardAdminAbuseRoute: typeof DashboardAdminAbuseRoute
+  DashboardAdminEmailRoute: typeof DashboardAdminEmailRoute
   DashboardAdminIndexRoute: typeof DashboardAdminIndexRoute
   DashboardAdminUsersUserIdRoute: typeof DashboardAdminUsersUserIdRoute
   DashboardAdminUsersIndexRoute: typeof DashboardAdminUsersIndexRoute
@@ -752,6 +772,7 @@ interface DashboardAdminRouteChildren {
 
 const DashboardAdminRouteChildren: DashboardAdminRouteChildren = {
   DashboardAdminAbuseRoute: DashboardAdminAbuseRoute,
+  DashboardAdminEmailRoute: DashboardAdminEmailRoute,
   DashboardAdminIndexRoute: DashboardAdminIndexRoute,
   DashboardAdminUsersUserIdRoute: DashboardAdminUsersUserIdRoute,
   DashboardAdminUsersIndexRoute: DashboardAdminUsersIndexRoute,

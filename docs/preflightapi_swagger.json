@@ -4,7 +4,7 @@
   "info": {
     "title": "PreflightApi",
     "description": "Aviation data API for VFR flight planning — weather, airports, airspace, NOTAMs, navigation, and E6B flight computer calculations.",
-    "version": "v1 (1.0.2)"
+    "version": "v1 (1.0.3)"
   },
   "servers": [
     {

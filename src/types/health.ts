@@ -1,8 +1,8 @@
+import type { HealthCheckEntry } from '@/generated/internal-api'
+
 export type {
   DataFreshnessResponse as DataFreshnessStatus,
   DataFreshnessResult as DataFreshnessEntry,
-  DataFreshnessSummary,
-  DataWarning,
   HealthCheckEntry as BackendHealthCheck,
   HealthCheckResponse as BackendHealthResponse,
 } from '@/generated/internal-api'
@@ -25,6 +25,6 @@ export interface ServiceHealthStatus {
 export interface SystemHealthStatus {
   overall: OverallStatus
   services: Array<ServiceHealthStatus>
-  backendChecks: Array<import('@/generated/internal-api').HealthCheckEntry>
+  backendChecks: Array<HealthCheckEntry>
   checkedAt: string
 }

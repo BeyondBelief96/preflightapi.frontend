@@ -38,6 +38,11 @@ export const adminKeys = {
     [...adminKeys.all, 'user-analytics', subscriptionId] as const,
   abuse: () => [...adminKeys.all, 'abuse'] as const,
   revenue: () => [...adminKeys.all, 'revenue'] as const,
+  emailRecipients: (tier: string) =>
+    [...adminKeys.all, 'email-recipients', tier] as const,
+  emailHistory: () => [...adminKeys.all, 'email-history'] as const,
+  emailDetail: (emailId: string) =>
+    [...adminKeys.all, 'email-detail', emailId] as const,
 }
 
 export const stripeKeys = {
