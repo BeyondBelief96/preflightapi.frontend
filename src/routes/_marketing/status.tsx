@@ -4,6 +4,8 @@ import {
   Activity,
   AlertTriangle,
   CheckCircle,
+  Clock,
+  Database,
   Server,
   Shield,
   Wrench,
@@ -11,11 +13,13 @@ import {
 } from 'lucide-react'
 import type {
   BackendHealthCheck,
+  DataFreshnessEntry,
+  DataFreshnessStatus,
   OverallStatus,
   ServiceStatus,
 } from '@/types/health'
 import { createPageHead } from '@/lib/seo'
-import { fetchSystemHealth } from '@/lib/server/health'
+import { fetchDataFreshness, fetchSystemHealth } from '@/lib/server/health'
 import { healthKeys } from '@/lib/server/apim-queries'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -202,10 +206,238 @@ function HealthCheckGroups({ checks }: { checks: Array<BackendHealthCheck> }) {
   )
 }
 
+// --- Data Freshness Section ---
+
+const SEVERITY_CONFIG: Record<
+  string,
+  { dotClass: string; label: string; textClass: string }
+> = {
+  none: {
+    dotClass: 'bg-aviation-success',
+    label: 'Fresh',
+    textClass: 'text-aviation-success',
+  },
+  info: {
+    dotClass: 'bg-blue-400',
+    label: 'Info',
+    textClass: 'text-blue-400',
+  },
+  warning: {
+    dotClass: 'bg-aviation-warning',
+    label: 'Warning',
+    textClass: 'text-aviation-warning',
+  },
+  critical: {
+    dotClass: 'bg-destructive',
+    label: 'Critical',
+    textClass: 'text-destructive',
+  },
+}
+
+const FRESHNESS_STATUS_CONFIG: Record<
+  string,
+  {
+    label: string
+    icon: typeof CheckCircle
+    bannerClass: string
+    textClass: string
+  }
+> = {
+  healthy: {
+    label: 'All Data Fresh',
+    icon: CheckCircle,
+    bannerClass: 'border-aviation-success/30 bg-aviation-success/5',
+    textClass: 'text-aviation-success',
+  },
+  degraded: {
+    label: 'Some Data Stale',
+    icon: AlertTriangle,
+    bannerClass: 'border-aviation-warning/30 bg-aviation-warning/5',
+    textClass: 'text-aviation-warning',
+  },
+  critical: {
+    label: 'Critical Data Staleness',
+    icon: XCircle,
+    bannerClass: 'border-destructive/30 bg-destructive/5',
+    textClass: 'text-destructive',
+  },
+  info: {
+    label: 'Minor Data Delays',
+    icon: AlertTriangle,
+    bannerClass: 'border-blue-400/30 bg-blue-400/5',
+    textClass: 'text-blue-400',
+  },
+}
+
+function formatRelativeTime(isoDate: string | null): string {
+  if (!isoDate) return 'Never'
+  const date = new Date(isoDate)
+  const now = new Date()
+  const diffMs = now.getTime() - date.getTime()
+  const diffMinutes = Math.floor(diffMs / 60_000)
+
+  if (diffMinutes < 1) return 'Just now'
+  if (diffMinutes < 60) return `${diffMinutes}m ago`
+  const diffHours = Math.floor(diffMinutes / 60)
+  if (diffHours < 24) return `${diffHours}h ago`
+  const diffDays = Math.floor(diffHours / 24)
+  return `${diffDays}d ago`
+}
+
+function formatSyncTypeName(syncType: string): string {
+  // Convert PascalCase to spaced words
+  return syncType.replace(/([A-Z])/g, ' $1').trim()
+}
+
+function SeverityDot({ severity }: { severity: string }) {
+  const config = SEVERITY_CONFIG[severity] ?? SEVERITY_CONFIG.info
+  return (
+    <span className="relative flex h-2.5 w-2.5">
+      {severity === 'none' && (
+        <span
+          className={cn(
+            'absolute inline-flex h-full w-full animate-ping rounded-full opacity-75',
+            config.dotClass,
+          )}
+        />
+      )}
+      <span
+        className={cn(
+          'relative inline-flex h-2.5 w-2.5 rounded-full',
+          config.dotClass,
+        )}
+      />
+    </span>
+  )
+}
+
+function DataFreshnessEntryRow({ entry }: { entry: DataFreshnessEntry }) {
+  const severityConfig =
+    SEVERITY_CONFIG[entry.severity] ?? SEVERITY_CONFIG.info
+
+  return (
+    <div className="space-y-1">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <SeverityDot severity={entry.severity} />
+          <span className="text-sm">{formatSyncTypeName(entry.syncType)}</span>
+        </div>
+        <div className="flex items-center gap-3">
+          <span
+            className={cn(
+              'rounded-full px-2 py-0.5 text-xs font-medium',
+              entry.isFresh
+                ? 'bg-aviation-success/10 text-aviation-success'
+                : `bg-current/10 ${severityConfig.textClass}`,
+            )}
+          >
+            {severityConfig.label}
+          </span>
+          <span className="flex items-center gap-1 text-xs text-muted-foreground">
+            <Clock className="h-3 w-3" />
+            {formatRelativeTime(entry.lastSuccessfulSync)}
+          </span>
+        </div>
+      </div>
+      {!entry.isFresh && (
+        <p className="ml-6 text-xs text-muted-foreground">{entry.message}</p>
+      )}
+      {entry.lastErrorMessage && !entry.isFresh && (
+        <p className="ml-6 text-xs text-destructive/80">
+          Error: {entry.lastErrorMessage}
+        </p>
+      )}
+    </div>
+  )
+}
+
+function DataFreshnessSection({
+  freshness,
+}: {
+  freshness: DataFreshnessStatus
+}) {
+  const statusConfig =
+    FRESHNESS_STATUS_CONFIG[freshness.overallStatus] ??
+    FRESHNESS_STATUS_CONFIG.healthy
+  const StatusIcon = statusConfig.icon
+
+  // Group by staleness mode
+  const weatherData = freshness.dataTypes.filter(
+    (d) => d.stalenessMode === 'TimeBased',
+  )
+  const publicationData = freshness.dataTypes.filter(
+    (d) => d.stalenessMode === 'CycleBased',
+  )
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center gap-3">
+        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent/10">
+          <Database className="h-5 w-5 text-accent" />
+        </div>
+        <h2 className="text-xl font-semibold">Data Sync Freshness</h2>
+      </div>
+
+      {/* Summary banner */}
+      <Card className={cn('border', statusConfig.bannerClass)}>
+        <CardContent className="flex items-center justify-between py-3">
+          <div className="flex items-center gap-3">
+            <StatusIcon className={cn('h-5 w-5', statusConfig.textClass)} />
+            <span className="font-medium">{statusConfig.label}</span>
+          </div>
+          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+            <span>{freshness.summary.fresh} fresh</span>
+            {freshness.summary.stale > 0 && (
+              <span className="text-destructive">
+                {freshness.summary.stale} stale
+              </span>
+            )}
+            <span>{freshness.summary.total} total</span>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Weather Data (TimeBased) */}
+      {weatherData.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Weather Data</CardTitle>
+          </CardHeader>
+          <CardContent className="-mt-2 space-y-3">
+            {weatherData.map((entry) => (
+              <DataFreshnessEntryRow key={entry.syncType} entry={entry} />
+            ))}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* FAA Publication Data (CycleBased) */}
+      {publicationData.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">FAA Publication Data</CardTitle>
+          </CardHeader>
+          <CardContent className="-mt-2 space-y-3">
+            {publicationData.map((entry) => (
+              <DataFreshnessEntryRow key={entry.syncType} entry={entry} />
+            ))}
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  )
+}
+
 function StatusPage() {
   const { data, isLoading } = useQuery({
     queryKey: healthKeys.system(),
     queryFn: () => fetchSystemHealth(),
+    refetchInterval: 30_000,
+  })
+
+  const { data: freshness, isLoading: freshnessLoading } = useQuery({
+    queryKey: healthKeys.dataFreshness(),
+    queryFn: () => fetchDataFreshness(),
     refetchInterval: 30_000,
   })
 
@@ -272,6 +504,18 @@ function StatusPage() {
         {data && data.backendChecks.length > 0 && (
           <HealthCheckGroups checks={data.backendChecks} />
         )}
+
+        {/* Data Sync Freshness */}
+        {freshnessLoading ? (
+          <div className="space-y-4">
+            <Skeleton className="h-10 w-64 rounded-lg" />
+            <Skeleton className="h-16 w-full rounded-xl" />
+            <Skeleton className="h-48 w-full rounded-xl" />
+            <Skeleton className="h-48 w-full rounded-xl" />
+          </div>
+        ) : freshness ? (
+          <DataFreshnessSection freshness={freshness} />
+        ) : null}
 
         {/* Footer info */}
         {data && (

@@ -172,6 +172,27 @@ X-RateLimit-Remaining: 58`}
         </div>
       </section>
 
+      {/* Data Freshness Headers */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-semibold">Data Freshness Headers</h2>
+        <p className="text-muted-foreground">
+          In addition to rate limit headers, every successful response from a
+          data endpoint includes{' '}
+          <strong className="text-foreground">data freshness headers</strong>{' '}
+          (<code>X-Data-Freshness</code>, <code>X-Data-Last-Updated</code>,{' '}
+          <code>X-Data-Sync-Age-Minutes</code>) that indicate how fresh the
+          underlying data is. See the{' '}
+          <Link
+            to="/docs/data-freshness"
+            className="text-accent hover:underline"
+          >
+            data freshness guide
+          </Link>{' '}
+          for details on staleness detection, severity levels, and opt-in
+          response body wrapping.
+        </p>
+      </section>
+
       {/* Exceeding Limits */}
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold">Exceeding Limits</h2>

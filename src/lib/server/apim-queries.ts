@@ -21,6 +21,7 @@ export const apimKeys = {
 export const healthKeys = {
   all: ['health'] as const,
   system: () => [...healthKeys.all, 'system'] as const,
+  dataFreshness: () => [...healthKeys.all, 'data-freshness'] as const,
 }
 
 export const adminKeys = {
