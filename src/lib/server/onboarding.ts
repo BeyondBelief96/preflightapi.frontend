@@ -22,7 +22,7 @@ export const getOnboardingStatus = createServerFn({ method: 'GET' }).handler(
 )
 
 export const completeOnboarding = createServerFn({ method: 'POST' })
-  .inputValidator(z.object({ useCase: z.string().nullable() }))
+  .inputValidator(z.object({ useCase: z.enum(['flight-school', 'efb', 'weather', 'drone', 'research', 'other']).nullable() }))
   .handler(async ({ data }) => {
     const userId = await requireAuth()
     const clerk = clerkClient()
