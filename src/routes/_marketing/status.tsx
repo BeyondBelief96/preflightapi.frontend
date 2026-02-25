@@ -294,9 +294,25 @@ function formatCycleDate(isoDate: string | null): string {
   })
 }
 
+const SYNC_TYPE_DISPLAY_NAMES: Record<string, string> = {
+  NotamDelta: 'NOTAMs',
+  ObstacleDailyChange: 'Obstacle Daily Changes',
+  GAirmet: 'G-AIRMETs',
+  Metar: 'METARs',
+  Taf: 'TAFs',
+  Pirep: 'PIREPs',
+  Sigmet: 'SIGMETs',
+  SpecialUseAirspace: 'Special Use Airspace',
+  ChartSupplement: 'Chart Supplements',
+  TerminalProcedure: 'Terminal Procedures',
+}
+
 function formatSyncTypeName(syncType: string): string {
-  // Convert PascalCase to spaced words
-  return syncType.replace(/([A-Z])/g, ' $1').trim()
+  return (
+    SYNC_TYPE_DISPLAY_NAMES[syncType] ??
+    // Fallback: convert PascalCase to spaced words
+    syncType.replace(/([A-Z])/g, ' $1').trim()
+  )
 }
 
 function SeverityDot({ severity }: { severity: string }) {
@@ -348,7 +364,7 @@ function DataFreshnessEntryRow({ entry }: { entry: DataFreshnessEntry }) {
             {formatCycleDate(entry.currentCycleDate)}
           </span>
         ) : (
-          <span className="flex w-[4.5rem] shrink-0 items-center justify-end gap-1 text-xs text-muted-foreground">
+          <span className="flex w-[7.5rem] shrink-0 items-center justify-end gap-1 text-xs text-muted-foreground">
             <Clock className="h-3 w-3" />
             {formatRelativeTime(entry.lastSuccessfulSync)}
           </span>
@@ -376,12 +392,20 @@ function DataFreshnessSection({
     FRESHNESS_STATUS_CONFIG.healthy
   const StatusIcon = statusConfig.icon
 
-  // Group by staleness mode
-  const weatherData = freshness.dataTypes.filter(
-    (d) => d.stalenessMode === 'TimeBased',
+  // Group by data category rather than staleness mode so that non-weather
+  // time-based entries (e.g. ObstacleDailyChange) don't land in "Weather Data"
+  const WEATHER_SYNC_TYPES = new Set([
+    'Metar',
+    'Taf',
+    'Pirep',
+    'Sigmet',
+    'GAirmet',
+  ])
+  const weatherData = freshness.dataTypes.filter((d) =>
+    WEATHER_SYNC_TYPES.has(d.syncType),
   )
   const publicationData = freshness.dataTypes.filter(
-    (d) => d.stalenessMode === 'CycleBased',
+    (d) => !WEATHER_SYNC_TYPES.has(d.syncType),
   )
 
   return (
@@ -417,6 +441,10 @@ function DataFreshnessSection({
         <Card>
           <CardHeader>
             <CardTitle className="text-base">Weather Data</CardTitle>
+            <p className="text-xs text-muted-foreground">
+              Synced continuously — timestamps show time since last successful
+              update
+            </p>
           </CardHeader>
           <CardContent className="-mt-2 space-y-3">
             {weatherData.map((entry) => (
@@ -426,19 +454,57 @@ function DataFreshnessSection({
         </Card>
       )}
 
-      {/* FAA Publication Data (CycleBased) */}
-      {publicationData.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">FAA Publication Data</CardTitle>
-          </CardHeader>
-          <CardContent className="-mt-2 space-y-3">
-            {publicationData.map((entry) => (
-              <DataFreshnessEntryRow key={entry.syncType} entry={entry} />
-            ))}
-          </CardContent>
-        </Card>
-      )}
+      {/* FAA Aeronautical Data — split cycle-based vs time-based */}
+      {publicationData.length > 0 &&
+        (() => {
+          const cycleBased = publicationData.filter(
+            (d) => d.stalenessMode === 'CycleBased',
+          )
+          const timeBased = publicationData.filter(
+            (d) => d.stalenessMode !== 'CycleBased',
+          )
+          return (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base">
+                  FAA Aeronautical Data
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="-mt-2 space-y-5">
+                {cycleBased.length > 0 && (
+                  <div className="space-y-3">
+                    <p className="text-xs font-medium text-muted-foreground">
+                      Publication cycle — dates show the current effective cycle
+                    </p>
+                    {cycleBased.map((entry) => (
+                      <DataFreshnessEntryRow
+                        key={entry.syncType}
+                        entry={entry}
+                      />
+                    ))}
+                  </div>
+                )}
+                {timeBased.length > 0 && (
+                  <div className="space-y-3">
+                    {cycleBased.length > 0 && (
+                      <div className="border-t border-border" />
+                    )}
+                    <p className="text-xs font-medium text-muted-foreground">
+                      Incremental updates — timestamps show time since last
+                      successful sync
+                    </p>
+                    {timeBased.map((entry) => (
+                      <DataFreshnessEntryRow
+                        key={entry.syncType}
+                        entry={entry}
+                      />
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )
+        })()}
     </div>
   )
 }
