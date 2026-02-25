@@ -172,24 +172,23 @@ X-RateLimit-Remaining: 58`}
         </div>
       </section>
 
-      {/* Data Freshness Headers */}
+      {/* Data Currency Headers */}
       <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">Data Freshness Headers</h2>
+        <h2 className="text-2xl font-semibold">Data Currency Headers</h2>
         <p className="text-muted-foreground">
           In addition to rate limit headers, every successful response from a
           data endpoint includes{' '}
-          <strong className="text-foreground">data freshness headers</strong>{' '}
+          <strong className="text-foreground">data currency headers</strong>{' '}
           (<code>X-Data-Freshness</code>, <code>X-Data-Last-Updated</code>,{' '}
-          <code>X-Data-Sync-Age-Minutes</code>) that indicate how fresh the
+          <code>X-Data-Sync-Age-Minutes</code>) that indicate how current the
           underlying data is. See the{' '}
           <Link
-            to="/docs/data-freshness"
+            to="/docs/data-currency"
             className="text-accent hover:underline"
           >
-            data freshness guide
+            data currency guide
           </Link>{' '}
-          for details on staleness detection, severity levels, and opt-in
-          response body wrapping.
+          for details on staleness detection and severity levels.
         </p>
       </section>
 

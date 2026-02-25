@@ -21,7 +21,7 @@ const DOC_PAGES = [
   '/docs/rate-limits',
   '/docs/errors',
   '/docs/openapi',
-  '/docs/data-freshness',
+  '/docs/data-currency',
   '/docs/data-models',
 ]
 

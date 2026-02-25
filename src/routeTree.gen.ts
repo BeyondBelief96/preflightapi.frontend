@@ -22,7 +22,7 @@ import { Route as DocsRateLimitsRouteImport } from './routes/docs/rate-limits'
 import { Route as DocsOpenapiRouteImport } from './routes/docs/openapi'
 import { Route as DocsGettingStartedRouteImport } from './routes/docs/getting-started'
 import { Route as DocsErrorsRouteImport } from './routes/docs/errors'
-import { Route as DocsDataFreshnessRouteImport } from './routes/docs/data-freshness'
+import { Route as DocsDataCurrencyRouteImport } from './routes/docs/data-currency'
 import { Route as DocsAuthenticationRouteImport } from './routes/docs/authentication'
 import { Route as DocsApiReferenceRouteImport } from './routes/docs/api-reference'
 import { Route as DashboardGettingStartedRouteImport } from './routes/dashboard/getting-started'
@@ -111,9 +111,9 @@ const DocsErrorsRoute = DocsErrorsRouteImport.update({
   path: '/errors',
   getParentRoute: () => DocsRoute,
 } as any)
-const DocsDataFreshnessRoute = DocsDataFreshnessRouteImport.update({
-  id: '/data-freshness',
-  path: '/data-freshness',
+const DocsDataCurrencyRoute = DocsDataCurrencyRouteImport.update({
+  id: '/data-currency',
+  path: '/data-currency',
   getParentRoute: () => DocsRoute,
 } as any)
 const DocsAuthenticationRoute = DocsAuthenticationRouteImport.update({
@@ -250,7 +250,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/getting-started': typeof DashboardGettingStartedRoute
   '/docs/api-reference': typeof DocsApiReferenceRoute
   '/docs/authentication': typeof DocsAuthenticationRoute
-  '/docs/data-freshness': typeof DocsDataFreshnessRoute
+  '/docs/data-currency': typeof DocsDataCurrencyRoute
   '/docs/errors': typeof DocsErrorsRoute
   '/docs/getting-started': typeof DocsGettingStartedRoute
   '/docs/openapi': typeof DocsOpenapiRoute
@@ -284,7 +284,7 @@ export interface FileRoutesByTo {
   '/dashboard/getting-started': typeof DashboardGettingStartedRoute
   '/docs/api-reference': typeof DocsApiReferenceRoute
   '/docs/authentication': typeof DocsAuthenticationRoute
-  '/docs/data-freshness': typeof DocsDataFreshnessRoute
+  '/docs/data-currency': typeof DocsDataCurrencyRoute
   '/docs/errors': typeof DocsErrorsRoute
   '/docs/getting-started': typeof DocsGettingStartedRoute
   '/docs/openapi': typeof DocsOpenapiRoute
@@ -324,7 +324,7 @@ export interface FileRoutesById {
   '/dashboard/getting-started': typeof DashboardGettingStartedRoute
   '/docs/api-reference': typeof DocsApiReferenceRoute
   '/docs/authentication': typeof DocsAuthenticationRoute
-  '/docs/data-freshness': typeof DocsDataFreshnessRoute
+  '/docs/data-currency': typeof DocsDataCurrencyRoute
   '/docs/errors': typeof DocsErrorsRoute
   '/docs/getting-started': typeof DocsGettingStartedRoute
   '/docs/openapi': typeof DocsOpenapiRoute
@@ -365,7 +365,7 @@ export interface FileRouteTypes {
     | '/dashboard/getting-started'
     | '/docs/api-reference'
     | '/docs/authentication'
-    | '/docs/data-freshness'
+    | '/docs/data-currency'
     | '/docs/errors'
     | '/docs/getting-started'
     | '/docs/openapi'
@@ -399,7 +399,7 @@ export interface FileRouteTypes {
     | '/dashboard/getting-started'
     | '/docs/api-reference'
     | '/docs/authentication'
-    | '/docs/data-freshness'
+    | '/docs/data-currency'
     | '/docs/errors'
     | '/docs/getting-started'
     | '/docs/openapi'
@@ -438,7 +438,7 @@ export interface FileRouteTypes {
     | '/dashboard/getting-started'
     | '/docs/api-reference'
     | '/docs/authentication'
-    | '/docs/data-freshness'
+    | '/docs/data-currency'
     | '/docs/errors'
     | '/docs/getting-started'
     | '/docs/openapi'
@@ -565,11 +565,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DocsErrorsRouteImport
       parentRoute: typeof DocsRoute
     }
-    '/docs/data-freshness': {
-      id: '/docs/data-freshness'
-      path: '/data-freshness'
-      fullPath: '/docs/data-freshness'
-      preLoaderRoute: typeof DocsDataFreshnessRouteImport
+    '/docs/data-currency': {
+      id: '/docs/data-currency'
+      path: '/data-currency'
+      fullPath: '/docs/data-currency'
+      preLoaderRoute: typeof DocsDataCurrencyRouteImport
       parentRoute: typeof DocsRoute
     }
     '/docs/authentication': {
@@ -807,7 +807,7 @@ const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
 interface DocsRouteChildren {
   DocsApiReferenceRoute: typeof DocsApiReferenceRoute
   DocsAuthenticationRoute: typeof DocsAuthenticationRoute
-  DocsDataFreshnessRoute: typeof DocsDataFreshnessRoute
+  DocsDataCurrencyRoute: typeof DocsDataCurrencyRoute
   DocsErrorsRoute: typeof DocsErrorsRoute
   DocsGettingStartedRoute: typeof DocsGettingStartedRoute
   DocsOpenapiRoute: typeof DocsOpenapiRoute
@@ -822,7 +822,7 @@ interface DocsRouteChildren {
 const DocsRouteChildren: DocsRouteChildren = {
   DocsApiReferenceRoute: DocsApiReferenceRoute,
   DocsAuthenticationRoute: DocsAuthenticationRoute,
-  DocsDataFreshnessRoute: DocsDataFreshnessRoute,
+  DocsDataCurrencyRoute: DocsDataCurrencyRoute,
   DocsErrorsRoute: DocsErrorsRoute,
   DocsGettingStartedRoute: DocsGettingStartedRoute,
   DocsOpenapiRoute: DocsOpenapiRoute,

@@ -24,7 +24,7 @@ export const sections = [
   {
     title: 'Resources',
     items: [
-      { label: 'Data Freshness', href: '/docs/data-freshness' },
+      { label: 'Data Currency', href: '/docs/data-currency' },
       { label: 'OpenAPI Spec', href: '/docs/openapi' },
     ],
   },

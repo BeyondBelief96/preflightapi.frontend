@@ -390,7 +390,7 @@ function DataFreshnessSection({
         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent/10">
           <Database className="h-5 w-5 text-accent" />
         </div>
-        <h2 className="text-xl font-semibold">Data Sync Freshness</h2>
+        <h2 className="text-xl font-semibold">Data Currency</h2>
       </div>
 
       {/* Summary banner */}

@@ -51,8 +51,8 @@ function buildIndex(): Array<SearchItem> {
       keywords: ['error', 'status code', '400', '403', '500'],
     },
     {
-      title: 'Data Freshness',
-      href: '/docs/data-freshness',
+      title: 'Data Currency',
+      href: '/docs/data-currency',
       keywords: [
         'sync',
         'update',
@@ -62,6 +62,7 @@ function buildIndex(): Array<SearchItem> {
         'publication',
         'schedule',
         'freshness',
+        'currency',
         '28-day',
         '56-day',
         'notam',
