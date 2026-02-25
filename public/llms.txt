@@ -1,0 +1,49 @@
+# PreflightAPI
+
+> PreflightAPI is a US Aviation Data REST API that unifies 7 FAA and NOAA data sources into 40+ endpoints. METARs, TAFs, PIREPs, SIGMETs, airports, NOTAMs, airspace, obstacles, and flight planning tools — one API key.
+
+PreflightAPI was built by Brandon Berisford, a software engineer and private pilot, to solve the problem of scattered US aviation data. It aggregates data from aviationweather.gov, FAA NASR, FAA ArcGIS, FAA NOTAM Management System, FAA d-TPP & Charts, and the FAA Digital Obstacle File into a single developer-friendly API.
+
+Authentication uses an `Ocp-Apim-Subscription-Key` header. Four pricing tiers are available, from a free Student Pilot plan (5,000 calls/month) up to ATP (2,000,000 calls/month). All tiers are self-service.
+
+Every data response includes freshness headers (`X-Data-Freshness`, `X-Data-Last-Updated`, `X-Data-Sync-Age-Minutes`) so consumers know how current the data is. Staleness is reported at four severity levels (none, info, warning, critical) using time-based thresholds for weather data (e.g. METARs stale after 50 min, TAFs after 120 min) and cycle-based tracking for FAA publication data (28-day and 56-day AIRAC cycles). A real-time status dashboard shows freshness across all 14 sync types.
+
+## Docs
+
+- [Getting Started](https://preflightapi.io/docs/getting-started): Quick start guide — sign up, get an API key, make your first request
+- [Authentication](https://preflightapi.io/docs/authentication): How to authenticate API requests
+- [Rate Limits](https://preflightapi.io/docs/rate-limits): Rate limiting and quota details per tier
+- [Error Handling](https://preflightapi.io/docs/errors): Error response formats and status codes
+- [Data Currency](https://preflightapi.io/docs/data-currency): How fresh the data is and update frequencies
+- [Data Models](https://preflightapi.io/docs/data-models): Shared data model reference
+- [OpenAPI Spec](https://preflightapi.io/docs/openapi): Interactive OpenAPI specification
+
+## API Categories
+
+- [METARs](https://preflightapi.io/docs/metars): Current weather observations for airports
+- [TAFs](https://preflightapi.io/docs/tafs): Terminal aerodrome forecasts
+- [PIREPs](https://preflightapi.io/docs/pireps): Pilot weather reports
+- [SIGMETs](https://preflightapi.io/docs/sigmets): Significant meteorological advisories
+- [G-AIRMETs](https://preflightapi.io/docs/g-airmets): Graphical airmet hazard areas
+- [Route Briefing](https://preflightapi.io/docs/briefing): Composite weather briefing for a route
+- [Airports](https://preflightapi.io/docs/airports): Airport search, details, and runway data
+- [Communication Frequencies](https://preflightapi.io/docs/communication-frequencies): Airport communication frequencies
+- [Airspace](https://preflightapi.io/docs/airspace): Controlled and special-use airspace boundaries
+- [NOTAMs](https://preflightapi.io/docs/notams): Notices to air missions
+- [Obstacles](https://preflightapi.io/docs/obstacles): 625,000+ FAA-charted obstacles
+- [Terminal Procedures](https://preflightapi.io/docs/terminal-procedures): FAA instrument approach and departure charts
+- [Chart Supplements](https://preflightapi.io/docs/chart-supplements): Airport/Facility Directory PDFs
+- [E6B Flight Computer](https://preflightapi.io/docs/e6b): Flight computer calculations
+- [Navigation Log](https://preflightapi.io/docs/nav-log): Flight planning navigation log
+
+## Pricing
+
+- [Pricing](https://preflightapi.io/pricing): Four tiers — Student Pilot (free, 5K calls/mo), Private Pilot ($14.99/mo, 150K calls/mo), Commercial Pilot ($49.99/mo, 750K calls/mo), ATP ($149.99/mo, 2M calls/mo)
+
+## Optional
+
+- [About](https://preflightapi.io/about): Company background and mission
+- [Contact](https://preflightapi.io/contact): Contact form
+- [System Status](https://preflightapi.io/status): API uptime and incident history
+- [Terms of Service](https://preflightapi.io/legal/terms): Terms and conditions
+- [Privacy Policy](https://preflightapi.io/legal/privacy): Privacy policy
