@@ -86,8 +86,7 @@ ApiManagementGatewayLogs
 
       const errorRate =
         monthReport.callCountTotal > 0
-          ? ((monthReport.callCountFailed + monthReport.callCountBlocked) /
-              monthReport.callCountTotal) *
+          ? (monthReport.callCountServerError / monthReport.callCountTotal) *
             100
           : 0
 
@@ -123,7 +122,7 @@ export const getSystemDailyTrend = createServerFn({ method: 'GET' }).handler(
       const kql = `
 ApiManagementGatewayLogs
 | where TimeGenerated >= ago(30d)
-| summarize calls = count(), errors = countif(ResponseCode >= 400) by bin(TimeGenerated, 1d)
+| summarize calls = count(), clientErrors = countif(ResponseCode >= 400 and ResponseCode < 500 and ResponseCode != 429), serverErrors = countif(ResponseCode >= 500) by bin(TimeGenerated, 1d)
 | order by TimeGenerated asc
 `.trim()
 
@@ -134,12 +133,14 @@ ApiManagementGatewayLogs
       const columns = table.columns.map((c) => c.name)
       const dateIdx = columns.indexOf('TimeGenerated')
       const callsIdx = columns.indexOf('calls')
-      const errorsIdx = columns.indexOf('errors')
+      const clientErrorsIdx = columns.indexOf('clientErrors')
+      const serverErrorsIdx = columns.indexOf('serverErrors')
 
       return table.rows.map((row) => ({
         date: String(row[dateIdx]).split('T')[0],
         calls: Number(row[callsIdx]) || 0,
-        errors: Number(row[errorsIdx]) || 0,
+        clientErrors: Number(row[clientErrorsIdx]) || 0,
+        serverErrors: Number(row[serverErrorsIdx]) || 0,
       }))
     } catch (err) {
       log.error({ err }, 'Failed to fetch system daily trend')
@@ -510,7 +511,7 @@ export const getAbuseIndicators = createServerFn({ method: 'GET' }).handler(
         logAnalyticsQuery(`
 ApiManagementGatewayLogs
 | where TimeGenerated >= ago(7d)
-| summarize totalCalls = count(), errorCount = countif(ResponseCode >= 400) by ApimSubscriptionId
+| summarize totalCalls = count(), errorCount = countif(ResponseCode >= 500) by ApimSubscriptionId
 | where totalCalls >= 50
 | extend errorRate = round(todouble(errorCount) / todouble(totalCalls) * 100, 2)
 | where errorRate > 20
@@ -534,7 +535,7 @@ ApiManagementGatewayLogs
         logAnalyticsQuery(`
 ApiManagementGatewayLogs
 | where TimeGenerated >= ago(24h) and isnotempty(CallerIpAddress)
-| summarize callCount = count(), distinctSubs = dcount(ApimSubscriptionId), errorRate = round(todouble(countif(ResponseCode >= 400)) / todouble(count()) * 100, 2) by CallerIpAddress
+| summarize callCount = count(), distinctSubs = dcount(ApimSubscriptionId), errorRate = round(todouble(countif(ResponseCode >= 500)) / todouble(count()) * 100, 2) by CallerIpAddress
 | where callCount > 500 or distinctSubs > 3
 | top 20 by callCount desc
         `.trim()),

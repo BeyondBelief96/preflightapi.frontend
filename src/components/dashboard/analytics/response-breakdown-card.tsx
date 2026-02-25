@@ -1,4 +1,4 @@
-import { CheckCircle2, ShieldAlert, XCircle } from 'lucide-react'
+import { AlertCircle, CheckCircle2, ShieldAlert, XCircle } from 'lucide-react'
 import type { ApimUsageReport } from '@/types/plans'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -40,28 +40,55 @@ export function ResponseBreakdownCard({
           </div>
         </div>
 
-        {/* Failed */}
+        {/* Client Errors (4xx) */}
         <div className="flex items-center gap-3">
-          <XCircle
+          <AlertCircle
             className={`h-4 w-4 shrink-0 ${
-              report && report.callCountFailed > 0
-                ? 'text-destructive'
+              report && report.callCountClientError > 0
+                ? 'text-aviation-warning'
                 : 'text-muted-foreground'
             }`}
           />
           <div className="flex-1">
-            <p className="text-xs text-muted-foreground">Failed</p>
+            <p className="text-xs text-muted-foreground">Client Errors (4xx)</p>
             {isLoading ? (
               <Skeleton className="mt-1 h-5 w-12" />
             ) : (
               <p
                 className={`text-lg font-semibold ${
-                  report && report.callCountFailed > 0
+                  report && report.callCountClientError > 0
+                    ? 'text-aviation-warning'
+                    : 'text-muted-foreground'
+                }`}
+              >
+                {report?.callCountClientError.toLocaleString() ?? '—'}
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* Server Errors (5xx) */}
+        <div className="flex items-center gap-3">
+          <XCircle
+            className={`h-4 w-4 shrink-0 ${
+              report && report.callCountServerError > 0
+                ? 'text-destructive'
+                : 'text-muted-foreground'
+            }`}
+          />
+          <div className="flex-1">
+            <p className="text-xs text-muted-foreground">Server Errors (5xx)</p>
+            {isLoading ? (
+              <Skeleton className="mt-1 h-5 w-12" />
+            ) : (
+              <p
+                className={`text-lg font-semibold ${
+                  report && report.callCountServerError > 0
                     ? 'text-destructive'
                     : 'text-muted-foreground'
                 }`}
               >
-                {report?.callCountFailed.toLocaleString() ?? '—'}
+                {report?.callCountServerError.toLocaleString() ?? '—'}
               </p>
             )}
           </div>

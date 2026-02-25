@@ -48,7 +48,7 @@ export function SuspiciousIps({
                 <TableHead>IP Address</TableHead>
                 <TableHead className="text-right">Calls</TableHead>
                 <TableHead className="text-right">Subscriptions</TableHead>
-                <TableHead className="text-right">Error Rate</TableHead>
+                <TableHead className="text-right">Server Error Rate</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

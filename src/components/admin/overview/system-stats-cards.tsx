@@ -32,9 +32,9 @@ export function SystemStatsCards({
         isLoading={isLoading}
       />
       <StatCard
-        title="Error Rate"
+        title="Server Error Rate"
         value={data ? `${data.errorRate}%` : '0%'}
-        subtitle="30-day average"
+        subtitle="5xx errors, 30-day average"
         icon={AlertTriangle}
         isLoading={isLoading}
       />

@@ -28,7 +28,7 @@ export function HighErrorUsers({
     <Card>
       <CardHeader>
         <CardTitle className="text-sm font-medium">
-          High Error Rate Users (7 days)
+          High Server Error Rate Users (7 days)
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -40,7 +40,7 @@ export function HighErrorUsers({
           </div>
         ) : !data || data.length === 0 ? (
           <p className="py-8 text-center text-sm text-muted-foreground">
-            No high error rate users detected
+            No high server error rate users detected
           </p>
         ) : (
           <Table>
@@ -48,8 +48,8 @@ export function HighErrorUsers({
               <TableRow>
                 <TableHead>Subscription</TableHead>
                 <TableHead className="text-right">Total Calls</TableHead>
-                <TableHead className="text-right">Errors</TableHead>
-                <TableHead className="text-right">Error Rate</TableHead>
+                <TableHead className="text-right">Server Errors</TableHead>
+                <TableHead className="text-right">Server Error Rate</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
