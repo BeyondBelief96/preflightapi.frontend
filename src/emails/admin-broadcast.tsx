@@ -8,6 +8,7 @@ import {
   Preview,
   Text,
 } from '@react-email/components'
+import sanitizeHtml from 'sanitize-html'
 
 interface AdminBroadcastEmailProps {
   content: string
@@ -29,7 +30,7 @@ export function AdminBroadcastEmail({
           <Text style={heading}>PreflightAPI</Text>
 
           <div
-            dangerouslySetInnerHTML={{ __html: content }}
+            dangerouslySetInnerHTML={{ __html: sanitizeHtml(content) }}
             style={contentSection}
           />
 
