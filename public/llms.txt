@@ -6,6 +6,8 @@ PreflightAPI was built by Brandon Berisford, a software engineer and private pil
 
 Authentication uses an `Ocp-Apim-Subscription-Key` header. Four pricing tiers are available, from a free Student Pilot plan (5,000 calls/month) up to ATP (2,000,000 calls/month). All tiers are self-service.
 
+Every data response includes freshness headers (`X-Data-Freshness`, `X-Data-Last-Updated`, `X-Data-Sync-Age-Minutes`) so consumers know how current the data is. Staleness is reported at four severity levels (none, info, warning, critical) using time-based thresholds for weather data (e.g. METARs stale after 50 min, TAFs after 120 min) and cycle-based tracking for FAA publication data (28-day and 56-day AIRAC cycles). A real-time status dashboard shows freshness across all 14 sync types.
+
 ## Docs
 
 - [Getting Started](https://preflightapi.io/docs/getting-started): Quick start guide — sign up, get an API key, make your first request
