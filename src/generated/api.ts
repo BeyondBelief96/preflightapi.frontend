@@ -1835,6 +1835,8 @@ export interface components {
             message?: string;
             /** @description Additional error details (only included in development environment). */
             details?: string | null;
+            /** @description Name of the external service that failed (only included for 503 errors). */
+            service?: string | null;
             /** @description Field-level validation errors (only for validation failures). */
             validationErrors?: {
                 [key: string]: string[];

@@ -4470,6 +4470,11 @@
             "description": "Additional error details (only included in development environment).",
             "nullable": true
           },
+          "service": {
+            "type": "string",
+            "description": "Name of the external service that failed (only included for 503 errors).",
+            "nullable": true
+          },
           "validationErrors": {
             "type": "object",
             "description": "Field-level validation errors (only for validation failures).",
