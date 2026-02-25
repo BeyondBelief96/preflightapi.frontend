@@ -22,7 +22,7 @@ import { Route as DocsRateLimitsRouteImport } from './routes/docs/rate-limits'
 import { Route as DocsOpenapiRouteImport } from './routes/docs/openapi'
 import { Route as DocsGettingStartedRouteImport } from './routes/docs/getting-started'
 import { Route as DocsErrorsRouteImport } from './routes/docs/errors'
-import { Route as DocsDataFreshnessRouteImport } from './routes/docs/data-freshness'
+import { Route as DocsDataCurrencyRouteImport } from './routes/docs/data-currency'
 import { Route as DocsAuthenticationRouteImport } from './routes/docs/authentication'
 import { Route as DocsApiReferenceRouteImport } from './routes/docs/api-reference'
 import { Route as DashboardGettingStartedRouteImport } from './routes/dashboard/getting-started'
@@ -39,6 +39,7 @@ import { Route as DashboardBillingIndexRouteImport } from './routes/dashboard/bi
 import { Route as DashboardAdminIndexRouteImport } from './routes/dashboard/admin/index'
 import { Route as DocsDataModelsGroupRouteImport } from './routes/docs/data-models/$group'
 import { Route as DocsCategoryOperationIdRouteImport } from './routes/docs/$category/$operationId'
+import { Route as DashboardAdminEmailRouteImport } from './routes/dashboard/admin/email'
 import { Route as DashboardAdminAbuseRouteImport } from './routes/dashboard/admin/abuse'
 import { Route as MarketingLegalTermsRouteImport } from './routes/_marketing/legal/terms'
 import { Route as MarketingLegalPrivacyRouteImport } from './routes/_marketing/legal/privacy'
@@ -110,9 +111,9 @@ const DocsErrorsRoute = DocsErrorsRouteImport.update({
   path: '/errors',
   getParentRoute: () => DocsRoute,
 } as any)
-const DocsDataFreshnessRoute = DocsDataFreshnessRouteImport.update({
-  id: '/data-freshness',
-  path: '/data-freshness',
+const DocsDataCurrencyRoute = DocsDataCurrencyRouteImport.update({
+  id: '/data-currency',
+  path: '/data-currency',
   getParentRoute: () => DocsRoute,
 } as any)
 const DocsAuthenticationRoute = DocsAuthenticationRouteImport.update({
@@ -195,6 +196,11 @@ const DocsCategoryOperationIdRoute = DocsCategoryOperationIdRouteImport.update({
   path: '/$category/$operationId',
   getParentRoute: () => DocsRoute,
 } as any)
+const DashboardAdminEmailRoute = DashboardAdminEmailRouteImport.update({
+  id: '/email',
+  path: '/email',
+  getParentRoute: () => DashboardAdminRoute,
+} as any)
 const DashboardAdminAbuseRoute = DashboardAdminAbuseRouteImport.update({
   id: '/abuse',
   path: '/abuse',
@@ -244,7 +250,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/getting-started': typeof DashboardGettingStartedRoute
   '/docs/api-reference': typeof DocsApiReferenceRoute
   '/docs/authentication': typeof DocsAuthenticationRoute
-  '/docs/data-freshness': typeof DocsDataFreshnessRoute
+  '/docs/data-currency': typeof DocsDataCurrencyRoute
   '/docs/errors': typeof DocsErrorsRoute
   '/docs/getting-started': typeof DocsGettingStartedRoute
   '/docs/openapi': typeof DocsOpenapiRoute
@@ -255,6 +261,7 @@ export interface FileRoutesByFullPath {
   '/legal/privacy': typeof MarketingLegalPrivacyRoute
   '/legal/terms': typeof MarketingLegalTermsRoute
   '/dashboard/admin/abuse': typeof DashboardAdminAbuseRoute
+  '/dashboard/admin/email': typeof DashboardAdminEmailRoute
   '/docs/$category/$operationId': typeof DocsCategoryOperationIdRoute
   '/docs/data-models/$group': typeof DocsDataModelsGroupRoute
   '/dashboard/admin/': typeof DashboardAdminIndexRoute
@@ -277,7 +284,7 @@ export interface FileRoutesByTo {
   '/dashboard/getting-started': typeof DashboardGettingStartedRoute
   '/docs/api-reference': typeof DocsApiReferenceRoute
   '/docs/authentication': typeof DocsAuthenticationRoute
-  '/docs/data-freshness': typeof DocsDataFreshnessRoute
+  '/docs/data-currency': typeof DocsDataCurrencyRoute
   '/docs/errors': typeof DocsErrorsRoute
   '/docs/getting-started': typeof DocsGettingStartedRoute
   '/docs/openapi': typeof DocsOpenapiRoute
@@ -289,6 +296,7 @@ export interface FileRoutesByTo {
   '/legal/privacy': typeof MarketingLegalPrivacyRoute
   '/legal/terms': typeof MarketingLegalTermsRoute
   '/dashboard/admin/abuse': typeof DashboardAdminAbuseRoute
+  '/dashboard/admin/email': typeof DashboardAdminEmailRoute
   '/docs/$category/$operationId': typeof DocsCategoryOperationIdRoute
   '/docs/data-models/$group': typeof DocsDataModelsGroupRoute
   '/dashboard/admin': typeof DashboardAdminIndexRoute
@@ -316,7 +324,7 @@ export interface FileRoutesById {
   '/dashboard/getting-started': typeof DashboardGettingStartedRoute
   '/docs/api-reference': typeof DocsApiReferenceRoute
   '/docs/authentication': typeof DocsAuthenticationRoute
-  '/docs/data-freshness': typeof DocsDataFreshnessRoute
+  '/docs/data-currency': typeof DocsDataCurrencyRoute
   '/docs/errors': typeof DocsErrorsRoute
   '/docs/getting-started': typeof DocsGettingStartedRoute
   '/docs/openapi': typeof DocsOpenapiRoute
@@ -328,6 +336,7 @@ export interface FileRoutesById {
   '/_marketing/legal/privacy': typeof MarketingLegalPrivacyRoute
   '/_marketing/legal/terms': typeof MarketingLegalTermsRoute
   '/dashboard/admin/abuse': typeof DashboardAdminAbuseRoute
+  '/dashboard/admin/email': typeof DashboardAdminEmailRoute
   '/docs/$category/$operationId': typeof DocsCategoryOperationIdRoute
   '/docs/data-models/$group': typeof DocsDataModelsGroupRoute
   '/dashboard/admin/': typeof DashboardAdminIndexRoute
@@ -356,7 +365,7 @@ export interface FileRouteTypes {
     | '/dashboard/getting-started'
     | '/docs/api-reference'
     | '/docs/authentication'
-    | '/docs/data-freshness'
+    | '/docs/data-currency'
     | '/docs/errors'
     | '/docs/getting-started'
     | '/docs/openapi'
@@ -367,6 +376,7 @@ export interface FileRouteTypes {
     | '/legal/privacy'
     | '/legal/terms'
     | '/dashboard/admin/abuse'
+    | '/dashboard/admin/email'
     | '/docs/$category/$operationId'
     | '/docs/data-models/$group'
     | '/dashboard/admin/'
@@ -389,7 +399,7 @@ export interface FileRouteTypes {
     | '/dashboard/getting-started'
     | '/docs/api-reference'
     | '/docs/authentication'
-    | '/docs/data-freshness'
+    | '/docs/data-currency'
     | '/docs/errors'
     | '/docs/getting-started'
     | '/docs/openapi'
@@ -401,6 +411,7 @@ export interface FileRouteTypes {
     | '/legal/privacy'
     | '/legal/terms'
     | '/dashboard/admin/abuse'
+    | '/dashboard/admin/email'
     | '/docs/$category/$operationId'
     | '/docs/data-models/$group'
     | '/dashboard/admin'
@@ -427,7 +438,7 @@ export interface FileRouteTypes {
     | '/dashboard/getting-started'
     | '/docs/api-reference'
     | '/docs/authentication'
-    | '/docs/data-freshness'
+    | '/docs/data-currency'
     | '/docs/errors'
     | '/docs/getting-started'
     | '/docs/openapi'
@@ -439,6 +450,7 @@ export interface FileRouteTypes {
     | '/_marketing/legal/privacy'
     | '/_marketing/legal/terms'
     | '/dashboard/admin/abuse'
+    | '/dashboard/admin/email'
     | '/docs/$category/$operationId'
     | '/docs/data-models/$group'
     | '/dashboard/admin/'
@@ -553,11 +565,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DocsErrorsRouteImport
       parentRoute: typeof DocsRoute
     }
-    '/docs/data-freshness': {
-      id: '/docs/data-freshness'
-      path: '/data-freshness'
-      fullPath: '/docs/data-freshness'
-      preLoaderRoute: typeof DocsDataFreshnessRouteImport
+    '/docs/data-currency': {
+      id: '/docs/data-currency'
+      path: '/data-currency'
+      fullPath: '/docs/data-currency'
+      preLoaderRoute: typeof DocsDataCurrencyRouteImport
       parentRoute: typeof DocsRoute
     }
     '/docs/authentication': {
@@ -672,6 +684,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DocsCategoryOperationIdRouteImport
       parentRoute: typeof DocsRoute
     }
+    '/dashboard/admin/email': {
+      id: '/dashboard/admin/email'
+      path: '/email'
+      fullPath: '/dashboard/admin/email'
+      preLoaderRoute: typeof DashboardAdminEmailRouteImport
+      parentRoute: typeof DashboardAdminRoute
+    }
     '/dashboard/admin/abuse': {
       id: '/dashboard/admin/abuse'
       path: '/abuse'
@@ -745,6 +764,7 @@ const MarketingRouteWithChildren = MarketingRoute._addFileChildren(
 
 interface DashboardAdminRouteChildren {
   DashboardAdminAbuseRoute: typeof DashboardAdminAbuseRoute
+  DashboardAdminEmailRoute: typeof DashboardAdminEmailRoute
   DashboardAdminIndexRoute: typeof DashboardAdminIndexRoute
   DashboardAdminUsersUserIdRoute: typeof DashboardAdminUsersUserIdRoute
   DashboardAdminUsersIndexRoute: typeof DashboardAdminUsersIndexRoute
@@ -752,6 +772,7 @@ interface DashboardAdminRouteChildren {
 
 const DashboardAdminRouteChildren: DashboardAdminRouteChildren = {
   DashboardAdminAbuseRoute: DashboardAdminAbuseRoute,
+  DashboardAdminEmailRoute: DashboardAdminEmailRoute,
   DashboardAdminIndexRoute: DashboardAdminIndexRoute,
   DashboardAdminUsersUserIdRoute: DashboardAdminUsersUserIdRoute,
   DashboardAdminUsersIndexRoute: DashboardAdminUsersIndexRoute,
@@ -786,7 +807,7 @@ const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
 interface DocsRouteChildren {
   DocsApiReferenceRoute: typeof DocsApiReferenceRoute
   DocsAuthenticationRoute: typeof DocsAuthenticationRoute
-  DocsDataFreshnessRoute: typeof DocsDataFreshnessRoute
+  DocsDataCurrencyRoute: typeof DocsDataCurrencyRoute
   DocsErrorsRoute: typeof DocsErrorsRoute
   DocsGettingStartedRoute: typeof DocsGettingStartedRoute
   DocsOpenapiRoute: typeof DocsOpenapiRoute
@@ -801,7 +822,7 @@ interface DocsRouteChildren {
 const DocsRouteChildren: DocsRouteChildren = {
   DocsApiReferenceRoute: DocsApiReferenceRoute,
   DocsAuthenticationRoute: DocsAuthenticationRoute,
-  DocsDataFreshnessRoute: DocsDataFreshnessRoute,
+  DocsDataCurrencyRoute: DocsDataCurrencyRoute,
   DocsErrorsRoute: DocsErrorsRoute,
   DocsGettingStartedRoute: DocsGettingStartedRoute,
   DocsOpenapiRoute: DocsOpenapiRoute,

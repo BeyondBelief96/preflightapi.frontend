@@ -8,6 +8,7 @@ import {
   CreditCard,
   Key,
   LayoutDashboard,
+  Mail,
   MessageSquare,
   Rocket,
   Settings,
@@ -39,6 +40,7 @@ const adminLinks = [
     href: '/dashboard/admin/abuse',
     icon: AlertTriangle,
   },
+  { label: 'Email', href: '/dashboard/admin/email', icon: Mail },
 ]
 
 function SidebarContent({

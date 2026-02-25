@@ -32,6 +32,7 @@ export const env = createEnv({
     // --- Optional (have defaults or non-critical) ---
 
     PREFLIGHT_API_BASE_URL: z.url().optional(),
+    PREFLIGHT_API_GATEWAY_SECRET: z.string().optional(),
     APIM_API_VERSION: z.string().optional(),
     APIM_LOG_ANALYTICS_WORKSPACE_ID: z.string().optional(),
     APIM_STUDENT_PRODUCT_ID: z.string().optional().default('student-pilot'),

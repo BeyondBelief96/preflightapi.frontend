@@ -1,3 +1,12 @@
+import type { HealthCheckEntry } from '@/generated/internal-api'
+
+export type {
+  DataFreshnessResponse as DataFreshnessStatus,
+  DataFreshnessResult as DataFreshnessEntry,
+  HealthCheckEntry as BackendHealthCheck,
+  HealthCheckResponse as BackendHealthResponse,
+} from '@/generated/internal-api'
+
 export type ServiceStatus =
   | 'operational'
   | 'degraded'
@@ -5,22 +14,6 @@ export type ServiceStatus =
   | 'outage'
 
 export type OverallStatus = ServiceStatus
-
-export interface BackendHealthCheck {
-  name: string
-  status: string
-  duration: number
-  tags: Array<string>
-  description: string | null
-  exception: string | null
-}
-
-export interface BackendHealthResponse {
-  status: string
-  version: string
-  totalDuration: number
-  checks: Array<BackendHealthCheck>
-}
 
 export interface ServiceHealthStatus {
   name: string
@@ -32,6 +25,6 @@ export interface ServiceHealthStatus {
 export interface SystemHealthStatus {
   overall: OverallStatus
   services: Array<ServiceHealthStatus>
-  backendChecks: Array<BackendHealthCheck>
+  backendChecks: Array<HealthCheckEntry>
   checkedAt: string
 }

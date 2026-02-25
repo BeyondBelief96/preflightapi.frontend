@@ -34,6 +34,13 @@ export interface DataFreshnessResponse {
   dataTypes: Array<DataFreshnessResult>
 }
 
+export interface DataWarning {
+  syncType: string
+  severity: string
+  message: string
+  lastSuccessfulSync: string | null
+}
+
 export interface HealthCheckEntry {
   name: string
   status: string

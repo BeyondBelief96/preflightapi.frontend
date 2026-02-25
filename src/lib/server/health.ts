@@ -3,6 +3,7 @@ import { createLogger } from './logger'
 import type {
   BackendHealthCheck,
   BackendHealthResponse,
+  DataFreshnessStatus,
   OverallStatus,
   ServiceHealthStatus,
   ServiceStatus,
@@ -13,6 +14,12 @@ import { env } from '@/env'
 const log = createLogger('health')
 
 const TIMEOUT_MS = 10_000
+
+function getInternalHeaders(): HeadersInit {
+  const secret = env.PREFLIGHT_API_GATEWAY_SECRET
+  if (!secret) return {}
+  return { 'X-Api-Gateway-Secret': secret }
+}
 
 function deriveOverallStatus(
   services: Array<ServiceHealthStatus>,
@@ -116,6 +123,7 @@ async function checkApi(): Promise<{
 
   try {
     const res = await fetch(url, {
+      headers: getInternalHeaders(),
       signal: AbortSignal.timeout(TIMEOUT_MS),
     })
     const elapsed = Math.round(performance.now() - start)
@@ -196,6 +204,32 @@ export const fetchSystemHealth = createServerFn({ method: 'GET' }).handler(
       services,
       backendChecks: api.checks,
       checkedAt: new Date().toISOString(),
+    }
+  },
+)
+
+export const fetchDataFreshness = createServerFn({ method: 'GET' }).handler(
+  async (): Promise<DataFreshnessStatus | null> => {
+    const baseUrl = env.PREFLIGHT_API_BASE_URL
+
+    if (!baseUrl) {
+      log.warn('PREFLIGHT_API_BASE_URL not configured — skipping data freshness')
+      return null
+    }
+
+    try {
+      const res = await fetch(`${baseUrl}/health/data-freshness`, {
+        headers: getInternalHeaders(),
+        signal: AbortSignal.timeout(TIMEOUT_MS),
+      })
+      if (!res.ok) {
+        log.warn({ status: res.status }, 'Data freshness check failed')
+        return null
+      }
+      return (await res.json()) as DataFreshnessStatus
+    } catch (err) {
+      log.error({ err }, 'Data freshness fetch failed')
+      return null
     }
   },
 )
