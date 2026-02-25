@@ -9,7 +9,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 
 interface SystemDailyTrendProps {
-  data: Array<{ date: string; calls: number; errors: number }> | undefined
+  data:
+    | Array<{
+        date: string
+        calls: number
+        clientErrors: number
+        serverErrors: number
+      }>
+    | undefined
   isLoading: boolean
 }
 
@@ -18,9 +25,13 @@ const chartConfig = {
     label: 'API Calls',
     color: 'var(--chart-1)',
   },
-  errors: {
-    label: 'Errors',
-    color: 'var(--chart-5)',
+  clientErrors: {
+    label: 'Client Errors (4xx)',
+    color: 'var(--chart-4)',
+  },
+  serverErrors: {
+    label: 'Server Errors (5xx)',
+    color: 'var(--destructive)',
   },
 } satisfies ChartConfig
 
@@ -67,7 +78,7 @@ export function SystemDailyTrend({ data, isLoading }: SystemDailyTrendProps) {
                   />
                 </linearGradient>
                 <linearGradient
-                  id="fillSystemErrors"
+                  id="fillClientErrors"
                   x1="0"
                   y1="0"
                   x2="0"
@@ -75,12 +86,30 @@ export function SystemDailyTrend({ data, isLoading }: SystemDailyTrendProps) {
                 >
                   <stop
                     offset="0%"
-                    stopColor="var(--chart-5)"
+                    stopColor="var(--chart-4)"
                     stopOpacity={0.3}
                   />
                   <stop
                     offset="100%"
-                    stopColor="var(--chart-5)"
+                    stopColor="var(--chart-4)"
+                    stopOpacity={0.05}
+                  />
+                </linearGradient>
+                <linearGradient
+                  id="fillServerErrors"
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
+                >
+                  <stop
+                    offset="0%"
+                    stopColor="var(--destructive)"
+                    stopOpacity={0.3}
+                  />
+                  <stop
+                    offset="100%"
+                    stopColor="var(--destructive)"
                     stopOpacity={0.05}
                   />
                 </linearGradient>
@@ -113,10 +142,17 @@ export function SystemDailyTrend({ data, isLoading }: SystemDailyTrendProps) {
                 strokeWidth={2}
               />
               <Area
-                dataKey="errors"
+                dataKey="clientErrors"
                 type="monotone"
-                fill="url(#fillSystemErrors)"
-                stroke="var(--chart-5)"
+                fill="url(#fillClientErrors)"
+                stroke="var(--chart-4)"
+                strokeWidth={2}
+              />
+              <Area
+                dataKey="serverErrors"
+                type="monotone"
+                fill="url(#fillServerErrors)"
+                stroke="var(--destructive)"
                 strokeWidth={2}
               />
             </AreaChart>

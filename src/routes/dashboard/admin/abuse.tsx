@@ -39,7 +39,7 @@ function AbuseDetectionPage() {
       <Tabs defaultValue="errors">
         <TabsList>
           <TabsTrigger value="errors">
-            High Error Rate
+            High Server Error Rate
             {data?.highErrorUsers.length
               ? ` (${data.highErrorUsers.length})`
               : ''}

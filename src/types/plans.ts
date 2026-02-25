@@ -40,7 +40,8 @@ export interface ApimUsageReport {
   callCountTotal: number
   callCountSuccess: number
   callCountBlocked: number
-  callCountFailed: number
+  callCountClientError: number // 4xx excluding 429
+  callCountServerError: number // 5xx
   callCountOther: number
   bandwidth: number
   apiTimeAvg: number
