@@ -155,6 +155,7 @@ export function EmailComposeForm() {
                           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
                           padding: 24px;
                           color: #475569;
+                          background-color: #ffffff;
                           font-size: 16px;
                           line-height: 1.6;
                           max-width: 600px;

@@ -8,6 +8,7 @@ import {
   AlignLeft,
   AlignRight,
   Bold,
+  Code,
   Heading1,
   Heading2,
   Italic,
@@ -19,7 +20,15 @@ import {
   Underline as UnderlineIcon,
   Undo,
 } from 'lucide-react'
-import { useCallback } from 'react'
+import { useCallback, useRef, useState } from 'react'
+import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { Toggle } from '@/components/ui/toggle'
 import { cn } from '@/lib/utils'
 
@@ -46,10 +55,23 @@ export function TipTapEditor({ onUpdate, className }: TipTapEditorProps) {
     editorProps: {
       attributes: {
         class:
-          'prose prose-sm dark:prose-invert max-w-none min-h-[200px] px-4 py-3 focus:outline-none',
+          'prose prose-sm prose-invert max-w-none min-h-[200px] px-4 py-3 focus:outline-none',
       },
     },
   })
+
+  const [importOpen, setImportOpen] = useState(false)
+  const importRef = useRef<HTMLTextAreaElement>(null)
+
+  const handleImportHtml = useCallback(() => {
+    if (!editor || !importRef.current) return
+    const html = importRef.current.value.trim()
+    if (html) {
+      editor.commands.setContent(html)
+      onUpdate(editor.getHTML())
+    }
+    setImportOpen(false)
+  }, [editor, onUpdate])
 
   const setLink = useCallback(() => {
     if (!editor) return
@@ -227,10 +249,41 @@ export function TipTapEditor({ onUpdate, className }: TipTapEditorProps) {
         >
           <Redo className="h-4 w-4" />
         </Toggle>
+        <div className="mx-1 w-px bg-border" />
+
+        <Toggle
+          size="sm"
+          pressed={false}
+          onPressedChange={() => setImportOpen(true)}
+          aria-label="Import HTML"
+          title="Import HTML"
+        >
+          <Code className="h-4 w-4" />
+        </Toggle>
       </div>
 
       {/* Editor */}
       <EditorContent editor={editor} />
+
+      {/* Import HTML Dialog */}
+      <Dialog open={importOpen} onOpenChange={setImportOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Import HTML</DialogTitle>
+          </DialogHeader>
+          <textarea
+            ref={importRef}
+            className="h-64 w-full rounded-md border bg-muted/50 px-3 py-2 font-mono text-sm focus:outline-none focus:ring-1 focus:ring-ring"
+            placeholder="Paste your HTML here..."
+          />
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setImportOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleImportHtml}>Import</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
