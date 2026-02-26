@@ -34,13 +34,6 @@ export interface DataCurrencyResponse {
   dataTypes: Array<DataCurrencyResult>
 }
 
-export interface DataWarning {
-  syncType: string
-  severity: string
-  message: string
-  lastSuccessfulSync: string | null
-}
-
 export interface HealthCheckEntry {
   name: string
   status: string
