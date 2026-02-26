@@ -9,7 +9,7 @@ export const Route = createFileRoute('/docs/data-currency')({
     createPageHead({
       title: 'Data Currency',
       description:
-        'How PreflightAPI keeps aviation data current. Sync schedules, staleness detection, and freshness headers for METAR, TAF, NOTAM, airport, airspace, and obstacle data.',
+        'How PreflightAPI keeps aviation data current. Sync schedules, staleness detection, and currency headers for METAR, TAF, NOTAM, airport, airspace, and obstacle data.',
       path: '/docs/data-currency',
     }),
   component: DataCurrencyDocs,
@@ -349,7 +349,7 @@ function DataCurrencyDocs() {
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold">Response Headers</h2>
         <p className="text-muted-foreground">
-          Every 2xx response from a data endpoint includes freshness headers
+          Every 2xx response from a data endpoint includes currency headers
           automatically:
         </p>
         <CodeBlock
