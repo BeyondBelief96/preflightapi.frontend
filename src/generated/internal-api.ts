@@ -3,7 +3,7 @@
  * Do not edit manually — run `node scripts/sync-internal-types.mjs` from the backend repo.
  */
 
-export interface DataFreshnessResult {
+export interface DataCurrencyResult {
   syncType: string
   isFresh: boolean
   severity: string
@@ -20,18 +20,18 @@ export interface DataFreshnessResult {
   lastAlertSeverity: string | null
 }
 
-export interface DataFreshnessSummary {
+export interface DataCurrencySummary {
   total: number
   fresh: number
   stale: number
   bySeverity: Record<string, number>
 }
 
-export interface DataFreshnessResponse {
+export interface DataCurrencyResponse {
   checkedAt: string
   overallStatus: string
-  summary: DataFreshnessSummary
-  dataTypes: Array<DataFreshnessResult>
+  summary: DataCurrencySummary
+  dataTypes: Array<DataCurrencyResult>
 }
 
 export interface HealthCheckEntry {
@@ -47,5 +47,6 @@ export interface HealthCheckResponse {
   status: string
   version: string
   totalDuration: number
+  lastCheckedAt: string | null
   checks: Array<HealthCheckEntry>
 }
