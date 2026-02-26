@@ -3,7 +3,7 @@ import { createLogger } from './logger'
 import type {
   BackendHealthCheck,
   BackendHealthResponse,
-  DataFreshnessStatus,
+  DataCurrencyStatus,
   OverallStatus,
   ServiceHealthStatus,
   ServiceStatus,
@@ -103,6 +103,7 @@ async function checkGateway(): Promise<ServiceHealthStatus> {
 async function checkApi(): Promise<{
   service: ServiceHealthStatus
   checks: Array<BackendHealthCheck>
+  lastCheckedAt: string | null
 }> {
   const baseUrl = env.PREFLIGHT_API_BASE_URL
 
@@ -115,6 +116,7 @@ async function checkApi(): Promise<{
         responseTimeMs: null,
       },
       checks: [],
+      lastCheckedAt: null,
     }
   }
 
@@ -147,13 +149,28 @@ async function checkApi(): Promise<{
           responseTimeMs: elapsed,
         },
         checks: body.checks ?? [],
+        lastCheckedAt: body.lastCheckedAt ?? null,
       }
     }
 
-    // 503 from /health means genuinely Unhealthy (bypasses maintenance mode)
+    // 503 from /health — could be Unhealthy or Starting (first check not yet complete)
     if (res.status === 503) {
       try {
         const body = (await res.json()) as BackendHealthResponse
+
+        if (body.status === 'Starting') {
+          return {
+            service: {
+              name: 'API Backend',
+              status: 'degraded',
+              description: 'Starting up — first health check pending',
+              responseTimeMs: elapsed,
+            },
+            checks: [],
+            lastCheckedAt: null,
+          }
+        }
+
         return {
           service: {
             name: 'API Backend',
@@ -162,6 +179,7 @@ async function checkApi(): Promise<{
             responseTimeMs: elapsed,
           },
           checks: body.checks ?? [],
+          lastCheckedAt: body.lastCheckedAt ?? null,
         }
       } catch {
         // Not JSON — fall through to generic degraded
@@ -177,6 +195,7 @@ async function checkApi(): Promise<{
         responseTimeMs: elapsed,
       },
       checks: [],
+      lastCheckedAt: null,
     }
   } catch (err) {
     const elapsed = Math.round(performance.now() - start)
@@ -189,6 +208,7 @@ async function checkApi(): Promise<{
         responseTimeMs: elapsed,
       },
       checks: [],
+      lastCheckedAt: null,
     }
   }
 }
@@ -204,31 +224,32 @@ export const fetchSystemHealth = createServerFn({ method: 'GET' }).handler(
       services,
       backendChecks: api.checks,
       checkedAt: new Date().toISOString(),
+      lastCheckedAt: api.lastCheckedAt,
     }
   },
 )
 
-export const fetchDataFreshness = createServerFn({ method: 'GET' }).handler(
-  async (): Promise<DataFreshnessStatus | null> => {
+export const fetchDataCurrency = createServerFn({ method: 'GET' }).handler(
+  async (): Promise<DataCurrencyStatus | null> => {
     const baseUrl = env.PREFLIGHT_API_BASE_URL
 
     if (!baseUrl) {
-      log.warn('PREFLIGHT_API_BASE_URL not configured — skipping data freshness')
+      log.warn('PREFLIGHT_API_BASE_URL not configured — skipping data currency')
       return null
     }
 
     try {
-      const res = await fetch(`${baseUrl}/health/data-freshness`, {
+      const res = await fetch(`${baseUrl}/health/data-currency`, {
         headers: getInternalHeaders(),
         signal: AbortSignal.timeout(TIMEOUT_MS),
       })
       if (!res.ok) {
-        log.warn({ status: res.status }, 'Data freshness check failed')
+        log.warn({ status: res.status }, 'Data currency check failed')
         return null
       }
-      return (await res.json()) as DataFreshnessStatus
+      return (await res.json()) as DataCurrencyStatus
     } catch (err) {
-      log.error({ err }, 'Data freshness fetch failed')
+      log.error({ err }, 'Data currency fetch failed')
       return null
     }
   },
