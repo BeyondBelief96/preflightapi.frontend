@@ -14,13 +14,13 @@ import {
 } from 'lucide-react'
 import type {
   BackendHealthCheck,
-  DataFreshnessEntry,
-  DataFreshnessStatus,
+  DataCurrencyEntry,
+  DataCurrencyStatus,
   OverallStatus,
   ServiceStatus,
 } from '@/types/health'
 import { createPageHead } from '@/lib/seo'
-import { fetchDataFreshness, fetchSystemHealth } from '@/lib/server/health'
+import { fetchDataCurrency, fetchSystemHealth } from '@/lib/server/health'
 import { healthKeys } from '@/lib/server/apim-queries'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -134,6 +134,18 @@ const SERVICE_ICONS: Record<string, typeof Shield> = {
   'API Backend': Server,
 }
 
+const CHECK_DISPLAY_NAMES: Record<string, string> = {
+  database: 'Database',
+  'blob-storage': 'Blob Storage',
+  'noaa-weather': 'aviationweather.gov',
+  'noaa-magvar': 'NOAA Geomagnetic Service',
+  'faa-nms': 'FAA NOTAM Management Service',
+}
+
+function formatCheckName(name: string): string {
+  return CHECK_DISPLAY_NAMES[name] ?? name
+}
+
 function checkStatusToServiceStatus(status: string): ServiceStatus {
   if (status === 'Healthy' || status === 'healthy') return 'operational'
   if (status === 'Unhealthy' || status === 'unhealthy') return 'outage'
@@ -148,7 +160,7 @@ function renderChecks(checks: Array<BackendHealthCheck>) {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <StatusDot status={serviceStatus} />
-            <span className="text-sm capitalize">{check.name}</span>
+            <span className="text-sm">{formatCheckName(check.name)}</span>
           </div>
           <span className="text-xs text-muted-foreground">
             {Math.round(check.duration)} ms
@@ -207,7 +219,7 @@ function HealthCheckGroups({ checks }: { checks: Array<BackendHealthCheck> }) {
   )
 }
 
-// --- Data Freshness Section ---
+// --- Data Currency Section ---
 
 const SEVERITY_CONFIG: Record<
   string,
@@ -235,7 +247,7 @@ const SEVERITY_CONFIG: Record<
   },
 }
 
-const FRESHNESS_STATUS_CONFIG: Record<
+const CURRENCY_STATUS_CONFIG: Record<
   string,
   {
     label: string
@@ -337,7 +349,7 @@ function SeverityDot({ severity }: { severity: string }) {
   )
 }
 
-function DataFreshnessEntryRow({ entry }: { entry: DataFreshnessEntry }) {
+function DataCurrencyEntryRow({ entry }: { entry: DataCurrencyEntry }) {
   const severityConfig =
     SEVERITY_CONFIG[entry.severity] ?? SEVERITY_CONFIG.info
 
@@ -382,14 +394,14 @@ function DataFreshnessEntryRow({ entry }: { entry: DataFreshnessEntry }) {
   )
 }
 
-function DataFreshnessSection({
-  freshness,
+function DataCurrencySection({
+  currency,
 }: {
-  freshness: DataFreshnessStatus
+  currency: DataCurrencyStatus
 }) {
   const statusConfig =
-    FRESHNESS_STATUS_CONFIG[freshness.overallStatus] ??
-    FRESHNESS_STATUS_CONFIG.healthy
+    CURRENCY_STATUS_CONFIG[currency.overallStatus] ??
+    CURRENCY_STATUS_CONFIG.healthy
   const StatusIcon = statusConfig.icon
 
   // Group by data category rather than staleness mode so that non-weather
@@ -401,10 +413,10 @@ function DataFreshnessSection({
     'Sigmet',
     'GAirmet',
   ])
-  const weatherData = freshness.dataTypes.filter((d) =>
+  const weatherData = currency.dataTypes.filter((d) =>
     WEATHER_SYNC_TYPES.has(d.syncType),
   )
-  const publicationData = freshness.dataTypes.filter(
+  const publicationData = currency.dataTypes.filter(
     (d) => !WEATHER_SYNC_TYPES.has(d.syncType),
   )
 
@@ -425,13 +437,13 @@ function DataFreshnessSection({
             <span className="font-medium">{statusConfig.label}</span>
           </div>
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
-            <span>{freshness.summary.fresh} fresh</span>
-            {freshness.summary.stale > 0 && (
+            <span>{currency.summary.fresh} fresh</span>
+            {currency.summary.stale > 0 && (
               <span className="text-destructive">
-                {freshness.summary.stale} stale
+                {currency.summary.stale} stale
               </span>
             )}
-            <span>{freshness.summary.total} total</span>
+            <span>{currency.summary.total} total</span>
           </div>
         </CardContent>
       </Card>
@@ -448,7 +460,7 @@ function DataFreshnessSection({
           </CardHeader>
           <CardContent className="-mt-2 space-y-3">
             {weatherData.map((entry) => (
-              <DataFreshnessEntryRow key={entry.syncType} entry={entry} />
+              <DataCurrencyEntryRow key={entry.syncType} entry={entry} />
             ))}
           </CardContent>
         </Card>
@@ -477,7 +489,7 @@ function DataFreshnessSection({
                       Publication cycle — dates show the current effective cycle
                     </p>
                     {cycleBased.map((entry) => (
-                      <DataFreshnessEntryRow
+                      <DataCurrencyEntryRow
                         key={entry.syncType}
                         entry={entry}
                       />
@@ -494,7 +506,7 @@ function DataFreshnessSection({
                       successful sync
                     </p>
                     {timeBased.map((entry) => (
-                      <DataFreshnessEntryRow
+                      <DataCurrencyEntryRow
                         key={entry.syncType}
                         entry={entry}
                       />
@@ -516,9 +528,9 @@ function StatusPage() {
     refetchInterval: 30_000,
   })
 
-  const { data: freshness, isLoading: freshnessLoading } = useQuery({
-    queryKey: healthKeys.dataFreshness(),
-    queryFn: () => fetchDataFreshness(),
+  const { data: currency, isLoading: currencyLoading } = useQuery({
+    queryKey: healthKeys.dataCurrency(),
+    queryFn: () => fetchDataCurrency(),
     refetchInterval: 30_000,
   })
 
@@ -586,23 +598,30 @@ function StatusPage() {
           <HealthCheckGroups checks={data.backendChecks} />
         )}
 
-        {/* Data Sync Freshness */}
-        {freshnessLoading ? (
+        {/* Data Currency */}
+        {currencyLoading ? (
           <div className="space-y-4">
             <Skeleton className="h-10 w-64 rounded-lg" />
             <Skeleton className="h-16 w-full rounded-xl" />
             <Skeleton className="h-48 w-full rounded-xl" />
             <Skeleton className="h-48 w-full rounded-xl" />
           </div>
-        ) : freshness ? (
-          <DataFreshnessSection freshness={freshness} />
+        ) : currency ? (
+          <DataCurrencySection currency={currency} />
         ) : null}
 
         {/* Footer info */}
         {data && (
           <p className="text-center text-xs text-muted-foreground">
-            Last checked: {new Date(data.checkedAt).toLocaleTimeString()}{' '}
-            &middot; Auto-refreshes every 30s
+            Last checked: {new Date(data.checkedAt).toLocaleTimeString()}
+            {data.lastCheckedAt && (
+              <>
+                {' '}
+                &middot; Backend checks ran{' '}
+                {formatRelativeTime(data.lastCheckedAt)}
+              </>
+            )}
+            {' '}&middot; Auto-refreshes every 30s
           </p>
         )}
       </section>

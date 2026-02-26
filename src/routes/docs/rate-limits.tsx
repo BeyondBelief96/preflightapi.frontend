@@ -179,7 +179,7 @@ X-RateLimit-Remaining: 58`}
           In addition to rate limit headers, every successful response from a
           data endpoint includes{' '}
           <strong className="text-foreground">data currency headers</strong>{' '}
-          (<code>X-Data-Freshness</code>, <code>X-Data-Last-Updated</code>,{' '}
+          (<code>X-Data-Currency</code>, <code>X-Data-Last-Updated</code>,{' '}
           <code>X-Data-Sync-Age-Minutes</code>) that indicate how current the
           underlying data is. See the{' '}
           <Link

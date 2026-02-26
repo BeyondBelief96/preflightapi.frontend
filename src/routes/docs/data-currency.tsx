@@ -356,7 +356,7 @@ function DataCurrencyDocs() {
           language="http"
           code={`HTTP/1.1 200 OK
 Content-Type: application/json
-X-Data-Freshness: fresh
+X-Data-Currency: fresh
 X-Data-Last-Updated: 2026-02-24T14:55:00.0000000Z
 X-Data-Sync-Age-Minutes: 5.0`}
         />
@@ -371,7 +371,7 @@ X-Data-Sync-Age-Minutes: 5.0`}
             <tbody>
               <tr className="border-b">
                 <td className="py-3">
-                  <code className="text-sm">X-Data-Freshness</code>
+                  <code className="text-sm">X-Data-Currency</code>
                 </td>
                 <td className="py-3 text-muted-foreground">
                   <code>fresh</code> or{' '}
