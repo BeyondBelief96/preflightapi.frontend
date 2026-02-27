@@ -71,11 +71,13 @@ export const getSystemOverview = createServerFn({ method: 'GET' }).handler(
           _queryUsageReport('', toIso(todayStart), toIso(now)),
           _queryUsageReport('', toIso(weekStart), toIso(now)),
           _queryUsageReport('', toIso(monthStart), toIso(now)),
-          logAnalyticsQuery(`
+          logAnalyticsQuery(
+            `
 ApiManagementGatewayLogs
 | where TimeGenerated >= ago(30d)
 | summarize activeUsers = dcount(ApimSubscriptionId)
-          `.trim()),
+          `.trim(),
+          ),
         ])
 
       const activeUsersTable = activeUsersResult.tables[0]
@@ -182,7 +184,11 @@ export const getAdminUsers = createServerFn({ method: 'POST' })
   .handler(
     async ({
       data,
-    }): Promise<{ users: Array<AdminUser>; totalCount: number; page: number }> => {
+    }): Promise<{
+      users: Array<AdminUser>
+      totalCount: number
+      page: number
+    }> => {
       await requireAdmin()
 
       const { createClerkClient } = await import('@clerk/backend')
@@ -198,9 +204,8 @@ export const getAdminUsers = createServerFn({ method: 'POST' })
       const users: Array<AdminUser> = await Promise.all(
         clerkResponse.data.map(async (user) => {
           const email =
-            user.emailAddresses.find(
-              (e) => e.id === user.primaryEmailAddressId,
-            )?.emailAddress ?? ''
+            user.emailAddresses.find((e) => e.id === user.primaryEmailAddressId)
+              ?.emailAddress ?? ''
           const stripeCustomerId =
             (user.privateMetadata as { stripeCustomerId?: string })
               ?.stripeCustomerId ?? null
@@ -343,10 +348,7 @@ export const getAdminUserDetail = createServerFn({ method: 'GET' })
         return {
           customerId: stripeCustomerId,
           subscriptionStatus: sub?.status ?? null,
-          planId:
-            (sub?.metadata?.planId) ??
-            item?.price?.lookup_key ??
-            null,
+          planId: sub?.metadata?.planId ?? item?.price?.lookup_key ?? null,
           currentPeriodEnd: item?.current_period_end
             ? new Date(item.current_period_end * 1000).toISOString()
             : null,
@@ -360,8 +362,7 @@ export const getAdminUserDetail = createServerFn({ method: 'GET' })
             hostedUrl: inv.hosted_invoice_url ?? null,
             attemptCount: inv.attempt_count ?? 0,
             paid: inv.amount_paid > 0,
-            lastPaymentError:
-              (inv.last_finalization_error?.message) ?? null,
+            lastPaymentError: inv.last_finalization_error?.message ?? null,
           })),
         }
       })(),
@@ -386,9 +387,10 @@ export const getAdminUserDetail = createServerFn({ method: 'GET' })
       try {
         const parts = activeSub.displayName.split('|')
         const resetEpoch = parts.length === 2 ? Number(parts[1]) : 0
-        const resetDate = resetEpoch > 0
-          ? new Date(resetEpoch * 1000)
-          : new Date(activeSub.createdDate)
+        const resetDate =
+          resetEpoch > 0
+            ? new Date(resetEpoch * 1000)
+            : new Date(activeSub.createdDate)
 
         const safeId = subscriptionIdSchema.parse(activeSub.id)
         const filter = `and ApimSubscriptionId == '${safeId}'`
@@ -508,7 +510,8 @@ export const getAbuseIndicators = createServerFn({ method: 'GET' }).handler(
         ipResult,
         quotaResult,
       ] = await Promise.all([
-        logAnalyticsQuery(`
+        logAnalyticsQuery(
+          `
 ApiManagementGatewayLogs
 | where TimeGenerated >= ago(7d)
 | summarize totalCalls = count(), errorCount = countif(ResponseCode >= 500) by ApimSubscriptionId
@@ -516,14 +519,18 @@ ApiManagementGatewayLogs
 | extend errorRate = round(todouble(errorCount) / todouble(totalCalls) * 100, 2)
 | where errorRate > 20
 | top 20 by errorRate desc
-        `.trim()),
-        logAnalyticsQuery(`
+        `.trim(),
+        ),
+        logAnalyticsQuery(
+          `
 ApiManagementGatewayLogs
 | where TimeGenerated >= ago(7d) and ResponseCode == 429
 | summarize count429 = count() by ApimSubscriptionId
 | top 20 by count429 desc
-        `.trim()),
-        logAnalyticsQuery(`
+        `.trim(),
+        ),
+        logAnalyticsQuery(
+          `
 ApiManagementGatewayLogs
 | where TimeGenerated >= ago(7d)
 | summarize hourlyCalls = count() by ApimSubscriptionId, bin(TimeGenerated, 1h)
@@ -531,21 +538,26 @@ ApiManagementGatewayLogs
 | where maxHourly > avgHourly * 3 and maxHourly > 100
 | extend spikeFactor = round(maxHourly / avgHourly, 2)
 | top 20 by spikeFactor desc
-        `.trim()),
-        logAnalyticsQuery(`
+        `.trim(),
+        ),
+        logAnalyticsQuery(
+          `
 ApiManagementGatewayLogs
 | where TimeGenerated >= ago(24h) and isnotempty(CallerIpAddress)
 | summarize callCount = count(), distinctSubs = dcount(ApimSubscriptionId), errorRate = round(todouble(countif(ResponseCode >= 500)) / todouble(count()) * 100, 2) by CallerIpAddress
 | where callCount > 500 or distinctSubs > 3
 | top 20 by callCount desc
-        `.trim()),
-        logAnalyticsQuery(`
+        `.trim(),
+        ),
+        logAnalyticsQuery(
+          `
 ApiManagementGatewayLogs
 | where TimeGenerated >= ago(30d)
 | summarize totalCalls = count() by ApimSubscriptionId
 | where totalCalls > 5000
 | top 20 by totalCalls desc
-        `.trim()),
+        `.trim(),
+        ),
       ])
 
       function parseTable<T>(
@@ -606,9 +618,7 @@ ApiManagementGatewayLogs
 // --- Admin Actions ---
 
 export const adminChangeTier = createServerFn({ method: 'POST' })
-  .inputValidator(
-    z.object({ userId: z.string(), planId: planIdSchema }),
-  )
+  .inputValidator(z.object({ userId: z.string(), planId: planIdSchema }))
   .handler(async ({ data }) => {
     await requireAdmin()
 

@@ -155,6 +155,12 @@ export default defineHandler(async (event) => {
           const apimProductId = productIds[planId]
           if (apimProductId) {
             await syncTierToApim(apimFetch, clerkUserId, apimProductId)
+            const tier = planIdFromProductId(apimProductId) as
+              | 'student'
+              | 'private'
+              | 'commercial'
+              | 'atp'
+            syncResendSegment(clerkUserId, tier)
           } else {
             log.warn({ planId }, 'No APIM product found for planId')
           }
@@ -209,11 +215,18 @@ export default defineHandler(async (event) => {
           }
 
           await syncTierToApim(apimFetch, clerkUserId, apimProductId)
+          const tier = planIdFromProductId(apimProductId) as
+            | 'student'
+            | 'private'
+            | 'commercial'
+            | 'atp'
+          syncResendSegment(clerkUserId, tier)
         } else {
           // Any non-active status loses paid access immediately.
           // If Stripe recovers a past_due payment, subscription.updated
           // fires again with status=active and we re-sync the paid tier.
           await syncTierToApim(apimFetch, clerkUserId, studentProductId, true)
+          syncResendSegment(clerkUserId, 'student')
         }
         break
       }
@@ -224,6 +237,7 @@ export default defineHandler(async (event) => {
 
         if (clerkUserId) {
           await syncTierToApim(apimFetch, clerkUserId, studentProductId, true)
+          syncResendSegment(clerkUserId, 'student')
         } else {
           log.warn('Could not resolve clerkUserId for paused subscription')
         }
@@ -245,6 +259,12 @@ export default defineHandler(async (event) => {
           productIds,
         )
         await syncTierToApim(apimFetch, clerkUserId, apimProductId)
+        const resumedTier = planIdFromProductId(apimProductId) as
+          | 'student'
+          | 'private'
+          | 'commercial'
+          | 'atp'
+        syncResendSegment(clerkUserId, resumedTier)
         break
       }
 
@@ -254,6 +274,7 @@ export default defineHandler(async (event) => {
 
         if (clerkUserId) {
           await syncTierToApim(apimFetch, clerkUserId, studentProductId, true)
+          syncResendSegment(clerkUserId, 'student')
         } else {
           log.warn('Could not resolve clerkUserId for deleted subscription')
         }
@@ -288,6 +309,8 @@ export default defineHandler(async (event) => {
             )
           }
 
+          syncResendSegment(clerkUserId, 'student')
+
           log.info(
             { userId: clerkUserId, customerId: customer.id },
             'Customer deleted — downgraded to student tier and cleared Clerk metadata',
@@ -317,6 +340,7 @@ export default defineHandler(async (event) => {
 
           if (clerkUserId) {
             await syncTierToApim(apimFetch, clerkUserId, studentProductId, true)
+            syncResendSegment(clerkUserId, 'student')
           } else {
             log.warn(
               'Could not resolve clerkUserId for failed invoice subscription',
@@ -446,6 +470,41 @@ export default defineHandler(async (event) => {
   markEventProcessed(stripeEvent.id)
   return { received: true }
 })
+
+// --- Resend Segment Sync ---
+// Fire-and-forget: updates the user's Resend segment after a tier change.
+// Never throws — failures are logged by resend-contacts.
+
+async function syncResendSegment(
+  clerkUserId: string,
+  newTier: 'student' | 'private' | 'commercial' | 'atp',
+): Promise<void> {
+  try {
+    const { clerkClient } = await import('@clerk/tanstack-react-start/server')
+    const clerk = clerkClient()
+    const user = await clerk.users.getUser(clerkUserId)
+    const email = user.emailAddresses.find(
+      (e) => e.id === user.primaryEmailAddressId,
+    )?.emailAddress
+
+    if (!email) {
+      log.warn(
+        { userId: clerkUserId },
+        'No email found for user — skipping Resend segment sync',
+      )
+      return
+    }
+
+    const { updateContactTierSegment } =
+      await import('@/lib/server/resend-contacts')
+    await updateContactTierSegment(email, newTier)
+  } catch (err) {
+    log.warn(
+      { err, userId: clerkUserId },
+      'Failed to sync Resend segment (non-fatal)',
+    )
+  }
+}
 
 // --- Resolve Clerk User ID ---
 // Checks subscription metadata first, then falls back to Stripe customer metadata.

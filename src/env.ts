@@ -45,6 +45,12 @@ export const env = createEnv({
     CLERK_WEBHOOK_SECRET: z.string().optional(),
     APIM_HEALTH_CHECK_PATH: z.string().optional(),
     ADMIN_EMAILS: z.string().optional(),
+    RESEND_SEGMENT_ALL_ID: z.string().optional(),
+    RESEND_SEGMENT_PAID_ID: z.string().optional(),
+    RESEND_SEGMENT_FREE_ID: z.string().optional(),
+    RESEND_TOPIC_ANNOUNCEMENTS_ID: z.string().optional(),
+    RESEND_TOPIC_RELEASES_ID: z.string().optional(),
+    RESEND_TOPIC_ALERTS_ID: z.string().optional(),
   },
 
   /**

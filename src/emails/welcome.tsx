@@ -2,7 +2,6 @@ import {
   Body,
   Container,
   Head,
-  Heading,
   Hr,
   Html,
   Link,
@@ -24,49 +23,56 @@ export function WelcomeEmail({ name }: WelcomeEmailProps) {
       <Preview>Welcome to PreflightAPI — your API key is ready</Preview>
       <Body style={body}>
         <Container style={container}>
-          <Heading style={heading}>Welcome to PreflightAPI, {name}!</Heading>
+          <Text style={paragraph}>Hey {name},</Text>
 
           <Text style={paragraph}>
-            Thanks for signing up. You now have access to our free Student Pilot
-            tier with 5000 API calls per month.
+            Brandon here. Thanks for signing up for PreflightAPI. I built this
+            because I wanted a single, reliable API for aviation data — and I
+            hope it saves you the same headaches it saved me.
           </Text>
 
-          <Text style={paragraph}>Here&apos;s how to get started:</Text>
+          <Text style={paragraph}>
+            You&apos;re on the free Student Pilot tier with 5,000 API calls per
+            month. Here&apos;s how to get going:
+          </Text>
 
           <Section style={steps}>
             <Text style={step}>
-              <strong>1.</strong> Head to your{' '}
+              <strong>1.</strong>{' '}
               <Link href={`${baseUrl}/docs/getting-started`} style={link}>
                 Quick Start guide
-              </Link>
+              </Link>{' '}
+              — make your first call in under a minute
             </Text>
             <Text style={step}>
-              <strong>2.</strong> Grab your API key from the{' '}
+              <strong>2.</strong>{' '}
               <Link href={`${baseUrl}/dashboard/keys`} style={link}>
-                API Keys page
+                Grab your API key
               </Link>
             </Text>
             <Text style={step}>
-              <strong>3.</strong> Check out our{' '}
+              <strong>3.</strong>{' '}
               <Link href={`${baseUrl}/docs`} style={link}>
-                API documentation
-              </Link>
+                Browse the docs
+              </Link>{' '}
+              — METARs, TAFs, NOTAMs, and more
             </Text>
           </Section>
 
           <Text style={paragraph}>
-            Need more calls or access to premium endpoints? Check out our{' '}
+            Need more calls or premium endpoints?{' '}
             <Link href={`${baseUrl}/pricing`} style={link}>
-              pricing plans
+              Check out the plans
             </Link>
             .
           </Text>
 
-          <Text style={{ ...paragraph, marginTop: '32px' }}>
-            Happy flying!
-            <br />
-            The PreflightAPI Team
+          <Text style={paragraph}>
+            If you run into anything or just want to say hi, reply to this
+            email. I read every one.
           </Text>
+
+          <Text style={{ ...paragraph, marginTop: '32px' }}>— Brandon</Text>
 
           <Hr style={hr} />
 
@@ -104,13 +110,6 @@ const container = {
   padding: '40px 32px',
   borderRadius: '8px',
   border: '1px solid #e2e8f0',
-}
-
-const heading = {
-  color: '#0f172a',
-  fontSize: '24px',
-  fontWeight: '600' as const,
-  marginBottom: '16px',
 }
 
 const paragraph = {

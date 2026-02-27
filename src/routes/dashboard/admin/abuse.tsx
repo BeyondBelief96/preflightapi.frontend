@@ -74,10 +74,7 @@ function AbuseDetectionPage() {
         </div>
 
         <TabsContent value="errors">
-          <HighErrorUsers
-            data={data?.highErrorUsers}
-            isLoading={isLoading}
-          />
+          <HighErrorUsers data={data?.highErrorUsers} isLoading={isLoading} />
         </TabsContent>
         <TabsContent value="ratelimit">
           <RateLimitAbusers
@@ -92,10 +89,7 @@ function AbuseDetectionPage() {
           <SuspiciousIps data={data?.suspiciousIps} isLoading={isLoading} />
         </TabsContent>
         <TabsContent value="quota">
-          <QuotaExceeders
-            data={data?.quotaExceeders}
-            isLoading={isLoading}
-          />
+          <QuotaExceeders data={data?.quotaExceeders} isLoading={isLoading} />
         </TabsContent>
       </Tabs>
     </div>

@@ -50,9 +50,15 @@ export function RevenueSummaryCard({
           </div>
           <div>
             <p className="text-2xl font-bold">
-              ${data.mrr.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              $
+              {data.mrr.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
             </p>
-            <p className="text-xs text-muted-foreground">Monthly Recurring Revenue</p>
+            <p className="text-xs text-muted-foreground">
+              Monthly Recurring Revenue
+            </p>
           </div>
         </div>
 

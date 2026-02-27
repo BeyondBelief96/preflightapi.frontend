@@ -8,7 +8,7 @@ export const Route = createFileRoute('/dashboard/admin/email')({
   head: () =>
     createPageHead({
       title: 'Admin - Email',
-      description: 'Compose and send emails to users.',
+      description: 'Send broadcasts and manage email communications.',
       noIndex: true,
     }),
   component: AdminEmailPage,
@@ -20,17 +20,17 @@ function AdminEmailPage() {
       <div>
         <h1 className="text-2xl font-bold">Email Management</h1>
         <p className="text-muted-foreground">
-          Compose and send emails to users, view sent email history
+          Send broadcasts to segments, manage topics, and view email history
         </p>
       </div>
 
-      <Tabs defaultValue="compose">
+      <Tabs defaultValue="broadcast">
         <TabsList>
-          <TabsTrigger value="compose">Compose</TabsTrigger>
+          <TabsTrigger value="broadcast">Broadcast</TabsTrigger>
           <TabsTrigger value="history">History</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="compose">
+        <TabsContent value="broadcast">
           <EmailComposeForm />
         </TabsContent>
 

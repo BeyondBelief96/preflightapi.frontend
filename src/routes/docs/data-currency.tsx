@@ -65,17 +65,35 @@ function DataCurrencyDocs() {
             </thead>
             <tbody>
               {[
-                { name: 'METARs', interval: 'Every 10 min', threshold: '50 min' },
-                { name: 'TAFs', interval: 'Every 30 min', threshold: '120 min' },
-                { name: 'PIREPs', interval: 'Every 5 min', threshold: '30 min' },
-                { name: 'SIGMETs', interval: 'Every 30 min', threshold: '120 min' },
-                { name: 'G-AIRMETs', interval: 'Every 30 min', threshold: '120 min' },
+                {
+                  name: 'METARs',
+                  interval: 'Every 10 min',
+                  threshold: '50 min',
+                },
+                {
+                  name: 'TAFs',
+                  interval: 'Every 30 min',
+                  threshold: '120 min',
+                },
+                {
+                  name: 'PIREPs',
+                  interval: 'Every 5 min',
+                  threshold: '30 min',
+                },
+                {
+                  name: 'SIGMETs',
+                  interval: 'Every 30 min',
+                  threshold: '120 min',
+                },
+                {
+                  name: 'G-AIRMETs',
+                  interval: 'Every 30 min',
+                  threshold: '120 min',
+                },
               ].map((row) => (
                 <tr key={row.name} className="border-b">
                   <td className="py-2 font-medium">{row.name}</td>
-                  <td className="py-2 text-muted-foreground">
-                    {row.interval}
-                  </td>
+                  <td className="py-2 text-muted-foreground">{row.interval}</td>
                   <td className="py-2 text-muted-foreground">
                     {row.threshold}
                   </td>
@@ -107,9 +125,21 @@ function DataCurrencyDocs() {
             </thead>
             <tbody>
               {[
-                { name: 'Airports & Runways', source: 'FAA NASR', time: '10:00 UTC' },
-                { name: 'Communication Frequencies', source: 'FAA NASR', time: '10:30 UTC' },
-                { name: 'Terminal Procedures', source: 'FAA d-TPP', time: '12:30 UTC' },
+                {
+                  name: 'Airports & Runways',
+                  source: 'FAA NASR',
+                  time: '10:00 UTC',
+                },
+                {
+                  name: 'Communication Frequencies',
+                  source: 'FAA NASR',
+                  time: '10:30 UTC',
+                },
+                {
+                  name: 'Terminal Procedures',
+                  source: 'FAA d-TPP',
+                  time: '12:30 UTC',
+                },
               ].map((row) => (
                 <tr key={row.name} className="border-b">
                   <td className="py-2 font-medium">{row.name}</td>
@@ -133,9 +163,21 @@ function DataCurrencyDocs() {
             </thead>
             <tbody>
               {[
-                { name: 'Airspace', source: 'ArcGIS REST API', time: '11:00 UTC' },
-                { name: 'Special Use Airspace', source: 'ArcGIS REST API', time: '11:30 UTC' },
-                { name: 'Chart Supplements', source: 'FAA d-CS', time: '12:00 UTC' },
+                {
+                  name: 'Airspace',
+                  source: 'ArcGIS REST API',
+                  time: '11:00 UTC',
+                },
+                {
+                  name: 'Special Use Airspace',
+                  source: 'ArcGIS REST API',
+                  time: '11:30 UTC',
+                },
+                {
+                  name: 'Chart Supplements',
+                  source: 'FAA d-CS',
+                  time: '12:00 UTC',
+                },
               ].map((row) => (
                 <tr key={row.name} className="border-b">
                   <td className="py-2 font-medium">{row.name}</td>
@@ -193,9 +235,9 @@ function DataCurrencyDocs() {
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold">NOTAMs</h2>
         <p className="text-muted-foreground">
-          NOTAMs are not tied to FAA publication cycles. A delta sync runs
-          every 3 minutes to pick up new and updated NOTAMs, with a full
-          reload daily to ensure completeness.
+          NOTAMs are not tied to FAA publication cycles. A delta sync runs every
+          3 minutes to pick up new and updated NOTAMs, with a full reload daily
+          to ensure completeness.
         </p>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -237,13 +279,12 @@ function DataCurrencyDocs() {
         </p>
         <ul className="list-inside list-disc space-y-1 text-muted-foreground">
           <li>
-            <strong className="text-foreground">Time-based</strong> — age
-            since last successful sync vs. a configured threshold
+            <strong className="text-foreground">Time-based</strong> — age since
+            last successful sync vs. a configured threshold
           </li>
           <li>
             <strong className="text-foreground">Cycle-based</strong> — whether
-            data has been synced since the current FAA publication cycle
-            started
+            data has been synced since the current FAA publication cycle started
           </li>
         </ul>
       </section>
@@ -294,16 +335,14 @@ function DataCurrencyDocs() {
                 <td className="py-2">
                   <SeverityBadge severity="critical" />
                 </td>
-                <td className="py-2 text-muted-foreground">
-                  Critically stale
-                </td>
+                <td className="py-2 text-muted-foreground">Critically stale</td>
               </tr>
             </tbody>
           </table>
         </div>
         <p className="text-sm text-muted-foreground">
-          Example: METARs have a 50-minute threshold. A METAR 60 minutes old
-          is 1.2x (info), 80 minutes is 1.6x (warning), 100+ minutes is 2.0x
+          Example: METARs have a 50-minute threshold. A METAR 60 minutes old is
+          1.2x (info), 80 minutes is 1.6x (warning), 100+ minutes is 2.0x
           (critical).
         </p>
 
@@ -374,8 +413,7 @@ X-Data-Sync-Age-Minutes: 5.0`}
                   <code className="text-sm">X-Data-Currency</code>
                 </td>
                 <td className="py-3 text-muted-foreground">
-                  <code>fresh</code> or{' '}
-                  <code>stale:{'<severity>'}</code> (e.g.,{' '}
+                  <code>fresh</code> or <code>stale:{'<severity>'}</code> (e.g.,{' '}
                   <code>stale:warning</code>)
                 </td>
               </tr>
@@ -399,8 +437,8 @@ X-Data-Sync-Age-Minutes: 5.0`}
           </table>
         </div>
         <p className="text-sm text-muted-foreground">
-          When an endpoint maps to multiple data sources (e.g., airspaces),
-          the worst severity across all sources is reported.
+          When an endpoint maps to multiple data sources (e.g., airspaces), the
+          worst severity across all sources is reported.
         </p>
       </section>
 
@@ -412,8 +450,8 @@ X-Data-Sync-Age-Minutes: 5.0`}
           <Link to="/status" className="text-accent hover:underline">
             system status page
           </Link>{' '}
-          for a real-time dashboard showing the currency of all 14 data
-          sources with auto-refresh.
+          for a real-time dashboard showing the currency of all 14 data sources
+          with auto-refresh.
         </p>
       </section>
     </div>

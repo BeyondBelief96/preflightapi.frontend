@@ -59,10 +59,7 @@ export function UserApimCard({
       <CardContent>
         <div className="space-y-4">
           {data.subscriptions.map((sub) => (
-            <div
-              key={sub.id}
-              className="rounded-lg border p-4"
-            >
+            <div key={sub.id} className="rounded-lg border p-4">
               <div className="mb-3 flex flex-wrap items-center gap-2">
                 <Badge variant="secondary" className="capitalize">
                   {sub.planId}

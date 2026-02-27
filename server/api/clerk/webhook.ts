@@ -106,7 +106,7 @@ async function handleUserCreated(event: ClerkUserEvent) {
     const html = await render(WelcomeEmail({ name }))
 
     const { error } = await resend.emails.send({
-      from: 'PreflightAPI <welcome@contact.preflightapi.io>',
+      from: 'Brandon at PreflightAPI <welcome@contact.preflightapi.io>',
       to: primaryEmail,
       subject: 'Welcome to PreflightAPI',
       html,
@@ -123,6 +123,19 @@ async function handleUserCreated(event: ClerkUserEvent) {
   } catch (err) {
     // Non-fatal — don't block user creation over email failure
     log.error({ err, userId }, 'Error sending welcome email')
+  }
+
+  // Add user as a Resend contact (non-fatal)
+  try {
+    const { createResendContact } = await import('@/lib/server/resend-contacts')
+    await createResendContact(
+      primaryEmail,
+      first_name,
+      event.data.last_name,
+      'student',
+    )
+  } catch (err) {
+    log.error({ err, userId }, 'Error creating Resend contact')
   }
 }
 
@@ -195,5 +208,17 @@ async function handleUserDeleted(event: ClerkUserEvent) {
   } catch (err) {
     // Log but don't fail — APIM user may not exist
     log.error({ err, userId }, 'Error cleaning up APIM user')
+  }
+
+  // 3. Remove from Resend contacts
+  const primaryEmail = event.data.email_addresses[0]?.email_address
+  if (primaryEmail) {
+    try {
+      const { removeResendContact } =
+        await import('@/lib/server/resend-contacts')
+      await removeResendContact(primaryEmail)
+    } catch (err) {
+      log.error({ err, userId }, 'Error removing Resend contact')
+    }
   }
 }

@@ -7,40 +7,38 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Skeleton } from '@/components/ui/skeleton'
-import { getEmailDetail } from '@/lib/server/admin-email'
+import { getBroadcastDetail } from '@/lib/server/admin-email'
 import { adminKeys } from '@/lib/server/apim-queries'
 
 const statusColors: Record<string, string> = {
-  delivered: 'bg-green-500/10 text-green-500',
-  bounced: 'bg-destructive/10 text-destructive',
-  sent: 'bg-blue-500/10 text-blue-500',
-  complained: 'bg-yellow-500/10 text-yellow-500',
-  opened: 'bg-green-500/10 text-green-500',
-  clicked: 'bg-green-500/10 text-green-500',
+  sent: 'bg-green-500/10 text-green-500',
+  draft: 'bg-muted text-muted-foreground',
+  queued: 'bg-blue-500/10 text-blue-500',
 }
 
-interface EmailDetailDialogProps {
-  emailId: string | null
+interface BroadcastDetailDialogProps {
+  broadcastId: string | null
   open: boolean
   onOpenChange: (open: boolean) => void
 }
 
-export function EmailDetailDialog({
-  emailId,
+export function BroadcastDetailDialog({
+  broadcastId,
   open,
   onOpenChange,
-}: EmailDetailDialogProps) {
+}: BroadcastDetailDialogProps) {
   const { data, isLoading } = useQuery({
-    queryKey: adminKeys.emailDetail(emailId ?? ''),
-    queryFn: () => getEmailDetail({ data: { emailId: emailId! } }),
-    enabled: !!emailId && open,
+    queryKey: adminKeys.broadcastDetail(broadcastId ?? ''),
+    queryFn: () =>
+      getBroadcastDetail({ data: { broadcastId: broadcastId! } }),
+    enabled: !!broadcastId && open,
   })
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-[95vw] sm:max-w-2xl md:left-[calc(50%+8rem)]">
         <DialogHeader>
-          <DialogTitle>Email Detail</DialogTitle>
+          <DialogTitle>Broadcast Detail</DialogTitle>
         </DialogHeader>
 
         {isLoading ? (
@@ -53,15 +51,10 @@ export function EmailDetailDialog({
           <div className="space-y-4">
             <div className="grid grid-cols-[auto,1fr] gap-x-3 gap-y-2 text-sm sm:gap-x-4">
               <span className="font-medium text-muted-foreground">From</span>
-              <span>{data.from}</span>
-
-              <span className="font-medium text-muted-foreground">To</span>
-              <span className="truncate">
-                {Array.isArray(data.to) ? data.to.join(', ') : data.to}
-              </span>
+              <span>{data.from ?? '—'}</span>
 
               <span className="font-medium text-muted-foreground">Subject</span>
-              <span>{data.subject}</span>
+              <span>{data.subject ?? '—'}</span>
 
               <span className="font-medium text-muted-foreground">Status</span>
               <span>
@@ -73,9 +66,11 @@ export function EmailDetailDialog({
                 </Badge>
               </span>
 
-              <span className="font-medium text-muted-foreground">Date</span>
+              <span className="font-medium text-muted-foreground">Sent</span>
               <span>
-                {new Date(data.createdAt).toLocaleString()}
+                {data.sentAt
+                  ? new Date(data.sentAt).toLocaleString()
+                  : new Date(data.createdAt).toLocaleString()}
               </span>
             </div>
 
@@ -83,7 +78,7 @@ export function EmailDetailDialog({
               <div className="rounded-md border">
                 <iframe
                   srcDoc={data.html}
-                  title="Email preview"
+                  title="Broadcast preview"
                   className="h-[250px] w-full rounded-md sm:h-[400px]"
                   sandbox=""
                 />
@@ -92,7 +87,7 @@ export function EmailDetailDialog({
           </div>
         ) : (
           <p className="py-8 text-center text-sm text-muted-foreground">
-            Email not found
+            Broadcast not found
           </p>
         )}
       </DialogContent>
