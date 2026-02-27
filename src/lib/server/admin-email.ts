@@ -107,13 +107,13 @@ export const sendBroadcast = createServerFn({ method: 'POST' })
     return { broadcastId: response.data?.id }
   })
 
-// --- Get Email History ---
+// --- Get Broadcast History ---
 
 const cursorSchema = z.object({
   cursor: z.string().optional(),
 })
 
-export const getEmailHistory = createServerFn({ method: 'POST' })
+export const getBroadcastHistory = createServerFn({ method: 'POST' })
   .inputValidator((input: z.input<typeof cursorSchema>) =>
     cursorSchema.parse(input ?? {}),
   )
@@ -122,52 +122,46 @@ export const getEmailHistory = createServerFn({ method: 'POST' })
 
     const resend = getResend()
 
-    const params: Record<string, string> = {}
+    const params: { cursor?: string } = {}
     if (data.cursor) {
-      params.starting_after = data.cursor
+      params.cursor = data.cursor
     }
 
-    const response = await resend.emails.list(params)
+    const response = await resend.broadcasts.list(params)
 
     if (response.error) {
       throw new Error(response.error.message)
     }
 
-    // Filter to only admin-broadcast emails by checking tags
-    const emails = (response.data?.data ?? []).filter((email) =>
-      email.tags?.some(
-        (tag) => tag.name === 'source' && tag.value === 'admin-broadcast',
-      ),
-    )
-
-    const hasMore = (response.data?.data?.length ?? 0) > 0 && emails.length > 0
+    const broadcasts = response.data?.data ?? []
 
     return {
-      emails: emails.map((email) => ({
-        id: email.id,
-        to: email.to,
-        subject: email.subject,
-        status: email.last_event,
-        createdAt: email.created_at,
+      broadcasts: broadcasts.map((b) => ({
+        id: b.id,
+        name: b.name,
+        subject: b.subject,
+        status: b.status,
+        createdAt: b.created_at,
+        sentAt: b.sent_at,
       })),
-      hasMore,
-      cursor: response.data?.data?.at(-1)?.id,
+      hasMore: response.data?.has_more ?? false,
+      cursor: broadcasts.at(-1)?.id,
     }
   })
 
-// --- Get Email Detail ---
+// --- Get Broadcast Detail ---
 
-const emailIdSchema = z.object({ emailId: z.string().min(1) })
+const broadcastIdSchema = z.object({ broadcastId: z.string().min(1) })
 
-export const getEmailDetail = createServerFn({ method: 'POST' })
-  .inputValidator((input: z.input<typeof emailIdSchema>) =>
-    emailIdSchema.parse(input),
+export const getBroadcastDetail = createServerFn({ method: 'POST' })
+  .inputValidator((input: z.input<typeof broadcastIdSchema>) =>
+    broadcastIdSchema.parse(input),
   )
   .handler(async ({ data }) => {
     await requireAdmin()
 
     const resend = getResend()
-    const response = await resend.emails.get(data.emailId)
+    const response = await resend.broadcasts.get(data.broadcastId)
 
     if (response.error) {
       throw new Error(response.error.message)
@@ -175,11 +169,12 @@ export const getEmailDetail = createServerFn({ method: 'POST' })
 
     return {
       id: response.data.id,
+      name: response.data.name,
       from: response.data.from,
-      to: response.data.to,
       subject: response.data.subject,
       html: response.data.html,
-      status: response.data.last_event,
+      status: response.data.status,
       createdAt: response.data.created_at,
+      sentAt: response.data.sent_at,
     }
   })

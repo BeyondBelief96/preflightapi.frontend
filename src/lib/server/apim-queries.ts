@@ -40,9 +40,9 @@ export const adminKeys = {
   revenue: () => [...adminKeys.all, 'revenue'] as const,
   segments: () => [...adminKeys.all, 'segments'] as const,
   topics: () => [...adminKeys.all, 'topics'] as const,
-  emailHistory: () => [...adminKeys.all, 'email-history'] as const,
-  emailDetail: (emailId: string) =>
-    [...adminKeys.all, 'email-detail', emailId] as const,
+  broadcastHistory: () => [...adminKeys.all, 'broadcast-history'] as const,
+  broadcastDetail: (broadcastId: string) =>
+    [...adminKeys.all, 'broadcast-detail', broadcastId] as const,
 }
 
 export const stripeKeys = {

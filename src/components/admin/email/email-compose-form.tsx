@@ -64,7 +64,7 @@ export function EmailComposeForm() {
       sendBroadcast({ data: input }),
     onSuccess: () => {
       toast.success('Broadcast sent successfully')
-      queryClient.invalidateQueries({ queryKey: adminKeys.emailHistory() })
+      queryClient.invalidateQueries({ queryKey: adminKeys.broadcastHistory() })
       setSegmentId('')
       setTopicId('')
       setSubject('')
