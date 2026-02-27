@@ -42,32 +42,40 @@ export function SuspiciousIps({
             No suspicious IPs detected
           </p>
         ) : (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>IP Address</TableHead>
-                <TableHead className="text-right">Calls</TableHead>
-                <TableHead className="text-right">Subscriptions</TableHead>
-                <TableHead className="text-right">Server Error Rate</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {data.map((row) => (
-                <TableRow key={row.ip}>
-                  <TableCell className="font-mono text-sm">{row.ip}</TableCell>
-                  <TableCell className="text-right">
-                    {row.callCount.toLocaleString()}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    {row.distinctSubscriptions}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    {row.errorRate}%
-                  </TableCell>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>IP Address</TableHead>
+                  <TableHead className="text-right">Calls</TableHead>
+                  <TableHead className="hidden text-right sm:table-cell">
+                    Subscriptions
+                  </TableHead>
+                  <TableHead className="hidden text-right sm:table-cell">
+                    Error Rate
+                  </TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {data.map((row) => (
+                  <TableRow key={row.ip}>
+                    <TableCell className="font-mono text-sm">
+                      {row.ip}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {row.callCount.toLocaleString()}
+                    </TableCell>
+                    <TableCell className="hidden text-right sm:table-cell">
+                      {row.distinctSubscriptions}
+                    </TableCell>
+                    <TableCell className="hidden text-right sm:table-cell">
+                      {row.errorRate}%
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         )}
       </CardContent>
     </Card>

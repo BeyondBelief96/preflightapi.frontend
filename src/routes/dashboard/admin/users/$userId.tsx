@@ -44,7 +44,7 @@ function AdminUserDetailPage() {
   })
 
   return (
-    <div className="space-y-6">
+    <div className="min-w-0 space-y-6">
       <div className="flex items-center gap-3">
         <Button variant="ghost" size="icon" asChild>
           <Link to="/dashboard/admin/users" search={{ page: 1, search: '' }}>
@@ -76,7 +76,6 @@ function AdminUserDetailPage() {
         <UserAnalyticsSection
           data={analytics}
           isLoading={analyticsLoading}
-          subscriptionId={activeSubscription.id}
         />
       )}
     </div>

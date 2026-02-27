@@ -42,26 +42,28 @@ export function TopEndpointsTable({
             No endpoint data yet
           </div>
         ) : (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Endpoint</TableHead>
-                <TableHead className="text-right">Calls</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {data.map((item) => (
-                <TableRow key={item.endpoint}>
-                  <TableCell className="font-mono text-sm">
-                    {formatEndpoint(item.endpoint)}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    {item.calls.toLocaleString()}
-                  </TableCell>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Endpoint</TableHead>
+                  <TableHead className="text-right">Calls</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {data.map((item) => (
+                  <TableRow key={item.endpoint}>
+                    <TableCell className="max-w-[200px] truncate font-mono text-sm sm:max-w-none">
+                      {formatEndpoint(item.endpoint)}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {item.calls.toLocaleString()}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         )}
       </CardContent>
     </Card>

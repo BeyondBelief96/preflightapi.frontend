@@ -41,26 +41,28 @@ export function RateLimitAbusers({
             No rate limit abusers detected
           </p>
         ) : (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Subscription</TableHead>
-                <TableHead className="text-right">429 Count</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {data.map((row) => (
-                <TableRow key={row.subscriptionId}>
-                  <TableCell>
-                    <SubscriptionLink subscriptionId={row.subscriptionId} />
-                  </TableCell>
-                  <TableCell className="text-right font-medium">
-                    {row.count429.toLocaleString()}
-                  </TableCell>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Subscription</TableHead>
+                  <TableHead className="text-right">429 Count</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {data.map((row) => (
+                  <TableRow key={row.subscriptionId}>
+                    <TableCell>
+                      <SubscriptionLink subscriptionId={row.subscriptionId} />
+                    </TableCell>
+                    <TableCell className="text-right font-medium">
+                      {row.count429.toLocaleString()}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         )}
       </CardContent>
     </Card>

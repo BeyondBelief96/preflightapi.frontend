@@ -134,7 +134,7 @@ export function EmailComposeForm() {
 
       {/* Preview Dialog */}
       <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
-        <DialogContent className="max-w-2xl md:left-[calc(50%+8rem)]">
+        <DialogContent className="max-w-[95vw] sm:max-w-2xl md:left-[calc(50%+8rem)]">
           <DialogHeader>
             <DialogTitle>Email Preview</DialogTitle>
           </DialogHeader>
@@ -167,7 +167,7 @@ export function EmailComposeForm() {
                   </html>
                 `}
                 title="Email preview"
-                className="h-[400px] w-full rounded-md"
+                className="h-[250px] w-full rounded-md sm:h-[400px]"
                 sandbox=""
               />
             </div>
@@ -177,7 +177,7 @@ export function EmailComposeForm() {
 
       {/* Confirm Send Dialog */}
       <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
-        <AlertDialogContent className="md:left-[calc(50%+8rem)]">
+        <AlertDialogContent className="max-w-[95vw] sm:max-w-lg md:left-[calc(50%+8rem)]">
           <AlertDialogHeader>
             <AlertDialogTitle>Send Email</AlertDialogTitle>
             <AlertDialogDescription>

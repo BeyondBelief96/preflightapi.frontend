@@ -43,34 +43,40 @@ export function HighErrorUsers({
             No high server error rate users detected
           </p>
         ) : (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Subscription</TableHead>
-                <TableHead className="text-right">Total Calls</TableHead>
-                <TableHead className="text-right">Server Errors</TableHead>
-                <TableHead className="text-right">Server Error Rate</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {data.map((row) => (
-                <TableRow key={row.subscriptionId}>
-                  <TableCell>
-                    <SubscriptionLink subscriptionId={row.subscriptionId} />
-                  </TableCell>
-                  <TableCell className="text-right">
-                    {row.totalCalls.toLocaleString()}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    {row.errorCount.toLocaleString()}
-                  </TableCell>
-                  <TableCell className="text-right font-medium text-destructive">
-                    {row.errorRate}%
-                  </TableCell>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Subscription</TableHead>
+                  <TableHead className="hidden text-right sm:table-cell">
+                    Total Calls
+                  </TableHead>
+                  <TableHead className="hidden text-right sm:table-cell">
+                    Server Errors
+                  </TableHead>
+                  <TableHead className="text-right">Error Rate</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {data.map((row) => (
+                  <TableRow key={row.subscriptionId}>
+                    <TableCell>
+                      <SubscriptionLink subscriptionId={row.subscriptionId} />
+                    </TableCell>
+                    <TableCell className="hidden text-right sm:table-cell">
+                      {row.totalCalls.toLocaleString()}
+                    </TableCell>
+                    <TableCell className="hidden text-right sm:table-cell">
+                      {row.errorCount.toLocaleString()}
+                    </TableCell>
+                    <TableCell className="text-right font-medium text-destructive">
+                      {row.errorRate}%
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         )}
       </CardContent>
     </Card>
