@@ -16,9 +16,8 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useSubscriptionSync } from '@/hooks/use-subscription-sync'
 
 const getAuthState = createServerFn().handler(async () => {
-  const { auth, clerkClient } = await import(
-    '@clerk/tanstack-react-start/server'
-  )
+  const { auth, clerkClient } =
+    await import('@clerk/tanstack-react-start/server')
   const session = await auth()
   if (!session?.userId) return { userId: null, onboardingComplete: false }
 

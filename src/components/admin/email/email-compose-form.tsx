@@ -1,13 +1,8 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Eye, Send } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
-import {
-  RecipientSelector
-  
-} from './recipient-selector'
 import { TipTapEditor } from './tiptap-editor'
-import type {SelectedRecipient} from './recipient-selector';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,53 +23,75 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { sendAdminEmail } from '@/lib/server/admin-email'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Skeleton } from '@/components/ui/skeleton'
+import {
+  getResendSegments,
+  getResendTopics,
+  sendBroadcast,
+} from '@/lib/server/admin-email'
 import { adminKeys } from '@/lib/server/apim-queries'
 
 export function EmailComposeForm() {
   const queryClient = useQueryClient()
+  const [segmentId, setSegmentId] = useState('')
+  const [topicId, setTopicId] = useState('')
   const [subject, setSubject] = useState('')
   const [htmlContent, setHtmlContent] = useState('')
-  const [recipients, setRecipients] = useState<Array<SelectedRecipient>>([])
   const [previewOpen, setPreviewOpen] = useState(false)
   const [confirmOpen, setConfirmOpen] = useState(false)
 
-  const sendMutation = useMutation({
-    mutationFn: (input: Parameters<typeof sendAdminEmail>[0]['data']) =>
-      sendAdminEmail({ data: input }),
-    onSuccess: (result) => {
-      if (result.failed > 0) {
-        toast.warning(
-          `Sent to ${result.sent} recipients, ${result.failed} failed`,
-        )
-      } else {
-        toast.success(`Email sent to ${result.sent} recipients`)
-      }
+  const { data: segments, isLoading: segmentsLoading } = useQuery({
+    queryKey: adminKeys.segments(),
+    queryFn: () => getResendSegments(),
+    staleTime: 5 * 60_000,
+  })
+
+  const { data: topics, isLoading: topicsLoading } = useQuery({
+    queryKey: adminKeys.topics(),
+    queryFn: () => getResendTopics(),
+    staleTime: 5 * 60_000,
+  })
+
+  const broadcastMutation = useMutation({
+    mutationFn: (input: Parameters<typeof sendBroadcast>[0]['data']) =>
+      sendBroadcast({ data: input }),
+    onSuccess: () => {
+      toast.success('Broadcast sent successfully')
       queryClient.invalidateQueries({ queryKey: adminKeys.emailHistory() })
-      // Reset form
+      setSegmentId('')
+      setTopicId('')
       setSubject('')
       setHtmlContent('')
-      setRecipients([])
     },
     onError: (err) => {
-      toast.error(err instanceof Error ? err.message : 'Failed to send email')
+      toast.error(
+        err instanceof Error ? err.message : 'Failed to send broadcast',
+      )
     },
   })
 
+  const selectedSegment = segments?.find((s) => s.id === segmentId)
+  const selectedTopic = topics?.find((t) => t.id === topicId)
+
   const canSend =
+    segmentId &&
     subject.trim() &&
     htmlContent.trim() &&
-    recipients.length > 0 &&
-    !sendMutation.isPending
+    !broadcastMutation.isPending
 
   const handleSend = () => {
-    sendMutation.mutate({
+    broadcastMutation.mutate({
+      segmentId,
+      topicId: topicId || undefined,
       subject,
       htmlContent,
-      recipients: recipients.map((r) => ({
-        email: r.email,
-        name: r.name,
-      })),
     })
     setConfirmOpen(false)
   }
@@ -83,9 +100,53 @@ export function EmailComposeForm() {
     <>
       <Card>
         <CardHeader>
-          <CardTitle className="text-sm font-medium">Compose Email</CardTitle>
+          <CardTitle className="text-sm font-medium">
+            Compose Broadcast
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
+          {/* Segment */}
+          <div className="space-y-2">
+            <Label>Segment</Label>
+            {segmentsLoading ? (
+              <Skeleton className="h-9 w-full" />
+            ) : (
+              <Select value={segmentId} onValueChange={setSegmentId}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a segment..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {segments?.map((segment) => (
+                    <SelectItem key={segment.id} value={segment.id}>
+                      {segment.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          </div>
+
+          {/* Topic */}
+          <div className="space-y-2">
+            <Label>Topic (optional)</Label>
+            {topicsLoading ? (
+              <Skeleton className="h-9 w-full" />
+            ) : (
+              <Select value={topicId} onValueChange={setTopicId}>
+                <SelectTrigger>
+                  <SelectValue placeholder="No topic" />
+                </SelectTrigger>
+                <SelectContent>
+                  {topics?.map((topic) => (
+                    <SelectItem key={topic.id} value={topic.id}>
+                      {topic.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          </div>
+
           {/* Subject */}
           <div className="space-y-2">
             <Label htmlFor="subject">Subject</Label>
@@ -95,12 +156,6 @@ export function EmailComposeForm() {
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
             />
-          </div>
-
-          {/* Recipients */}
-          <div className="space-y-2">
-            <Label>Recipients</Label>
-            <RecipientSelector value={recipients} onChange={setRecipients} />
           </div>
 
           {/* Editor */}
@@ -126,7 +181,7 @@ export function EmailComposeForm() {
               disabled={!canSend}
             >
               <Send className="mr-2 h-4 w-4" />
-              {sendMutation.isPending ? 'Sending...' : 'Send'}
+              {broadcastMutation.isPending ? 'Sending...' : 'Send Broadcast'}
             </Button>
           </div>
         </CardContent>
@@ -179,17 +234,18 @@ export function EmailComposeForm() {
       <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <AlertDialogContent className="max-w-[95vw] sm:max-w-lg md:left-[calc(50%+8rem)]">
           <AlertDialogHeader>
-            <AlertDialogTitle>Send Email</AlertDialogTitle>
+            <AlertDialogTitle>Send Broadcast</AlertDialogTitle>
             <AlertDialogDescription>
-              Send &quot;{subject}&quot; to {recipients.length} recipient
-              {recipients.length !== 1 ? 's' : ''}? This action cannot be
-              undone.
+              Send &quot;{subject}&quot; to the{' '}
+              <strong>{selectedSegment?.name ?? 'selected'}</strong> segment
+              {selectedTopic ? ` under the "${selectedTopic.name}" topic` : ''}?
+              This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={handleSend}>
-              Send Email
+              Send Broadcast
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -350,8 +350,7 @@ function SeverityDot({ severity }: { severity: string }) {
 }
 
 function DataCurrencyEntryRow({ entry }: { entry: DataCurrencyEntry }) {
-  const severityConfig =
-    SEVERITY_CONFIG[entry.severity] ?? SEVERITY_CONFIG.info
+  const severityConfig = SEVERITY_CONFIG[entry.severity] ?? SEVERITY_CONFIG.info
 
   return (
     <div className="space-y-1">
@@ -394,11 +393,7 @@ function DataCurrencyEntryRow({ entry }: { entry: DataCurrencyEntry }) {
   )
 }
 
-function DataCurrencySection({
-  currency,
-}: {
-  currency: DataCurrencyStatus
-}) {
+function DataCurrencySection({ currency }: { currency: DataCurrencyStatus }) {
   const statusConfig =
     CURRENCY_STATUS_CONFIG[currency.overallStatus] ??
     CURRENCY_STATUS_CONFIG.healthy
@@ -620,8 +615,8 @@ function StatusPage() {
                 &middot; Backend checks ran{' '}
                 {formatRelativeTime(data.lastCheckedAt)}
               </>
-            )}
-            {' '}&middot; Auto-refreshes every 30s
+            )}{' '}
+            &middot; Auto-refreshes every 30s
           </p>
         )}
       </section>

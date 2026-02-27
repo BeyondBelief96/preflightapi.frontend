@@ -41,7 +41,11 @@ export function AdminBroadcastEmail({
             <Link href={baseUrl} style={footerLink}>
               PreflightAPI
             </Link>{' '}
-            account. If you have questions, reply to this email or contact{' '}
+            account.{' '}
+            <Link href="{{{RESEND_UNSUBSCRIBE_URL}}}" style={footerLink}>
+              Manage your email preferences
+            </Link>{' '}
+            or contact{' '}
             <Link href="mailto:support@preflightapi.io" style={footerLink}>
               support@preflightapi.io
             </Link>

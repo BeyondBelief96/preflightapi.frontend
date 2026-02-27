@@ -11,9 +11,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 
 function formatEndpoint(operationId: string): string {
-  return operationId
-    .replace(/-/g, ' ')
-    .replace(/\b\w/g, (c) => c.toUpperCase())
+  return operationId.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
 }
 
 export function TopEndpointsTable({

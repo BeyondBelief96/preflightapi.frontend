@@ -74,9 +74,7 @@ export function EmailDetailDialog({
               </span>
 
               <span className="font-medium text-muted-foreground">Date</span>
-              <span>
-                {new Date(data.createdAt).toLocaleString()}
-              </span>
+              <span>{new Date(data.createdAt).toLocaleString()}</span>
             </div>
 
             {data.html && (

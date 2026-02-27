@@ -35,9 +35,7 @@ describe('isAdmin', () => {
   it('returns true for admin email', async () => {
     mockGetUser.mockResolvedValue({
       primaryEmailAddressId: 'email_1',
-      emailAddresses: [
-        { id: 'email_1', emailAddress: 'admin@example.com' },
-      ],
+      emailAddresses: [{ id: 'email_1', emailAddress: 'admin@example.com' }],
     })
 
     expect(await isAdmin('user_123')).toBe(true)
@@ -46,9 +44,7 @@ describe('isAdmin', () => {
   it('returns true case-insensitively', async () => {
     mockGetUser.mockResolvedValue({
       primaryEmailAddressId: 'email_1',
-      emailAddresses: [
-        { id: 'email_1', emailAddress: 'BOSS@Example.IO' },
-      ],
+      emailAddresses: [{ id: 'email_1', emailAddress: 'BOSS@Example.IO' }],
     })
 
     expect(await isAdmin('user_456')).toBe(true)
@@ -57,9 +53,7 @@ describe('isAdmin', () => {
   it('returns false for non-admin email', async () => {
     mockGetUser.mockResolvedValue({
       primaryEmailAddressId: 'email_1',
-      emailAddresses: [
-        { id: 'email_1', emailAddress: 'user@example.com' },
-      ],
+      emailAddresses: [{ id: 'email_1', emailAddress: 'user@example.com' }],
     })
 
     expect(await isAdmin('user_789')).toBe(false)
@@ -91,9 +85,7 @@ describe('requireAdmin', () => {
     mockAuth.mockResolvedValue({ userId: 'user_notadmin' })
     mockGetUser.mockResolvedValue({
       primaryEmailAddressId: 'email_1',
-      emailAddresses: [
-        { id: 'email_1', emailAddress: 'user@random.com' },
-      ],
+      emailAddresses: [{ id: 'email_1', emailAddress: 'user@random.com' }],
     })
 
     await expect(requireAdmin()).rejects.toThrow('Forbidden')
@@ -103,9 +95,7 @@ describe('requireAdmin', () => {
     mockAuth.mockResolvedValue({ userId: 'user_admin' })
     mockGetUser.mockResolvedValue({
       primaryEmailAddressId: 'email_1',
-      emailAddresses: [
-        { id: 'email_1', emailAddress: 'admin@example.com' },
-      ],
+      emailAddresses: [{ id: 'email_1', emailAddress: 'admin@example.com' }],
     })
 
     const result = await requireAdmin()

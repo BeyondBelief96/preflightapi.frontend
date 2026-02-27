@@ -12,9 +12,7 @@ vi.mock('@clerk/backend', () => ({
     users: {
       getUser: vi.fn().mockResolvedValue({
         primaryEmailAddressId: 'email_1',
-        emailAddresses: [
-          { id: 'email_1', emailAddress: 'admin@example.com' },
-        ],
+        emailAddresses: [{ id: 'email_1', emailAddress: 'admin@example.com' }],
       }),
     },
   }),

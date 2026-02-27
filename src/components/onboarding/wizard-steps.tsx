@@ -79,7 +79,11 @@ export function WelcomeStep({
 }
 
 const USE_CASE_OPTIONS = [
-  { value: 'flight-school', label: 'Flight School / Training', icon: GraduationCap },
+  {
+    value: 'flight-school',
+    label: 'Flight School / Training',
+    icon: GraduationCap,
+  },
   { value: 'efb', label: 'Electronic Flight Bag', icon: Tablet },
   { value: 'weather', label: 'Weather Briefing Tool', icon: CloudSun },
   { value: 'drone', label: 'Drone / UAV Operations', icon: Plane },
@@ -102,8 +106,8 @@ export function UseCaseStep({
         <div>
           <h2 className="text-2xl font-bold">What Are You Building?</h2>
           <p className="mt-2 text-muted-foreground">
-            This helps us understand how you're using PreflightAPI. You can skip this if you
-            prefer.
+            This helps us understand how you're using PreflightAPI. You can skip
+            this if you prefer.
           </p>
         </div>
 

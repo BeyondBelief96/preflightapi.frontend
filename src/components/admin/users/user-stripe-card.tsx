@@ -124,10 +124,7 @@ export function UserStripeCard({
             </p>
             <div className="space-y-3">
               {data.recentInvoices.map((inv) => (
-                <div
-                  key={inv.id}
-                  className="rounded-md border p-3"
-                >
+                <div key={inv.id} className="rounded-md border p-3">
                   <div className="flex items-center justify-between gap-3 text-sm">
                     <div className="flex items-center gap-2">
                       <span className="shrink-0">

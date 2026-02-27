@@ -95,9 +95,7 @@ export function EmailHistoryTable() {
                         <TableCell>
                           <Badge
                             variant="secondary"
-                            className={
-                              statusColors[email.status ?? ''] ?? ''
-                            }
+                            className={statusColors[email.status ?? ''] ?? ''}
                           >
                             {email.status ?? 'unknown'}
                           </Badge>

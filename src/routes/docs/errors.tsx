@@ -107,8 +107,7 @@ const errorCodeGroups = [
       },
       {
         code: 'BACKEND_UNAVAILABLE',
-        description:
-          'Backend is unreachable (deploy, crash, or network issue)',
+        description: 'Backend is unreachable (deploy, crash, or network issue)',
       },
       {
         code: 'MAINTENANCE',
@@ -282,9 +281,7 @@ function ErrorsDocs() {
                 <th className="py-3 pr-4 text-left font-semibold">Field</th>
                 <th className="py-3 pr-4 text-left font-semibold">Type</th>
                 <th className="py-3 text-left font-semibold">Description</th>
-                <th className="py-3 text-left font-semibold">
-                  Always Present
-                </th>
+                <th className="py-3 text-left font-semibold">Always Present</th>
               </tr>
             </thead>
             <tbody>
@@ -295,8 +292,8 @@ function ErrorsDocs() {
                 <td className="py-3 pr-4 text-muted-foreground">string</td>
                 <td className="py-3 text-muted-foreground">
                   Machine-readable error code (e.g.,{' '}
-                  <code>METAR_NOT_FOUND</code>,{' '}
-                  <code>RATE_LIMIT_EXCEEDED</code>)
+                  <code>METAR_NOT_FOUND</code>, <code>RATE_LIMIT_EXCEEDED</code>
+                  )
                 </td>
                 <td className="py-3 text-muted-foreground">Yes</td>
               </tr>
@@ -377,9 +374,7 @@ function ErrorsDocs() {
                 <td className="py-3 pr-4">
                   <code className="text-sm">validationErrors</code>
                 </td>
-                <td className="py-3 pr-4 text-muted-foreground">
-                  {'object?'}
-                </td>
+                <td className="py-3 pr-4 text-muted-foreground">{'object?'}</td>
                 <td className="py-3 text-muted-foreground">
                   Field-level errors (only on <code>VALIDATION_ERROR</code>)
                 </td>

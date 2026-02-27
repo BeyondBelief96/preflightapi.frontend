@@ -56,7 +56,10 @@ export function SystemDailyTrend({ data, isLoading }: SystemDailyTrendProps) {
             No traffic data yet
           </div>
         ) : (
-          <ChartContainer config={chartConfig} className="h-[200px] w-full sm:h-[250px]">
+          <ChartContainer
+            config={chartConfig}
+            className="h-[200px] w-full sm:h-[250px]"
+          >
             <AreaChart data={data} accessibilityLayer>
               <defs>
                 <linearGradient

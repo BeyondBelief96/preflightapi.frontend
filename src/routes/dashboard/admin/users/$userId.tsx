@@ -38,7 +38,9 @@ function AdminUserDetailPage() {
   const { data: analytics, isLoading: analyticsLoading } = useQuery({
     queryKey: adminKeys.userAnalytics(activeSubscription?.id ?? ''),
     queryFn: () =>
-      getAdminUserAnalytics({ data: { subscriptionId: activeSubscription!.id } }),
+      getAdminUserAnalytics({
+        data: { subscriptionId: activeSubscription!.id },
+      }),
     enabled: !!activeSubscription?.id,
     staleTime: 60_000,
   })
@@ -73,10 +75,7 @@ function AdminUserDetailPage() {
       </div>
 
       {activeSubscription && (
-        <UserAnalyticsSection
-          data={analytics}
-          isLoading={analyticsLoading}
-        />
+        <UserAnalyticsSection data={analytics} isLoading={analyticsLoading} />
       )}
     </div>
   )

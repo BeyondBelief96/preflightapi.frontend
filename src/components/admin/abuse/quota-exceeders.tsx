@@ -46,7 +46,9 @@ export function QuotaExceeders({
               <TableHeader>
                 <TableRow>
                   <TableHead>Subscription</TableHead>
-                  <TableHead className="text-right">Total Calls (30d)</TableHead>
+                  <TableHead className="text-right">
+                    Total Calls (30d)
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>

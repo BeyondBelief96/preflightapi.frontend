@@ -84,12 +84,7 @@ export function TipTapEditor({ onUpdate, className }: TipTapEditorProps) {
       return
     }
 
-    editor
-      .chain()
-      .focus()
-      .extendMarkRange('link')
-      .setLink({ href: url })
-      .run()
+    editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run()
   }, [editor])
 
   if (!editor) return null
@@ -101,9 +96,7 @@ export function TipTapEditor({ onUpdate, className }: TipTapEditorProps) {
         <Toggle
           size="sm"
           pressed={editor.isActive('bold')}
-          onPressedChange={() =>
-            editor.chain().focus().toggleBold().run()
-          }
+          onPressedChange={() => editor.chain().focus().toggleBold().run()}
           aria-label="Bold"
         >
           <Bold className="h-4 w-4" />
@@ -111,9 +104,7 @@ export function TipTapEditor({ onUpdate, className }: TipTapEditorProps) {
         <Toggle
           size="sm"
           pressed={editor.isActive('italic')}
-          onPressedChange={() =>
-            editor.chain().focus().toggleItalic().run()
-          }
+          onPressedChange={() => editor.chain().focus().toggleItalic().run()}
           aria-label="Italic"
         >
           <Italic className="h-4 w-4" />
@@ -121,9 +112,7 @@ export function TipTapEditor({ onUpdate, className }: TipTapEditorProps) {
         <Toggle
           size="sm"
           pressed={editor.isActive('underline')}
-          onPressedChange={() =>
-            editor.chain().focus().toggleUnderline().run()
-          }
+          onPressedChange={() => editor.chain().focus().toggleUnderline().run()}
           aria-label="Underline"
         >
           <UnderlineIcon className="h-4 w-4" />

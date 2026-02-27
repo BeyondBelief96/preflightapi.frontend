@@ -149,11 +149,7 @@ export function UserAdminActions({
           <p className="text-sm text-muted-foreground">Reset Quota</p>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button
-                variant="outline"
-                size="sm"
-                disabled={isAnyLoading}
-              >
+              <Button variant="outline" size="sm" disabled={isAnyLoading}>
                 <RefreshCw className="mr-1.5 h-3.5 w-3.5" />
                 Reset Quota Counter
               </Button>
@@ -178,16 +174,10 @@ export function UserAdminActions({
         </div>
 
         <div className="space-y-2">
-          <p className="text-sm text-muted-foreground">
-            Cancel Subscription
-          </p>
+          <p className="text-sm text-muted-foreground">Cancel Subscription</p>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button
-                variant="destructive"
-                size="sm"
-                disabled={isAnyLoading}
-              >
+              <Button variant="destructive" size="sm" disabled={isAnyLoading}>
                 <XCircle className="mr-1.5 h-3.5 w-3.5" />
                 Cancel Subscription
               </Button>
