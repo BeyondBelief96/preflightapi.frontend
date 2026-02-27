@@ -38,7 +38,7 @@ export function EmailDetailDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl md:left-[calc(50%+8rem)]">
+      <DialogContent className="max-w-[95vw] sm:max-w-2xl md:left-[calc(50%+8rem)]">
         <DialogHeader>
           <DialogTitle>Email Detail</DialogTitle>
         </DialogHeader>
@@ -51,7 +51,7 @@ export function EmailDetailDialog({
           </div>
         ) : data ? (
           <div className="space-y-4">
-            <div className="grid grid-cols-[auto,1fr] gap-x-4 gap-y-2 text-sm">
+            <div className="grid grid-cols-[auto,1fr] gap-x-3 gap-y-2 text-sm sm:gap-x-4">
               <span className="font-medium text-muted-foreground">From</span>
               <span>{data.from}</span>
 
@@ -84,7 +84,7 @@ export function EmailDetailDialog({
                 <iframe
                   srcDoc={data.html}
                   title="Email preview"
-                  className="h-[400px] w-full rounded-md"
+                  className="h-[250px] w-full rounded-md sm:h-[400px]"
                   sandbox=""
                 />
               </div>

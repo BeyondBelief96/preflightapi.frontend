@@ -23,20 +23,13 @@ interface UserAnalyticsData {
 export function UserAnalyticsSection({
   data,
   isLoading,
-  subscriptionId,
 }: {
   data: UserAnalyticsData | undefined
   isLoading: boolean
-  subscriptionId: string
 }) {
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-lg font-semibold">Analytics</h2>
-        <p className="text-sm text-muted-foreground">
-          Subscription: <span className="font-mono">{subscriptionId}</span>
-        </p>
-      </div>
+      <h2 className="text-lg font-semibold">Analytics</h2>
 
       <div className="grid gap-4 md:grid-cols-2">
         <ResponseBreakdownCard
@@ -51,7 +44,7 @@ export function UserAnalyticsSection({
 
       <DailyTrendChart data={data?.dailyTrend} isLoading={isLoading} />
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid min-w-0 gap-4 md:grid-cols-2">
         <EndpointBreakdownChart data={data?.endpoints} isLoading={isLoading} />
         <ErrorBreakdownChart data={data?.errors} isLoading={isLoading} />
       </div>

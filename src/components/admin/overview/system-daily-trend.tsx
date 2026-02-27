@@ -42,21 +42,21 @@ function formatDate(dateStr: string): string {
 
 export function SystemDailyTrend({ data, isLoading }: SystemDailyTrendProps) {
   return (
-    <Card>
+    <Card className="overflow-hidden">
       <CardHeader className="pb-3">
         <CardTitle className="text-sm font-medium">
           System Traffic (30 days)
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="min-w-0">
         {isLoading ? (
-          <Skeleton className="h-[250px] w-full" />
+          <Skeleton className="h-[200px] w-full sm:h-[250px]" />
         ) : !data || data.length === 0 ? (
-          <div className="flex h-[250px] items-center justify-center text-sm text-muted-foreground">
+          <div className="flex h-[200px] items-center justify-center text-sm text-muted-foreground sm:h-[250px]">
             No traffic data yet
           </div>
         ) : (
-          <ChartContainer config={chartConfig} className="h-[250px] w-full">
+          <ChartContainer config={chartConfig} className="h-[200px] w-full sm:h-[250px]">
             <AreaChart data={data} accessibilityLayer>
               <defs>
                 <linearGradient

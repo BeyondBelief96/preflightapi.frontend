@@ -93,9 +93,9 @@ export function UserAdminActions({
       <CardContent className="space-y-5">
         <div className="space-y-2">
           <p className="text-sm text-muted-foreground">Change Tier</p>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
             <Select value={selectedTier} onValueChange={setSelectedTier}>
-              <SelectTrigger className="w-48">
+              <SelectTrigger className="w-full sm:w-48">
                 <SelectValue placeholder="Select tier..." />
               </SelectTrigger>
               <SelectContent>

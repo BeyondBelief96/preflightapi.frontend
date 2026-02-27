@@ -41,26 +41,28 @@ export function QuotaExceeders({
             No high volume users detected
           </p>
         ) : (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Subscription</TableHead>
-                <TableHead className="text-right">Total Calls (30d)</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {data.map((row) => (
-                <TableRow key={row.subscriptionId}>
-                  <TableCell>
-                    <SubscriptionLink subscriptionId={row.subscriptionId} />
-                  </TableCell>
-                  <TableCell className="text-right font-medium">
-                    {row.totalCalls.toLocaleString()}
-                  </TableCell>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Subscription</TableHead>
+                  <TableHead className="text-right">Total Calls (30d)</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {data.map((row) => (
+                  <TableRow key={row.subscriptionId}>
+                    <TableCell>
+                      <SubscriptionLink subscriptionId={row.subscriptionId} />
+                    </TableCell>
+                    <TableCell className="text-right font-medium">
+                      {row.totalCalls.toLocaleString()}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         )}
       </CardContent>
     </Card>

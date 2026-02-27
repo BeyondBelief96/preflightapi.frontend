@@ -60,50 +60,56 @@ export function EmailHistoryTable() {
             </p>
           ) : (
             <>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Subject</TableHead>
-                    <TableHead>Recipients</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Sent At</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {emails.map((email) => (
-                    <TableRow
-                      key={email.id}
-                      className="cursor-pointer"
-                      onClick={() => setSelectedEmailId(email.id)}
-                    >
-                      <TableCell className="max-w-[200px] truncate font-medium">
-                        {email.subject}
-                      </TableCell>
-                      <TableCell className="max-w-[200px] truncate text-muted-foreground">
-                        {Array.isArray(email.to)
-                          ? email.to.slice(0, 3).join(', ') +
-                            (email.to.length > 3
-                              ? ` +${email.to.length - 3}`
-                              : '')
-                          : email.to}
-                      </TableCell>
-                      <TableCell>
-                        <Badge
-                          variant="secondary"
-                          className={
-                            statusColors[email.status ?? ''] ?? ''
-                          }
-                        >
-                          {email.status ?? 'unknown'}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-muted-foreground">
-                        {new Date(email.createdAt).toLocaleString()}
-                      </TableCell>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Subject</TableHead>
+                      <TableHead className="hidden sm:table-cell">
+                        Recipients
+                      </TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="hidden md:table-cell">
+                        Sent At
+                      </TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {emails.map((email) => (
+                      <TableRow
+                        key={email.id}
+                        className="cursor-pointer"
+                        onClick={() => setSelectedEmailId(email.id)}
+                      >
+                        <TableCell className="max-w-[200px] truncate font-medium">
+                          {email.subject}
+                        </TableCell>
+                        <TableCell className="hidden max-w-[200px] truncate text-muted-foreground sm:table-cell">
+                          {Array.isArray(email.to)
+                            ? email.to.slice(0, 3).join(', ') +
+                              (email.to.length > 3
+                                ? ` +${email.to.length - 3}`
+                                : '')
+                            : email.to}
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            variant="secondary"
+                            className={
+                              statusColors[email.status ?? ''] ?? ''
+                            }
+                          >
+                            {email.status ?? 'unknown'}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="hidden text-muted-foreground md:table-cell">
+                          {new Date(email.createdAt).toLocaleString()}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
 
               {hasNextPage && (
                 <div className="mt-4 flex justify-center">

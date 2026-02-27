@@ -62,14 +62,17 @@ export function ErrorBreakdownChart({
 
   const chartHeight = chartData ? Math.max(chartData.length * 36, 100) : 200
   const yAxisWidth = chartData
-    ? estimateLabelWidth(
-        chartData.map((d) => d.label),
-        12,
+    ? Math.min(
+        estimateLabelWidth(
+          chartData.map((d) => d.label),
+          12,
+        ),
+        140,
       )
     : 140
 
   return (
-    <Card>
+    <Card className="min-w-0 overflow-hidden">
       <CardHeader className="pb-3">
         <CardTitle className="text-sm font-medium">
           Error Breakdown

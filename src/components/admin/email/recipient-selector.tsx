@@ -132,9 +132,9 @@ export function RecipientSelector({ value, onChange }: RecipientSelectorProps) {
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <Select value={tier} onValueChange={setTier}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-full sm:w-[180px]">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>

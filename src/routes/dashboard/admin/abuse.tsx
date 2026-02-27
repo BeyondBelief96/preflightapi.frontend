@@ -37,38 +37,41 @@ function AbuseDetectionPage() {
       </div>
 
       <Tabs defaultValue="errors">
-        <TabsList>
-          <TabsTrigger value="errors">
-            High Server Error Rate
-            {data?.highErrorUsers.length
-              ? ` (${data.highErrorUsers.length})`
-              : ''}
-          </TabsTrigger>
-          <TabsTrigger value="ratelimit">
-            Rate Limits
-            {data?.rateLimitAbusers.length
-              ? ` (${data.rateLimitAbusers.length})`
-              : ''}
-          </TabsTrigger>
-          <TabsTrigger value="spikes">
-            Traffic Spikes
-            {data?.trafficSpikes.length
-              ? ` (${data.trafficSpikes.length})`
-              : ''}
-          </TabsTrigger>
-          <TabsTrigger value="ips">
-            Suspicious IPs
-            {data?.suspiciousIps.length
-              ? ` (${data.suspiciousIps.length})`
-              : ''}
-          </TabsTrigger>
-          <TabsTrigger value="quota">
-            Quota
-            {data?.quotaExceeders.length
-              ? ` (${data.quotaExceeders.length})`
-              : ''}
-          </TabsTrigger>
-        </TabsList>
+        <div className="overflow-x-auto">
+          <TabsList>
+            <TabsTrigger value="errors">
+              <span className="sm:hidden">Errors</span>
+              <span className="hidden sm:inline">High Error Rate</span>
+              {data?.highErrorUsers.length
+                ? ` (${data.highErrorUsers.length})`
+                : ''}
+            </TabsTrigger>
+            <TabsTrigger value="ratelimit">
+              Rate Limits
+              {data?.rateLimitAbusers.length
+                ? ` (${data.rateLimitAbusers.length})`
+                : ''}
+            </TabsTrigger>
+            <TabsTrigger value="spikes">
+              Spikes
+              {data?.trafficSpikes.length
+                ? ` (${data.trafficSpikes.length})`
+                : ''}
+            </TabsTrigger>
+            <TabsTrigger value="ips">
+              IPs
+              {data?.suspiciousIps.length
+                ? ` (${data.suspiciousIps.length})`
+                : ''}
+            </TabsTrigger>
+            <TabsTrigger value="quota">
+              Quota
+              {data?.quotaExceeders.length
+                ? ` (${data.quotaExceeders.length})`
+                : ''}
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent value="errors">
           <HighErrorUsers

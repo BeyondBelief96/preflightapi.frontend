@@ -43,34 +43,40 @@ export function TrafficSpikes({
             No traffic spikes detected
           </p>
         ) : (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Subscription</TableHead>
-                <TableHead className="text-right">Avg/hr</TableHead>
-                <TableHead className="text-right">Max/hr</TableHead>
-                <TableHead className="text-right">Spike Factor</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {data.map((row) => (
-                <TableRow key={row.subscriptionId}>
-                  <TableCell>
-                    <SubscriptionLink subscriptionId={row.subscriptionId} />
-                  </TableCell>
-                  <TableCell className="text-right">
-                    {Math.round(row.avgHourly).toLocaleString()}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    {row.maxHourly.toLocaleString()}
-                  </TableCell>
-                  <TableCell className="text-right font-medium text-warning">
-                    {row.spikeFactor}x
-                  </TableCell>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Subscription</TableHead>
+                  <TableHead className="hidden text-right sm:table-cell">
+                    Avg/hr
+                  </TableHead>
+                  <TableHead className="hidden text-right sm:table-cell">
+                    Max/hr
+                  </TableHead>
+                  <TableHead className="text-right">Spike Factor</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {data.map((row) => (
+                  <TableRow key={row.subscriptionId}>
+                    <TableCell>
+                      <SubscriptionLink subscriptionId={row.subscriptionId} />
+                    </TableCell>
+                    <TableCell className="hidden text-right sm:table-cell">
+                      {Math.round(row.avgHourly).toLocaleString()}
+                    </TableCell>
+                    <TableCell className="hidden text-right sm:table-cell">
+                      {row.maxHourly.toLocaleString()}
+                    </TableCell>
+                    <TableCell className="text-right font-medium text-warning">
+                      {row.spikeFactor}x
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         )}
       </CardContent>
     </Card>

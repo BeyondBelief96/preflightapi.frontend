@@ -49,7 +49,7 @@ function AdminOverview() {
   })
 
   return (
-    <div className="space-y-8">
+    <div className="min-w-0 space-y-8">
       <div>
         <h1 className="text-2xl font-bold">System Overview</h1>
         <p className="text-muted-foreground">
@@ -59,17 +59,19 @@ function AdminOverview() {
 
       <SystemStatsCards data={overview.data} isLoading={overview.isLoading} />
 
-      <div className="grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2">
+      <div className="grid min-w-0 gap-6 lg:grid-cols-3">
+        <div className="min-w-0 lg:col-span-2">
           <SystemDailyTrend
             data={dailyTrend.data}
             isLoading={dailyTrend.isLoading}
           />
         </div>
-        <RevenueSummaryCard
-          data={revenue.data}
-          isLoading={revenue.isLoading}
-        />
+        <div className="min-w-0">
+          <RevenueSummaryCard
+            data={revenue.data}
+            isLoading={revenue.isLoading}
+          />
+        </div>
       </div>
 
       <TopEndpointsTable

@@ -39,7 +39,7 @@ export function RevenueSummaryCard({
   )
 
   return (
-    <Card>
+    <Card className="overflow-hidden">
       <CardHeader>
         <CardTitle className="text-sm font-medium">Revenue</CardTitle>
       </CardHeader>
