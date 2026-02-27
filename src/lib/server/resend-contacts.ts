@@ -88,8 +88,10 @@ export async function removeResendContact(email: string): Promise<void> {
 }
 
 /**
- * Moves a contact between the Paid and Free segments when their tier changes.
- * Requires the contact's Resend ID to manage segment membership.
+ * Updates a contact's tier segment by upserting via `contacts.create()`.
+ * Resend's create is idempotent — if the contact exists it updates them,
+ * if not it creates them. This eliminates any race condition with the
+ * Clerk webhook that initially creates the contact.
  *
  * Non-fatal — logs errors but never throws.
  */
@@ -101,49 +103,42 @@ export async function updateContactTierSegment(
     const { getResend } = await import('./resend-client')
     const resend = getResend()
 
+    const segmentAllId = env.RESEND_SEGMENT_ALL_ID
     const segmentPaidId = env.RESEND_SEGMENT_PAID_ID
     const segmentFreeId = env.RESEND_SEGMENT_FREE_ID
 
-    if (!segmentPaidId || !segmentFreeId) {
+    if (!segmentAllId || !segmentPaidId || !segmentFreeId) {
       log.warn(
-        'RESEND_SEGMENT_PAID_ID or RESEND_SEGMENT_FREE_ID not configured — skipping segment update',
+        'Resend segment IDs not fully configured — skipping segment update',
       )
       return
     }
 
-    // Look up contact by email to get their ID
-    const contact = await resend.contacts.get({ email })
-    if (contact.error || !contact.data) {
-      log.warn({ email }, 'Could not find Resend contact for segment update')
-      return
-    }
-
-    const contactId = contact.data.id
     const isPaid = newTier !== 'student'
 
-    // Add to the correct segment and remove from the other
-    const addSegmentId = isPaid ? segmentPaidId : segmentFreeId
-    const removeSegmentId = isPaid ? segmentFreeId : segmentPaidId
+    // Upsert contact with the correct segment — creates if missing, updates if exists
+    const { error } = await resend.contacts.create({
+      email,
+      segments: [
+        { id: segmentAllId },
+        { id: isPaid ? segmentPaidId : segmentFreeId },
+      ],
+    })
 
-    const [addResult, removeResult] = await Promise.allSettled([
-      resend.contacts.segments.add({ contactId, segmentId: addSegmentId }),
-      resend.contacts.segments.remove({
-        contactId,
-        segmentId: removeSegmentId,
-      }),
-    ])
-
-    if (addResult.status === 'rejected') {
-      log.warn(
-        { err: addResult.reason, email, segment: addSegmentId },
-        'Failed to add contact to segment',
-      )
+    if (error) {
+      log.warn({ err: error, email }, 'Failed to upsert Resend contact segment')
+      return
     }
-    if (removeResult.status === 'rejected') {
-      log.warn(
-        { err: removeResult.reason, email, segment: removeSegmentId },
-        'Failed to remove contact from segment',
-      )
+
+    // Remove from the opposite segment (create doesn't remove old segments)
+    const removeSegmentId = isPaid ? segmentFreeId : segmentPaidId
+    const contact = await resend.contacts.get({ email })
+    if (contact.data) {
+      await resend.contacts.segments
+        .remove({ contactId: contact.data.id, segmentId: removeSegmentId })
+        .catch(() => {
+          // Ignore — contact may not have been in this segment
+        })
     }
 
     log.info({ email, newTier }, 'Updated Resend contact tier segment')
