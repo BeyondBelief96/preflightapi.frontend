@@ -46,7 +46,7 @@ export function EndpointFooter({
   endpoints: Array<{ method: 'GET' | 'POST'; path: string }>
 }) {
   return (
-    <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs text-muted-foreground">
+    <div className="mt-6 flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 text-xs text-muted-foreground">
       <span>Endpoints used:</span>
       {endpoints.map((ep) => (
         <code
