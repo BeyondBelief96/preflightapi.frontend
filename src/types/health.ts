@@ -10,7 +10,6 @@ export type {
 export type ServiceStatus =
   | 'operational'
   | 'degraded'
-  | 'maintenance'
   | 'outage'
 
 export type OverallStatus = ServiceStatus
