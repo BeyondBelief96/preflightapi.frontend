@@ -5,13 +5,13 @@ import { Badge } from '@/components/ui/badge'
 import { API_BASE_URL } from '@/lib/gateway-url'
 
 const sources = [
-  { label: 'FAA NASR', format: 'CSV', cycle: '28d' },
-  { label: 'FAA DOF', format: 'CSV', cycle: '56d' },
-  { label: 'FAA d-TPPs', format: 'PDF', cycle: '28d' },
-  { label: 'FAA d-CS', format: 'PDF', cycle: '56d' },
-  { label: 'FAA ADDS', format: 'GeoJSON', cycle: '56d' },
-  { label: 'FAA NMS', format: 'JSON', cycle: '3min' },
-  { label: 'AWC', format: 'XML', cycle: '5-30m' },
+  { label: 'FAA NASR', url: 'https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/', format: 'CSV', cycle: '28d' },
+  { label: 'FAA DOF', url: 'https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/dof/', format: 'CSV', cycle: '56d' },
+  { label: 'FAA d-TPPs', url: 'https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/dtpp/', format: 'PDF', cycle: '28d' },
+  { label: 'FAA d-CS', url: 'https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/dafd/', format: 'PDF', cycle: '56d' },
+  { label: 'FAA ADDS', url: 'https://adds-faa.opendata.arcgis.com/', format: 'GeoJSON', cycle: '56d' },
+  { label: 'FAA NMS', url: 'https://nms.aim.faa.gov/', format: 'JSON', cycle: '3min' },
+  { label: 'AWC', url: 'https://aviationweather.gov/', format: 'XML', cycle: '5-30m' },
 ]
 
 const infraStages = [
@@ -49,9 +49,12 @@ export function DataPipelineSection() {
         {/* Source chips */}
         <div className="mt-14 flex flex-wrap justify-center gap-2.5">
           {sources.map((source) => (
-            <div
+            <a
               key={source.label}
-              className="flex items-center gap-2 rounded-lg border border-dashed border-border bg-card px-3.5 py-2"
+              href={source.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 rounded-lg border border-dashed border-border bg-card px-3.5 py-2 transition-colors hover:border-accent/50"
             >
               <span className="text-sm font-medium">{source.label}</span>
               <Badge variant="secondary" className="text-[10px]">
@@ -60,7 +63,7 @@ export function DataPipelineSection() {
               <span className="text-[10px] text-muted-foreground">
                 {source.cycle}
               </span>
-            </div>
+            </a>
           ))}
         </div>
 

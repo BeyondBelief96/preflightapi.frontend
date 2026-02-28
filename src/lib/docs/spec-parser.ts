@@ -250,6 +250,7 @@ const tierPatterns: Array<{ pattern: RegExp; key: string }> = [
   },
   { pattern: /\/navlog\/winds-aloft/, key: 'navigation/winds-aloft' },
   { pattern: /\/navlog/, key: 'navigation/nav-log' },
+  { pattern: /\/navaids/, key: 'navaids' },
 ]
 
 function getTierForPath(path: string): EndpointTier {

@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge'
 
 type DataSource = {
   name: string
+  url: string
   description: string
   frequency: string
   format: string
@@ -12,6 +13,7 @@ type DataSource = {
 const sources: Array<DataSource> = [
   {
     name: 'FAA NASR',
+    url: 'https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/',
     description:
       'National Airspace System Resources — airports, runways, frequencies, navaids, and more.',
     frequency: 'Every 28 days',
@@ -19,6 +21,7 @@ const sources: Array<DataSource> = [
   },
   {
     name: 'FAA DOF',
+    url: 'https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/dof/',
     description:
       'Digital Obstacle File — 625,000+ towers, antennas, and other obstructions with precise coordinates.',
     frequency: 'Every 56 days + daily',
@@ -26,6 +29,7 @@ const sources: Array<DataSource> = [
   },
   {
     name: 'FAA ADDS',
+    url: 'https://adds-faa.opendata.arcgis.com/',
     description:
       'Aeronautical Data Delivery System — Class B, C, D and special use airspace boundaries.',
     frequency: 'Every 56 days',
@@ -33,6 +37,7 @@ const sources: Array<DataSource> = [
   },
   {
     name: 'FAA NMS',
+    url: 'https://nms.aim.faa.gov/',
     description:
       'NOTAM Management System — active Notices to Air Missions for all US facilities.',
     frequency: 'Daily + every 3 minutes',
@@ -40,20 +45,23 @@ const sources: Array<DataSource> = [
   },
   {
     name: 'Aviation Weather Center',
+    url: 'https://aviationweather.gov/',
     description:
-      'METARs, TAFs, PIREPs, SIGMETs, G-AIRMETs, and winds aloft from the aviationweather.gov',
+      'METARs, TAFs, PIREPs, SIGMETs, G-AIRMETs, and winds aloft from aviationweather.gov.',
     frequency: '5–30 minutes',
     format: 'XML',
   },
   {
     name: 'FAA d-TPPs',
+    url: 'https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/dtpp/',
     description:
-      'Digital Terminal Procedures Publication — IAP, DP, STAR, airport diagrams, and more',
+      'Digital Terminal Procedures Publication — IAP, DP, STAR, airport diagrams, and more.',
     frequency: 'Every 28 days',
     format: 'PDF',
   },
   {
     name: 'FAA d-CS',
+    url: 'https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/dafd/',
     description:
       'Digital Chart Supplements — airport facility directories with detailed information for every US airport.',
     frequency: 'Every 56 days',
@@ -81,7 +89,16 @@ export function DataSourcesGrid() {
           {sources.map((source, index) => (
             <FadeIn key={source.name} delay={index * 80}>
               <div className="flex h-full flex-col rounded-xl border bg-card p-5 transition-colors hover:border-accent/50">
-                <h3 className="font-semibold">{source.name}</h3>
+                <h3 className="font-semibold">
+                  <a
+                    href={source.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-accent hover:underline"
+                  >
+                    {source.name}
+                  </a>
+                </h3>
                 <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">
                   {source.description}
                 </p>

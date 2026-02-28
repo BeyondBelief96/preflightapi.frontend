@@ -774,6 +774,108 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/navaids": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Gets a paginated list of navaids with optional filtering.
+         * @description ``` GET /api/v1/navaids — all navaids (paginated) GET /api/v1/navaids?search=DFW — search by identifier, name, or city GET /api/v1/navaids?type=VOR — filter by facility type GET /api/v1/navaids?state=TX — filter by state GET /api/v1/navaids?search=Dallas&type=VORTAC&state=TX — combine filters ```
+         */
+        get: operations["Navaid_GetNavaids"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/navaids/type/{type}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Gets a paginated list of navaids filtered by facility type.
+         * @description ``` GET /api/v1/navaids/type/Vor — all VOR facilities GET /api/v1/navaids/type/Vortac — all VORTAC facilities GET /api/v1/navaids/type/NdbDme — all NDB/DME facilities ```
+         */
+        get: operations["Navaid_GetByType"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/navaids/{navId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Gets all navaids matching an identifier. Because NavId is not globally unique
+         *     (e.g., "DFW" can be both a VOR and an NDB), this endpoint returns a list.
+         * @description ``` GET /api/v1/navaids/DFW — returns all navaids with identifier "DFW" GET /api/v1/navaids/BIE — returns all navaids with identifier "BIE" ```
+         */
+        get: operations["Navaid_GetByIdentifier"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/navaids/batch": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Gets navaids for multiple identifiers in a single request.
+         * @description ``` GET /api/v1/navaids/batch?ids=DFW,BIE,AUS ```
+         */
+        get: operations["Navaid_GetBatch"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/navaids/nearby": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Searches for navaids near a geographic point. Results are filtered by radius but not sorted by distance;
+         *     pagination order is deterministic but arbitrary.
+         * @description ``` GET /api/v1/navaids/nearby?lat=32.897&lon=-97.038 — default 30 NM radius GET /api/v1/navaids/nearby?lat=32.897&lon=-97.038&radiusNm=50&type=VOR — VORs within 50 NM ```
+         */
+        get: operations["Navaid_SearchNearby"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/navlog/calculate": {
         parameters: {
             query?: never;
@@ -1821,6 +1923,10 @@ export interface components {
             nextCursor?: string | null;
             /** @description True if more results are available beyond this page; false if this is the last page. */
             hasMore?: boolean;
+            /** @description Opaque cursor value to pass as the cursor query parameter to fetch the previous page. Null on the first page. */
+            previousCursor?: string | null;
+            /** @description True if there are results before this page; false if this is the first page. */
+            hasPrevious?: boolean;
             /**
              * Format: int32
              * @description Maximum number of items returned per page (1-500, default 100).
@@ -3745,6 +3851,198 @@ export interface components {
             pagination?: components["schemas"]["PaginationMetadata"];
         };
         /**
+         * @description Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the
+         *     pagination.nextCursor value as the cursor query parameter in your next request.
+         *     Continue until pagination.hasMore is false.
+         */
+        PaginatedResponseOfNavaidDto: {
+            /** @description The current page of results. */
+            data?: components["schemas"]["NavaidDto"][];
+            /** @description Pagination metadata including the cursor to fetch the next page. */
+            pagination?: components["schemas"]["PaginationMetadata"];
+        };
+        /**
+         * @description Navigation aid (NAVAID) data from the FAA National Airspace System Resources (NASR) database.
+         *     Includes VOR, VORTAC, VOR/DME, NDB, NDB/DME, TACAN, DME, and other facility types.
+         *     Use the navaid's NavId to query related endpoints such as identifier lookup
+         *     (GET /api/v1/navaids/{navId}), batch lookup
+         *     (GET /api/v1/navaids/batch?ids=DFW,AUS), and nearby search
+         *     (GET /api/v1/navaids/nearby?lat=32.897&lon=-97.038).
+         */
+        NavaidDto: {
+            /**
+             * Format: guid
+             * @description Internal unique identifier.
+             */
+            id?: string;
+            /** @description FAA NASR field: NAV_ID. NAVAID facility identifier (e.g., DFW, AUS). Not globally unique — the same identifier may exist for different facility types. */
+            navId?: string;
+            /** @description FAA NASR field: NAV_TYPE. Facility type (e.g., VOR, VORTAC, NDB, DME, TACAN). */
+            navType?: components["schemas"]["NavaidType"];
+            /** @description FAA NASR field: NAV_STATUS. Current operational status of the facility. */
+            navStatus?: string;
+            /** @description FAA NASR field: NAME. Official name of the NAVAID facility. */
+            name?: string;
+            /** @description FAA NASR field: CITY. City associated with the NAVAID. */
+            city?: string;
+            /** @description FAA NASR field: STATE_CODE. Two-letter state or territory code (e.g., TX, CA). */
+            stateCode?: string | null;
+            /** @description FAA NASR field: STATE_NAME. Full state or territory name. */
+            stateName?: string | null;
+            /** @description FAA NASR field: COUNTRY_CODE. Two-letter country code (e.g., US). */
+            countryCode?: string;
+            /** @description FAA NASR field: COUNTRY_NAME. Full country name. */
+            countryName?: string;
+            /**
+             * Format: decimal
+             * @description FAA NASR field: LAT_DECIMAL. Latitude in decimal degrees (WGS 84).
+             */
+            latitude?: number | null;
+            /**
+             * Format: decimal
+             * @description FAA NASR field: LONG_DECIMAL. Longitude in decimal degrees (WGS 84).
+             */
+            longitude?: number | null;
+            /**
+             * Format: decimal
+             * @description FAA NASR field: ELEV. Elevation in feet above MSL.
+             */
+            elevation?: number | null;
+            /** @description FAA NASR field: OWNER. Name of the facility owner. */
+            owner?: string | null;
+            /** @description FAA NASR field: OPERATOR. Name of the facility operator. */
+            operator?: string | null;
+            /** @description FAA NASR field: NAS_USE_FLAG. Whether the facility is part of the National Airspace System. */
+            nasUse?: boolean;
+            /** @description FAA NASR field: PUBLIC_USE_FLAG. Whether the facility is for public use. */
+            publicUse?: boolean;
+            /**
+             * Format: int32
+             * @description FAA NASR field: MAG_VARN. Magnetic variation in degrees.
+             */
+            magneticVariation?: number | null;
+            /** @description FAA NASR field: MAG_VARN_HEMIS. Magnetic variation direction (E or W). */
+            magneticVariationDirection?: string | null;
+            /**
+             * Format: int32
+             * @description FAA NASR field: MAG_VARN_YEAR. Year the magnetic variation was last determined.
+             */
+            magneticVariationYear?: number | null;
+            /**
+             * Format: decimal
+             * @description FAA NASR field: FREQ. Transmitted frequency in MHz (VOR) or kHz (NDB).
+             */
+            frequency?: number | null;
+            /** @description FAA NASR field: CHAN. TACAN/VORTAC channel designation (e.g., 78X). */
+            channel?: string | null;
+            /** @description FAA NASR field: VOICE_CALL. Voice call name used by the facility. */
+            voiceCall?: string | null;
+            /** @description FAA NASR field: OPER_HOURS. Hours of operation (e.g., CONTINUOUS, 0600-2200). */
+            operatingHours?: string | null;
+            /** @description FAA NASR field: NDB_CLASS_CODE. NDB class code (e.g., HH, MHW, H-SAB/LOM). Only applicable to NDB facility types. */
+            ndbClassCode?: string | null;
+            /** @description FAA NASR field: ALT_CODE. VOR Standard Service Volume classification (e.g., High, Low, Terminal). */
+            altCode?: components["schemas"]["VorServiceVolume"] | null;
+            /** @description FAA NASR field: DME_SSV. DME Standard Service Volume classification (e.g., High, Low, Terminal). */
+            dmeSsv?: components["schemas"]["DmeServiceVolume"] | null;
+            /** @description FAA NASR field: SIMUL_VOICE_FLAG. Whether the facility broadcasts voice simultaneously on the navigation frequency. */
+            simultaneousVoice?: boolean;
+            /** @description FAA NASR field: AUTO_VOICE_ID_FLAG. Whether the facility has automatic voice identification. */
+            automaticVoiceId?: boolean;
+            /** @description FAA NASR field: HIWAS_FLAG. Whether the facility broadcasts Hazardous Inflight Weather Advisory Service. */
+            hiwas?: boolean;
+            /** @description FAA NASR field: LOW_NAV_ON_HIGH_CHART_FLAG. Whether this low-altitude NAVAID appears on high-altitude charts. */
+            lowNavOnHighChart?: boolean;
+            /**
+             * Format: int32
+             * @description FAA NASR field: PWR_OUTPUT. Transmitter power output in watts.
+             */
+            powerOutput?: number | null;
+            /** @description FAA NASR field: TACAN_DME_STATUS. Operational status of the co-located TACAN or DME component. */
+            tacanDmeStatus?: string | null;
+            /**
+             * Format: decimal
+             * @description FAA NASR field: TACAN_DME_LAT_DECIMAL. Latitude of the TACAN/DME antenna in decimal degrees (WGS 84). May differ from the VOR position.
+             */
+            tacanDmeLatitude?: number | null;
+            /**
+             * Format: decimal
+             * @description FAA NASR field: TACAN_DME_LONG_DECIMAL. Longitude of the TACAN/DME antenna in decimal degrees (WGS 84).
+             */
+            tacanDmeLongitude?: number | null;
+            /** @description FAA NASR field: HIGH_ALT_ARTCC_ID. Identifier of the high-altitude Air Route Traffic Control Center. */
+            highAltArtccId?: string | null;
+            /** @description FAA NASR field: HIGH_ARTCC_NAME. Name of the high-altitude ARTCC. */
+            highArtccName?: string | null;
+            /** @description FAA NASR field: LOW_ALT_ARTCC_ID. Identifier of the low-altitude ARTCC. */
+            lowAltArtccId?: string | null;
+            /** @description FAA NASR field: LOW_ARTCC_NAME. Name of the low-altitude ARTCC. */
+            lowArtccName?: string | null;
+            /** @description FAA NASR field: FSS_ID. Identifier of the associated Flight Service Station. */
+            fssId?: string | null;
+            /** @description FAA NASR field: FSS_NAME. Name of the associated Flight Service Station. */
+            fssName?: string | null;
+            /** @description FAA NASR field: NOTAM_ID. NOTAM identifier for the facility. */
+            notamId?: string | null;
+            /**
+             * Format: date-time
+             * @description FAA NASR field: EFFECTIVE_DATE. Date the current NASR data cycle became effective.
+             */
+            effectiveDate?: string;
+            /** @description VOR receiver checkpoints associated with this NAVAID (from NAV2 records). */
+            checkpoints?: components["schemas"]["NavaidCheckpoint"][] | null;
+            /** @description Remarks associated with this NAVAID (from NAV6 records). */
+            remarks?: components["schemas"]["NavaidRemark"][] | null;
+        };
+        /**
+         * @description NAVAID facility type. Corresponds to FAA NASR field NAV_TYPE (NAV1).
+         * @enum {string}
+         */
+        NavaidType: "Unknown" | "Consolan" | "Dme" | "FanMarker" | "MarineNdb" | "MarineNdbDme" | "Ndb" | "NdbDme" | "Tacan" | "UhfNdb" | "Vor" | "Vortac" | "VorDme" | "Vot";
+        /**
+         * @description VOR Standard Service Volume classification. Corresponds to FAA NASR field ALT_CODE (NAV1).
+         * @enum {string}
+         */
+        VorServiceVolume: "Unknown" | "High" | "Low" | "Terminal" | "VorHigh" | "VorLow";
+        /**
+         * @description DME Standard Service Volume classification. Corresponds to FAA NASR field DME_SSV (NAV1).
+         * @enum {string}
+         */
+        DmeServiceVolume: "Unknown" | "High" | "Low" | "Terminal" | "DmeHigh" | "DmeLow";
+        NavaidCheckpoint: {
+            /**
+             * Format: int32
+             * @description Altitude only when checkpoint is in air.
+             */
+            altitude?: number | null;
+            /**
+             * Format: int32
+             * @description Bearing of checkpoint.
+             */
+            bearing?: number;
+            /** @description Air/Ground Code: A=AIR, G=GROUND, G1=GROUND ONE. */
+            airGroundCode?: string;
+            /** @description Narrative description associated with the checkpoint. */
+            description?: string;
+            /** @description Airport ID associated with the checkpoint. */
+            airportId?: string | null;
+            /** @description State code in which associated city is located. */
+            stateCode?: string;
+        };
+        NavaidRemark: {
+            /** @description NASR table associated with remark. */
+            tabName?: string;
+            /** @description NASR column name associated with remark. */
+            referenceColumnName?: string;
+            /**
+             * Format: int32
+             * @description Sequence number assigned to reference column remark.
+             */
+            sequenceNumber?: number;
+            /** @description Remark text (free form text that further describes a specific information item). */
+            remark?: string;
+        };
+        /**
          * @description Complete navigation log calculation result for a VFR cross-country flight.
          *     Includes per-leg calculations (course, speed, fuel, wind) and references to airspace and obstacle
          *     data along the route. Use the returned identifiers with the Airspace and Obstacle endpoints to
@@ -4448,6 +4746,13 @@ export type PressureAltitudeResponseDto = components['schemas']['PressureAltitud
 export type PressureAltitudeRequestDto = components['schemas']['PressureAltitudeRequestDto'];
 export type PaginatedResponseOfGAirmetDto = components['schemas']['PaginatedResponseOfGAirmetDto'];
 export type PaginatedResponseOfMetarDto = components['schemas']['PaginatedResponseOfMetarDto'];
+export type PaginatedResponseOfNavaidDto = components['schemas']['PaginatedResponseOfNavaidDto'];
+export type NavaidDto = components['schemas']['NavaidDto'];
+export type NavaidType = components['schemas']['NavaidType'];
+export type VorServiceVolume = components['schemas']['VorServiceVolume'];
+export type DmeServiceVolume = components['schemas']['DmeServiceVolume'];
+export type NavaidCheckpoint = components['schemas']['NavaidCheckpoint'];
+export type NavaidRemark = components['schemas']['NavaidRemark'];
 export type NavlogResponseDto = components['schemas']['NavlogResponseDto'];
 export type NavigationLegDto = components['schemas']['NavigationLegDto'];
 export type WaypointDto = components['schemas']['WaypointDto'];
@@ -5564,6 +5869,180 @@ export interface operations {
                 };
             };
             /** @description If the state parameter is empty */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+        };
+    };
+    Navaid_GetNavaids: {
+        parameters: {
+            query?: {
+                /** @description Search across NavId (starts with), Name (contains), and City (contains) */
+                search?: string | null;
+                /** @description Filter by navaid facility type (e.g., VOR, VORTAC, VOR/DME, NDB, NDB/DME, TACAN, DME) */
+                type?: string | null;
+                /** @description Filter by two-letter state code (e.g., TX, CA) */
+                state?: string | null;
+                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+                cursor?: string | null;
+                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Returns the navaids */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedResponseOfNavaidDto"];
+                };
+            };
+        };
+    };
+    Navaid_GetByType: {
+        parameters: {
+            query?: {
+                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+                cursor?: string | null;
+                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+                limit?: number;
+            };
+            header?: never;
+            path: {
+                /** @description NAVAID facility type enum value */
+                type: components["schemas"]["NavaidType"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Returns the navaids */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedResponseOfNavaidDto"];
+                };
+            };
+        };
+    };
+    Navaid_GetByIdentifier: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description NAVAID facility identifier (e.g., DFW, AUS, BIE) */
+                navId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Returns the matching navaids */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NavaidDto"][];
+                };
+            };
+            /** @description If the identifier is empty */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+            /** @description If no navaids match the identifier */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+        };
+    };
+    Navaid_GetBatch: {
+        parameters: {
+            query?: {
+                /** @description Comma-separated list of NAVAID identifiers (maximum 100) */
+                ids?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Returns the matching navaids (may include multiple per identifier) */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NavaidDto"][];
+                };
+            };
+            /** @description If the list is empty or exceeds 100 identifiers */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+        };
+    };
+    Navaid_SearchNearby: {
+        parameters: {
+            query?: {
+                /** @description Latitude in decimal degrees (-90 to 90) */
+                lat?: number;
+                /** @description Longitude in decimal degrees (-180 to 180) */
+                lon?: number;
+                /** @description Search radius in nautical miles (default 30, must be greater than 0) */
+                radiusNm?: number;
+                /** @description Optional navaid type filter (e.g., VOR, VORTAC, NDB) */
+                type?: string | null;
+                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+                cursor?: string | null;
+                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Returns the navaids found */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedResponseOfNavaidDto"];
+                };
+            };
+            /** @description If coordinates or radius are invalid */
             400: {
                 headers: {
                     [name: string]: unknown;

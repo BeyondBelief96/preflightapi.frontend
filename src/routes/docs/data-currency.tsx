@@ -51,8 +51,16 @@ function DataCurrencyDocs() {
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold">Weather Data</h2>
         <p className="text-muted-foreground">
-          Weather products are polled from the NOAA Aviation Weather API on
-          short intervals.
+          Weather products are polled from the{' '}
+          <a
+            href="https://aviationweather.gov/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-accent hover:underline"
+          >
+            NOAA Aviation Weather Center
+          </a>{' '}
+          on short intervals.
         </p>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -128,22 +136,40 @@ function DataCurrencyDocs() {
                 {
                   name: 'Airports & Runways',
                   source: 'FAA NASR',
+                  url: 'https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/',
                   time: '10:00 UTC',
                 },
                 {
                   name: 'Communication Frequencies',
                   source: 'FAA NASR',
+                  url: 'https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/',
                   time: '10:30 UTC',
+                },
+                {
+                  name: 'NAVAIDs',
+                  source: 'FAA NASR',
+                  url: 'https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/',
+                  time: '11:00 UTC',
                 },
                 {
                   name: 'Terminal Procedures',
                   source: 'FAA d-TPP',
+                  url: 'https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/dtpp/',
                   time: '12:30 UTC',
                 },
               ].map((row) => (
                 <tr key={row.name} className="border-b">
                   <td className="py-2 font-medium">{row.name}</td>
-                  <td className="py-2 text-muted-foreground">{row.source}</td>
+                  <td className="py-2 text-muted-foreground">
+                    <a
+                      href={row.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-accent hover:underline"
+                    >
+                      {row.source}
+                    </a>
+                  </td>
                   <td className="py-2 text-muted-foreground">{row.time}</td>
                 </tr>
               ))}
@@ -165,23 +191,35 @@ function DataCurrencyDocs() {
               {[
                 {
                   name: 'Airspace',
-                  source: 'ArcGIS REST API',
+                  source: 'FAA ADDS',
+                  url: 'https://adds-faa.opendata.arcgis.com/',
                   time: '11:00 UTC',
                 },
                 {
                   name: 'Special Use Airspace',
-                  source: 'ArcGIS REST API',
+                  source: 'FAA ADDS',
+                  url: 'https://adds-faa.opendata.arcgis.com/',
                   time: '11:30 UTC',
                 },
                 {
                   name: 'Chart Supplements',
                   source: 'FAA d-CS',
+                  url: 'https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/dafd/',
                   time: '12:00 UTC',
                 },
               ].map((row) => (
                 <tr key={row.name} className="border-b">
                   <td className="py-2 font-medium">{row.name}</td>
-                  <td className="py-2 text-muted-foreground">{row.source}</td>
+                  <td className="py-2 text-muted-foreground">
+                    <a
+                      href={row.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-accent hover:underline"
+                    >
+                      {row.source}
+                    </a>
+                  </td>
                   <td className="py-2 text-muted-foreground">{row.time}</td>
                 </tr>
               ))}
@@ -199,8 +237,17 @@ function DataCurrencyDocs() {
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold">Obstacles</h2>
         <p className="text-muted-foreground">
-          Sourced from the FAA Digital Obstacle File (DOF). A full load runs
-          every 56-day cycle, with daily incremental changes in between.
+          Sourced from the{' '}
+          <a
+            href="https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/dof/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-accent hover:underline"
+          >
+            FAA Digital Obstacle File (DOF)
+          </a>
+          . A full load runs every 56-day cycle, with daily incremental changes
+          in between.
         </p>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -235,9 +282,18 @@ function DataCurrencyDocs() {
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold">NOTAMs</h2>
         <p className="text-muted-foreground">
-          NOTAMs are not tied to FAA publication cycles. A delta sync runs every
-          3 minutes to pick up new and updated NOTAMs, with a full reload daily
-          to ensure completeness.
+          Sourced from the{' '}
+          <a
+            href="https://nms.aim.faa.gov/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-accent hover:underline"
+          >
+            FAA NOTAM Management System (NMS)
+          </a>
+          . NOTAMs are not tied to FAA publication cycles. A delta sync runs
+          every 3 minutes to pick up new and updated NOTAMs, with a full reload
+          daily to ensure completeness.
         </p>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -450,7 +506,7 @@ X-Data-Sync-Age-Minutes: 5.0`}
           <Link to="/status" className="text-accent hover:underline">
             system status page
           </Link>{' '}
-          for a real-time dashboard showing the currency of all 14 data sources
+          for a real-time dashboard showing the currency of all 15 data sources
           with auto-refresh.
         </p>
       </section>

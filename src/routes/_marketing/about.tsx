@@ -227,33 +227,44 @@ function AboutPage() {
             {[
               {
                 source: 'aviationweather.gov',
+                url: 'https://aviationweather.gov/',
                 data: 'METARs, TAFs, PIREPs, SIGMETs, G-AIRMETs, winds aloft',
               },
               {
                 source: 'FAA NASR Subscription',
-                data: 'Airports, runways, frequencies — updated every 28 days',
+                url: 'https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/',
+                data: 'Airports, runways, frequencies, NAVAIDs — updated every 28 days',
               },
               {
-                source: 'FAA ArcGIS Services',
+                source: 'FAA Aeronautical Data Delivery System',
+                url: 'https://adds-faa.opendata.arcgis.com/',
                 data: 'Controlled & special-use airspace boundaries — updated every 56 days',
               },
               {
-                source: 'FAA NMS (NOTAM Management System)',
+                source: 'FAA NOTAM Management System',
+                url: 'https://nms.aim.faa.gov/',
                 data: 'Active NOTAMs by airport, geographic radius, or flight route',
               },
               {
-                source: 'FAA d-TPP & Charts',
+                source: 'FAA d-TPP & d-CS',
+                url: 'https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/dtpp/',
                 data: 'Terminal procedure charts (IAP, DP, STAR, airport diagrams) and Chart Supplement (A/FD) documents',
               },
               {
                 source: 'FAA Digital Obstacle File',
+                url: 'https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/dof/',
                 data: '625,000+ obstacles including towers, buildings, cranes, and terrain — updated daily',
               },
             ].map((item) => (
               <div key={item.source} className="rounded-xl border bg-card p-5">
-                <p className="text-sm font-semibold text-accent">
+                <a
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm font-semibold text-accent hover:underline"
+                >
                   {item.source}
-                </p>
+                </a>
                 <p className="mt-2 text-sm text-muted-foreground">
                   {item.data}
                 </p>
