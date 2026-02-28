@@ -263,7 +263,7 @@ console.log(data)`}
                 >
                   Airports
                 </Link>{' '}
-                — Search 19,600+ US airports, get details, runways, and
+                — Search 19,600+ US airports with details and
                 frequencies.
               </li>
               <li>

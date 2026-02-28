@@ -41,9 +41,17 @@ const GROUP_DEFS: Array<GroupDef> = [
     slug: 'airports',
     title: 'Airports',
     description:
-      'Airport details, runway data, surface types, lighting, markings, approaches, and controlling objects.',
+      'Airport details, communication frequencies, and facility information.',
     icon: 'plane',
     tags: ['Airports', 'Communication Frequencies'],
+  },
+  {
+    slug: 'runways',
+    title: 'Runways',
+    description:
+      'Runway dimensions, surface types, lighting, markings, weight-bearing capacity, runway ends, and approaches.',
+    icon: 'ruler',
+    tags: ['Runways'],
   },
   {
     slug: 'airspace',

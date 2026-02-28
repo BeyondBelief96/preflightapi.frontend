@@ -200,7 +200,7 @@ export const fetchDemoRunways = createServerFn()
   )
   .handler(async ({ data }) => {
     return demoFetch<Array<RunwayDto>>(
-      `/airports/${data.icao}/runways`,
+      `/runways/airport/${data.icao}`,
       CACHE_TTL.runways,
     )
   })

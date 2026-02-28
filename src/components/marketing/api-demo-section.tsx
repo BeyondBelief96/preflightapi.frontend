@@ -73,7 +73,7 @@ export function ApiDemoSection() {
               endpoints={[
                 { method: 'GET', path: '/airports/{icao}' },
                 { method: 'GET', path: '/metars/{icao}' },
-                { method: 'GET', path: '/airports/{icao}/runways' },
+                { method: 'GET', path: '/runways/airport/{icao}' },
                 {
                   method: 'GET',
                   path: '/communication-frequencies/{facilityId}',

@@ -43,6 +43,7 @@ export const sections = [
     title: 'Airports & Airspace',
     items: [
       { label: 'Airports', href: '/docs/airports' },
+      { label: 'Runways', href: '/docs/runways' },
       {
         label: 'Communication Frequencies',
         href: '/docs/communication-frequencies',
@@ -76,6 +77,7 @@ export const sections = [
       { label: 'Overview', href: '/docs/data-models', exact: true },
       { label: 'Weather', href: '/docs/data-models/weather' },
       { label: 'Airports', href: '/docs/data-models/airports' },
+      { label: 'Runways', href: '/docs/data-models/runways' },
       { label: 'Airspace', href: '/docs/data-models/airspace' },
       { label: 'NOTAMs', href: '/docs/data-models/notams' },
       { label: 'Obstacles', href: '/docs/data-models/obstacles' },

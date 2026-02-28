@@ -192,7 +192,7 @@ export const ENDPOINT_ACCESS: Record<string, EndpointTier> = {
   taf: 'student',
   'airports/search': 'student',
   'airports/details': 'student',
-  'airports/runways': 'student',
+  runways: 'student',
   'airports/frequencies': 'student',
   pirep: 'private',
   sigmet: 'private',

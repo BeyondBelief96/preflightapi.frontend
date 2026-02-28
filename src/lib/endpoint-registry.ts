@@ -34,9 +34,14 @@ export const ENDPOINT_CATEGORIES: Array<EndpointCategoryEntry> = [
     href: '/docs/tafs',
   },
   {
-    label: 'Airports (search, details & runways)',
-    endpointKeys: ['airports/search', 'airports/details', 'airports/runways'],
+    label: 'Airports (search & details)',
+    endpointKeys: ['airports/search', 'airports/details'],
     href: '/docs/airports',
+  },
+  {
+    label: 'Runways',
+    endpointKeys: ['runways'],
+    href: '/docs/runways',
   },
   {
     label: 'Communication Frequencies',
@@ -155,7 +160,7 @@ export const PRICING_FEATURES: Array<PricingFeatureGroup> = [
         name: 'Airport information (19,600+ US airports)',
         endpointKey: 'airports/search',
       },
-      { name: 'Runways', endpointKey: 'airports/runways' },
+      { name: 'Runways', endpointKey: 'runways' },
       {
         name: 'Communication frequencies',
         endpointKey: 'airports/frequencies',
