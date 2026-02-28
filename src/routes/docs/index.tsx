@@ -170,6 +170,12 @@ const categoryGroups: Array<CategoryGroup> = [
     title: 'Navigation',
     items: [
       {
+        icon: 'radio',
+        title: 'NAVAIDs',
+        description: 'VOR, VORTAC, NDB, DME, and TACAN navigation aids.',
+        href: '/docs/navaids',
+      },
+      {
         icon: 'route',
         title: 'Navigation Log',
         description: 'Nav log, bearing & distance, and winds aloft.',
@@ -206,8 +212,34 @@ function DocsIndex() {
         calculations. It provides real-time METARs, Terminal Area Forecasts
         (TAFs), airport information, geospatial airspace boundaries, NOTAMs,
         Chart Supplements, Terminal Procedures, and many other flight planning
-        tools — sourced from NOAA, FAA NASR Subscriptions, the NOTAM Management
-        System, and more. Here's how to get started.
+        tools — sourced from{' '}
+        <a
+          href="https://aviationweather.gov/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-accent hover:underline"
+        >
+          NOAA
+        </a>
+        ,{' '}
+        <a
+          href="https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-accent hover:underline"
+        >
+          FAA NASR Subscriptions
+        </a>
+        , the{' '}
+        <a
+          href="https://nms.aim.faa.gov/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-accent hover:underline"
+        >
+          NOTAM Management System
+        </a>
+        , and more. Here's how to get started.
       </p>
 
       {/* Quick links */}
@@ -289,19 +321,21 @@ function DocsIndex() {
           <li>
             <strong className="text-foreground">Cursor-based pagination</strong>{' '}
             — Endpoints that can return large result sets use a paginated
-            wrapper. Use the <code>cursor</code> query parameter to fetch
-            subsequent pages. The <code>limit</code> parameter controls page
-            size (1–500, default 100).
+            wrapper with bidirectional navigation. Use the{' '}
+            <code>cursor</code> query parameter with either{' '}
+            <code>nextCursor</code> or <code>previousCursor</code> to page
+            forward or backward. The <code>limit</code> parameter controls
+            page size (1–500, default 100).
           </li>
           <li>
             <strong className="text-foreground">Structured errors</strong> —
-            Backend errors return a{' '}
+            All errors — gateway and backend — return a{' '}
             <Link to="/docs/errors" className="text-accent hover:underline">
-              structured response
+              unified response format
             </Link>{' '}
             with a machine-readable <code>code</code>, human-readable{' '}
             <code>message</code>, and a <code>traceId</code> for support.
-            Gateway errors (auth, rate limit, quota) use a simpler format.
+            Validation errors include field-level details.
           </li>
           <li>
             <strong className="text-foreground">Response caching</strong> — GET
@@ -327,6 +361,8 @@ function DocsIndex() {
   "pagination": {
     "nextCursor": "eyJpZCI6MTAwfQ==",
     "hasMore": true,
+    "previousCursor": null,
+    "hasPrevious": false,
     "limit": 100
   }
 }`}

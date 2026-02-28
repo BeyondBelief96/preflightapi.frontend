@@ -4,7 +4,7 @@ export const SITE_CONFIG = {
   name: 'PreflightAPI',
   tagline: 'Aviation Data API for Developers',
   description:
-    'Access real-time aviation data including METAR, TAF, NOTAMs, airport information, airspace data, and flight planning tools through a modern REST API.',
+    'Access real-time aviation data including METAR, TAF, NOTAMs, NAVAIDs, airport information, airspace data, and flight planning tools through a modern REST API.',
   url: 'https://preflightapi.io',
   supportEmail: 'support@preflightapi.io',
 } as const
@@ -50,6 +50,7 @@ export const TIER_FEATURES: Record<string, Array<string>> = {
     'VFR navigation log generation with wind correction and fuel burn calculations',
     'Bearing & distance calculations between geographic coordinates',
     'Winds aloft forecasts (6/12/24 hr) from aviationweather.gov',
+    'Full FAA NAVAID database (VOR, VORTAC, NDB, DME, TACAN)',
     'FAA terminal procedure charts (IAP, DP, STAR, airport diagrams)',
     'Official FAA chart supplement (A/FD) PDFs',
     'Always up-to-date with the latest FAA data',
@@ -213,6 +214,7 @@ export const ENDPOINT_ACCESS: Record<string, EndpointTier> = {
   'e6b/calculator': 'commercial',
   'navigation/nav-log': 'commercial',
   'briefing/route': 'commercial',
+  navaids: 'commercial',
 } as const
 
 export const DEFAULT_PLAN_LIMITS: Record<

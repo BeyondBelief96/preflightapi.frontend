@@ -27,7 +27,8 @@ const cacheDurations = [
     duration: '10 minutes',
   },
   {
-    category: 'Static / NASR data (airports, frequencies, airspace, obstacles)',
+    category:
+      'Static / NASR data (airports, frequencies, airspace, obstacles, NAVAIDs)',
     duration: '15 minutes',
   },
 ]

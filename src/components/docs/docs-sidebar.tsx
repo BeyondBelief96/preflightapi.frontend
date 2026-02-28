@@ -65,7 +65,10 @@ export const sections = [
   },
   {
     title: 'Navigation',
-    items: [{ label: 'Navigation Log', href: '/docs/nav-log' }],
+    items: [
+      { label: 'NAVAIDs', href: '/docs/navaids' },
+      { label: 'Navigation Log', href: '/docs/nav-log' },
+    ],
   },
   {
     title: 'Data Models',

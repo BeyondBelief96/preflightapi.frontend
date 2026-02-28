@@ -178,6 +178,8 @@ console.log(data)`}
   "pagination": {
     "nextCursor": "eyJpZCI6MTAwfQ==",
     "hasMore": true,
+    "previousCursor": null,
+    "hasPrevious": false,
     "limit": 100
   }
 }`}
@@ -185,7 +187,8 @@ console.log(data)`}
 
         <p className="text-muted-foreground">
           To fetch the next page, pass the <code>nextCursor</code> value as the{' '}
-          <code>cursor</code> query parameter. You can also control page size
+          <code>cursor</code> query parameter. To go back, pass{' '}
+          <code>previousCursor</code> instead. You can also control page size
           with the <code>limit</code> parameter (1–500, default 100).
         </p>
 
@@ -287,6 +290,16 @@ console.log(data)`}
                   Obstacles
                 </Link>{' '}
                 — 625,000+ FAA-charted obstacles (towers, cranes, antennas).
+              </li>
+              <li>
+                <Link
+                  to="/docs/navaids"
+                  className="text-accent hover:underline"
+                >
+                  NAVAIDs
+                </Link>{' '}
+                — VOR, VORTAC, NDB, DME, and TACAN navigation aids with spatial
+                search.
               </li>
             </ul>
           </div>

@@ -12,26 +12,78 @@ const features = [
   {
     icon: Cloud,
     title: 'Real-Time Weather',
-    description:
-      'METARs, TAFs, PIREPs, SIGMETs, G-AIRMETs, and winds aloft. Sourced from aviationweather.gov.',
+    description: (
+      <>
+        METARs, TAFs, PIREPs, SIGMETs, G-AIRMETs, and winds aloft. Sourced
+        from{' '}
+        <a
+          href="https://aviationweather.gov/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-accent hover:underline"
+        >
+          aviationweather.gov
+        </a>
+        .
+      </>
+    ),
   },
   {
     icon: TowerControl,
     title: '19,600+ US Airports',
-    description:
-      'Sourced from the FAA NASR subscription. Runways, frequencies, terminal procedures, chart supplements. Updated every 28 days.',
+    description: (
+      <>
+        Sourced from the{' '}
+        <a
+          href="https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-accent hover:underline"
+        >
+          FAA NASR subscription
+        </a>
+        . Runways, frequencies, terminal procedures, chart supplements. Updated
+        every 28 days.
+      </>
+    ),
   },
   {
     icon: Map,
     title: 'Airspace Boundaries',
-    description:
-      'Class B, C, D and special use airspace with full geospatial boundaries and coordinates. From FAA Aeronautical Data Delivery System. Updated every 56 days.',
+    description: (
+      <>
+        Class B, C, D and special use airspace with full geospatial boundaries
+        and coordinates. From the{' '}
+        <a
+          href="https://adds-faa.opendata.arcgis.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-accent hover:underline"
+        >
+          FAA Aeronautical Data Delivery System
+        </a>
+        . Updated every 56 days.
+      </>
+    ),
   },
   {
     icon: AlertTriangle,
     title: 'NOTAMs',
-    description:
-      "Straight from the FAA NOTAM Management System. Don't worry about applying for access, we've already done it for you.",
+    description: (
+      <>
+        Straight from the{' '}
+        <a
+          href="https://nms.aim.faa.gov/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-accent hover:underline"
+        >
+          FAA NOTAM Management System
+        </a>
+        . Don&apos;t worry about applying for access, we&apos;ve already done it
+        for you.
+      </>
+    ),
   },
   {
     icon: Navigation,

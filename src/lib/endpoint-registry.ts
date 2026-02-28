@@ -104,6 +104,11 @@ export const ENDPOINT_CATEGORIES: Array<EndpointCategoryEntry> = [
     href: '/docs/e6b',
   },
   {
+    label: 'NAVAIDs',
+    endpointKeys: ['navaids'],
+    href: '/docs/navaids',
+  },
+  {
     label: 'Navigation Log',
     endpointKeys: [
       'navigation/nav-log',
@@ -179,6 +184,23 @@ export const PRICING_FEATURES: Array<PricingFeatureGroup> = [
       {
         name: 'Chart supplement (A/FD) PDFs',
         endpointKey: 'charts/supplements',
+      },
+    ],
+  },
+  {
+    category: 'Navigation Aids',
+    features: [
+      {
+        name: 'Full FAA NAVAID database (VOR, VORTAC, NDB, DME, TACAN)',
+        endpointKey: 'navaids',
+      },
+      {
+        name: 'Nearby NAVAID spatial search',
+        endpointKey: 'navaids',
+      },
+      {
+        name: 'VOR checkpoints & NAVAID remarks',
+        endpointKey: 'navaids',
       },
     ],
   },

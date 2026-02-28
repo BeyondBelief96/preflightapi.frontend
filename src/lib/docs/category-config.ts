@@ -124,6 +124,10 @@ export const CATEGORIES: Array<ApiCategory> = [
     description:
       tagsMeta['Airports'] ?? 'FAA airport data from the NASR database.',
     icon: 'plane',
+    intro:
+      'Comprehensive FAA NASR airport database covering 19,600+ US airports with facility details, ownership, services, and operational data. Supports search, filtering, and detailed lookups.',
+    learnMoreUrl: 'https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/',
+    learnMoreLabel: 'FAA NASR Subscription data',
     subcategories: [
       {
         tag: 'Airports',
@@ -139,6 +143,10 @@ export const CATEGORIES: Array<ApiCategory> = [
       tagsMeta['Communication Frequencies'] ??
       'Airport and facility communication frequency data.',
     icon: 'radio',
+    intro:
+      'FAA NASR communication frequency data for airport facilities including ATIS, tower, ground, clearance delivery, approach/departure, and more.',
+    learnMoreUrl: 'https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/',
+    learnMoreLabel: 'FAA NASR Subscription data',
     subcategories: [
       {
         tag: 'Communication Frequencies',
@@ -153,6 +161,10 @@ export const CATEGORIES: Array<ApiCategory> = [
     description:
       tagsMeta['Airspace'] ?? 'Controlled and special-use airspace boundaries.',
     icon: 'layers',
+    intro:
+      'Controlled (Class B, C, D, E) and special-use airspace boundaries with full geospatial coordinates. Sourced from the FAA Aeronautical Data Delivery System.',
+    learnMoreUrl: 'https://adds-faa.opendata.arcgis.com/',
+    learnMoreLabel: 'FAA Aeronautical Data Delivery System',
     subcategories: [
       {
         tag: 'Airspace',
@@ -166,6 +178,10 @@ export const CATEGORIES: Array<ApiCategory> = [
     title: 'NOTAMs',
     description: tagsMeta['NOTAMs'] ?? 'Notices to Air Missions.',
     icon: 'alert-triangle',
+    intro:
+      'Active Notices to Air Missions sourced from the FAA NOTAM Management System. Query by airport, geographic radius, or flight route with delta syncs every 3 minutes.',
+    learnMoreUrl: 'https://nms.aim.faa.gov/',
+    learnMoreLabel: 'FAA NOTAM Management System',
     subcategories: [
       {
         tag: 'NOTAMs',
@@ -179,6 +195,10 @@ export const CATEGORIES: Array<ApiCategory> = [
     title: 'Obstacles',
     description: tagsMeta['Obstacles'] ?? 'FAA-charted obstacles.',
     icon: 'triangle-alert',
+    intro:
+      'FAA Digital Obstacle File (DOF) with 625,000+ charted obstacles including towers, cranes, antennas, and other structures. Supports search, filtering, and spatial nearby queries.',
+    learnMoreUrl: 'https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/dof/',
+    learnMoreLabel: 'FAA Digital Obstacle File',
     subcategories: [
       {
         tag: 'Obstacles',
@@ -196,6 +216,10 @@ export const CATEGORIES: Array<ApiCategory> = [
       tagsMeta['Terminal Procedures'] ??
       'FAA terminal procedure chart PDFs (IAP, DP, STAR, airport diagrams, and more).',
     icon: 'file-text',
+    intro:
+      'FAA terminal procedure chart PDFs including instrument approach procedures, departure procedures, STARs, and airport diagrams from the Digital Terminal Procedures Publication.',
+    learnMoreUrl: 'https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/dtpp/',
+    learnMoreLabel: 'FAA Digital Terminal Procedures Publication',
     subcategories: [
       {
         tag: 'Terminal Procedures',
@@ -211,6 +235,10 @@ export const CATEGORIES: Array<ApiCategory> = [
     description:
       tagsMeta['Chart Supplements'] ?? 'FAA Chart Supplement (A/FD) PDFs.',
     icon: 'file-text',
+    intro:
+      'FAA Chart Supplement (formerly Airport/Facility Directory) PDFs with detailed information for every US airport including runway data, services, and NOTAMs.',
+    learnMoreUrl: 'https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/dafd/',
+    learnMoreLabel: 'FAA Digital Chart Supplements',
     subcategories: [
       {
         tag: 'Chart Supplements',
@@ -237,6 +265,26 @@ export const CATEGORIES: Array<ApiCategory> = [
   },
 
   // ── Navigation ───────────────────────────────────────
+  {
+    slug: 'navaids',
+    title: 'NAVAIDs',
+    description:
+      tagsMeta['Navaids'] ??
+      'FAA navigation aid data including VOR, VORTAC, NDB, DME, and TACAN facilities.',
+    icon: 'radio',
+    intro:
+      'Full FAA NASR navigation aid database with facility details, frequencies, service volumes, VOR checkpoints, and operational remarks. Supports search, batch lookup, and spatial nearby queries.',
+    learnMoreUrl: 'https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/',
+    learnMoreLabel: 'FAA NASR Subscription data',
+    subcategories: [
+      {
+        tag: 'Navaids',
+        label: 'NAVAIDs',
+        description:
+          'Search, filter, batch lookup, and spatial search for navigation aids.',
+      },
+    ],
+  },
   {
     slug: 'nav-log',
     title: 'Navigation Log',
