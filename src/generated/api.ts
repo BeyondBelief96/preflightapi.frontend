@@ -2080,7 +2080,7 @@ export interface components {
             /** @description GeoJSON boundary geometry. */
             geometry?: components["schemas"]["GeoJsonGeometry"] | null;
         };
-        /** @description GeoJSON geometry representing an airspace boundary. */
+        /** @description GeoJSON geometry object with a type and coordinate array. */
         GeoJsonGeometry: {
             /** @description Geometry type (e.g., Polygon, MultiPolygon). */
             type?: string;

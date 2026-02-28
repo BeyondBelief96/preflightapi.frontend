@@ -5292,7 +5292,7 @@
       },
       "GeoJsonGeometry": {
         "type": "object",
-        "description": "GeoJSON geometry representing an airspace boundary.",
+        "description": "GeoJSON geometry object with a type and coordinate array.",
         "additionalProperties": false,
         "properties": {
           "type": {
