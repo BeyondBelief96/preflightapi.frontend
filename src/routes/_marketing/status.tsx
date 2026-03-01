@@ -137,6 +137,19 @@ function formatCheckName(name: string): string {
   return CHECK_DISPLAY_NAMES[name] ?? name
 }
 
+function combineOverallStatus(
+  serviceStatus: OverallStatus,
+  currencyStatus?: string,
+): OverallStatus {
+  // Service outage always takes priority
+  if (serviceStatus === 'outage') return 'outage'
+  // Service degradation or stale data → degraded
+  if (serviceStatus === 'degraded') return 'degraded'
+  if (currencyStatus === 'critical' || currencyStatus === 'degraded')
+    return 'degraded'
+  return 'operational'
+}
+
 function checkStatusToServiceStatus(status: string): ServiceStatus {
   if (status === 'Healthy' || status === 'healthy') return 'operational'
   if (status === 'Unhealthy' || status === 'unhealthy') return 'outage'
@@ -543,7 +556,12 @@ function StatusPage() {
         {isLoading ? (
           <Skeleton className="h-24 w-full rounded-xl" />
         ) : data ? (
-          <OverallBanner status={data.overall} />
+          <OverallBanner
+            status={combineOverallStatus(
+              data.overall,
+              currency?.overallStatus,
+            )}
+          />
         ) : null}
 
         {/* Service cards */}
