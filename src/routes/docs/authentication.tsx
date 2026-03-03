@@ -1,6 +1,14 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
+import { useCallback, useEffect, useState } from 'react'
+import type { LanguageId } from '@/lib/docs/code-examples'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Callout } from '@/components/docs/callout'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { CodeBlock } from '@/components/docs/code-block'
 import { API_BASE_URL } from '@/lib/gateway-url'
 import { createPageHead } from '@/lib/seo'
@@ -10,16 +18,277 @@ export const Route = createFileRoute('/docs/authentication')({
     createPageHead({
       title: 'Authentication',
       description:
-        'Learn how to authenticate with the PreflightAPI using subscription keys. Includes examples for cURL, JavaScript, Python, and more.',
+        'Learn how to authenticate with the PreflightAPI using subscription keys. Includes examples for cURL, TypeScript, Python, Java, Go, C#, and PHP.',
       path: '/docs/authentication',
     }),
   component: AuthenticationDocs,
 })
 
+const STORAGE_KEY = 'preflight-docs-lang'
+const DEFAULT_LANG: LanguageId = 'curl'
+
 const tabTriggerClass =
   'rounded-none border-b-2 border-transparent px-3 py-1.5 text-xs data-[state=active]:border-accent data-[state=active]:bg-transparent'
 
+interface LangDef {
+  id: LanguageId
+  label: string
+}
+
+const LANGS: Array<LangDef> = [
+  { id: 'curl', label: 'cURL' },
+  { id: 'typescript', label: 'TypeScript' },
+  { id: 'python', label: 'Python' },
+  { id: 'java', label: 'Java' },
+  { id: 'go', label: 'Go' },
+  { id: 'csharp', label: 'C#' },
+  { id: 'php', label: 'PHP' },
+]
+
+function getStoredLang(): LanguageId {
+  if (typeof window === 'undefined') return DEFAULT_LANG
+  const stored = localStorage.getItem(STORAGE_KEY)
+  if (stored && LANGS.some((l) => l.id === stored)) return stored as LanguageId
+  return DEFAULT_LANG
+}
+
+interface CodeExample {
+  code: string
+  highlight: string
+}
+
+function getAuthExamples(
+  baseUrl: string,
+): Record<LanguageId, CodeExample> {
+  return {
+    curl: {
+      code: `curl -H "Ocp-Apim-Subscription-Key: YOUR_API_KEY" \\
+  "${baseUrl}/metars/KJFK"`,
+      highlight: 'bash',
+    },
+    typescript: {
+      code: `const response = await fetch(
+  '${baseUrl}/metars/KJFK',
+  {
+    headers: {
+      'Ocp-Apim-Subscription-Key': process.env.PREFLIGHT_API_KEY!,
+    },
+  },
+)`,
+      highlight: 'typescript',
+    },
+    python: {
+      code: `import requests
+
+response = requests.get(
+    "${baseUrl}/metars/KJFK",
+    headers={"Ocp-Apim-Subscription-Key": "YOUR_API_KEY"},
+)`,
+      highlight: 'python',
+    },
+    java: {
+      code: `import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
+HttpClient client = HttpClient.newHttpClient();
+
+HttpRequest request = HttpRequest.newBuilder()
+    .uri(URI.create("${baseUrl}/metars/KJFK"))
+    .header("Ocp-Apim-Subscription-Key", "YOUR_API_KEY")
+    .GET()
+    .build();
+
+HttpResponse<String> response = client.send(
+    request, HttpResponse.BodyHandlers.ofString()
+);`,
+      highlight: 'java',
+    },
+    go: {
+      code: `req, _ := http.NewRequest("GET", "${baseUrl}/metars/KJFK", nil)
+req.Header.Set("Ocp-Apim-Subscription-Key", "YOUR_API_KEY")
+
+resp, _ := http.DefaultClient.Do(req)`,
+      highlight: 'go',
+    },
+    csharp: {
+      code: `using System.Net.Http;
+
+var client = new HttpClient();
+client.DefaultRequestHeaders.Add(
+    "Ocp-Apim-Subscription-Key", "YOUR_API_KEY"
+);
+
+var response = await client.GetAsync("${baseUrl}/metars/KJFK");`,
+      highlight: 'csharp',
+    },
+    php: {
+      code: `<?php
+$ch = curl_init();
+
+curl_setopt($ch, CURLOPT_URL, "${baseUrl}/metars/KJFK");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    "Ocp-Apim-Subscription-Key: YOUR_API_KEY",
+]);
+
+$response = curl_exec($ch);
+curl_close($ch);`,
+      highlight: 'php',
+    },
+  }
+}
+
+function getEnvExamples(
+  baseUrl: string,
+): Record<LanguageId, CodeExample> {
+  return {
+    curl: {
+      code: `# Export the key in your shell
+export PREFLIGHT_API_KEY="your-subscription-key-here"
+
+curl -H "Ocp-Apim-Subscription-Key: $PREFLIGHT_API_KEY" \\
+  "${baseUrl}/metars/KJFK"`,
+      highlight: 'bash',
+    },
+    typescript: {
+      code: `// Read from environment variable
+const API_KEY = process.env.PREFLIGHT_API_KEY!
+
+const response = await fetch(
+  '${baseUrl}/metars/KJFK',
+  {
+    headers: { 'Ocp-Apim-Subscription-Key': API_KEY },
+  },
+)`,
+      highlight: 'typescript',
+    },
+    python: {
+      code: `import os
+import requests
+
+api_key = os.environ["PREFLIGHT_API_KEY"]
+
+response = requests.get(
+    "${baseUrl}/metars/KJFK",
+    headers={"Ocp-Apim-Subscription-Key": api_key},
+)`,
+      highlight: 'python',
+    },
+    java: {
+      code: `String apiKey = System.getenv("PREFLIGHT_API_KEY");
+
+HttpRequest request = HttpRequest.newBuilder()
+    .uri(URI.create("${baseUrl}/metars/KJFK"))
+    .header("Ocp-Apim-Subscription-Key", apiKey)
+    .GET()
+    .build();`,
+      highlight: 'java',
+    },
+    go: {
+      code: `apiKey := os.Getenv("PREFLIGHT_API_KEY")
+
+req, _ := http.NewRequest("GET", "${baseUrl}/metars/KJFK", nil)
+req.Header.Set("Ocp-Apim-Subscription-Key", apiKey)`,
+      highlight: 'go',
+    },
+    csharp: {
+      code: `var apiKey = Environment.GetEnvironmentVariable("PREFLIGHT_API_KEY")!;
+
+var client = new HttpClient();
+client.DefaultRequestHeaders.Add(
+    "Ocp-Apim-Subscription-Key", apiKey
+);
+
+var response = await client.GetAsync("${baseUrl}/metars/KJFK");`,
+      highlight: 'csharp',
+    },
+    php: {
+      code: `<?php
+$apiKey = getenv("PREFLIGHT_API_KEY");
+
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, "${baseUrl}/metars/KJFK");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    "Ocp-Apim-Subscription-Key: " . $apiKey,
+]);
+
+$response = curl_exec($ch);
+curl_close($ch);`,
+      highlight: 'php',
+    },
+  }
+}
+
+function MultiLangBlock({
+  examples,
+  lang,
+  onLangChange,
+}: {
+  examples: Record<LanguageId, CodeExample>
+  lang: LanguageId
+  onLangChange: (id: string) => void
+}) {
+  const current = examples[lang]
+
+  return (
+    <div>
+      <div className="hidden md:block">
+        <Tabs value={lang} onValueChange={onLangChange} className="w-full">
+          <TabsList className="h-auto bg-transparent p-0">
+            {LANGS.map((l) => (
+              <TabsTrigger key={l.id} value={l.id} className={tabTriggerClass}>
+                {l.label}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+          {LANGS.map((l) => (
+            <TabsContent key={l.id} value={l.id} className="mt-2">
+              <CodeBlock
+                code={examples[l.id].code}
+                language={examples[l.id].highlight}
+              />
+            </TabsContent>
+          ))}
+        </Tabs>
+      </div>
+      <div className="md:hidden">
+        <Select value={lang} onValueChange={onLangChange}>
+          <SelectTrigger size="sm" className="mb-2 w-full">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {LANGS.map((l) => (
+              <SelectItem key={l.id} value={l.id}>
+                {l.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <CodeBlock code={current.code} language={current.highlight} />
+      </div>
+    </div>
+  )
+}
+
 function AuthenticationDocs() {
+  const [lang, setLang] = useState<LanguageId>(DEFAULT_LANG)
+
+  useEffect(() => {
+    setLang(getStoredLang())
+  }, [])
+
+  const handleLangChange = useCallback((value: string) => {
+    const id = value as LanguageId
+    setLang(id)
+    localStorage.setItem(STORAGE_KEY, id)
+  }, [])
+
+  const authExamples = getAuthExamples(API_BASE_URL)
+  const envExamples = getEnvExamples(API_BASE_URL)
+
   return (
     <div className="space-y-10">
       <div>
@@ -57,50 +326,10 @@ function AuthenticationDocs() {
           is the recommended authentication method.
         </p>
 
-        <Tabs defaultValue="curl" className="w-full">
-          <TabsList className="h-auto bg-transparent p-0">
-            <TabsTrigger value="curl" className={tabTriggerClass}>
-              cURL
-            </TabsTrigger>
-            <TabsTrigger value="typescript" className={tabTriggerClass}>
-              TypeScript
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="curl" className="mt-2">
-            <CodeBlock
-              language="bash"
-              code={`curl -H "Ocp-Apim-Subscription-Key: YOUR_API_KEY" \\
-  "${API_BASE_URL}/metars/KJFK"`}
-            />
-          </TabsContent>
-          <TabsContent value="typescript" className="mt-2">
-            <CodeBlock
-              language="typescript"
-              code={`const response = await fetch(
-  '${API_BASE_URL}/metars/KJFK',
-  {
-    headers: {
-      'Ocp-Apim-Subscription-Key': process.env.PREFLIGHT_API_KEY!,
-    },
-  },
-)`}
-            />
-          </TabsContent>
-        </Tabs>
-      </section>
-
-      {/* Query Parameter Alternative */}
-      <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">Query Parameter Alternative</h2>
-        <p className="text-muted-foreground">
-          If adding a custom header is not possible in your environment, you can
-          pass the key as a <code>subscription-key</code> query parameter
-          instead. The header method is preferred since query parameters may
-          appear in server logs and browser history.
-        </p>
-        <CodeBlock
-          language="bash"
-          code={`curl "${API_BASE_URL}/metars/KJFK?subscription-key=YOUR_API_KEY"`}
+        <MultiLangBlock
+          examples={authExamples}
+          lang={lang}
+          onLangChange={handleLangChange}
         />
       </section>
 
@@ -162,37 +391,17 @@ function AuthenticationDocs() {
           code.
         </p>
 
-        <Tabs defaultValue="typescript" className="w-full">
-          <TabsList className="h-auto bg-transparent p-0">
-            <TabsTrigger value="typescript" className={tabTriggerClass}>
-              TypeScript
-            </TabsTrigger>
-            <TabsTrigger value="dotenv" className={tabTriggerClass}>
-              .env file
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="typescript" className="mt-2">
-            <CodeBlock
-              language="typescript"
-              code={`// Read from environment variable
-const API_KEY = process.env.PREFLIGHT_API_KEY!
+        <MultiLangBlock
+          examples={envExamples}
+          lang={lang}
+          onLangChange={handleLangChange}
+        />
 
-const response = await fetch(
-  '${API_BASE_URL}/metars/KJFK',
-  {
-    headers: { 'Ocp-Apim-Subscription-Key': API_KEY },
-  },
-)`}
-            />
-          </TabsContent>
-          <TabsContent value="dotenv" className="mt-2">
-            <CodeBlock
-              language="bash"
-              code={`# .env (add to .gitignore!)
+        <CodeBlock
+          language="bash"
+          code={`# .env (add to .gitignore!)
 PREFLIGHT_API_KEY=your-subscription-key-here`}
-            />
-          </TabsContent>
-        </Tabs>
+        />
       </section>
 
       {/* Best Practices */}

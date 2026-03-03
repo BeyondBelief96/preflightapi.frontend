@@ -133,7 +133,7 @@ function DocsLayout() {
             </Link>
           </SignedOut>
           <SignedIn>
-            <Link to="/dashboard">
+            <Link to="/dashboard" className="hidden sm:inline-flex">
               <Button variant="ghost" size="sm">
                 Dashboard
               </Button>

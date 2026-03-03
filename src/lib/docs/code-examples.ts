@@ -210,3 +210,192 @@ export function generateTypeScript(endpoint: ParsedEndpoint): string {
 
   return code
 }
+
+/** Convert JSON string to Python-safe syntax (true/false/null → True/False/None) */
+function jsonToPython(json: string): string {
+  return json.replace(/: true/g, ': True').replace(/: false/g, ': False').replace(/: null/g, ': None')
+}
+
+export function generatePython(endpoint: ParsedEndpoint): string {
+  const url = buildUrl(endpoint)
+  const body = getExampleBody(endpoint)
+
+  let code = 'import requests\n\n'
+  code += `url = "${url}"\n`
+  code += 'headers = {\n'
+  code += '    "Ocp-Apim-Subscription-Key": "YOUR_API_KEY"'
+  if (body) {
+    code += ',\n    "Content-Type": "application/json"'
+  }
+  code += ',\n}\n'
+
+  if (body) {
+    code += `\npayload = ${jsonToPython(body)}\n`
+  }
+
+  code += `\nresponse = requests.${endpoint.method.toLowerCase()}(url, headers=headers`
+  if (body) {
+    code += ', json=payload'
+  }
+  code += ')\n'
+  code += 'data = response.json()\nprint(data)'
+
+  return code
+}
+
+export function generateJava(endpoint: ParsedEndpoint): string {
+  const url = buildUrl(endpoint)
+  const body = getExampleBody(endpoint)
+
+  let code = 'import java.net.URI;\n'
+  code += 'import java.net.http.HttpClient;\n'
+  code += 'import java.net.http.HttpRequest;\n'
+  code += 'import java.net.http.HttpResponse;\n\n'
+  code += 'HttpClient client = HttpClient.newHttpClient();\n\n'
+
+  if (body) {
+    code += `String json = """\n${body}""";\n\n`
+  }
+
+  code += 'HttpRequest request = HttpRequest.newBuilder()\n'
+  code += `    .uri(URI.create("${url}"))\n`
+  code += `    .header("Ocp-Apim-Subscription-Key", "YOUR_API_KEY")\n`
+
+  if (body) {
+    code += '    .header("Content-Type", "application/json")\n'
+    code += `    .${endpoint.method === 'GET' ? 'GET' : endpoint.method}(HttpRequest.BodyPublishers.ofString(json))\n`
+  } else {
+    code += `    .${endpoint.method}(${endpoint.method === 'GET' ? '' : 'HttpRequest.BodyPublishers.noBody()'})\n`
+  }
+
+  code += '    .build();\n\n'
+  code += 'HttpResponse<String> response = client.send(\n'
+  code += '    request, HttpResponse.BodyHandlers.ofString()\n);\n'
+  code += 'System.out.println(response.body());'
+
+  return code
+}
+
+export function generateGo(endpoint: ParsedEndpoint): string {
+  const url = buildUrl(endpoint)
+  const body = getExampleBody(endpoint)
+  const needsBody = !!body
+
+  let code = 'package main\n\nimport (\n'
+  code += '    "fmt"\n'
+  code += '    "io"\n'
+  code += '    "net/http"\n'
+  if (needsBody) {
+    code += '    "strings"\n'
+  }
+  code += ')\n\nfunc main() {\n'
+
+  if (needsBody) {
+    code += `    body := strings.NewReader(\`${body}\`)\n`
+    code += `    req, _ := http.NewRequest("${endpoint.method}", "${url}", body)\n`
+  } else {
+    code += `    req, _ := http.NewRequest("${endpoint.method}", "${url}", nil)\n`
+  }
+
+  code += '    req.Header.Set("Ocp-Apim-Subscription-Key", "YOUR_API_KEY")\n'
+  if (needsBody) {
+    code += '    req.Header.Set("Content-Type", "application/json")\n'
+  }
+
+  code += '\n    resp, _ := http.DefaultClient.Do(req)\n'
+  code += '    defer resp.Body.Close()\n'
+  code += '    data, _ := io.ReadAll(resp.Body)\n'
+  code += '    fmt.Println(string(data))\n'
+  code += '}'
+
+  return code
+}
+
+export function generateCSharp(endpoint: ParsedEndpoint): string {
+  const url = buildUrl(endpoint)
+  const body = getExampleBody(endpoint)
+
+  let code = 'using System.Net.Http;\n'
+  if (body) {
+    code += 'using System.Text;\n'
+  }
+  code += '\n'
+
+  code += 'var client = new HttpClient();\n'
+  code += 'client.DefaultRequestHeaders.Add(\n'
+  code += '    "Ocp-Apim-Subscription-Key", "YOUR_API_KEY"\n);\n'
+
+  if (body) {
+    code += `\nvar json = @"\n${body}";\n`
+    code += 'var content = new StringContent(json, Encoding.UTF8, "application/json");\n'
+  }
+
+  const methodMap: Record<string, string> = {
+    GET: 'GetAsync',
+    POST: 'PostAsync',
+    PUT: 'PutAsync',
+    DELETE: 'DeleteAsync',
+    PATCH: 'PatchAsync',
+  }
+  const method = methodMap[endpoint.method] ?? 'GetAsync'
+
+  if (body && endpoint.method !== 'GET') {
+    code += `\nvar response = await client.${method}("${url}", content);\n`
+  } else {
+    code += `\nvar response = await client.${method}("${url}");\n`
+  }
+
+  code += 'var data = await response.Content.ReadAsStringAsync();\n'
+  code += 'Console.WriteLine(data);'
+
+  return code
+}
+
+export function generatePhp(endpoint: ParsedEndpoint): string {
+  const url = buildUrl(endpoint)
+  const body = getExampleBody(endpoint)
+
+  let code = '<?php\n'
+  code += '$ch = curl_init();\n\n'
+  code += `curl_setopt($ch, CURLOPT_URL, "${url}");\n`
+  code += 'curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);\n'
+
+  if (endpoint.method !== 'GET') {
+    code += `curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "${endpoint.method}");\n`
+  }
+
+  code += '\ncurl_setopt($ch, CURLOPT_HTTPHEADER, [\n'
+  code += '    "Ocp-Apim-Subscription-Key: YOUR_API_KEY"'
+  if (body) {
+    code += ',\n    "Content-Type: application/json"'
+  }
+  code += ',\n]);\n'
+
+  if (body) {
+    code += `\ncurl_setopt($ch, CURLOPT_POSTFIELDS, '${body}');\n`
+  }
+
+  code += '\n$response = curl_exec($ch);\ncurl_close($ch);\n\n'
+  code += '$data = json_decode($response, true);\nprint_r($data);'
+
+  return code
+}
+
+export type LanguageId = 'curl' | 'typescript' | 'python' | 'java' | 'go' | 'csharp' | 'php'
+
+export interface LanguageOption {
+  id: LanguageId
+  label: string
+  highlight: string
+  generate: (endpoint: ParsedEndpoint) => string
+}
+
+export const LANGUAGES: Array<LanguageOption> = [
+  { id: 'curl', label: 'cURL', highlight: 'bash', generate: generateCurl },
+  { id: 'typescript', label: 'TypeScript', highlight: 'typescript', generate: generateTypeScript },
+  { id: 'python', label: 'Python', highlight: 'python', generate: generatePython },
+  { id: 'java', label: 'Java', highlight: 'java', generate: generateJava },
+  { id: 'go', label: 'Go', highlight: 'go', generate: generateGo },
+  { id: 'csharp', label: 'C#', highlight: 'csharp', generate: generateCSharp },
+  { id: 'php', label: 'PHP', highlight: 'php', generate: generatePhp },
+]

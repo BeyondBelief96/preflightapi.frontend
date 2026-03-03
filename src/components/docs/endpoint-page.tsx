@@ -10,6 +10,9 @@ import { SchemaLink } from './schema-link'
 import { ResponseViewer } from './response-viewer'
 import { CodeExamples } from './code-examples'
 import { TryItPlayground } from './try-it-playground'
+import { UseCaseBlock } from './use-case-block'
+import { AnnotatedResponse } from './annotated-response'
+import { EndpointTips } from './endpoint-tips'
 import type { ApiCategory, ParsedEndpoint } from '@/lib/docs/types'
 import { Button } from '@/components/ui/button'
 
@@ -61,6 +64,18 @@ export function EndpointPage({ endpoint, category }: EndpointPageProps) {
 
       {/* Content sections */}
       <div className="mt-8 space-y-8">
+        {/* Use Case */}
+        <UseCaseBlock operationId={endpoint.operationId} />
+
+        {/* Quick Code Example */}
+        <section>
+          <h2 className="mb-3 text-xl font-semibold">Code Examples</h2>
+          <CodeExamples endpoint={endpoint} />
+        </section>
+
+        {/* Annotated Response */}
+        <AnnotatedResponse operationId={endpoint.operationId} />
+
         {/* Description */}
         {endpoint.description && (
           <section>
@@ -103,19 +118,16 @@ export function EndpointPage({ endpoint, category }: EndpointPageProps) {
             </section>
           )}
 
-        {/* Responses */}
+        {/* Response Schema */}
         {endpoint.responses.length > 0 && (
           <section>
-            <h2 className="mb-3 text-xl font-semibold">Responses</h2>
+            <h2 className="mb-3 text-xl font-semibold">Response Schema</h2>
             <ResponseViewer responses={endpoint.responses} />
           </section>
         )}
 
-        {/* Code Examples */}
-        <section>
-          <h2 className="mb-3 text-xl font-semibold">Code Examples</h2>
-          <CodeExamples endpoint={endpoint} />
-        </section>
+        {/* Tips & Gotchas */}
+        <EndpointTips operationId={endpoint.operationId} />
 
         {/* Try It Playground */}
         <section>

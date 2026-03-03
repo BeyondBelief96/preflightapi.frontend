@@ -103,7 +103,7 @@ const categoryGroups: Array<CategoryGroup> = [
     ],
   },
   {
-    title: 'Airports & Airspace',
+    title: 'Airports & Facilities',
     items: [
       {
         icon: 'plane',
@@ -112,11 +112,22 @@ const categoryGroups: Array<CategoryGroup> = [
         href: '/docs/airports',
       },
       {
+        icon: 'plane',
+        title: 'Runways',
+        description: 'Runway dimensions, surfaces, and lighting.',
+        href: '/docs/runways',
+      },
+      {
         icon: 'radio',
         title: 'Communication Frequencies',
         description: 'Airport and facility radio frequencies.',
         href: '/docs/communication-frequencies',
       },
+    ],
+  },
+  {
+    title: 'Airspace & NOTAMs',
+    items: [
       {
         icon: 'layers',
         title: 'Airspace',
@@ -138,36 +149,7 @@ const categoryGroups: Array<CategoryGroup> = [
     ],
   },
   {
-    title: 'Documents',
-    items: [
-      {
-        icon: 'file-text',
-        title: 'Terminal Procedures',
-        description: 'FAA terminal procedure chart PDFs.',
-        href: '/docs/terminal-procedures',
-      },
-      {
-        icon: 'file-text',
-        title: 'Chart Supplements',
-        description: 'FAA Chart Supplement (A/FD) PDFs.',
-        href: '/docs/chart-supplements',
-      },
-    ],
-  },
-  {
-    title: 'E6B Flight Computer',
-    items: [
-      {
-        icon: 'calculator',
-        title: 'E6B Flight Computer',
-        description:
-          'Crosswind, density altitude, wind triangle, TAS, cloud base, and pressure altitude.',
-        href: '/docs/e6b',
-      },
-    ],
-  },
-  {
-    title: 'Navigation',
+    title: 'Navigation & Planning',
     items: [
       {
         icon: 'radio',
@@ -180,6 +162,35 @@ const categoryGroups: Array<CategoryGroup> = [
         title: 'Navigation Log',
         description: 'Nav log, bearing & distance, and winds aloft.',
         href: '/docs/nav-log',
+      },
+    ],
+  },
+  {
+    title: 'Utilities',
+    items: [
+      {
+        icon: 'calculator',
+        title: 'E6B Flight Computer',
+        description:
+          'Crosswind, density altitude, wind triangle, TAS, cloud base, and pressure altitude.',
+        href: '/docs/e6b',
+      },
+    ],
+  },
+  {
+    title: 'Charts & Procedures',
+    items: [
+      {
+        icon: 'file-text',
+        title: 'Terminal Procedures',
+        description: 'FAA terminal procedure chart PDFs.',
+        href: '/docs/terminal-procedures',
+      },
+      {
+        icon: 'file-text',
+        title: 'Chart Supplements',
+        description: 'FAA Chart Supplement (A/FD) PDFs.',
+        href: '/docs/chart-supplements',
       },
     ],
   },
@@ -446,7 +457,7 @@ function DocsIndex() {
                 <div>
                   <h3 className="font-semibold">Quick Start Guide</h3>
                   <p className="mt-1 text-sm text-muted-foreground">
-                    Get up and running with PreflightAPI in under 5 minutes.
+                    Get up and running with PreflightAPI in under 2 minutes.
                   </p>
                 </div>
               </CardContent>

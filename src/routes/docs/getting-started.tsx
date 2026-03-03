@@ -1,5 +1,16 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
+import { useCallback, useEffect, useState } from 'react'
+import { Calculator, Cloud, Plane, RouteIcon } from 'lucide-react'
+import type { LanguageId } from '@/lib/docs/code-examples'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Card, CardContent } from '@/components/ui/card'
 import { Callout } from '@/components/docs/callout'
 import { CodeBlock } from '@/components/docs/code-block'
 import { API_BASE_URL } from '@/lib/gateway-url'
@@ -11,66 +22,295 @@ export const Route = createFileRoute('/docs/getting-started')({
     createPageHead({
       title: 'Getting Started',
       description:
-        'Get started with PreflightAPI in minutes. Sign up for an API key, make your first request, and integrate aviation data into your application.',
+        'Get started with PreflightAPI in under 2 minutes. Sign up, get your API key, and make your first request.',
       path: '/docs/getting-started',
     }),
   component: GettingStartedDocs,
 })
 
+const STORAGE_KEY = 'preflight-docs-lang'
+const DEFAULT_LANG: LanguageId = 'curl'
+
 const tabTriggerClass =
   'rounded-none border-b-2 border-transparent px-3 py-1.5 text-xs data-[state=active]:border-accent data-[state=active]:bg-transparent'
+
+interface LangExample {
+  id: LanguageId
+  label: string
+  highlight: string
+}
+
+const LANGS: Array<LangExample> = [
+  { id: 'curl', label: 'cURL', highlight: 'bash' },
+  { id: 'typescript', label: 'TypeScript', highlight: 'typescript' },
+  { id: 'python', label: 'Python', highlight: 'python' },
+  { id: 'java', label: 'Java', highlight: 'java' },
+  { id: 'go', label: 'Go', highlight: 'go' },
+  { id: 'csharp', label: 'C#', highlight: 'csharp' },
+  { id: 'php', label: 'PHP', highlight: 'php' },
+]
+
+function getStoredLang(): LanguageId {
+  if (typeof window === 'undefined') return DEFAULT_LANG
+  const stored = localStorage.getItem(STORAGE_KEY)
+  if (stored && LANGS.some((l) => l.id === stored)) return stored as LanguageId
+  return DEFAULT_LANG
+}
+
+function getMetarExamples(
+  baseUrl: string,
+): Record<LanguageId, { code: string; highlight: string }> {
+  return {
+    curl: {
+      code: `curl -H "Ocp-Apim-Subscription-Key: YOUR_API_KEY" \\
+  "${baseUrl}/metars/KJFK"`,
+      highlight: 'bash',
+    },
+    typescript: {
+      code: `const response = await fetch(
+  '${baseUrl}/metars/KJFK',
+  {
+    headers: {
+      'Ocp-Apim-Subscription-Key': process.env.PREFLIGHT_API_KEY!,
+    },
+  },
+)
+
+const metar = await response.json()
+console.log(metar.flightCategory) // "VFR"`,
+      highlight: 'typescript',
+    },
+    python: {
+      code: `import requests
+
+response = requests.get(
+    "${baseUrl}/metars/KJFK",
+    headers={"Ocp-Apim-Subscription-Key": "YOUR_API_KEY"},
+)
+
+metar = response.json()
+print(metar["flightCategory"])  # "VFR"`,
+      highlight: 'python',
+    },
+    java: {
+      code: `import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
+HttpClient client = HttpClient.newHttpClient();
+
+HttpRequest request = HttpRequest.newBuilder()
+    .uri(URI.create("${baseUrl}/metars/KJFK"))
+    .header("Ocp-Apim-Subscription-Key", "YOUR_API_KEY")
+    .GET()
+    .build();
+
+HttpResponse<String> response = client.send(
+    request, HttpResponse.BodyHandlers.ofString()
+);
+System.out.println(response.body());`,
+      highlight: 'java',
+    },
+    go: {
+      code: `package main
+
+import (
+    "fmt"
+    "io"
+    "net/http"
+)
+
+func main() {
+    req, _ := http.NewRequest("GET", "${baseUrl}/metars/KJFK", nil)
+    req.Header.Set("Ocp-Apim-Subscription-Key", "YOUR_API_KEY")
+
+    resp, _ := http.DefaultClient.Do(req)
+    defer resp.Body.Close()
+    data, _ := io.ReadAll(resp.Body)
+    fmt.Println(string(data))
+}`,
+      highlight: 'go',
+    },
+    csharp: {
+      code: `using System.Net.Http;
+
+var client = new HttpClient();
+client.DefaultRequestHeaders.Add(
+    "Ocp-Apim-Subscription-Key", "YOUR_API_KEY"
+);
+
+var response = await client.GetAsync("${baseUrl}/metars/KJFK");
+var data = await response.Content.ReadAsStringAsync();
+Console.WriteLine(data);`,
+      highlight: 'csharp',
+    },
+    php: {
+      code: `<?php
+$ch = curl_init();
+
+curl_setopt($ch, CURLOPT_URL, "${baseUrl}/metars/KJFK");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    "Ocp-Apim-Subscription-Key: YOUR_API_KEY",
+]);
+
+$response = curl_exec($ch);
+curl_close($ch);
+
+$data = json_decode($response, true);
+print_r($data);`,
+      highlight: 'php',
+    },
+  }
+}
+
+function LanguageTabs({
+  examples,
+  lang,
+  onLangChange,
+}: {
+  examples: Record<LanguageId, { code: string; highlight: string }>
+  lang: LanguageId
+  onLangChange: (id: string) => void
+}) {
+  const current = examples[lang]
+
+  return (
+    <div>
+      {/* Desktop: tabs */}
+      <div className="hidden md:block">
+        <Tabs value={lang} onValueChange={onLangChange} className="w-full">
+          <TabsList className="h-auto bg-transparent p-0">
+            {LANGS.map((l) => (
+              <TabsTrigger key={l.id} value={l.id} className={tabTriggerClass}>
+                {l.label}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+          {LANGS.map((l) => (
+            <TabsContent key={l.id} value={l.id} className="mt-2">
+              <CodeBlock
+                code={examples[l.id].code}
+                language={examples[l.id].highlight}
+              />
+            </TabsContent>
+          ))}
+        </Tabs>
+      </div>
+      {/* Mobile: dropdown */}
+      <div className="md:hidden">
+        <Select value={lang} onValueChange={onLangChange}>
+          <SelectTrigger size="sm" className="mb-2 w-full">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {LANGS.map((l) => (
+              <SelectItem key={l.id} value={l.id}>
+                {l.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <CodeBlock code={current.code} language={current.highlight} />
+      </div>
+    </div>
+  )
+}
+
+const metarAnnotations = [
+  {
+    field: 'flightCategory',
+    explanation:
+      'VFR, MVFR, IFR, or LIFR — a quick go/no-go indicator based on visibility and ceiling.',
+  },
+  {
+    field: 'rawText',
+    explanation:
+      'The original encoded METAR string. Useful for display to pilots who prefer the raw format.',
+  },
+  {
+    field: 'windSpeedKt',
+    explanation:
+      'Sustained wind speed in knots. Combine with windDirDegrees to calculate crosswind.',
+  },
+  {
+    field: 'skyCondition',
+    explanation:
+      'Cloud layers with coverage (FEW, SCT, BKN, OVC) and base height in feet AGL.',
+  },
+]
 
 function GettingStartedDocs() {
   const { plans } = usePlans()
   const studentPlan = plans.find((p) => p.id === 'student')
   const freeName = studentPlan?.name ?? 'Student Pilot'
-  const freeCalls = studentPlan?.limits.callsPerMonth?.toLocaleString() ?? '5,000'
+  const freeCalls =
+    studentPlan?.limits.callsPerMonth?.toLocaleString() ?? '5,000'
+
+  const [lang, setLang] = useState<LanguageId>(DEFAULT_LANG)
+
+  useEffect(() => {
+    setLang(getStoredLang())
+  }, [])
+
+  const handleLangChange = useCallback((value: string) => {
+    const id = value as LanguageId
+    setLang(id)
+    localStorage.setItem(STORAGE_KEY, id)
+  }, [])
+
+  const metarExamples = getMetarExamples(API_BASE_URL)
 
   return (
     <div className="space-y-10">
       <div>
         <h1 className="text-3xl font-bold">Getting Started</h1>
         <p className="mt-4 text-lg text-muted-foreground">
-          Get up and running with PreflightAPI in under 5 minutes. By the end of
+          Get up and running with PreflightAPI in under 2 minutes. By the end of
           this guide you'll have made your first API call and received live
           METAR data.
         </p>
       </div>
 
-      {/* Step 1 */}
+      {/* Aviation Glossary */}
+      <Callout variant="note" title="New to aviation data?">
+        <strong>METAR</strong> — Hourly weather observation for an airport (wind,
+        visibility, clouds, temp).{' '}
+        <strong>TAF</strong> — Terminal forecast covering the next 24-30 hours.{' '}
+        <strong>ICAO code</strong> — 4-letter airport identifier (e.g., KJFK for
+        JFK International).{' '}
+        <strong>NOTAM</strong> — Notice to Air Missions: alerts about closed
+        runways, airspace restrictions, etc.
+      </Callout>
+
+      {/* Step 1: Sign Up & Get Key */}
       <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">1. Create an Account</h2>
+        <h2 className="text-2xl font-semibold">
+          1. Sign Up & Get Your API Key
+        </h2>
         <p className="text-muted-foreground">
-          Sign up for a free account at{' '}
+          Create a free account at{' '}
           <Link to="/sign-up" className="text-accent hover:underline">
             preflightapi.io/sign-up
-          </Link>
-          . No credit card required. You'll start on the{' '}
-          <strong className="text-foreground">{freeName}</strong> plan, which is
-          free and includes {freeCalls} API calls per month — enough to explore
-          every endpoint.
+          </Link>{' '}
+          — no credit card required. You'll start on the{' '}
+          <strong className="text-foreground">{freeName}</strong> plan with{' '}
+          {freeCalls} API calls per month.
         </p>
-      </section>
-
-      {/* Step 2 */}
-      <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">2. Get Your API Key</h2>
         <p className="text-muted-foreground">
-          After signing in, navigate to the{' '}
+          After signing in, go to the{' '}
           <Link to="/dashboard/keys" className="text-accent hover:underline">
             API Keys
           </Link>{' '}
-          page in your dashboard. Your subscription includes a{' '}
-          <strong className="text-foreground">primary</strong> and{' '}
-          <strong className="text-foreground">secondary</strong> key — both work
-          identically. Having two keys lets you rotate one without downtime.
-          Copy either key to use in the next step.
+          page and copy either your primary or secondary key. Both work
+          identically — having two lets you rotate without downtime.
         </p>
         <div className="rounded-lg border bg-muted/30 p-4">
           <p className="text-sm text-muted-foreground">
             Keep your API key secret. Never embed it in client-side code or
-            commit it to a public repository. Use environment variables to store
-            it in your application. See the{' '}
+            commit it to a public repository. See the{' '}
             <Link
               to="/docs/authentication"
               className="text-accent hover:underline"
@@ -80,56 +320,21 @@ function GettingStartedDocs() {
             for best practices.
           </p>
         </div>
-        <Callout variant="tip">
-          You can also explore the API without writing code — import our{' '}
-          <Link to="/docs/openapi" className="text-accent hover:underline">
-            OpenAPI spec
-          </Link>{' '}
-          into Postman, Insomnia, or any OpenAPI-compatible tool.
-        </Callout>
       </section>
 
-      {/* Step 3 */}
+      {/* Step 2: Make Your First Request */}
       <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">3. Make Your First Request</h2>
+        <h2 className="text-2xl font-semibold">2. Make Your First Request</h2>
         <p className="text-muted-foreground">
           Include your API key in the <code>Ocp-Apim-Subscription-Key</code>{' '}
-          header. Let's fetch the current METAR for JFK International Airport:
+          header. Let's fetch the current METAR for JFK International:
         </p>
 
-        <Tabs defaultValue="curl" className="w-full">
-          <TabsList className="h-auto bg-transparent p-0">
-            <TabsTrigger value="curl" className={tabTriggerClass}>
-              cURL
-            </TabsTrigger>
-            <TabsTrigger value="typescript" className={tabTriggerClass}>
-              TypeScript
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="curl" className="mt-2">
-            <CodeBlock
-              language="bash"
-              code={`curl -H "Ocp-Apim-Subscription-Key: YOUR_API_KEY" \\
-  "${API_BASE_URL}/metars/KJFK"`}
-            />
-          </TabsContent>
-          <TabsContent value="typescript" className="mt-2">
-            <CodeBlock
-              language="typescript"
-              code={`const response = await fetch(
-  '${API_BASE_URL}/metars/KJFK',
-  {
-    headers: {
-      'Ocp-Apim-Subscription-Key': process.env.PREFLIGHT_API_KEY!,
-    },
-  },
-)
-
-const data: Metar = await response.json()
-console.log(data)`}
-            />
-          </TabsContent>
-        </Tabs>
+        <LanguageTabs
+          examples={metarExamples}
+          lang={lang}
+          onLangChange={handleLangChange}
+        />
 
         <p className="text-sm text-muted-foreground">
           A successful response returns the current METAR observation:
@@ -156,186 +361,123 @@ console.log(data)`}
   "wxString": null
 }`}
         />
-      </section>
 
-      {/* Step 4 */}
-      <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">4. Understand the Response</h2>
-        <p className="text-muted-foreground">
-          Single-resource endpoints (like fetching a METAR by ICAO code) return
-          the object directly. Some collection endpoints — particularly those
-          that can return large or unbounded result sets — use a paginated
-          wrapper:
-        </p>
-
-        <CodeBlock
-          language="json"
-          code={`{
-  "data": [
-    { "stationId": "KJFK", "flightCategory": "VFR", ... },
-    { "stationId": "KLGA", "flightCategory": "MVFR", ... }
-  ],
-  "pagination": {
-    "nextCursor": "eyJpZCI6MTAwfQ==",
-    "hasMore": true,
-    "previousCursor": null,
-    "hasPrevious": false,
-    "limit": 100
-  }
-}`}
-        />
-
-        <p className="text-muted-foreground">
-          To fetch the next page, pass the <code>nextCursor</code> value as the{' '}
-          <code>cursor</code> query parameter. To go back, pass{' '}
-          <code>previousCursor</code> instead. You can also control page size
-          with the <code>limit</code> parameter (1–500, default 100).
-        </p>
-
-        <CodeBlock
-          language="bash"
-          code={`curl -H "Ocp-Apim-Subscription-Key: YOUR_API_KEY" \\
-  "${API_BASE_URL}/airports/search?state=NY&cursor=eyJpZCI6MTAwfQ==&limit=50"`}
-        />
-      </section>
-
-      {/* Step 5 */}
-      <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">5. Explore the API</h2>
-        <p className="text-muted-foreground">
-          Now that you've made your first request, explore the full range of
-          aviation data available. Here's a suggested learning path:
-        </p>
-
-        <div className="space-y-6">
-          <div>
-            <h3 className="mb-2 text-sm font-semibold text-foreground">
-              Weather
-            </h3>
-            <ul className="list-inside list-disc space-y-1.5 text-muted-foreground">
-              <li>
-                <Link to="/docs/metars" className="text-accent hover:underline">
-                  METARs
-                </Link>{' '}
-                &{' '}
-                <Link to="/docs/tafs" className="text-accent hover:underline">
-                  TAFs
-                </Link>{' '}
-                — Start here. Surface observations and terminal forecasts for
-                any US airport.
-              </li>
-              <li>
-                <Link to="/docs/pireps" className="text-accent hover:underline">
-                  PIREPs
-                </Link>{' '}
-                — Pilot reports of turbulence, icing, and sky conditions.
-              </li>
-              <li>
-                <Link
-                  to="/docs/sigmets"
-                  className="text-accent hover:underline"
-                >
-                  Domestic SIGMETs
-                </Link>{' '}
-                — Weather advisories and significant weather hazards.
-              </li>
-              <li>
-                <Link
-                  to="/docs/g-airmets"
-                  className="text-accent hover:underline"
-                >
-                  G-AIRMETs
-                </Link>{' '}
-                — Graphical AIRMET hazard areas with polygon boundaries.
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="mb-2 text-sm font-semibold text-foreground">
-              Airports & Airspace
-            </h3>
-            <ul className="list-inside list-disc space-y-1.5 text-muted-foreground">
-              <li>
-                <Link
-                  to="/docs/airports"
-                  className="text-accent hover:underline"
-                >
-                  Airports
-                </Link>{' '}
-                — Search 19,600+ US airports with details and
-                frequencies.
-              </li>
-              <li>
-                <Link
-                  to="/docs/airspace"
-                  className="text-accent hover:underline"
-                >
-                  Airspace
-                </Link>{' '}
-                — Query controlled (Class B/C/D/E) and special-use airspace
-                boundaries.
-              </li>
-              <li>
-                <Link to="/docs/notams" className="text-accent hover:underline">
-                  NOTAMs
-                </Link>{' '}
-                — Notices to Air Missions by airport, radius, or route.
-              </li>
-              <li>
-                <Link
-                  to="/docs/obstacles"
-                  className="text-accent hover:underline"
-                >
-                  Obstacles
-                </Link>{' '}
-                — 625,000+ FAA-charted obstacles (towers, cranes, antennas).
-              </li>
-              <li>
-                <Link
-                  to="/docs/navaids"
-                  className="text-accent hover:underline"
-                >
-                  NAVAIDs
-                </Link>{' '}
-                — VOR, VORTAC, NDB, DME, and TACAN navigation aids with spatial
-                search.
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="mb-2 text-sm font-semibold text-foreground">
-              Flight Planning
-            </h3>
-            <ul className="list-inside list-disc space-y-1.5 text-muted-foreground">
-              <li>
-                <Link to="/docs/e6b" className="text-accent hover:underline">
-                  E6B Flight Computer
-                </Link>{' '}
-                — Crosswind, density altitude, wind triangle, TAS, cloud base,
-                and pressure altitude calculations.
-              </li>
-              <li>
-                <Link
-                  to="/docs/nav-log"
-                  className="text-accent hover:underline"
-                >
-                  Navigation Log
-                </Link>{' '}
-                — Full navigation log with wind correction, fuel burn, bearing &
-                distance, and winds aloft.
-              </li>
-            </ul>
-          </div>
+        {/* Inline annotated response */}
+        <div className="space-y-2">
+          <h3 className="text-sm font-semibold text-foreground">
+            Key fields to know
+          </h3>
+          <dl className="space-y-2">
+            {metarAnnotations.map((ann) => (
+              <div
+                key={ann.field}
+                className="rounded-md border bg-muted/30 px-3 py-2"
+              >
+                <dt className="text-sm font-medium text-foreground">
+                  <code className="rounded bg-muted px-1.5 py-0.5 text-xs text-accent">
+                    {ann.field}
+                  </code>
+                </dt>
+                <dd className="mt-1 text-sm text-muted-foreground">
+                  {ann.explanation}
+                </dd>
+              </div>
+            ))}
+          </dl>
         </div>
 
         <Callout variant="tip">
-          Download the{' '}
+          Single-resource endpoints return the object directly. Collection
+          endpoints use a paginated wrapper with{' '}
+          <code>data</code> and <code>pagination</code> fields. See the{' '}
+          <Link to="/docs" className="text-accent hover:underline">
+            API overview
+          </Link>{' '}
+          for pagination details.
+        </Callout>
+      </section>
+
+      {/* Step 3: Explore */}
+      <section className="space-y-4">
+        <h2 className="text-2xl font-semibold">3. Explore the API</h2>
+        <p className="text-muted-foreground">
+          Now that you've made your first request, explore the full range of
+          aviation data available:
+        </p>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Link to="/docs/metars">
+            <Card className="h-full cursor-pointer transition-colors hover:border-accent/50 hover:bg-accent/5">
+              <CardContent className="flex items-start gap-3 p-4">
+                <div className="rounded-lg bg-accent/10 p-2 text-accent">
+                  <Cloud className="h-4 w-4" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold">Weather</h3>
+                  <p className="mt-0.5 text-xs text-muted-foreground">
+                    METARs, TAFs, PIREPs, SIGMETs, and G-AIRMETs
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+          <Link to="/docs/airports">
+            <Card className="h-full cursor-pointer transition-colors hover:border-accent/50 hover:bg-accent/5">
+              <CardContent className="flex items-start gap-3 p-4">
+                <div className="rounded-lg bg-accent/10 p-2 text-accent">
+                  <Plane className="h-4 w-4" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold">
+                    Airports & Airspace
+                  </h3>
+                  <p className="mt-0.5 text-xs text-muted-foreground">
+                    19,600+ airports, airspace boundaries, NOTAMs
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+          <Link to="/docs/e6b">
+            <Card className="h-full cursor-pointer transition-colors hover:border-accent/50 hover:bg-accent/5">
+              <CardContent className="flex items-start gap-3 p-4">
+                <div className="rounded-lg bg-accent/10 p-2 text-accent">
+                  <Calculator className="h-4 w-4" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold">
+                    E6B Flight Computer
+                  </h3>
+                  <p className="mt-0.5 text-xs text-muted-foreground">
+                    Crosswind, density altitude, wind triangle, TAS
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+          <Link to="/docs/nav-log">
+            <Card className="h-full cursor-pointer transition-colors hover:border-accent/50 hover:bg-accent/5">
+              <CardContent className="flex items-start gap-3 p-4">
+                <div className="rounded-lg bg-accent/10 p-2 text-accent">
+                  <RouteIcon className="h-4 w-4" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-semibold">Flight Planning</h3>
+                  <p className="mt-0.5 text-xs text-muted-foreground">
+                    Navigation log, bearing & distance, winds aloft
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+        </div>
+
+        <Callout variant="tip">
+          You can also explore without writing code — import our{' '}
           <Link to="/docs/openapi" className="text-accent hover:underline">
             OpenAPI spec
           </Link>{' '}
-          to generate typed clients or import into your favorite API tool.
+          into Postman, Insomnia, or any OpenAPI-compatible tool.
         </Callout>
       </section>
 
