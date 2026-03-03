@@ -82,7 +82,7 @@ export function PlanCTA({ plan }: { plan: PlanDefinition }) {
     },
   })
 
-  // Marketing-only plans (e.g. ATP) link to contact
+  // Marketing-only plans link to contact
   if (plan.marketingOnly) {
     return (
       <Link to="/contact">

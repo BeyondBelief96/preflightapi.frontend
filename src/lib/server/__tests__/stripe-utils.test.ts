@@ -8,11 +8,9 @@ vi.mock('@/env', () => ({
   env: {
     STRIPE_PRIVATE_PRICE_ID: 'price_private_test',
     STRIPE_COMMERCIAL_PRICE_ID: 'price_commercial_test',
-    STRIPE_ATP_PRICE_ID: 'price_atp_test',
     APIM_STUDENT_PRODUCT_ID: 'student-pilot',
     APIM_PRIVATE_PRODUCT_ID: 'private-pilot',
     APIM_COMMERCIAL_PRODUCT_ID: 'commercial-pilot',
-    APIM_ATP_PRODUCT_ID: 'atp',
   },
 }))
 
@@ -23,10 +21,6 @@ describe('planIdFromPriceId', () => {
 
   it('returns "commercial" for the commercial price ID', () => {
     expect(planIdFromPriceId('price_commercial_test')).toBe('commercial')
-  })
-
-  it('returns "atp" for the ATP price ID', () => {
-    expect(planIdFromPriceId('price_atp_test')).toBe('atp')
   })
 
   it('returns undefined for an unknown price ID', () => {
@@ -45,10 +39,6 @@ describe('getPriceIdForPlan', () => {
 
   it('returns the commercial price ID for "commercial"', () => {
     expect(getPriceIdForPlan('commercial')).toBe('price_commercial_test')
-  })
-
-  it('returns the ATP price ID for "atp"', () => {
-    expect(getPriceIdForPlan('atp')).toBe('price_atp_test')
   })
 
   it('returns undefined for "student" (free tier has no price)', () => {
@@ -73,23 +63,18 @@ describe('planIdFromProductId', () => {
     expect(planIdFromProductId('commercial-pilot')).toBe('commercial')
   })
 
-  it('maps atp → atp', () => {
-    expect(planIdFromProductId('atp')).toBe('atp')
-  })
-
   it('falls back to "student" for unknown product IDs', () => {
     expect(planIdFromProductId('unknown-product')).toBe('student')
   })
 })
 
 describe('getApimProductIds', () => {
-  it('returns all three product IDs', () => {
+  it('returns all product IDs', () => {
     const ids = getApimProductIds()
     expect(ids).toEqual({
       student: 'student-pilot',
       private: 'private-pilot',
       commercial: 'commercial-pilot',
-      atp: 'atp',
     })
   })
 })

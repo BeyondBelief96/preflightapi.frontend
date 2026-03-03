@@ -200,7 +200,7 @@ export const fetchDemoRunways = createServerFn()
   )
   .handler(async ({ data }) => {
     return demoFetch<Array<RunwayDto>>(
-      `/airports/${data.icao}/runways`,
+      `/runways/airport/${data.icao}`,
       CACHE_TTL.runways,
     )
   })
@@ -255,7 +255,7 @@ export const fetchDemoNavlog = createServerFn().handler(async () => {
         fuelOnBoardGals: 40,
       },
       plannedCruisingAltitude: 5500,
-      timeOfDeparture: new Date(Date.now()).toISOString(),
+      timeOfDeparture: new Date().toISOString(),
     },
   })
 })

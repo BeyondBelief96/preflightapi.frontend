@@ -89,27 +89,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/airports/{icaoCodeOrIdent}/runways": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Gets runways for a specific airport, including dimensions, surface type, lighting,
-         *     and detailed runway end information (approach types, markings, obstacles).
-         *     Runway heading data can be used with the E6B crosswind calculator endpoint.
-         */
-        get: operations["Airport_GetRunwaysByAirport"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/v1/airspaces/by-classes": {
         parameters: {
             query?: never;
@@ -1395,6 +1374,67 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/runways/airport/{icaoCodeOrIdent}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Gets runways for a specific airport by ICAO code or FAA identifier.
+         * @description ``` GET /api/v1/runways/airport/KDFW — runways at DFW GET /api/v1/runways/airport/DFW?includeGeometry=true — with ArcGIS polygon geometry ```
+         */
+        get: operations["Runway_GetRunwaysByAirport"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/runways": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Gets a paginated list of runways with optional filtering.
+         * @description ``` GET /api/v1/runways — all runways (paginated) GET /api/v1/runways?search=DFW — search by airport identifier, name, or city GET /api/v1/runways?surfaceType=Asphalt&minLength=5000 — asphalt runways 5000+ ft GET /api/v1/runways?state=TX&lighted=true — lighted runways in Texas ```
+         */
+        get: operations["Runway_GetRunways"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/runways/nearby": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Searches for runways near a geographic point using the parent airport's location.
+         *     Useful for finding diversion airports with suitable runways.
+         * @description ``` GET /api/v1/runways/nearby?lat=32.897&lon=-97.038 — default 30 NM radius GET /api/v1/runways/nearby?lat=32.897&lon=-97.038&minLength=4000&surfaceType=Asphalt — paved 4000+ ft runways GET /api/v1/runways/nearby?lat=32.897&lon=-97.038&includeGeometry=true — with polygon geometry ```
+         */
+        get: operations["Runway_SearchNearby"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/sigmets": {
         parameters: {
             query?: never;
@@ -1577,7 +1617,7 @@ export interface components {
          * @description Airport data from the FAA National Airspace System Resources (NASR) database.
          *     Combines data from APT_BASE, APT_ATT, and APT_CON CSV files.
          *     Use the airport's IcaoId or ArptId to query related endpoints such as runways
-         *     (GET /api/v1/airports/{icaoCodeOrIdent}/runways), communication frequencies
+         *     (GET /api/v1/runways/airport/{icaoCodeOrIdent}), communication frequencies
          *     (GET /api/v1/communication-frequencies/{servicedFacility}), METARs
          *     (GET /api/v1/metars/{icaoCodeOrIdent}), TAFs (GET /api/v1/tafs/{icaoCodeOrIdent}),
          *     airport diagrams (GET /api/v1/airport-diagrams/{icaoCodeOrIdent}), and
@@ -1955,450 +1995,6 @@ export interface components {
             path?: string | null;
         };
         /**
-         * @description Runway data from the FAA NASR database, sourced from APT_RWY.
-         *     Includes dimensions, surface, lighting, and weight-bearing information.
-         */
-        RunwayDto: {
-            /**
-             * Format: guid
-             * @description System-generated unique identifier.
-             */
-            id?: string;
-            /** @description FAA NASR field: RWY_ID. Runway identification (e.g., "01/19", "09L/27R", "H1" for helipad). */
-            runwayId?: string;
-            /**
-             * Format: int32
-             * @description FAA NASR field: RWY_LEN. Physical runway length to the nearest foot.
-             */
-            length?: number | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: RWY_WIDTH. Physical runway width to the nearest foot.
-             */
-            width?: number | null;
-            /**
-             * @description FAA NASR field: SURFACE_TYPE_CODE. Runway surface type.
-             *     Common values: Concrete (CONC), Asphalt (ASPH), Turf (TURF), Dirt (DIRT), Gravel (GRAVEL), Water (WATER).
-             */
-            surfaceType?: components["schemas"]["RunwaySurfaceType"];
-            /**
-             * @description FAA NASR field: TREATMENT_CODE. Runway surface treatment.
-             *     Possible values: Grooved (GRVD), PorousFrictionCourse (PFC), AggregateFrictionSealCoat (AFSC),
-             *     RubberizedFrictionSealCoat (RFSC), WireComb (WC), None (NONE).
-             */
-            surfaceTreatment?: components["schemas"]["RunwaySurfaceTreatment"];
-            /** @description FAA NASR field: PCN. Pavement Classification Number. See FAA Advisory Circular 150/5335-5 for code definitions and PCN determination formula. */
-            pavementClassification?: string | null;
-            /**
-             * @description FAA NASR field: RWY_LGT_CODE. Runway lights edge intensity.
-             *     Possible values: High (HIGH), Medium (MED), Low (LOW), Flood (FLD), NonStandard (NSTD), Perimeter (PERI), Strobe (STRB), None (NONE).
-             */
-            edgeLightIntensity?: components["schemas"]["RunwayEdgeLightIntensity"];
-            /**
-             * Format: int32
-             * @description FAA NASR field: GROSS_WT_SW. Runway weight-bearing capacity for single wheel type landing gear, in pounds.
-             */
-            weightBearingSingleWheel?: number | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: GROSS_WT_DW. Runway weight-bearing capacity for dual wheel type landing gear, in pounds.
-             */
-            weightBearingDualWheel?: number | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: GROSS_WT_DTW. Runway weight-bearing capacity for two dual wheels in tandem type landing gear, in pounds.
-             */
-            weightBearingDualTandem?: number | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: GROSS_WT_DDTW. Runway weight-bearing capacity for two dual wheels in tandem/two dual wheels in double tandem body gear type landing gear, in pounds.
-             */
-            weightBearingDoubleDualTandem?: number | null;
-            /**
-             * @description FAA NASR field: COND. Runway Surface Condition.
-             *     Possible values: EXCELLENT, GOOD, FAIR, POOR, FAILED.
-             */
-            surfaceCondition?: string | null;
-            /**
-             * @description FAA NASR field: PAVEMENT_TYPE_CODE. Pavement Type.
-             *     Possible values: R (Rigid), F (Flexible).
-             */
-            pavementTypeCode?: string | null;
-            /** @description FAA NASR field: SUBGRADE_STRENGTH_CODE. Subgrade Strength (Letters A-F). */
-            subgradeStrengthCode?: string | null;
-            /** @description FAA NASR field: TIRE_PRES_CODE. Tire Pressure Code (Letters W-Z). */
-            tirePressureCode?: string | null;
-            /**
-             * @description FAA NASR field: DTRM_METHOD_CODE. Determination Method for pavement strength.
-             *     Possible values: T (Technical), U (Using Aircraft).
-             */
-            determinationMethodCode?: string | null;
-            /** @description FAA NASR field: RWY_LEN_SOURCE. Source of runway length information. */
-            runwayLengthSource?: string | null;
-            /**
-             * Format: date-time
-             * @description FAA NASR field: LENGTH_SOURCE_DATE. Date of runway length source information.
-             */
-            lengthSourceDate?: string | null;
-            /** @description Runway end details for each direction (typically two per runway). */
-            runwayEnds?: components["schemas"]["RunwayEndDto"][];
-        };
-        /**
-         * @description Runway Surface Type. Corresponds to FAA NASR field SURFACE_TYPE_CODE (APT_RWY).
-         *     The value will usually be one of the common types or a combination of two types
-         *     when the runway is composed of distinct sections.
-         * @enum {string}
-         */
-        RunwaySurfaceType: "Unknown" | "Concrete" | "Asphalt" | "Snow" | "Ice" | "Mats" | "Treated" | "Gravel" | "Turf" | "Dirt" | "PartiallyPaved" | "Rooftop" | "Water" | "Aluminum" | "Brick" | "Caliche" | "Coral" | "Deck" | "Grass" | "Metal" | "NonStandard" | "OilChip" | "Psp" | "Sand" | "Sod" | "Steel" | "Wood";
-        /**
-         * @description Runway Surface Treatment. Corresponds to FAA NASR field TREATMENT_CODE (APT_RWY).
-         * @enum {string}
-         */
-        RunwaySurfaceTreatment: "Unknown" | "None" | "Grooved" | "PorousFrictionCourse" | "AggregateFrictionSealCoat" | "RubberizedFrictionSealCoat" | "WireComb";
-        /**
-         * @description Runway Lights Edge Intensity. Corresponds to FAA NASR field RWY_LGT_CODE (APT_RWY).
-         * @enum {string}
-         */
-        RunwayEdgeLightIntensity: "Unknown" | "None" | "High" | "Medium" | "Low" | "Flood" | "NonStandard" | "Perimeter" | "Strobe";
-        /**
-         * @description Runway end data from the FAA NASR database, sourced from APT_RWY_END.
-         *     Includes approach, markings, lighting, and controlling obstacle information.
-         */
-        RunwayEndDto: {
-            /**
-             * Format: guid
-             * @description System-generated unique identifier.
-             */
-            id?: string;
-            /** @description FAA NASR field: RWY_END_ID. Runway end identifier (e.g., "01", "19", "09L", "27R"). */
-            runwayEndId?: string;
-            /**
-             * Format: int32
-             * @description FAA NASR field: TRUE_ALIGNMENT. Runway end true alignment. True heading of the runway to the nearest degree.
-             */
-            trueAlignment?: number | null;
-            /**
-             * @description FAA NASR field: ILS_TYPE. Instrument Landing System (ILS) type.
-             *     Possible values: Ils (ILS), Mls (MLS), Sdf (SDF), Localizer (LOCALIZER), Lda (LDA), Ismls (ISMLS),
-             *     IlsDme (ILS/DME), SdfDme (SDF/DME), LocDme (LOC/DME), LocGs (LOC/GS), LdaDme (LDA/DME).
-             */
-            approachType?: components["schemas"]["InstrumentApproachType"];
-            /** @description FAA NASR field: RIGHT_HAND_TRAFFIC_PAT_FLAG. Whether right-hand traffic pattern is in effect for landing aircraft. */
-            rightHandTrafficPattern?: boolean;
-            /**
-             * @description FAA NASR field: RWY_MARKING_TYPE_CODE. Runway markings type.
-             *     Possible values: PrecisionInstrument (PIR), NonPrecisionInstrument (NPI), Basic (BSC),
-             *     NumbersOnly (NRS), NonStandard (NSTD), Buoys (BUOY), Stol (STOL), None (NONE).
-             */
-            markingsType?: components["schemas"]["RunwayMarkingsType"];
-            /**
-             * @description FAA NASR field: RWY_MARKING_COND. Runway markings condition.
-             *     Possible values: Good (G), Fair (F), Poor (P).
-             */
-            markingsCondition?: components["schemas"]["RunwayMarkingsCondition"];
-            /**
-             * Format: decimal
-             * @description FAA NASR field: LAT_DECIMAL. Latitude of physical runway end in decimal degrees.
-             */
-            latitude?: number | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: LONG_DECIMAL. Longitude of physical runway end in decimal degrees.
-             */
-            longitude?: number | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: RWY_END_ELEV. Elevation at the physical runway end in feet MSL.
-             */
-            elevation?: number | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: THR_CROSSING_HGT. Threshold Crossing Height in feet AGL. Height that the effective visual glide path crosses above the runway threshold.
-             */
-            thresholdCrossingHeight?: number | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: VISUAL_GLIDE_PATH_ANGLE. Visual glide path angle in hundredths of degrees.
-             */
-            visualGlidePathAngle?: number | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: LAT_DISPLACED_THR_DECIMAL. Latitude of displaced threshold in decimal degrees.
-             */
-            displacedThresholdLatitude?: number | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: LONG_DISPLACED_THR_DECIMAL. Longitude of displaced threshold in decimal degrees.
-             */
-            displacedThresholdLongitude?: number | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: DISPLACED_THR_ELEV. Elevation at the displaced threshold in feet MSL.
-             */
-            displacedThresholdElevation?: number | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: DISPLACED_THR_LEN. Displaced threshold length in feet from the runway end.
-             */
-            displacedThresholdLength?: number | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: TDZ_ELEV. Elevation at the touchdown zone in feet MSL.
-             */
-            touchdownZoneElevation?: number | null;
-            /**
-             * @description FAA NASR field: VGSI_CODE. Visual Glide Slope Indicator type.
-             *     Common types: VASI (V2L/V4L/etc.), PAPI (P2L/P4L/etc.), SAVASI (S2L/S2R), Tri-Color, Pulsating, Panel systems.
-             */
-            visualGlideSlopeIndicator?: components["schemas"]["VisualGlideSlopeIndicatorType"];
-            /**
-             * @description FAA NASR field: RWY_VISUAL_RANGE_EQUIP_CODE. Runway Visual Range (RVR) equipment location.
-             *     Possible values: Touchdown (T), Midfield (M), Rollout (R), None (N), TouchdownMidfield (TM), TouchdownRollout (TR), MidfieldRollout (MR), TouchdownMidfieldRollout (TMR).
-             */
-            runwayVisualRangeEquipment?: components["schemas"]["RunwayVisualRangeEquipmentType"];
-            /** @description FAA NASR field: RWY_VSBY_VALUE_EQUIP_FLAG. Whether Runway Visibility Value (RVV) equipment is installed. */
-            runwayVisibilityValueEquipment?: boolean;
-            /**
-             * @description FAA NASR field: APCH_LGT_SYSTEM_CODE. Approach light system type.
-             *     See ApproachLightSystemType enum for all possible values and their FAA descriptions.
-             */
-            approachLightSystem?: components["schemas"]["ApproachLightSystemType"];
-            /** @description FAA NASR field: RWY_END_LGTS_FLAG. Whether Runway End Identifier Lights (REIL) are installed. */
-            hasRunwayEndLights?: boolean;
-            /** @description FAA NASR field: CNTRLN_LGTS_AVBL_FLAG. Whether runway centerline lights are installed. */
-            hasCenterlineLights?: boolean;
-            /** @description FAA NASR field: TDZ_LGT_AVBL_FLAG. Whether runway end touchdown zone lights are installed. */
-            hasTouchdownZoneLights?: boolean;
-            /** @description FAA NASR field: OBSTN_TYPE. Controlling object description (type of obstacle). */
-            controllingObjectDescription?: string | null;
-            /**
-             * @description FAA NASR field: OBSTN_MRKD_CODE. Controlling object marked/lighted status.
-             *     Possible values: Marked (M), Lighted (L), MarkedAndLighted (ML), None (NONE).
-             */
-            controllingObjectMarking?: components["schemas"]["ControllingObjectMarking"];
-            /**
-             * Format: int32
-             * @description FAA NASR field: OBSTN_CLNC_SLOPE. Controlling object clearance slope value, expressed as a ratio of N:1. If greater than 50:1, then 50 is entered.
-             */
-            controllingObjectClearanceSlope?: number | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: OBSTN_HGT. Controlling object height above the physical runway end in feet AGL.
-             */
-            controllingObjectHeightAboveRunway?: number | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: DIST_FROM_THR. Controlling object distance from the physical runway end in feet.
-             */
-            controllingObjectDistanceFromRunway?: number | null;
-            /** @description FAA NASR field: CNTRLN_OFFSET. Controlling object centerline offset distance in feet from the extended runway centerline. */
-            controllingObjectCenterlineOffset?: string | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: RWY_END_LAT_DEG. Runway end latitude degrees.
-             */
-            rwyEndLatDeg?: number | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: RWY_END_LAT_MIN. Runway end latitude minutes.
-             */
-            rwyEndLatMin?: number | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: RWY_END_LAT_SEC. Runway end latitude seconds.
-             */
-            rwyEndLatSec?: number | null;
-            /** @description FAA NASR field: RWY_END_LAT_HEMIS. Runway end latitude hemisphere (N or S). */
-            rwyEndLatHemis?: string | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: RWY_END_LONG_DEG. Runway end longitude degrees.
-             */
-            rwyEndLongDeg?: number | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: RWY_END_LONG_MIN. Runway end longitude minutes.
-             */
-            rwyEndLongMin?: number | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: RWY_END_LONG_SEC. Runway end longitude seconds.
-             */
-            rwyEndLongSec?: number | null;
-            /** @description FAA NASR field: RWY_END_LONG_HEMIS. Runway end longitude hemisphere (E or W). */
-            rwyEndLongHemis?: string | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: DISPLACED_THR_LAT_DEG. Displaced threshold latitude degrees.
-             */
-            displacedThrLatDeg?: number | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: DISPLACED_THR_LAT_MIN. Displaced threshold latitude minutes.
-             */
-            displacedThrLatMin?: number | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: DISPLACED_THR_LAT_SEC. Displaced threshold latitude seconds.
-             */
-            displacedThrLatSec?: number | null;
-            /** @description FAA NASR field: DISPLACED_THR_LAT_HEMIS. Displaced threshold latitude hemisphere (N or S). */
-            displacedThrLatHemis?: string | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: DISPLACED_THR_LONG_DEG. Displaced threshold longitude degrees.
-             */
-            displacedThrLongDeg?: number | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: DISPLACED_THR_LONG_MIN. Displaced threshold longitude minutes.
-             */
-            displacedThrLongMin?: number | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: DISPLACED_THR_LONG_SEC. Displaced threshold longitude seconds.
-             */
-            displacedThrLongSec?: number | null;
-            /** @description FAA NASR field: DISPLACED_THR_LONG_HEMIS. Displaced threshold longitude hemisphere (E or W). */
-            displacedThrLongHemis?: string | null;
-            /**
-             * @description FAA NASR field: FAR_PART_77_CODE. FAA CFR Part 77 (Objects Affecting Navigable Airspace) Runway Category.
-             *     Possible values: A(V) (Utility Runway with Visual Approach), B(V) (Other Than Utility with Visual Approach),
-             *     A(NP) (Utility with Nonprecision Approach), C (Other Than Utility with Nonprecision, visibility > 3/4 mile),
-             *     D (Other Than Utility with Nonprecision, visibility as low as 3/4 mile), PIR (Precision Instrument Runway).
-             */
-            farPart77Code?: string | null;
-            /** @description FAA NASR field: CNTRLN_DIR_CODE. Controlling Object Centerline Offset Direction. Indicates direction (left or right) to the object from the centerline as seen by an approaching pilot. */
-            centerlineDirectionCode?: string | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: RWY_GRAD. Runway End Gradient.
-             */
-            runwayGradient?: number | null;
-            /** @description FAA NASR field: RWY_GRAD_DIRECTION. Runway End Gradient Direction (Up or Down). */
-            runwayGradientDirection?: string | null;
-            /** @description FAA NASR field: RWY_END_PSN_SOURCE. Source of runway end position information. */
-            rwyEndPositionSource?: string | null;
-            /**
-             * Format: date-time
-             * @description FAA NASR field: RWY_END_PSN_DATE. Date of runway end position information.
-             */
-            rwyEndPositionDate?: string | null;
-            /** @description FAA NASR field: RWY_END_ELEV_SOURCE. Source of runway end elevation information. */
-            rwyEndElevationSource?: string | null;
-            /**
-             * Format: date-time
-             * @description FAA NASR field: RWY_END_ELEV_DATE. Date of runway end elevation information.
-             */
-            rwyEndElevationDate?: string | null;
-            /** @description FAA NASR field: DSPL_THR_PSN_SOURCE. Source of displaced threshold position information. */
-            displacedThrPositionSource?: string | null;
-            /**
-             * Format: date-time
-             * @description FAA NASR field: RWY_END_DSPL_THR_PSN_DATE. Date of displaced threshold position information.
-             */
-            displacedThrPositionDate?: string | null;
-            /** @description FAA NASR field: DSPL_THR_ELEV_SOURCE. Source of displaced threshold elevation information. */
-            displacedThrElevationSource?: string | null;
-            /**
-             * Format: date-time
-             * @description FAA NASR field: RWY_END_DSPL_THR_ELEV_DATE. Date of displaced threshold elevation information.
-             */
-            displacedThrElevationDate?: string | null;
-            /** @description FAA NASR field: TDZ_ELEV_SOURCE. Source of touchdown zone elevation information. */
-            touchdownZoneElevSource?: string | null;
-            /**
-             * Format: date-time
-             * @description FAA NASR field: RWY_END_TDZ_ELEV_DATE. Date of touchdown zone elevation information.
-             */
-            touchdownZoneElevDate?: string | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: TKOF_RUN_AVBL. Takeoff Run Available (TORA) in feet.
-             */
-            takeoffRunAvailable?: number | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: TKOF_DIST_AVBL. Takeoff Distance Available (TODA) in feet.
-             */
-            takeoffDistanceAvailable?: number | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: ACLT_STOP_DIST_AVBL. Accelerate-Stop Distance Available (ASDA) in feet.
-             */
-            accelerateStopDistAvailable?: number | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: LNDG_DIST_AVBL. Landing Distance Available (LDA) in feet.
-             */
-            landingDistanceAvailable?: number | null;
-            /**
-             * Format: int32
-             * @description FAA NASR field: LAHSO_ALD. Available Landing Distance for Land and Hold Short Operations (LAHSO), in feet.
-             */
-            lahsoAvailableLandingDistance?: number | null;
-            /** @description FAA NASR field: RWY_END_INTERSECT_LAHSO. ID of Intersecting Runway Defining Hold Short Point. */
-            lahsoIntersectingRunway?: string | null;
-            /** @description FAA NASR field: LAHSO_DESC. Description of Entity Defining Hold Short Point if not an Intersecting Runway. */
-            lahsoDescription?: string | null;
-            /** @description FAA NASR field: LAHSO_LAT. LAHSO hold short point latitude (DMS format). */
-            lahsoLatitude?: string | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: LAT_LAHSO_DECIMAL. LAHSO hold short point latitude in decimal degrees.
-             */
-            lahsoLatDecimal?: number | null;
-            /** @description FAA NASR field: LAHSO_LONG. LAHSO hold short point longitude (DMS format). */
-            lahsoLongitude?: string | null;
-            /**
-             * Format: decimal
-             * @description FAA NASR field: LONG_LAHSO_DECIMAL. LAHSO hold short point longitude in decimal degrees.
-             */
-            lahsoLongDecimal?: number | null;
-            /** @description FAA NASR field: LAHSO_PSN_SOURCE. Source of LAHSO position information. */
-            lahsoPositionSource?: string | null;
-            /**
-             * Format: date-time
-             * @description FAA NASR field: RWY_END_LAHSO_PSN_DATE. Date of LAHSO position information.
-             */
-            lahsoPositionDate?: string | null;
-        };
-        /**
-         * @description Instrument Landing System (ILS) Type. Corresponds to FAA NASR field ILS_TYPE (APT_RWY_END).
-         * @enum {string}
-         */
-        InstrumentApproachType: "Unknown" | "None" | "Ils" | "Mls" | "Sdf" | "Localizer" | "Lda" | "Ismls" | "IlsDme" | "SdfDme" | "LocDme" | "LocGs" | "LdaDme";
-        /**
-         * @description Runway Markings Type. Corresponds to FAA NASR field RWY_MARKING_TYPE_CODE (APT_RWY_END).
-         * @enum {string}
-         */
-        RunwayMarkingsType: "Unknown" | "None" | "PrecisionInstrument" | "NonPrecisionInstrument" | "Basic" | "NumbersOnly" | "NonStandard" | "Buoys" | "Stol";
-        /**
-         * @description Runway Markings Condition. Corresponds to FAA NASR field RWY_MARKING_COND (APT_RWY_END).
-         * @enum {string}
-         */
-        RunwayMarkingsCondition: "Unknown" | "Good" | "Fair" | "Poor";
-        /**
-         * @description Visual Glide Slope Indicators. Corresponds to FAA NASR field VGSI_CODE (APT_RWY_END).
-         * @enum {string}
-         */
-        VisualGlideSlopeIndicatorType: "Unknown" | "None" | "Savasi2BoxLeft" | "Savasi2BoxRight" | "Vasi2BoxLeft" | "Vasi2BoxRight" | "Vasi4BoxLeft" | "Vasi4BoxRight" | "Vasi6BoxLeft" | "Vasi6BoxRight" | "Vasi12Box" | "Vasi16Box" | "Papi2LightLeft" | "Papi2LightRight" | "Papi4LightLeft" | "Papi4LightRight" | "TriColorLeft" | "TriColorRight" | "PulsatingLeft" | "PulsatingRight" | "PanelLeft" | "PanelRight" | "NonStandard" | "PrivateUse" | "NonSpecificVasi";
-        /**
-         * @description Runway Visual Range (RVR) Equipment Location. Corresponds to FAA NASR field RWY_VISUAL_RANGE_EQUIP_CODE (APT_RWY_END).
-         * @enum {string}
-         */
-        RunwayVisualRangeEquipmentType: "Unknown" | "None" | "Touchdown" | "Midfield" | "Rollout" | "TouchdownMidfield" | "TouchdownRollout" | "MidfieldRollout" | "TouchdownMidfieldRollout";
-        /**
-         * @description Approach Light System. Corresponds to FAA NASR field APCH_LGT_SYSTEM_CODE (APT_RWY_END).
-         * @enum {string}
-         */
-        ApproachLightSystemType: "Unknown" | "None" | "AirForceOverrun" | "Alsaf" | "Alsf1" | "Alsf2" | "Mals" | "Malsf" | "Malsr" | "Rail" | "Sals" | "Salsf" | "Ssals" | "Ssalf" | "Ssalr" | "Odals" | "Rlls" | "MilitaryOverrun" | "NonStandard";
-        /**
-         * @description Controlling Object Marked/Lighted. Corresponds to FAA NASR field OBSTN_MRKD_CODE (APT_RWY_END).
-         * @enum {string}
-         */
-        ControllingObjectMarking: "Unknown" | "None" | "Marked" | "Lighted" | "MarkedAndLighted";
-        /**
          * @description Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the
          *     pagination.nextCursor value as the cursor query parameter in your next request.
          *     Continue until pagination.hasMore is false.
@@ -2484,7 +2080,7 @@ export interface components {
             /** @description GeoJSON boundary geometry. */
             geometry?: components["schemas"]["GeoJsonGeometry"] | null;
         };
-        /** @description GeoJSON geometry representing an airspace boundary. */
+        /** @description GeoJSON geometry object with a type and coordinate array. */
         GeoJsonGeometry: {
             /** @description Geometry type (e.g., Polygon, MultiPolygon). */
             type?: string;
@@ -4611,6 +4207,469 @@ export interface components {
             pagination?: components["schemas"]["PaginationMetadata"];
         };
         /**
+         * @description Runway data from the FAA NASR database, sourced from APT_RWY.
+         *     Includes dimensions, surface, lighting, and weight-bearing information.
+         */
+        RunwayDto: {
+            /**
+             * Format: guid
+             * @description System-generated unique identifier.
+             */
+            id?: string;
+            /** @description ICAO code of the parent airport (e.g., KDFW). Included when queried via the Runways endpoints. */
+            airportIcaoCode?: string | null;
+            /** @description FAA identifier of the parent airport (e.g., DFW). Included when queried via the Runways endpoints. */
+            airportArptId?: string | null;
+            /** @description Name of the parent airport. Included when queried via the Runways endpoints. */
+            airportName?: string | null;
+            /** @description FAA NASR field: RWY_ID. Runway identification (e.g., "01/19", "09L/27R", "H1" for helipad). */
+            runwayId?: string;
+            /**
+             * Format: int32
+             * @description FAA NASR field: RWY_LEN. Physical runway length to the nearest foot.
+             */
+            length?: number | null;
+            /**
+             * Format: int32
+             * @description FAA NASR field: RWY_WIDTH. Physical runway width to the nearest foot.
+             */
+            width?: number | null;
+            /**
+             * @description FAA NASR field: SURFACE_TYPE_CODE. Runway surface type.
+             *     Common values: Concrete (CONC), Asphalt (ASPH), Turf (TURF), Dirt (DIRT), Gravel (GRAVEL), Water (WATER).
+             */
+            surfaceType?: components["schemas"]["RunwaySurfaceType"];
+            /**
+             * @description FAA NASR field: TREATMENT_CODE. Runway surface treatment.
+             *     Possible values: Grooved (GRVD), PorousFrictionCourse (PFC), AggregateFrictionSealCoat (AFSC),
+             *     RubberizedFrictionSealCoat (RFSC), WireComb (WC), None (NONE).
+             */
+            surfaceTreatment?: components["schemas"]["RunwaySurfaceTreatment"];
+            /** @description FAA NASR field: PCN. Pavement Classification Number. See FAA Advisory Circular 150/5335-5 for code definitions and PCN determination formula. */
+            pavementClassification?: string | null;
+            /**
+             * @description FAA NASR field: RWY_LGT_CODE. Runway lights edge intensity.
+             *     Possible values: High (HIGH), Medium (MED), Low (LOW), Flood (FLD), NonStandard (NSTD), Perimeter (PERI), Strobe (STRB), None (NONE).
+             */
+            edgeLightIntensity?: components["schemas"]["RunwayEdgeLightIntensity"];
+            /**
+             * Format: int32
+             * @description FAA NASR field: GROSS_WT_SW. Runway weight-bearing capacity for single wheel type landing gear, in pounds.
+             */
+            weightBearingSingleWheel?: number | null;
+            /**
+             * Format: int32
+             * @description FAA NASR field: GROSS_WT_DW. Runway weight-bearing capacity for dual wheel type landing gear, in pounds.
+             */
+            weightBearingDualWheel?: number | null;
+            /**
+             * Format: int32
+             * @description FAA NASR field: GROSS_WT_DTW. Runway weight-bearing capacity for two dual wheels in tandem type landing gear, in pounds.
+             */
+            weightBearingDualTandem?: number | null;
+            /**
+             * Format: int32
+             * @description FAA NASR field: GROSS_WT_DDTW. Runway weight-bearing capacity for two dual wheels in tandem/two dual wheels in double tandem body gear type landing gear, in pounds.
+             */
+            weightBearingDoubleDualTandem?: number | null;
+            /**
+             * @description FAA NASR field: COND. Runway Surface Condition.
+             *     Possible values: EXCELLENT, GOOD, FAIR, POOR, FAILED.
+             */
+            surfaceCondition?: string | null;
+            /**
+             * @description FAA NASR field: PAVEMENT_TYPE_CODE. Pavement Type.
+             *     Possible values: R (Rigid), F (Flexible).
+             */
+            pavementTypeCode?: string | null;
+            /** @description FAA NASR field: SUBGRADE_STRENGTH_CODE. Subgrade Strength (Letters A-F). */
+            subgradeStrengthCode?: string | null;
+            /** @description FAA NASR field: TIRE_PRES_CODE. Tire Pressure Code (Letters W-Z). */
+            tirePressureCode?: string | null;
+            /**
+             * @description FAA NASR field: DTRM_METHOD_CODE. Determination Method for pavement strength.
+             *     Possible values: T (Technical), U (Using Aircraft).
+             */
+            determinationMethodCode?: string | null;
+            /** @description FAA NASR field: RWY_LEN_SOURCE. Source of runway length information. */
+            runwayLengthSource?: string | null;
+            /**
+             * Format: date-time
+             * @description FAA NASR field: LENGTH_SOURCE_DATE. Date of runway length source information.
+             */
+            lengthSourceDate?: string | null;
+            /** @description GeoJSON polygon geometry of the physical runway boundary. Only included when includeGeometry=true. */
+            geometry?: components["schemas"]["GeoJsonGeometry"] | null;
+            /** @description Runway end details for each direction (typically two per runway). */
+            runwayEnds?: components["schemas"]["RunwayEndDto"][];
+        };
+        /**
+         * @description Runway Surface Type. Corresponds to FAA NASR field SURFACE_TYPE_CODE (APT_RWY).
+         *     The value will usually be one of the common types or a combination of two types
+         *     when the runway is composed of distinct sections.
+         * @enum {string}
+         */
+        RunwaySurfaceType: "Unknown" | "Concrete" | "Asphalt" | "Snow" | "Ice" | "Mats" | "Treated" | "Gravel" | "Turf" | "Dirt" | "PartiallyPaved" | "Rooftop" | "Water" | "Aluminum" | "Brick" | "Caliche" | "Coral" | "Deck" | "Grass" | "Metal" | "NonStandard" | "OilChip" | "Psp" | "Sand" | "Sod" | "Steel" | "Wood";
+        /**
+         * @description Runway Surface Treatment. Corresponds to FAA NASR field TREATMENT_CODE (APT_RWY).
+         * @enum {string}
+         */
+        RunwaySurfaceTreatment: "Unknown" | "None" | "Grooved" | "PorousFrictionCourse" | "AggregateFrictionSealCoat" | "RubberizedFrictionSealCoat" | "WireComb";
+        /**
+         * @description Runway Lights Edge Intensity. Corresponds to FAA NASR field RWY_LGT_CODE (APT_RWY).
+         * @enum {string}
+         */
+        RunwayEdgeLightIntensity: "Unknown" | "None" | "High" | "Medium" | "Low" | "Flood" | "NonStandard" | "Perimeter" | "Strobe";
+        /**
+         * @description Runway end data from the FAA NASR database, sourced from APT_RWY_END.
+         *     Includes approach, markings, lighting, and controlling obstacle information.
+         */
+        RunwayEndDto: {
+            /**
+             * Format: guid
+             * @description System-generated unique identifier.
+             */
+            id?: string;
+            /** @description FAA NASR field: RWY_END_ID. Runway end identifier (e.g., "01", "19", "09L", "27R"). */
+            runwayEndId?: string;
+            /**
+             * Format: int32
+             * @description FAA NASR field: TRUE_ALIGNMENT. Runway end true alignment. True heading of the runway to the nearest degree.
+             */
+            trueAlignment?: number | null;
+            /**
+             * @description FAA NASR field: ILS_TYPE. Instrument Landing System (ILS) type.
+             *     Possible values: Ils (ILS), Mls (MLS), Sdf (SDF), Localizer (LOCALIZER), Lda (LDA), Ismls (ISMLS),
+             *     IlsDme (ILS/DME), SdfDme (SDF/DME), LocDme (LOC/DME), LocGs (LOC/GS), LdaDme (LDA/DME).
+             */
+            approachType?: components["schemas"]["InstrumentApproachType"];
+            /** @description FAA NASR field: RIGHT_HAND_TRAFFIC_PAT_FLAG. Whether right-hand traffic pattern is in effect for landing aircraft. */
+            rightHandTrafficPattern?: boolean;
+            /**
+             * @description FAA NASR field: RWY_MARKING_TYPE_CODE. Runway markings type.
+             *     Possible values: PrecisionInstrument (PIR), NonPrecisionInstrument (NPI), Basic (BSC),
+             *     NumbersOnly (NRS), NonStandard (NSTD), Buoys (BUOY), Stol (STOL), None (NONE).
+             */
+            markingsType?: components["schemas"]["RunwayMarkingsType"];
+            /**
+             * @description FAA NASR field: RWY_MARKING_COND. Runway markings condition.
+             *     Possible values: Good (G), Fair (F), Poor (P).
+             */
+            markingsCondition?: components["schemas"]["RunwayMarkingsCondition"];
+            /**
+             * Format: decimal
+             * @description FAA NASR field: LAT_DECIMAL. Latitude of physical runway end in decimal degrees.
+             */
+            latitude?: number | null;
+            /**
+             * Format: decimal
+             * @description FAA NASR field: LONG_DECIMAL. Longitude of physical runway end in decimal degrees.
+             */
+            longitude?: number | null;
+            /**
+             * Format: decimal
+             * @description FAA NASR field: RWY_END_ELEV. Elevation at the physical runway end in feet MSL.
+             */
+            elevation?: number | null;
+            /**
+             * Format: decimal
+             * @description FAA NASR field: THR_CROSSING_HGT. Threshold Crossing Height in feet AGL. Height that the effective visual glide path crosses above the runway threshold.
+             */
+            thresholdCrossingHeight?: number | null;
+            /**
+             * Format: decimal
+             * @description FAA NASR field: VISUAL_GLIDE_PATH_ANGLE. Visual glide path angle in hundredths of degrees.
+             */
+            visualGlidePathAngle?: number | null;
+            /**
+             * Format: decimal
+             * @description FAA NASR field: LAT_DISPLACED_THR_DECIMAL. Latitude of displaced threshold in decimal degrees.
+             */
+            displacedThresholdLatitude?: number | null;
+            /**
+             * Format: decimal
+             * @description FAA NASR field: LONG_DISPLACED_THR_DECIMAL. Longitude of displaced threshold in decimal degrees.
+             */
+            displacedThresholdLongitude?: number | null;
+            /**
+             * Format: decimal
+             * @description FAA NASR field: DISPLACED_THR_ELEV. Elevation at the displaced threshold in feet MSL.
+             */
+            displacedThresholdElevation?: number | null;
+            /**
+             * Format: int32
+             * @description FAA NASR field: DISPLACED_THR_LEN. Displaced threshold length in feet from the runway end.
+             */
+            displacedThresholdLength?: number | null;
+            /**
+             * Format: decimal
+             * @description FAA NASR field: TDZ_ELEV. Elevation at the touchdown zone in feet MSL.
+             */
+            touchdownZoneElevation?: number | null;
+            /**
+             * @description FAA NASR field: VGSI_CODE. Visual Glide Slope Indicator type.
+             *     Common types: VASI (V2L/V4L/etc.), PAPI (P2L/P4L/etc.), SAVASI (S2L/S2R), Tri-Color, Pulsating, Panel systems.
+             */
+            visualGlideSlopeIndicator?: components["schemas"]["VisualGlideSlopeIndicatorType"];
+            /**
+             * @description FAA NASR field: RWY_VISUAL_RANGE_EQUIP_CODE. Runway Visual Range (RVR) equipment location.
+             *     Possible values: Touchdown (T), Midfield (M), Rollout (R), None (N), TouchdownMidfield (TM), TouchdownRollout (TR), MidfieldRollout (MR), TouchdownMidfieldRollout (TMR).
+             */
+            runwayVisualRangeEquipment?: components["schemas"]["RunwayVisualRangeEquipmentType"];
+            /** @description FAA NASR field: RWY_VSBY_VALUE_EQUIP_FLAG. Whether Runway Visibility Value (RVV) equipment is installed. */
+            runwayVisibilityValueEquipment?: boolean;
+            /**
+             * @description FAA NASR field: APCH_LGT_SYSTEM_CODE. Approach light system type.
+             *     See ApproachLightSystemType enum for all possible values and their FAA descriptions.
+             */
+            approachLightSystem?: components["schemas"]["ApproachLightSystemType"];
+            /** @description FAA NASR field: RWY_END_LGTS_FLAG. Whether Runway End Identifier Lights (REIL) are installed. */
+            hasRunwayEndLights?: boolean;
+            /** @description FAA NASR field: CNTRLN_LGTS_AVBL_FLAG. Whether runway centerline lights are installed. */
+            hasCenterlineLights?: boolean;
+            /** @description FAA NASR field: TDZ_LGT_AVBL_FLAG. Whether runway end touchdown zone lights are installed. */
+            hasTouchdownZoneLights?: boolean;
+            /** @description FAA NASR field: OBSTN_TYPE. Controlling object description (type of obstacle). */
+            controllingObjectDescription?: string | null;
+            /**
+             * @description FAA NASR field: OBSTN_MRKD_CODE. Controlling object marked/lighted status.
+             *     Possible values: Marked (M), Lighted (L), MarkedAndLighted (ML), None (NONE).
+             */
+            controllingObjectMarking?: components["schemas"]["ControllingObjectMarking"];
+            /**
+             * Format: int32
+             * @description FAA NASR field: OBSTN_CLNC_SLOPE. Controlling object clearance slope value, expressed as a ratio of N:1. If greater than 50:1, then 50 is entered.
+             */
+            controllingObjectClearanceSlope?: number | null;
+            /**
+             * Format: int32
+             * @description FAA NASR field: OBSTN_HGT. Controlling object height above the physical runway end in feet AGL.
+             */
+            controllingObjectHeightAboveRunway?: number | null;
+            /**
+             * Format: int32
+             * @description FAA NASR field: DIST_FROM_THR. Controlling object distance from the physical runway end in feet.
+             */
+            controllingObjectDistanceFromRunway?: number | null;
+            /** @description FAA NASR field: CNTRLN_OFFSET. Controlling object centerline offset distance in feet from the extended runway centerline. */
+            controllingObjectCenterlineOffset?: string | null;
+            /**
+             * Format: int32
+             * @description FAA NASR field: RWY_END_LAT_DEG. Runway end latitude degrees.
+             */
+            rwyEndLatDeg?: number | null;
+            /**
+             * Format: int32
+             * @description FAA NASR field: RWY_END_LAT_MIN. Runway end latitude minutes.
+             */
+            rwyEndLatMin?: number | null;
+            /**
+             * Format: decimal
+             * @description FAA NASR field: RWY_END_LAT_SEC. Runway end latitude seconds.
+             */
+            rwyEndLatSec?: number | null;
+            /** @description FAA NASR field: RWY_END_LAT_HEMIS. Runway end latitude hemisphere (N or S). */
+            rwyEndLatHemis?: string | null;
+            /**
+             * Format: int32
+             * @description FAA NASR field: RWY_END_LONG_DEG. Runway end longitude degrees.
+             */
+            rwyEndLongDeg?: number | null;
+            /**
+             * Format: int32
+             * @description FAA NASR field: RWY_END_LONG_MIN. Runway end longitude minutes.
+             */
+            rwyEndLongMin?: number | null;
+            /**
+             * Format: decimal
+             * @description FAA NASR field: RWY_END_LONG_SEC. Runway end longitude seconds.
+             */
+            rwyEndLongSec?: number | null;
+            /** @description FAA NASR field: RWY_END_LONG_HEMIS. Runway end longitude hemisphere (E or W). */
+            rwyEndLongHemis?: string | null;
+            /**
+             * Format: int32
+             * @description FAA NASR field: DISPLACED_THR_LAT_DEG. Displaced threshold latitude degrees.
+             */
+            displacedThrLatDeg?: number | null;
+            /**
+             * Format: int32
+             * @description FAA NASR field: DISPLACED_THR_LAT_MIN. Displaced threshold latitude minutes.
+             */
+            displacedThrLatMin?: number | null;
+            /**
+             * Format: decimal
+             * @description FAA NASR field: DISPLACED_THR_LAT_SEC. Displaced threshold latitude seconds.
+             */
+            displacedThrLatSec?: number | null;
+            /** @description FAA NASR field: DISPLACED_THR_LAT_HEMIS. Displaced threshold latitude hemisphere (N or S). */
+            displacedThrLatHemis?: string | null;
+            /**
+             * Format: int32
+             * @description FAA NASR field: DISPLACED_THR_LONG_DEG. Displaced threshold longitude degrees.
+             */
+            displacedThrLongDeg?: number | null;
+            /**
+             * Format: int32
+             * @description FAA NASR field: DISPLACED_THR_LONG_MIN. Displaced threshold longitude minutes.
+             */
+            displacedThrLongMin?: number | null;
+            /**
+             * Format: decimal
+             * @description FAA NASR field: DISPLACED_THR_LONG_SEC. Displaced threshold longitude seconds.
+             */
+            displacedThrLongSec?: number | null;
+            /** @description FAA NASR field: DISPLACED_THR_LONG_HEMIS. Displaced threshold longitude hemisphere (E or W). */
+            displacedThrLongHemis?: string | null;
+            /**
+             * @description FAA NASR field: FAR_PART_77_CODE. FAA CFR Part 77 (Objects Affecting Navigable Airspace) Runway Category.
+             *     Possible values: A(V) (Utility Runway with Visual Approach), B(V) (Other Than Utility with Visual Approach),
+             *     A(NP) (Utility with Nonprecision Approach), C (Other Than Utility with Nonprecision, visibility > 3/4 mile),
+             *     D (Other Than Utility with Nonprecision, visibility as low as 3/4 mile), PIR (Precision Instrument Runway).
+             */
+            farPart77Code?: string | null;
+            /** @description FAA NASR field: CNTRLN_DIR_CODE. Controlling Object Centerline Offset Direction. Indicates direction (left or right) to the object from the centerline as seen by an approaching pilot. */
+            centerlineDirectionCode?: string | null;
+            /**
+             * Format: decimal
+             * @description FAA NASR field: RWY_GRAD. Runway End Gradient.
+             */
+            runwayGradient?: number | null;
+            /** @description FAA NASR field: RWY_GRAD_DIRECTION. Runway End Gradient Direction (Up or Down). */
+            runwayGradientDirection?: string | null;
+            /** @description FAA NASR field: RWY_END_PSN_SOURCE. Source of runway end position information. */
+            rwyEndPositionSource?: string | null;
+            /**
+             * Format: date-time
+             * @description FAA NASR field: RWY_END_PSN_DATE. Date of runway end position information.
+             */
+            rwyEndPositionDate?: string | null;
+            /** @description FAA NASR field: RWY_END_ELEV_SOURCE. Source of runway end elevation information. */
+            rwyEndElevationSource?: string | null;
+            /**
+             * Format: date-time
+             * @description FAA NASR field: RWY_END_ELEV_DATE. Date of runway end elevation information.
+             */
+            rwyEndElevationDate?: string | null;
+            /** @description FAA NASR field: DSPL_THR_PSN_SOURCE. Source of displaced threshold position information. */
+            displacedThrPositionSource?: string | null;
+            /**
+             * Format: date-time
+             * @description FAA NASR field: RWY_END_DSPL_THR_PSN_DATE. Date of displaced threshold position information.
+             */
+            displacedThrPositionDate?: string | null;
+            /** @description FAA NASR field: DSPL_THR_ELEV_SOURCE. Source of displaced threshold elevation information. */
+            displacedThrElevationSource?: string | null;
+            /**
+             * Format: date-time
+             * @description FAA NASR field: RWY_END_DSPL_THR_ELEV_DATE. Date of displaced threshold elevation information.
+             */
+            displacedThrElevationDate?: string | null;
+            /** @description FAA NASR field: TDZ_ELEV_SOURCE. Source of touchdown zone elevation information. */
+            touchdownZoneElevSource?: string | null;
+            /**
+             * Format: date-time
+             * @description FAA NASR field: RWY_END_TDZ_ELEV_DATE. Date of touchdown zone elevation information.
+             */
+            touchdownZoneElevDate?: string | null;
+            /**
+             * Format: int32
+             * @description FAA NASR field: TKOF_RUN_AVBL. Takeoff Run Available (TORA) in feet.
+             */
+            takeoffRunAvailable?: number | null;
+            /**
+             * Format: int32
+             * @description FAA NASR field: TKOF_DIST_AVBL. Takeoff Distance Available (TODA) in feet.
+             */
+            takeoffDistanceAvailable?: number | null;
+            /**
+             * Format: int32
+             * @description FAA NASR field: ACLT_STOP_DIST_AVBL. Accelerate-Stop Distance Available (ASDA) in feet.
+             */
+            accelerateStopDistAvailable?: number | null;
+            /**
+             * Format: int32
+             * @description FAA NASR field: LNDG_DIST_AVBL. Landing Distance Available (LDA) in feet.
+             */
+            landingDistanceAvailable?: number | null;
+            /**
+             * Format: int32
+             * @description FAA NASR field: LAHSO_ALD. Available Landing Distance for Land and Hold Short Operations (LAHSO), in feet.
+             */
+            lahsoAvailableLandingDistance?: number | null;
+            /** @description FAA NASR field: RWY_END_INTERSECT_LAHSO. ID of Intersecting Runway Defining Hold Short Point. */
+            lahsoIntersectingRunway?: string | null;
+            /** @description FAA NASR field: LAHSO_DESC. Description of Entity Defining Hold Short Point if not an Intersecting Runway. */
+            lahsoDescription?: string | null;
+            /** @description FAA NASR field: LAHSO_LAT. LAHSO hold short point latitude (DMS format). */
+            lahsoLatitude?: string | null;
+            /**
+             * Format: decimal
+             * @description FAA NASR field: LAT_LAHSO_DECIMAL. LAHSO hold short point latitude in decimal degrees.
+             */
+            lahsoLatDecimal?: number | null;
+            /** @description FAA NASR field: LAHSO_LONG. LAHSO hold short point longitude (DMS format). */
+            lahsoLongitude?: string | null;
+            /**
+             * Format: decimal
+             * @description FAA NASR field: LONG_LAHSO_DECIMAL. LAHSO hold short point longitude in decimal degrees.
+             */
+            lahsoLongDecimal?: number | null;
+            /** @description FAA NASR field: LAHSO_PSN_SOURCE. Source of LAHSO position information. */
+            lahsoPositionSource?: string | null;
+            /**
+             * Format: date-time
+             * @description FAA NASR field: RWY_END_LAHSO_PSN_DATE. Date of LAHSO position information.
+             */
+            lahsoPositionDate?: string | null;
+        };
+        /**
+         * @description Instrument Landing System (ILS) Type. Corresponds to FAA NASR field ILS_TYPE (APT_RWY_END).
+         * @enum {string}
+         */
+        InstrumentApproachType: "Unknown" | "None" | "Ils" | "Mls" | "Sdf" | "Localizer" | "Lda" | "Ismls" | "IlsDme" | "SdfDme" | "LocDme" | "LocGs" | "LdaDme";
+        /**
+         * @description Runway Markings Type. Corresponds to FAA NASR field RWY_MARKING_TYPE_CODE (APT_RWY_END).
+         * @enum {string}
+         */
+        RunwayMarkingsType: "Unknown" | "None" | "PrecisionInstrument" | "NonPrecisionInstrument" | "Basic" | "NumbersOnly" | "NonStandard" | "Buoys" | "Stol";
+        /**
+         * @description Runway Markings Condition. Corresponds to FAA NASR field RWY_MARKING_COND (APT_RWY_END).
+         * @enum {string}
+         */
+        RunwayMarkingsCondition: "Unknown" | "Good" | "Fair" | "Poor";
+        /**
+         * @description Visual Glide Slope Indicators. Corresponds to FAA NASR field VGSI_CODE (APT_RWY_END).
+         * @enum {string}
+         */
+        VisualGlideSlopeIndicatorType: "Unknown" | "None" | "Savasi2BoxLeft" | "Savasi2BoxRight" | "Vasi2BoxLeft" | "Vasi2BoxRight" | "Vasi4BoxLeft" | "Vasi4BoxRight" | "Vasi6BoxLeft" | "Vasi6BoxRight" | "Vasi12Box" | "Vasi16Box" | "Papi2LightLeft" | "Papi2LightRight" | "Papi4LightLeft" | "Papi4LightRight" | "TriColorLeft" | "TriColorRight" | "PulsatingLeft" | "PulsatingRight" | "PanelLeft" | "PanelRight" | "NonStandard" | "PrivateUse" | "NonSpecificVasi";
+        /**
+         * @description Runway Visual Range (RVR) Equipment Location. Corresponds to FAA NASR field RWY_VISUAL_RANGE_EQUIP_CODE (APT_RWY_END).
+         * @enum {string}
+         */
+        RunwayVisualRangeEquipmentType: "Unknown" | "None" | "Touchdown" | "Midfield" | "Rollout" | "TouchdownMidfield" | "TouchdownRollout" | "MidfieldRollout" | "TouchdownMidfieldRollout";
+        /**
+         * @description Approach Light System. Corresponds to FAA NASR field APCH_LGT_SYSTEM_CODE (APT_RWY_END).
+         * @enum {string}
+         */
+        ApproachLightSystemType: "Unknown" | "None" | "AirForceOverrun" | "Alsaf" | "Alsf1" | "Alsf2" | "Mals" | "Malsf" | "Malsr" | "Rail" | "Sals" | "Salsf" | "Ssals" | "Ssalf" | "Ssalr" | "Odals" | "Rlls" | "MilitaryOverrun" | "NonStandard";
+        /**
+         * @description Controlling Object Marked/Lighted. Corresponds to FAA NASR field OBSTN_MRKD_CODE (APT_RWY_END).
+         * @enum {string}
+         */
+        ControllingObjectMarking: "Unknown" | "None" | "Marked" | "Lighted" | "MarkedAndLighted";
+        /**
+         * @description Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the
+         *     pagination.nextCursor value as the cursor query parameter in your next request.
+         *     Continue until pagination.hasMore is false.
+         */
+        PaginatedResponseOfRunwayDto: {
+            /** @description The current page of results. */
+            data?: components["schemas"]["RunwayDto"][];
+            /** @description Pagination metadata including the cursor to fetch the next page. */
+            pagination?: components["schemas"]["PaginationMetadata"];
+        };
+        /**
          * @description Cursor-based paginated response wrapper. To retrieve subsequent pages, pass the
          *     pagination.nextCursor value as the cursor query parameter in your next request.
          *     Continue until pagination.hasMore is false.
@@ -4671,18 +4730,6 @@ export type SegmentedCircleMarkerType = components['schemas']['SegmentedCircleMa
 export type WindIndicatorType = components['schemas']['WindIndicatorType'];
 export type PaginationMetadata = components['schemas']['PaginationMetadata'];
 export type ApiErrorResponse = components['schemas']['ApiErrorResponse'];
-export type RunwayDto = components['schemas']['RunwayDto'];
-export type RunwaySurfaceType = components['schemas']['RunwaySurfaceType'];
-export type RunwaySurfaceTreatment = components['schemas']['RunwaySurfaceTreatment'];
-export type RunwayEdgeLightIntensity = components['schemas']['RunwayEdgeLightIntensity'];
-export type RunwayEndDto = components['schemas']['RunwayEndDto'];
-export type InstrumentApproachType = components['schemas']['InstrumentApproachType'];
-export type RunwayMarkingsType = components['schemas']['RunwayMarkingsType'];
-export type RunwayMarkingsCondition = components['schemas']['RunwayMarkingsCondition'];
-export type VisualGlideSlopeIndicatorType = components['schemas']['VisualGlideSlopeIndicatorType'];
-export type RunwayVisualRangeEquipmentType = components['schemas']['RunwayVisualRangeEquipmentType'];
-export type ApproachLightSystemType = components['schemas']['ApproachLightSystemType'];
-export type ControllingObjectMarking = components['schemas']['ControllingObjectMarking'];
 export type PaginatedResponseOfAirspaceDto = components['schemas']['PaginatedResponseOfAirspaceDto'];
 export type AirspaceDto = components['schemas']['AirspaceDto'];
 export type GeoJsonGeometry = components['schemas']['GeoJsonGeometry'];
@@ -4777,6 +4824,19 @@ export type VerticalAccuracy = components['schemas']['VerticalAccuracy'];
 export type ObstacleMarking = components['schemas']['ObstacleMarking'];
 export type VerificationStatus = components['schemas']['VerificationStatus'];
 export type PaginatedResponseOfPirepDto = components['schemas']['PaginatedResponseOfPirepDto'];
+export type RunwayDto = components['schemas']['RunwayDto'];
+export type RunwaySurfaceType = components['schemas']['RunwaySurfaceType'];
+export type RunwaySurfaceTreatment = components['schemas']['RunwaySurfaceTreatment'];
+export type RunwayEdgeLightIntensity = components['schemas']['RunwayEdgeLightIntensity'];
+export type RunwayEndDto = components['schemas']['RunwayEndDto'];
+export type InstrumentApproachType = components['schemas']['InstrumentApproachType'];
+export type RunwayMarkingsType = components['schemas']['RunwayMarkingsType'];
+export type RunwayMarkingsCondition = components['schemas']['RunwayMarkingsCondition'];
+export type VisualGlideSlopeIndicatorType = components['schemas']['VisualGlideSlopeIndicatorType'];
+export type RunwayVisualRangeEquipmentType = components['schemas']['RunwayVisualRangeEquipmentType'];
+export type ApproachLightSystemType = components['schemas']['ApproachLightSystemType'];
+export type ControllingObjectMarking = components['schemas']['ControllingObjectMarking'];
+export type PaginatedResponseOfRunwayDto = components['schemas']['PaginatedResponseOfRunwayDto'];
 export type PaginatedResponseOfSigmetDto = components['schemas']['PaginatedResponseOfSigmetDto'];
 export type TerminalProceduresResponseDto = components['schemas']['TerminalProceduresResponseDto'];
 export type TerminalProcedureDto = components['schemas']['TerminalProcedureDto'];
@@ -4906,38 +4966,6 @@ export interface operations {
             };
             /** @description If the ids parameter is empty */
             400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ApiErrorResponse"];
-                };
-            };
-        };
-    };
-    Airport_GetRunwaysByAirport: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description ICAO code or FAA identifier (e.g., KDFW, DFW) */
-                icaoCodeOrIdent: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Returns the airport's runways */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RunwayDto"][];
-                };
-            };
-            /** @description If the airport is not found */
-            404: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -6852,6 +6880,131 @@ export interface operations {
             };
             /** @description If the airport is not found */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+        };
+    };
+    Runway_GetRunwaysByAirport: {
+        parameters: {
+            query?: {
+                /** @description Include ArcGIS runway polygon geometry in the response (default false) */
+                includeGeometry?: boolean;
+            };
+            header?: never;
+            path: {
+                /** @description ICAO code or FAA identifier (e.g., KDFW, DFW) */
+                icaoCodeOrIdent: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Returns the airport's runways */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RunwayDto"][];
+                };
+            };
+            /** @description If the identifier is empty */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+            /** @description If the airport is not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiErrorResponse"];
+                };
+            };
+        };
+    };
+    Runway_GetRunways: {
+        parameters: {
+            query?: {
+                /** @description Search across airport identifier, ICAO code, name, and city */
+                search?: string | null;
+                /** @description Filter by runway surface type enum (e.g., Asphalt, Concrete, Turf) */
+                surfaceType?: components["schemas"]["RunwaySurfaceType"] | null;
+                /** @description Minimum runway length in feet */
+                minLength?: number | null;
+                /** @description Filter by two-letter state code (e.g., TX, CA) */
+                state?: string | null;
+                /** @description Filter by whether the runway has edge lighting */
+                lighted?: boolean | null;
+                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+                cursor?: string | null;
+                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Returns the runways */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedResponseOfRunwayDto"];
+                };
+            };
+        };
+    };
+    Runway_SearchNearby: {
+        parameters: {
+            query?: {
+                /** @description Latitude in decimal degrees (-90 to 90) */
+                lat?: number;
+                /** @description Longitude in decimal degrees (-180 to 180) */
+                lon?: number;
+                /** @description Search radius in nautical miles (default 30, max 500) */
+                radiusNm?: number;
+                /** @description Minimum runway length in feet */
+                minLength?: number | null;
+                /** @description Filter by runway surface type enum (e.g., Asphalt, Concrete) */
+                surfaceType?: components["schemas"]["RunwaySurfaceType"] | null;
+                /** @description Include ArcGIS runway polygon geometry in the response (default false) */
+                includeGeometry?: boolean;
+                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+                cursor?: string | null;
+                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Returns the runways found */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedResponseOfRunwayDto"];
+                };
+            };
+            /** @description If coordinates or radius are invalid */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };

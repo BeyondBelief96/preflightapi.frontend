@@ -9,7 +9,7 @@ export function CtaSection() {
   const { plans } = usePlans()
   const studentPlan = plans.find((p) => p.id === 'student')
   const freeCallsLabel =
-    studentPlan?.limits.callsPerMonth?.toLocaleString() ?? '500'
+    studentPlan?.limits.callsPerMonth?.toLocaleString() ?? '5,000'
 
   return (
     <section className="relative overflow-hidden border-t border-border bg-[oklch(0.08_0.005_245)] py-20 text-card-foreground">

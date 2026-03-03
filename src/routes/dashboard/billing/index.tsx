@@ -23,7 +23,7 @@ import { useReconcile } from '@/components/dashboard/billing/use-reconcile'
 
 const billingSearchSchema = z.object({
   checkout: z.enum(['success', 'canceled']).optional(),
-  plan: z.enum(['private', 'commercial', 'atp']).optional(),
+  plan: z.enum(['private', 'commercial']).optional(),
   portal: z.enum(['return']).optional(),
 })
 
@@ -315,14 +315,11 @@ function BillingPage() {
 
       <CurrentPlanCard
         currentPlan={currentPlan}
-        plans={plans}
         stripeSub={stripeSub}
         isPaid={isPaid}
         isPastDue={isPastDue}
         isCanceling={isCanceling}
         cancelDate={cancelDate}
-        onCheckout={(planId) => checkoutMutation.mutate(planId)}
-        isCheckoutPending={checkoutMutation.isPending}
         onPortal={() => portalMutation.mutate()}
         isPortalPending={portalMutation.isPending}
       />

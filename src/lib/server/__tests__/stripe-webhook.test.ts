@@ -65,7 +65,6 @@ vi.mock('@/lib/server/apim-products', () => ({
     student: 'student-pilot',
     private: 'private-pilot',
     commercial: 'commercial-pilot',
-    atp: 'atp',
   }),
   isDowngrade: (...a: Array<any>) => mockIsDowngrade(...a),
   planIdFromProductId: (...a: Array<any>) => mockPlanIdFromProductId(...a),
@@ -75,12 +74,9 @@ vi.mock('@/lib/server/stripe-tier-resolver', () => ({
   resolveApimProductId: (...a: Array<any>) => mockResolveApimProductId(...a),
 }))
 
-vi.mock('@clerk/tanstack-react-start/server', () => ({
-  clerkClient: () => ({
-    users: {
-      updateUserMetadata: (...a: Array<any>) => mockUpdateUserMetadata(...a),
-    },
-  }),
+vi.mock('@/lib/server/clerk-admin', () => ({
+  clearStripeCustomerId: (...a: Array<any>) => mockUpdateUserMetadata(...a),
+  getUserPrimaryEmail: vi.fn().mockResolvedValue(undefined),
 }))
 
 // --- Helpers ---
@@ -108,14 +104,11 @@ beforeEach(() => {
   vi.stubEnv('STRIPE_WEBHOOK_SECRET', 'whsec_test')
   vi.stubEnv('STRIPE_PRIVATE_PRICE_ID', 'price_private')
   vi.stubEnv('STRIPE_COMMERCIAL_PRICE_ID', 'price_commercial')
-  vi.stubEnv('STRIPE_ATP_PRICE_ID', 'price_atp')
-
   mockPlanIdFromProductId.mockImplementation((id: string) => {
     const m: Record<string, string> = {
       'student-pilot': 'student',
       'private-pilot': 'private',
       'commercial-pilot': 'commercial',
-      atp: 'atp',
     }
     return m[id] ?? 'student'
   })
@@ -417,9 +410,7 @@ describe('Stripe webhook handler', () => {
 
     const body = JSON.parse(mockApimFetch.mock.calls[1][1].body)
     expect(body.properties.scope).toBe('/products/student-pilot')
-    expect(mockUpdateUserMetadata).toHaveBeenCalledWith('user_gone', {
-      privateMetadata: { stripeCustomerId: null },
-    })
+    expect(mockUpdateUserMetadata).toHaveBeenCalledWith('user_gone')
   })
 
   // -- invoice.payment_failed --

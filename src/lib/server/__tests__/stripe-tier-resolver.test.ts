@@ -7,7 +7,6 @@ vi.mock('@/env', () => ({
   env: {
     STRIPE_PRIVATE_PRICE_ID: 'price_private_test',
     STRIPE_COMMERCIAL_PRICE_ID: 'price_commercial_test',
-    STRIPE_ATP_PRICE_ID: 'price_atp_test',
   },
 }))
 
@@ -15,7 +14,6 @@ const PRODUCT_IDS: Record<string, string> = {
   student: 'student-pilot',
   private: 'private-pilot',
   commercial: 'commercial-pilot',
-  atp: 'atp',
 }
 
 describe('resolveApimProductId', () => {
@@ -55,15 +53,4 @@ describe('resolveApimProductId', () => {
     )
   })
 
-  it('resolves ATP from price ID', () => {
-    expect(resolveApimProductId('price_atp_test', undefined, PRODUCT_IDS)).toBe(
-      'atp',
-    )
-  })
-
-  it('resolves ATP from metadata when price ID is unknown', () => {
-    expect(resolveApimProductId('price_unknown', 'atp', PRODUCT_IDS)).toBe(
-      'atp',
-    )
-  })
 })

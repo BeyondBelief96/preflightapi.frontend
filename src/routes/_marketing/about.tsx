@@ -28,7 +28,7 @@ function AboutPage() {
   const { plans } = usePlans()
   const studentPlan = plans.find((p) => p.id === 'student')
   const freeCallsLabel =
-    studentPlan?.limits.callsPerMonth?.toLocaleString() ?? '500'
+    studentPlan?.limits.callsPerMonth?.toLocaleString() ?? '5,000'
 
   return (
     <div>
@@ -178,7 +178,7 @@ function AboutPage() {
                   icon: Layers,
                   title: 'One Source of Truth',
                   description:
-                    'Weather, airports, airspace, NOTAMs, obstacles, charts — all behind a single API key.',
+                    'Weather, airports, NAVAIDs, airspace, NOTAMs, obstacles, charts — all behind a single API key.',
                 },
                 {
                   icon: RefreshCw,

@@ -137,6 +137,26 @@ export const CATEGORIES: Array<ApiCategory> = [
     ],
   },
   {
+    slug: 'runways',
+    title: 'Runways',
+    description:
+      tagsMeta['Runways'] ??
+      'FAA runway data with filtering, spatial search, and optional ArcGIS polygon geometry.',
+    icon: 'ruler',
+    intro:
+      'FAA NASR runway data for 19,600+ US airports including dimensions, surface type, lighting, weight-bearing capacity, and detailed runway end information. Supports filtering, text search, and spatial nearby queries with optional ArcGIS polygon geometry.',
+    learnMoreUrl: 'https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/',
+    learnMoreLabel: 'FAA NASR Subscription data',
+    subcategories: [
+      {
+        tag: 'Runways',
+        label: 'Runways',
+        description:
+          'Search, filter, and retrieve runway data by airport, text search, or geographic proximity.',
+      },
+    ],
+  },
+  {
     slug: 'communication-frequencies',
     title: 'Communication Frequencies',
     description:

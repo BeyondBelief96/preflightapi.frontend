@@ -27,7 +27,6 @@ function deriveOverallStatus(
   const statuses = services.map((s) => s.status)
   if (statuses.every((s) => s === 'operational')) return 'operational'
   if (statuses.some((s) => s === 'outage')) return 'outage'
-  if (statuses.some((s) => s === 'maintenance')) return 'maintenance'
   return 'degraded'
 }
 

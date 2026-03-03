@@ -1,7 +1,7 @@
 import { HTTPError, defineHandler } from 'h3'
 import type Stripe from 'stripe'
 import type { getStripe as GetStripeFn } from '@/lib/server/stripe-client'
-import type { apimFetch as ApimFetchFn } from '@/lib/server/apim-client'
+import type { apimFetch } from '@/lib/server/apim-client'
 import type {
   getApimProductIds as GetApimProductIdsFn,
   isDowngrade as IsDowngradeFn,
@@ -10,6 +10,8 @@ import type {
 import type { resolveApimProductId as ResolveApimProductIdFn } from '@/lib/server/stripe-tier-resolver'
 import type { SubscriptionListResponse } from '@/types/apim'
 import { createLogger } from '@/lib/server/logger'
+
+type ApimFetchFn = typeof apimFetch
 
 const log = createLogger('stripe-webhook')
 
@@ -34,7 +36,7 @@ function markEventProcessed(eventId: string) {
 
 export default defineHandler(async (event) => {
   let getStripe: typeof GetStripeFn
-  let apimFetch: typeof ApimFetchFn
+  let apimFetch: ApimFetchFn
   let getApimProductIds: typeof GetApimProductIdsFn
   let resolveApimProductId: typeof ResolveApimProductIdFn
   let isDowngrade: typeof IsDowngradeFn
@@ -88,13 +90,6 @@ export default defineHandler(async (event) => {
         statusMessage: 'Missing price configuration',
       })
     }
-    if (!process.env.STRIPE_ATP_PRICE_ID) {
-      log.error('STRIPE_ATP_PRICE_ID is not set — paid tier mapping will fail')
-      throw new HTTPError({
-        statusCode: 500,
-        statusMessage: 'Missing price configuration',
-      })
-    }
   } else {
     if (!process.env.STRIPE_PRIVATE_PRICE_ID) {
       log.warn(
@@ -104,11 +99,6 @@ export default defineHandler(async (event) => {
     if (!process.env.STRIPE_COMMERCIAL_PRICE_ID) {
       log.warn(
         'STRIPE_COMMERCIAL_PRICE_ID is not set — price-based tier mapping will fail for commercial plans',
-      )
-    }
-    if (!process.env.STRIPE_ATP_PRICE_ID) {
-      log.warn(
-        'STRIPE_ATP_PRICE_ID is not set — price-based tier mapping will fail for ATP plans',
       )
     }
   }
@@ -159,7 +149,6 @@ export default defineHandler(async (event) => {
               | 'student'
               | 'private'
               | 'commercial'
-              | 'atp'
             syncResendSegment(clerkUserId, tier)
           } else {
             log.warn({ planId }, 'No APIM product found for planId')
@@ -219,7 +208,6 @@ export default defineHandler(async (event) => {
             | 'student'
             | 'private'
             | 'commercial'
-            | 'atp'
           syncResendSegment(clerkUserId, tier)
         } else {
           // Any non-active status loses paid access immediately.
@@ -263,7 +251,6 @@ export default defineHandler(async (event) => {
           | 'student'
           | 'private'
           | 'commercial'
-          | 'atp'
         syncResendSegment(clerkUserId, resumedTier)
         break
       }
@@ -295,12 +282,9 @@ export default defineHandler(async (event) => {
           // Clear stale stripeCustomerId from Clerk so getOrCreateStripeCustomer
           // will create a fresh customer on the next checkout attempt.
           try {
-            const { clerkClient } =
-              await import('@clerk/tanstack-react-start/server')
-            const clerk = clerkClient()
-            await clerk.users.updateUserMetadata(clerkUserId, {
-              privateMetadata: { stripeCustomerId: null },
-            })
+            const { clearStripeCustomerId } =
+              await import('@/lib/server/clerk-admin')
+            await clearStripeCustomerId(clerkUserId)
           } catch (err) {
             // Non-fatal — getOrCreateStripeCustomer also handles stale IDs
             log.warn(
@@ -477,15 +461,11 @@ export default defineHandler(async (event) => {
 
 async function syncResendSegment(
   clerkUserId: string,
-  newTier: 'student' | 'private' | 'commercial' | 'atp',
+  newTier: 'student' | 'private' | 'commercial',
 ): Promise<void> {
   try {
-    const { clerkClient } = await import('@clerk/tanstack-react-start/server')
-    const clerk = clerkClient()
-    const user = await clerk.users.getUser(clerkUserId)
-    const email = user.emailAddresses.find(
-      (e) => e.id === user.primaryEmailAddressId,
-    )?.emailAddress
+    const { getUserPrimaryEmail } = await import('@/lib/server/clerk-admin')
+    const email = await getUserPrimaryEmail(clerkUserId)
 
     if (!email) {
       log.warn(
@@ -550,11 +530,6 @@ async function getCurrentApimProductId(
 }
 
 // --- APIM Sync Helper ---
-
-type ApimFetchFn = <T = unknown>(
-  path: string,
-  options?: RequestInit,
-) => Promise<T>
 
 async function syncTierToApim(
   apimFetch: ApimFetchFn,
@@ -640,7 +615,7 @@ async function syncQuotaEpoch(
 
   const newDisplayName = `${clerkUserId}|${periodStartUnix}`
 
-  await Promise.allSettled(
+  const epochResults = await Promise.allSettled(
     activeSubs.map((sub) =>
       apimFetch(`/subscriptions/${sub.name}`, {
         method: 'PATCH',
@@ -650,6 +625,25 @@ async function syncQuotaEpoch(
       }),
     ),
   )
+
+  const epochFailures = epochResults.filter(
+    (r): r is PromiseRejectedResult => r.status === 'rejected',
+  )
+  if (epochFailures.length > 0) {
+    log.error(
+      {
+        userId: clerkUserId,
+        epoch: periodStartUnix,
+        failedCount: epochFailures.length,
+        totalCount: activeSubs.length,
+        errors: epochFailures.map((f) => String(f.reason)),
+      },
+      'Some APIM quota epoch PATCHes failed',
+    )
+    throw new Error(
+      `Failed to sync epoch for ${epochFailures.length}/${activeSubs.length} APIM subscriptions`,
+    )
+  }
 
   log.info(
     {

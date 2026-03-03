@@ -12,7 +12,6 @@ const subjectLabels: Record<string, string> = {
   billing: 'Billing',
   partnership: 'Partnership',
   enterprise: 'Enterprise / Custom Plan',
-  atp: 'Enterprise / Custom Plan', // legacy alias
 }
 
 const emailSchema = z.object({

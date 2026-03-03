@@ -1,182 +1,362 @@
 import { Link } from '@tanstack/react-router'
 import { ArrowRight, Terminal } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { codeToHtml } from 'shiki'
+import {  useEffect, useState } from 'react'
+import type {ReactNode} from 'react';
 import { Button } from '@/components/ui/button'
-import { API_BASE_URL } from '@/lib/gateway-url'
+import { Badge } from '@/components/ui/badge'
 import { isWaitlistMode } from '@/lib/waitlist'
 import { usePlans } from '@/hooks/use-plans'
 import { useTypingEffect } from '@/hooks/use-typing-effect'
+import { cn } from '@/lib/utils'
 
-const codeExamples = [
-  {
-    id: 'fetch',
-    label: 'fetch',
-    file: 'weather.ts',
-    lang: 'typescript',
-    code: `import type { MetarDto } from './types'
+// ---------------------------------------------------------------------------
+// Token-based syntax-highlighted code examples
+// ---------------------------------------------------------------------------
 
-const res = await fetch(
-  \`${API_BASE_URL}/metars/KJFK\`,
-  {
-    headers: {
-      'Ocp-Apim-Subscription-Key': 'your-api-key',
-    },
-  },
+interface Token {
+  text: string
+  className: string
+}
+
+interface CodeExample {
+  label: string
+  tokens: Array<Token>
+  response: ReactNode
+}
+
+const Str = ({ children }: { children: string }) => (
+  <span className="text-green-400">"{children}"</span>
+)
+const Num = ({ children }: { children: number }) => (
+  <span className="text-orange-300">{children}</span>
 )
 
-const metar: MetarDto = await res.json()
-console.log(metar.flightCategory) // "VFR"`,
+function JsonLine({
+  propKey,
+  value,
+  isLast = false,
+}: {
+  propKey: string
+  value: ReactNode
+  isLast?: boolean
+}) {
+  return (
+    <>
+      {'  '}
+      <span className="text-sky-300">"{propKey}"</span>
+      <span className="text-white/30">: </span>
+      {value}
+      {!isLast && <span className="text-white/30">,</span>}
+      {'\n'}
+    </>
+  )
+}
+
+const EXAMPLES: Array<CodeExample> = [
+  {
+    label: 'Get METAR Weather',
+    tokens: [
+      { text: 'const ', className: 'text-purple-400' },
+      { text: 'res', className: 'text-white/90' },
+      { text: ' = ', className: 'text-white/30' },
+      { text: 'await ', className: 'text-purple-400' },
+      { text: 'fetch', className: 'text-yellow-300' },
+      { text: '(', className: 'text-white/30' },
+      { text: '`${API_URL}/metars/KJFK`', className: 'text-green-400' },
+      { text: ', {\n  ', className: 'text-white/30' },
+      { text: 'headers', className: 'text-sky-300' },
+      { text: ': { ', className: 'text-white/30' },
+      { text: "'Ocp-Apim-Subscription-Key'", className: 'text-green-400' },
+      { text: ': ', className: 'text-white/30' },
+      { text: 'API_KEY', className: 'text-white/90' },
+      { text: ' }\n})\n', className: 'text-white/30' },
+      { text: 'const ', className: 'text-purple-400' },
+      { text: 'metar', className: 'text-white/90' },
+      { text: ' = ', className: 'text-white/30' },
+      { text: 'await ', className: 'text-purple-400' },
+      { text: 'res', className: 'text-white/90' },
+      { text: '.', className: 'text-white/30' },
+      { text: 'json', className: 'text-yellow-300' },
+      { text: '()', className: 'text-white/30' },
+    ],
+    response: (
+      <>
+        <span className="text-white/30">{'{\n'}</span>
+        <JsonLine propKey="stationId" value={<Str>KJFK</Str>} />
+        <JsonLine propKey="flightCategory" value={<Str>VFR</Str>} />
+        <JsonLine propKey="tempC" value={<Num>{18}</Num>} />
+        <JsonLine propKey="dewpointC" value={<Num>{12}</Num>} />
+        <JsonLine propKey="windDirDegrees" value={<Str>220</Str>} />
+        <JsonLine propKey="windSpeedKt" value={<Num>{12}</Num>} />
+        <JsonLine propKey="visibilityStatuteMi" value={<Str>10</Str>} />
+        <JsonLine propKey="altimInHg" value={<Num>{29.92}</Num>} isLast />
+        <span className="text-white/30">{'}'}</span>
+      </>
+    ),
   },
   {
-    id: 'axios',
-    label: 'axios',
-    file: 'weather.ts',
-    lang: 'typescript',
-    code: `import axios from 'axios'
-import type { MetarDto } from './types'
-
-const client = axios.create({
-  baseURL: '${API_BASE_URL}',
-  headers: {
-    'Ocp-Apim-Subscription-Key': 'your-api-key',
-  },
-})
-
-const { data } = await client.get<MetarDto>(
-  '/metars/KJFK',
-)
-console.log(data.flightCategory) // "VFR"`,
+    label: 'NAVAID Lookup',
+    tokens: [
+      { text: 'const ', className: 'text-purple-400' },
+      { text: 'res', className: 'text-white/90' },
+      { text: ' = ', className: 'text-white/30' },
+      { text: 'await ', className: 'text-purple-400' },
+      { text: 'fetch', className: 'text-yellow-300' },
+      { text: '(', className: 'text-white/30' },
+      { text: '`${API_URL}/navaids/DFW`', className: 'text-green-400' },
+      { text: ', {\n  ', className: 'text-white/30' },
+      { text: 'headers', className: 'text-sky-300' },
+      { text: ': { ', className: 'text-white/30' },
+      { text: "'Ocp-Apim-Subscription-Key'", className: 'text-green-400' },
+      { text: ': ', className: 'text-white/30' },
+      { text: 'API_KEY', className: 'text-white/90' },
+      { text: ' }\n})\n', className: 'text-white/30' },
+      { text: 'const ', className: 'text-purple-400' },
+      { text: 'navaid', className: 'text-white/90' },
+      { text: ' = ', className: 'text-white/30' },
+      { text: 'await ', className: 'text-purple-400' },
+      { text: 'res', className: 'text-white/90' },
+      { text: '.', className: 'text-white/30' },
+      { text: 'json', className: 'text-yellow-300' },
+      { text: '()', className: 'text-white/30' },
+    ],
+    response: (
+      <>
+        <span className="text-white/30">{'{\n'}</span>
+        <JsonLine propKey="navId" value={<Str>DFW</Str>} />
+        <JsonLine propKey="navType" value={<Str>Vortac</Str>} />
+        <JsonLine propKey="name" value={<Str>Dallas-Fort Worth</Str>} />
+        <JsonLine propKey="city" value={<Str>Dallas</Str>} />
+        <JsonLine propKey="stateCode" value={<Str>TX</Str>} />
+        <JsonLine propKey="latitude" value={<Num>{32.897}</Num>} />
+        <JsonLine propKey="elevation" value={<Num>{535}</Num>} isLast />
+        <span className="text-white/30">{'}'}</span>
+      </>
+    ),
   },
   {
-    id: 'react-query',
-    label: 'TanStack Query',
-    file: 'useMetar.ts',
-    lang: 'typescript',
-    code: `import { useQuery } from '@tanstack/react-query'
-import type { MetarDto } from './types'
+    label: 'Calculate Flight Plan',
+    tokens: [
+      { text: 'const ', className: 'text-purple-400' },
+      { text: 'res', className: 'text-white/90' },
+      { text: ' = ', className: 'text-white/30' },
+      { text: 'await ', className: 'text-purple-400' },
+      { text: 'fetch', className: 'text-yellow-300' },
+      { text: '(', className: 'text-white/30' },
+      { text: '`${API_URL}/navlog/calculate`', className: 'text-green-400' },
+      { text: ', {\n  ', className: 'text-white/30' },
+      { text: 'method', className: 'text-sky-300' },
+      { text: ': ', className: 'text-white/30' },
+      { text: "'POST'", className: 'text-green-400' },
+      { text: ',\n  ', className: 'text-white/30' },
+      { text: 'headers', className: 'text-sky-300' },
+      { text: ': { ', className: 'text-white/30' },
+      { text: "'Ocp-Apim-Subscription-Key'", className: 'text-green-400' },
+      { text: ': ', className: 'text-white/30' },
+      { text: 'API_KEY', className: 'text-white/90' },
+      { text: ' },\n  ', className: 'text-white/30' },
+      { text: 'body', className: 'text-sky-300' },
+      { text: ': ', className: 'text-white/30' },
+      { text: 'JSON', className: 'text-white/90' },
+      { text: '.', className: 'text-white/30' },
+      { text: 'stringify', className: 'text-yellow-300' },
+      { text: '({ ', className: 'text-white/30' },
+      { text: 'from', className: 'text-sky-300' },
+      { text: ': ', className: 'text-white/30' },
+      { text: "'KJFK'", className: 'text-green-400' },
+      { text: ', ', className: 'text-white/30' },
+      { text: 'to', className: 'text-sky-300' },
+      { text: ': ', className: 'text-white/30' },
+      { text: "'KLAX'", className: 'text-green-400' },
+      { text: ' })\n})\n', className: 'text-white/30' },
+      { text: 'const ', className: 'text-purple-400' },
+      { text: 'navlog', className: 'text-white/90' },
+      { text: ' = ', className: 'text-white/30' },
+      { text: 'await ', className: 'text-purple-400' },
+      { text: 'res', className: 'text-white/90' },
+      { text: '.', className: 'text-white/30' },
+      { text: 'json', className: 'text-yellow-300' },
+      { text: '()', className: 'text-white/30' },
+    ],
+    response: (
+      <>
+        <span className="text-white/30">{'{\n'}</span>
+        <JsonLine
+          propKey="totalRouteDistance"
+          value={<Num>{2145.8}</Num>}
+        />
+        <JsonLine
+          propKey="totalRouteTimeHours"
+          value={<Num>{4.87}</Num>}
+        />
+        <JsonLine propKey="totalFuelUsed" value={<Num>{68.3}</Num>} />
+        <JsonLine
+          propKey="averageWindComponent"
+          value={<Num>{-12.5}</Num>}
+        />
+        <JsonLine
+          propKey="legs"
+          value={
+            <span className="text-white/30">
+              [<span className="text-white/20 italic"> ...14 items </span>]
+            </span>
+          }
+          isLast
+        />
+        <span className="text-white/30">{'}'}</span>
+      </>
+    ),
+  },
+]
 
-export function useMetar(stationId: string) {
-  return useQuery({
-    queryKey: ['metar', stationId],
-    queryFn: async (): Promise<MetarDto> => {
-      const res = await fetch(
-        \`${API_BASE_URL}/metars/\${stationId}\`,
-        {
-          headers: {
-            'Ocp-Apim-Subscription-Key': 'your-api-key',
-          },
-        },
-      )
-      return res.json()
-    },
+// ---------------------------------------------------------------------------
+// Token rendering — clips tokens to match the typing cursor position
+// ---------------------------------------------------------------------------
+
+function renderTokens(tokens: Array<Token>, charLimit: number) {
+  let consumed = 0
+  return tokens.map((token, i) => {
+    if (consumed >= charLimit) return null
+    const available = charLimit - consumed
+    const text = token.text.slice(0, available)
+    consumed += token.text.length
+    return (
+      <span key={i} className={token.className}>
+        {text}
+      </span>
+    )
   })
-}`,
-  },
-  {
-    id: 'rtk-query',
-    label: 'RTK Query',
-    file: 'store/weatherApi.ts',
-    lang: 'typescript',
-    code: `import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import type { MetarDto } from '../types'
+}
 
-export const weatherApi = createApi({
-  baseQuery: fetchBaseQuery({
-    baseUrl: '${API_BASE_URL}',
-    prepareHeaders: (headers) => {
-      headers.set(
-        'Ocp-Apim-Subscription-Key',
-        'your-api-key',
-      )
-      return headers
-    },
-  }),
-  endpoints: (builder) => ({
-    getMetar: builder.query<MetarDto, string>({
-      query: (stationId) => \`/metars/\${stationId}\`,
-    }),
-  }),
-})`,
-  },
-] as const
+// ---------------------------------------------------------------------------
+// HeroCodeDemo — auto-cycling animated terminal
+// ---------------------------------------------------------------------------
 
-function CodeTabs() {
-  const [activeTab, setActiveTab] = useState(0)
-  const [highlightedHtml, setHighlightedHtml] = useState<
-    Record<number, string>
-  >({})
+type Phase = 'typing' | 'showing' | 'fading'
 
-  useEffect(() => {
-    codeExamples.forEach((example, index) => {
-      codeToHtml(example.code, {
-        lang: example.lang,
-        theme: 'github-dark',
-      }).then((html) => {
-        setHighlightedHtml((prev) => ({ ...prev, [index]: html }))
-      })
-    })
-  }, [])
+function HeroCodeDemo() {
+  const [exampleIndex, setExampleIndex] = useState(0)
+  const [phase, setPhase] = useState<Phase>('typing')
 
-  const activeExample = codeExamples[activeTab]
+  const example = EXAMPLES[exampleIndex]
+  const fullText = example.tokens.map((t) => t.text).join('')
   const { displayedText, isComplete } = useTypingEffect({
-    text: activeExample.code,
+    text: fullText,
+    speed: 18,
   })
+
+  // TYPING → SHOWING: wait for typing to finish
+  useEffect(() => {
+    if (phase === 'typing' && isComplete && displayedText === fullText) {
+      setPhase('showing')
+    }
+  }, [phase, isComplete, displayedText, fullText])
+
+  // SHOWING → FADING: hold 3s then fade
+  useEffect(() => {
+    if (phase !== 'showing') return
+    const id = setTimeout(() => setPhase('fading'), 3000)
+    return () => clearTimeout(id)
+  }, [phase])
+
+  // FADING → next TYPING: swap example after 300ms fade-out
+  useEffect(() => {
+    if (phase !== 'fading') return
+    const id = setTimeout(() => {
+      setExampleIndex((i) => (i + 1) % EXAMPLES.length)
+      setPhase('typing')
+    }, 300)
+    return () => clearTimeout(id)
+  }, [phase])
+
+  const goToExample = (index: number) => {
+    if (index === exampleIndex) return
+    setExampleIndex(index)
+    setPhase('typing')
+  }
 
   return (
     <div className="overflow-hidden rounded-xl border bg-aviation-dark shadow-2xl">
-      {/* Tab bar */}
+      {/* Terminal chrome */}
       <div className="flex items-center gap-2 border-b border-white/10 px-4 py-3">
         <div className="mr-2 flex items-center gap-1.5">
           <div className="h-3 w-3 rounded-full bg-red-500/80" />
           <div className="h-3 w-3 rounded-full bg-yellow-500/80" />
           <div className="h-3 w-3 rounded-full bg-green-500/80" />
         </div>
-        <span className="text-xs text-white/50">{activeExample.file}</span>
+        <Terminal className="h-3.5 w-3.5 text-white/40" />
+        <span className="text-xs text-white/50">Terminal</span>
+        <span className="ml-auto text-xs text-white/40">{example.label}</span>
       </div>
-      {/* Tabs — hidden on mobile, shows first example only */}
-      <div className="hidden overflow-x-auto border-b border-white/10 lg:flex">
-        {codeExamples.map((example, index) => (
-          <button
-            key={example.id}
-            type="button"
-            onClick={() => setActiveTab(index)}
-            className={`shrink-0 px-4 py-2 text-xs font-medium transition-colors ${
-              activeTab === index
-                ? 'border-b-2 border-accent text-white'
-                : 'text-white/50 hover:text-white/80'
-            }`}
-          >
-            {example.label}
-          </button>
-        ))}
-      </div>
-      {/* Code content — fixed height */}
-      <div className="h-[280px] overflow-auto p-4 text-[13px] leading-relaxed sm:text-sm lg:h-[420px] [&_pre]:!bg-transparent [&_pre]:!m-0 [&_code]:!bg-transparent">
-        {isComplete && highlightedHtml[activeTab] ? (
-          <div
-            dangerouslySetInnerHTML={{ __html: highlightedHtml[activeTab] }}
-          />
-        ) : (
-          <pre>
-            <code className="text-white/90">
-              {isComplete ? activeExample.code : displayedText}
+
+      {/* Content: code + response (fades out together) */}
+      <div
+        className={
+          phase === 'fading'
+            ? 'opacity-0 transition-opacity duration-300'
+            : 'opacity-100'
+        }
+      >
+        {/* Code */}
+        <div className="px-4 py-4">
+          <pre className="text-[13px] leading-relaxed sm:text-sm">
+            <code>
+              {renderTokens(example.tokens, displayedText.length)}
+              {!isComplete && (
+                <span className="animate-cursor-blink text-accent">
+                  &#x2588;
+                </span>
+              )}
             </code>
-            {!isComplete && (
-              <span className="animate-cursor-blink text-accent">|</span>
-            )}
           </pre>
+        </div>
+
+        {/* Response */}
+        {(phase === 'showing' || phase === 'fading') && (
+          <div className="animate-fade-in-up border-t border-white/10 px-4 py-4">
+            <div className="mb-3 flex items-center gap-2 text-xs">
+              <span className="text-white/30">Response</span>
+              <Badge className="border-green-500/30 bg-green-500/15 text-[10px] text-green-400">
+                200 OK
+              </Badge>
+            </div>
+            <pre className="text-[13px] leading-relaxed sm:text-sm">
+              <code>{example.response}</code>
+            </pre>
+          </div>
         )}
+      </div>
+
+      {/* Dot indicators */}
+      <div className="flex items-center justify-center gap-2 border-t border-white/10 px-4 py-3">
+        {EXAMPLES.map((_, i) => (
+          <button
+            key={i}
+            type="button"
+            onClick={() => goToExample(i)}
+            className={cn(
+              'h-1.5 rounded-full transition-all',
+              i === exampleIndex
+                ? 'w-6 bg-accent'
+                : 'w-1.5 bg-white/20 hover:bg-white/40',
+            )}
+            aria-label={`Show example: ${EXAMPLES[i].label}`}
+          />
+        ))}
       </div>
     </div>
   )
 }
 
+// ---------------------------------------------------------------------------
+// HeroSection
+// ---------------------------------------------------------------------------
+
 export function HeroSection() {
   const { plans } = usePlans()
   const studentPlan = plans.find((p) => p.id === 'student')
   const freeCallsLabel =
-    studentPlan?.limits.callsPerMonth?.toLocaleString() ?? '500'
+    studentPlan?.limits.callsPerMonth?.toLocaleString() ?? '5,000'
 
   return (
     <section className="relative overflow-hidden">
@@ -194,9 +374,9 @@ export function HeroSection() {
               <span className="text-accent">Developer-Ready.</span>
             </h1>
             <p className="mt-4 text-lg font-medium text-muted-foreground sm:text-xl">
-              Airports, runways, frequencies, airspace, NOTAMs, obstacles, and
-              more — all with one API key. Your aviation data infrastructure,
-              already built.
+              Airports, runways, frequencies, NAVAIDs, airspace, NOTAMs,
+              obstacles, and more — all with one API key. Your aviation data
+              infrastructure, already built.
             </p>
             <p className="mt-6 text-base leading-relaxed text-muted-foreground">
               Built by a pilot and software engineer. All data sourced from the
@@ -221,9 +401,9 @@ export function HeroSection() {
             </p>
           </div>
 
-          {/* Right: Code Example */}
+          {/* Right: Code Demo */}
           <div className="relative min-w-0">
-            <CodeTabs />
+            <HeroCodeDemo />
             {/* Decorative glow */}
             <div className="absolute -inset-4 -z-10 rounded-2xl bg-gradient-to-br from-accent/20 via-primary/10 to-transparent blur-2xl" />
           </div>

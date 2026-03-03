@@ -12,20 +12,8 @@ export const sections = [
       { label: 'Overview', href: '/docs', exact: true },
       { label: 'Quick Start', href: '/docs/getting-started' },
       { label: 'Authentication', href: '/docs/authentication' },
-    ],
-  },
-  {
-    title: 'Usage & Limits',
-    items: [
       { label: 'Rate Limits', href: '/docs/rate-limits' },
       { label: 'Error Handling', href: '/docs/errors' },
-    ],
-  },
-  {
-    title: 'Resources',
-    items: [
-      { label: 'Data Currency', href: '/docs/data-currency' },
-      { label: 'OpenAPI Spec', href: '/docs/openapi' },
     ],
   },
   {
@@ -40,42 +28,51 @@ export const sections = [
     ],
   },
   {
-    title: 'Airports & Airspace',
+    title: 'Airports & Facilities',
     items: [
       { label: 'Airports', href: '/docs/airports' },
+      { label: 'Runways', href: '/docs/runways' },
       {
         label: 'Communication Frequencies',
         href: '/docs/communication-frequencies',
       },
+    ],
+  },
+  {
+    title: 'Airspace & NOTAMs',
+    items: [
       { label: 'Airspace', href: '/docs/airspace' },
       { label: 'NOTAMs', href: '/docs/notams' },
       { label: 'Obstacles', href: '/docs/obstacles' },
     ],
   },
   {
-    title: 'Documents',
-    items: [
-      { label: 'Terminal Procedures', href: '/docs/terminal-procedures' },
-      { label: 'Chart Supplements', href: '/docs/chart-supplements' },
-    ],
-  },
-  {
-    title: 'E6B Flight Computer',
-    items: [{ label: 'E6B Flight Computer', href: '/docs/e6b' }],
-  },
-  {
-    title: 'Navigation',
+    title: 'Navigation & Planning',
     items: [
       { label: 'NAVAIDs', href: '/docs/navaids' },
       { label: 'Navigation Log', href: '/docs/nav-log' },
     ],
   },
   {
-    title: 'Data Models',
+    title: 'Utilities',
+    items: [{ label: 'E6B Flight Computer', href: '/docs/e6b' }],
+  },
+  {
+    title: 'Charts & Procedures',
     items: [
-      { label: 'Overview', href: '/docs/data-models', exact: true },
+      { label: 'Terminal Procedures', href: '/docs/terminal-procedures' },
+      { label: 'Chart Supplements', href: '/docs/chart-supplements' },
+    ],
+  },
+  {
+    title: 'Reference',
+    items: [
+      { label: 'Data Currency', href: '/docs/data-currency' },
+      { label: 'OpenAPI Spec', href: '/docs/openapi' },
+      { label: 'Data Models', href: '/docs/data-models', exact: true },
       { label: 'Weather', href: '/docs/data-models/weather' },
       { label: 'Airports', href: '/docs/data-models/airports' },
+      { label: 'Runways', href: '/docs/data-models/runways' },
       { label: 'Airspace', href: '/docs/data-models/airspace' },
       { label: 'NOTAMs', href: '/docs/data-models/notams' },
       { label: 'Obstacles', href: '/docs/data-models/obstacles' },

@@ -78,7 +78,9 @@ function resolveSchema(
     return resolveSchema(lookupSchema(name), visited)
   }
   if (s.oneOf && s.oneOf.length === 1) {
-    return resolveSchema(s.oneOf[0], visited)
+    const inner = resolveSchema(s.oneOf[0], visited)
+    if (inner && s.nullable) return { ...inner, nullable: true }
+    return inner
   }
   if (s.allOf && s.allOf.length) {
     const merged: OpenApiSchema = {
@@ -148,7 +150,7 @@ function parseSchemaFields(
       type: schemaToType(prop),
       nullable: actualProp?.nullable ?? false,
       required: requiredSet.has(name),
-      description: actualProp?.description,
+      description: prop.description ?? actualProp?.description,
       enum: actualProp?.enum?.map(String),
       enumNames: actualProp?.['x-enumNames'],
       refName,
@@ -224,7 +226,7 @@ const tierPatterns: Array<{ pattern: RegExp; key: string }> = [
   { pattern: /\/metars\//, key: 'metar' },
   { pattern: /\/tafs\//, key: 'taf' },
   { pattern: /\/airports\/search/, key: 'airports/search' },
-  { pattern: /\/airports\/[^/]+\/runways/, key: 'airports/runways' },
+  { pattern: /\/runways/, key: 'runways' },
   { pattern: /\/communication-frequencies\//, key: 'airports/frequencies' },
   { pattern: /\/airports/, key: 'airports/details' },
   { pattern: /\/pireps/, key: 'pirep' },

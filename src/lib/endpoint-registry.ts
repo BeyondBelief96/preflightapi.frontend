@@ -34,9 +34,14 @@ export const ENDPOINT_CATEGORIES: Array<EndpointCategoryEntry> = [
     href: '/docs/tafs',
   },
   {
-    label: 'Airports (search, details & runways)',
-    endpointKeys: ['airports/search', 'airports/details', 'airports/runways'],
+    label: 'Airports (search & details)',
+    endpointKeys: ['airports/search', 'airports/details'],
     href: '/docs/airports',
+  },
+  {
+    label: 'Runways',
+    endpointKeys: ['runways'],
+    href: '/docs/runways',
   },
   {
     label: 'Communication Frequencies',
@@ -155,7 +160,7 @@ export const PRICING_FEATURES: Array<PricingFeatureGroup> = [
         name: 'Airport information (19,600+ US airports)',
         endpointKey: 'airports/search',
       },
-      { name: 'Runways', endpointKey: 'airports/runways' },
+      { name: 'Runways', endpointKey: 'runways' },
       {
         name: 'Communication frequencies',
         endpointKey: 'airports/frequencies',
@@ -259,7 +264,7 @@ export const PRICING_FEATURES: Array<PricingFeatureGroup> = [
 // Helper functions
 // ---------------------------------------------------------------------------
 
-const PLAN_IDS: Array<PlanId> = ['student', 'private', 'commercial', 'atp']
+const PLAN_IDS: Array<PlanId> = ['student', 'private', 'commercial']
 
 /**
  * Returns the minimum tier required for a category (highest tier among its
@@ -310,7 +315,7 @@ export function planHasEndpointAccess(
 
 /**
  * Builds rows for the docs overview "Endpoint Access by Plan" table.
- * Each row has { category, student, private, commercial, atp } booleans.
+ * Each row has { category, student, private, commercial } booleans.
  */
 export function buildEndpointAccessRows(
   endpointAccess: Record<string, EndpointTier> = ENDPOINT_ACCESS,
@@ -320,14 +325,13 @@ export function buildEndpointAccessRows(
     student: planHasAccess('student', cat, endpointAccess),
     private: planHasAccess('private', cat, endpointAccess),
     commercial: planHasAccess('commercial', cat, endpointAccess),
-    atp: planHasAccess('atp', cat, endpointAccess),
   }))
 }
 
 /**
  * Builds comparison feature sections for the pricing page.
  * Returns sections with { category, features: [{ name, student, private,
- * commercial, atp }] } where values are booleans.
+ * commercial }] } where values are booleans.
  */
 export function buildPricingComparisonFeatures(
   endpointAccess: Record<string, EndpointTier> = ENDPOINT_ACCESS,
@@ -346,7 +350,6 @@ export function buildPricingComparisonFeatures(
         f.endpointKey,
         endpointAccess,
       ),
-      atp: planHasEndpointAccess('atp', f.endpointKey, endpointAccess),
     })),
   }))
 }

@@ -20,7 +20,6 @@ export const env = createEnv({
     STRIPE_WEBHOOK_SECRET: requiredInProd(z.string()),
     STRIPE_PRIVATE_PRICE_ID: requiredInProd(z.string()),
     STRIPE_COMMERCIAL_PRICE_ID: requiredInProd(z.string()),
-    STRIPE_ATP_PRICE_ID: requiredInProd(z.string()),
     AZURE_TENANT_ID: requiredInProd(z.string()),
     AZURE_CLIENT_ID: requiredInProd(z.string()),
     AZURE_CLIENT_SECRET: requiredInProd(z.string()),
@@ -41,7 +40,6 @@ export const env = createEnv({
       .string()
       .optional()
       .default('commercial-pilot'),
-    APIM_ATP_PRODUCT_ID: z.string().optional().default('atp'),
     CLERK_WEBHOOK_SECRET: z.string().optional(),
     APIM_HEALTH_CHECK_PATH: z.string().optional(),
     ADMIN_EMAILS: z.string().optional(),

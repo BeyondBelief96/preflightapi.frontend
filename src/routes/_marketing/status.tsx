@@ -9,7 +9,6 @@ import {
   Database,
   Server,
   Shield,
-  Wrench,
   XCircle,
 } from 'lucide-react'
 import type {
@@ -61,13 +60,6 @@ const STATUS_CONFIG: Record<
     dotClass: 'bg-aviation-warning',
     bannerClass: 'border-aviation-warning/30 bg-aviation-warning/5',
   },
-  maintenance: {
-    label: 'Under Maintenance',
-    description: 'Scheduled maintenance is in progress.',
-    icon: Wrench,
-    dotClass: 'bg-primary',
-    bannerClass: 'border-primary/30 bg-primary/5',
-  },
   outage: {
     label: 'Service Outage',
     description: 'One or more services are currently unavailable.',
@@ -116,7 +108,6 @@ function OverallBanner({ status }: { status: OverallStatus }) {
             'h-8 w-8 shrink-0',
             status === 'operational' && 'text-aviation-success',
             status === 'degraded' && 'text-aviation-warning',
-            status === 'maintenance' && 'text-primary',
             status === 'outage' && 'text-destructive',
           )}
         />
@@ -144,6 +135,19 @@ const CHECK_DISPLAY_NAMES: Record<string, string> = {
 
 function formatCheckName(name: string): string {
   return CHECK_DISPLAY_NAMES[name] ?? name
+}
+
+function combineOverallStatus(
+  serviceStatus: OverallStatus,
+  currencyStatus?: string,
+): OverallStatus {
+  // Service outage always takes priority
+  if (serviceStatus === 'outage') return 'outage'
+  // Service degradation or stale data → degraded
+  if (serviceStatus === 'degraded') return 'degraded'
+  if (currencyStatus === 'critical' || currencyStatus === 'degraded')
+    return 'degraded'
+  return 'operational'
 }
 
 function checkStatusToServiceStatus(status: string): ServiceStatus {
@@ -552,7 +556,12 @@ function StatusPage() {
         {isLoading ? (
           <Skeleton className="h-24 w-full rounded-xl" />
         ) : data ? (
-          <OverallBanner status={data.overall} />
+          <OverallBanner
+            status={combineOverallStatus(
+              data.overall,
+              currency?.overallStatus,
+            )}
+          />
         ) : null}
 
         {/* Service cards */}
