@@ -78,7 +78,9 @@ function resolveSchema(
     return resolveSchema(lookupSchema(name), visited)
   }
   if (s.oneOf && s.oneOf.length === 1) {
-    return resolveSchema(s.oneOf[0], visited)
+    const inner = resolveSchema(s.oneOf[0], visited)
+    if (inner && s.nullable) return { ...inner, nullable: true }
+    return inner
   }
   if (s.allOf && s.allOf.length) {
     const merged: OpenApiSchema = {

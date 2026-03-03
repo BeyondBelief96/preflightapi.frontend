@@ -1,7 +1,7 @@
 import { HTTPError, defineHandler } from 'h3'
 import type Stripe from 'stripe'
 import type { getStripe as GetStripeFn } from '@/lib/server/stripe-client'
-import type { apimFetch as ApimFetchFn } from '@/lib/server/apim-client'
+import type { apimFetch } from '@/lib/server/apim-client'
 import type {
   getApimProductIds as GetApimProductIdsFn,
   isDowngrade as IsDowngradeFn,
@@ -10,6 +10,8 @@ import type {
 import type { resolveApimProductId as ResolveApimProductIdFn } from '@/lib/server/stripe-tier-resolver'
 import type { SubscriptionListResponse } from '@/types/apim'
 import { createLogger } from '@/lib/server/logger'
+
+type ApimFetchFn = typeof apimFetch
 
 const log = createLogger('stripe-webhook')
 
@@ -34,7 +36,7 @@ function markEventProcessed(eventId: string) {
 
 export default defineHandler(async (event) => {
   let getStripe: typeof GetStripeFn
-  let apimFetch: typeof ApimFetchFn
+  let apimFetch: ApimFetchFn
   let getApimProductIds: typeof GetApimProductIdsFn
   let resolveApimProductId: typeof ResolveApimProductIdFn
   let isDowngrade: typeof IsDowngradeFn
@@ -529,11 +531,6 @@ async function getCurrentApimProductId(
 
 // --- APIM Sync Helper ---
 
-type ApimFetchFn = <T = unknown>(
-  path: string,
-  options?: RequestInit,
-) => Promise<T>
-
 async function syncTierToApim(
   apimFetch: ApimFetchFn,
   clerkUserId: string,
@@ -618,7 +615,7 @@ async function syncQuotaEpoch(
 
   const newDisplayName = `${clerkUserId}|${periodStartUnix}`
 
-  await Promise.allSettled(
+  const epochResults = await Promise.allSettled(
     activeSubs.map((sub) =>
       apimFetch(`/subscriptions/${sub.name}`, {
         method: 'PATCH',
@@ -628,6 +625,25 @@ async function syncQuotaEpoch(
       }),
     ),
   )
+
+  const epochFailures = epochResults.filter(
+    (r): r is PromiseRejectedResult => r.status === 'rejected',
+  )
+  if (epochFailures.length > 0) {
+    log.error(
+      {
+        userId: clerkUserId,
+        epoch: periodStartUnix,
+        failedCount: epochFailures.length,
+        totalCount: activeSubs.length,
+        errors: epochFailures.map((f) => String(f.reason)),
+      },
+      'Some APIM quota epoch PATCHes failed',
+    )
+    throw new Error(
+      `Failed to sync epoch for ${epochFailures.length}/${activeSubs.length} APIM subscriptions`,
+    )
+  }
 
   log.info(
     {
