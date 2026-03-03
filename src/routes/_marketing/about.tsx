@@ -28,7 +28,7 @@ function AboutPage() {
   const { plans } = usePlans()
   const studentPlan = plans.find((p) => p.id === 'student')
   const freeCallsLabel =
-    studentPlan?.limits.callsPerMonth?.toLocaleString() ?? '500'
+    studentPlan?.limits.callsPerMonth?.toLocaleString() ?? '5,000'
 
   return (
     <div>

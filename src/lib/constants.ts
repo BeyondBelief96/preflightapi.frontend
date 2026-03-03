@@ -97,7 +97,7 @@ function formatCostPerRequest(
   if (price === 0) return 'Free — $0/request'
   const cost = price / callsPerMonth
   // Show enough decimals to be meaningful
-  const formatted = cost < 0.001 ? cost.toFixed(4) : cost.toFixed(4)
+  const formatted = cost < 0.001 ? cost.toFixed(6) : cost.toFixed(4)
   return `~$${formatted}/request at full usage`
 }
 

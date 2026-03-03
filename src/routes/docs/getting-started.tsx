@@ -24,7 +24,7 @@ function GettingStartedDocs() {
   const { plans } = usePlans()
   const studentPlan = plans.find((p) => p.id === 'student')
   const freeName = studentPlan?.name ?? 'Student Pilot'
-  const freeCalls = studentPlan?.limits.callsPerMonth?.toLocaleString() ?? '500'
+  const freeCalls = studentPlan?.limits.callsPerMonth?.toLocaleString() ?? '5,000'
 
   return (
     <div className="space-y-10">
