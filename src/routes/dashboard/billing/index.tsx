@@ -19,6 +19,7 @@ import {
 import { apimKeys, stripeKeys } from '@/lib/server/apim-queries'
 import { UpgradeSuccessBanner } from '@/components/dashboard/billing/upgrade-success-banner'
 import { CurrentPlanCard } from '@/components/dashboard/billing/current-plan-card'
+import { UpgradePlanCards } from '@/components/dashboard/billing/upgrade-plan-cards'
 import { useReconcile } from '@/components/dashboard/billing/use-reconcile'
 
 const billingSearchSchema = z.object({
@@ -117,14 +118,20 @@ function BillingPage() {
     refetchOnMount: 'always',
   })
 
+  const [pendingPlanId, setPendingPlanId] = useState<string | null>(null)
+
   const checkoutMutation = useMutation({
-    mutationFn: (planId: string) => createCheckoutSession({ data: { planId } }),
+    mutationFn: (planId: string) => {
+      setPendingPlanId(planId)
+      return createCheckoutSession({ data: { planId } })
+    },
     onSuccess: (data) => {
       if (data.url) {
         window.location.href = data.url
       }
     },
     onError: (err) => {
+      setPendingPlanId(null)
       toastError('Failed to start checkout', err)
     },
   })
@@ -323,6 +330,15 @@ function BillingPage() {
         onPortal={() => portalMutation.mutate()}
         isPortalPending={portalMutation.isPending}
       />
+
+      {!isPaid && stripeSubQuery.isSuccess && (
+        <UpgradePlanCards
+          plans={plans}
+          onCheckout={(planId) => checkoutMutation.mutate(planId)}
+          isCheckoutPending={checkoutMutation.isPending}
+          pendingPlanId={pendingPlanId}
+        />
+      )}
 
       {/* Usage */}
       <Card>

@@ -1,4 +1,3 @@
-import { Link } from '@tanstack/react-router'
 import { Check, ExternalLink, Loader2 } from 'lucide-react'
 import type { PlanDefinition } from '@/lib/constants'
 import type { StripeSubscriptionStatus } from '@/types/plans'
@@ -81,9 +80,9 @@ export function CurrentPlanCard({
               {isCanceling ? 'Reactivate Subscription' : 'Manage Subscription'}
             </Button>
           ) : (
-            <Button asChild className="w-full sm:w-auto">
-              <Link to="/pricing">Upgrade Plan</Link>
-            </Button>
+            <p className="text-sm text-muted-foreground">
+              Choose a plan below to upgrade.
+            </p>
           )}
         </div>
         <div className="mt-6">
