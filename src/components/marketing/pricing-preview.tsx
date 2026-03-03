@@ -19,7 +19,7 @@ export function PricingPreview() {
             Start free and scale as your application grows. No hidden fees.
           </p>
         </div>
-        <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {selfServicePlans.map((plan, index) => (
             <FadeIn key={plan.id} delay={index * 100}>
               <div

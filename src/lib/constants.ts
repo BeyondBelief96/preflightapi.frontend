@@ -56,19 +56,12 @@ export const TIER_FEATURES: Record<string, Array<string>> = {
     'Always up-to-date with the latest FAA data',
     'Priority support',
   ],
-  atp: [
-    'All available endpoints',
-    'Built for production workloads',
-    'Always up-to-date with the latest FAA data',
-    'Priority support',
-  ],
 }
 
 export const TIER_UI: Record<string, { highlighted?: boolean; cta: string }> = {
   student: { cta: 'Get Started Free' },
   private: { highlighted: true, cta: 'Go Private' },
   commercial: { cta: 'Go Commercial' },
-  atp: { cta: 'Go ATP' },
 }
 
 // --- Helpers ---
@@ -162,20 +155,6 @@ export const PLANS: Array<PlanDefinition> = [
     ),
     cta: 'Go Commercial',
   },
-  {
-    id: 'atp',
-    name: 'ATP',
-    price: 149.99,
-    interval: 'month',
-    apimProductId: 'atp',
-    limits: { callsPerMonth: 2_000_000, ratePerMinute: 500 },
-    features: buildPlanFeatures(
-      'atp',
-      { callsPerMonth: 2_000_000, ratePerMinute: 500 },
-      149.99,
-    ),
-    cta: 'Go ATP',
-  },
 ] as const
 
 export type EndpointTier = PlanId
@@ -184,7 +163,6 @@ export const PLAN_ORDER: Record<PlanId, number> = {
   student: 0,
   private: 1,
   commercial: 2,
-  atp: 3,
 }
 
 export const ENDPOINT_ACCESS: Record<string, EndpointTier> = {

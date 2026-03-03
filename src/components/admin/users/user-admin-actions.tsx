@@ -34,7 +34,6 @@ const TIERS = [
   { value: 'student', label: 'Student Pilot' },
   { value: 'private', label: 'Private Pilot' },
   { value: 'commercial', label: 'Commercial Pilot' },
-  { value: 'atp', label: 'ATP' },
 ] as const
 
 export function UserAdminActions({

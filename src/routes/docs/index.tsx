@@ -202,8 +202,6 @@ function DocsIndex() {
   const studentPlan = plans.find((p) => p.id === 'student')
   const privatePlan = plans.find((p) => p.id === 'private')
   const commercialPlan = plans.find((p) => p.id === 'commercial')
-  const atpPlan = plans.find((p) => p.id === 'atp')
-
   return (
     <div>
       <h1 className="text-3xl font-bold">Overview</h1>
@@ -413,13 +411,6 @@ function DocsIndex() {
                       : ''}
                   </span>
                 </th>
-                <th className="py-3 text-center font-semibold">
-                  {atpPlan?.name ?? 'ATP'}
-                  <br />
-                  <span className="font-normal text-muted-foreground">
-                    {atpPlan?.price != null ? `$${atpPlan.price}/mo` : ''}
-                  </span>
-                </th>
               </tr>
             </thead>
             <tbody>
@@ -434,9 +425,6 @@ function DocsIndex() {
                   </td>
                   <td className="py-3 text-center">
                     {row.commercial ? '\u2705' : '\u2014'}
-                  </td>
-                  <td className="py-3 text-center">
-                    {row.atp ? '\u2705' : '\u2014'}
                   </td>
                 </tr>
               ))}

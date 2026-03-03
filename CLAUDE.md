@@ -87,14 +87,13 @@ const myServerFn = createServerFn()
 
 ### Subscription Tiers
 
-Four tiers defined in `src/lib/constants.ts`. Plan data (names, limits, prices) is fetched dynamically from APIM and Stripe at runtime — avoid hardcoding tier names or prices in UI.
+Three tiers defined in `src/lib/constants.ts`. Plan data (names, limits, prices) is fetched dynamically from APIM and Stripe at runtime — avoid hardcoding tier names or prices in UI.
 
 | Tier             | Plan ID      | APIM Product ID    | Default Price | Calls/Month | Rate Limit  |
 | ---------------- | ------------ | ------------------ | ------------- | ----------- | ----------- |
 | Student Pilot    | `student`    | `student-pilot`    | Free          | 5,000       | 10 req/min  |
 | Private Pilot    | `private`    | `private-pilot`    | $14.99/mo     | 150,000     | 60 req/min  |
 | Commercial Pilot | `commercial` | `commercial-pilot` | $49.99/mo     | 750,000     | 300 req/min |
-| ATP              | `atp`        | `atp`              | $149.99/mo    | 2,000,000   | 500 req/min |
 
 - `ENDPOINT_ACCESS` maps API endpoints to minimum required tier (`EndpointTier`)
 - `src/lib/endpoint-registry.ts` is the single source of truth for endpoint categories, doc links, and tier access computation — used by pricing, docs overview, and upgrade banner
@@ -105,7 +104,7 @@ Four tiers defined in `src/lib/constants.ts`. Plan data (names, limits, prices) 
 - Stripe API version `2026-01-28.clover`: `current_period_end` is on `SubscriptionItem`, not `Subscription`
 - Portal upgrades change price but NOT custom metadata — price ID takes priority over metadata for tier mapping
 - Stripe customer ID stored in Clerk `privateMetadata.stripeCustomerId`
-- Price IDs are server-only env vars (differ between test/live): `STRIPE_PRIVATE_PRICE_ID`, `STRIPE_COMMERCIAL_PRICE_ID`, `STRIPE_ATP_PRICE_ID`
+- Price IDs are server-only env vars (differ between test/live): `STRIPE_PRIVATE_PRICE_ID`, `STRIPE_COMMERCIAL_PRICE_ID`
 - Checkout is redirect-based (no `@stripe/stripe-js` on client)
 - `createCheckoutSession` prevents duplicate subscriptions server-side
 - APIM API keys stay the same across tier changes (subscription scope is PATCHed)

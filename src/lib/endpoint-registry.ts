@@ -264,7 +264,7 @@ export const PRICING_FEATURES: Array<PricingFeatureGroup> = [
 // Helper functions
 // ---------------------------------------------------------------------------
 
-const PLAN_IDS: Array<PlanId> = ['student', 'private', 'commercial', 'atp']
+const PLAN_IDS: Array<PlanId> = ['student', 'private', 'commercial']
 
 /**
  * Returns the minimum tier required for a category (highest tier among its
@@ -325,7 +325,6 @@ export function buildEndpointAccessRows(
     student: planHasAccess('student', cat, endpointAccess),
     private: planHasAccess('private', cat, endpointAccess),
     commercial: planHasAccess('commercial', cat, endpointAccess),
-    atp: planHasAccess('atp', cat, endpointAccess),
   }))
 }
 
@@ -351,7 +350,6 @@ export function buildPricingComparisonFeatures(
         f.endpointKey,
         endpointAccess,
       ),
-      atp: planHasEndpointAccess('atp', f.endpointKey, endpointAccess),
     })),
   }))
 }

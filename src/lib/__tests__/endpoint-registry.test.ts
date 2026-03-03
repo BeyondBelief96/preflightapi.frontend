@@ -109,10 +109,6 @@ describe('planHasAccess', () => {
     expect(planHasAccess('commercial', notams)).toBe(true)
   })
 
-  it('atp can access commercial-tier categories', () => {
-    expect(planHasAccess('atp', notams)).toBe(true)
-  })
-
   it('student can access student-tier categories', () => {
     const metars = ENDPOINT_CATEGORIES.find((c) => c.label === 'METARs')!
     expect(planHasAccess('student', metars)).toBe(true)
@@ -137,7 +133,7 @@ describe('planHasEndpointAccess', () => {
   })
 
   it('returns false for unknown endpoint key', () => {
-    expect(planHasEndpointAccess('atp', 'nonexistent/key')).toBe(false)
+    expect(planHasEndpointAccess('commercial', 'nonexistent/key')).toBe(false)
   })
 
   it('falls back to static ENDPOINT_ACCESS when dynamic data has different keys', () => {
@@ -166,7 +162,6 @@ describe('buildEndpointAccessRows', () => {
     expect(briefing!.student).toBe(false)
     expect(briefing!.private).toBe(false)
     expect(briefing!.commercial).toBe(true)
-    expect(briefing!.atp).toBe(true)
   })
 
   it('METARs are accessible to all plans', () => {
@@ -175,7 +170,6 @@ describe('buildEndpointAccessRows', () => {
     expect(metars!.student).toBe(true)
     expect(metars!.private).toBe(true)
     expect(metars!.commercial).toBe(true)
-    expect(metars!.atp).toBe(true)
   })
 
   it('PIREPs are private+ only', () => {
@@ -184,7 +178,6 @@ describe('buildEndpointAccessRows', () => {
     expect(pireps!.student).toBe(false)
     expect(pireps!.private).toBe(true)
     expect(pireps!.commercial).toBe(true)
-    expect(pireps!.atp).toBe(true)
   })
 
   it('falls back to static tiers when dynamic endpointAccess has unrelated keys', () => {
@@ -194,7 +187,6 @@ describe('buildEndpointAccessRows', () => {
     expect(notams.student).toBe(false)
     expect(notams.private).toBe(false)
     expect(notams.commercial).toBe(true)
-    expect(notams.atp).toBe(true)
   })
 })
 
@@ -217,7 +209,6 @@ describe('buildPricingComparisonFeatures', () => {
     expect(metars.student).toBe(true)
     expect(metars.private).toBe(true)
     expect(metars.commercial).toBe(true)
-    expect(metars.atp).toBe(true)
   })
 
   it('computes correct booleans for a private-tier feature', () => {
@@ -228,7 +219,6 @@ describe('buildPricingComparisonFeatures', () => {
     expect(pireps.student).toBe(false)
     expect(pireps.private).toBe(true)
     expect(pireps.commercial).toBe(true)
-    expect(pireps.atp).toBe(true)
   })
 
   it('computes correct booleans for a commercial-tier feature', () => {
@@ -241,7 +231,6 @@ describe('buildPricingComparisonFeatures', () => {
     expect(briefing.student).toBe(false)
     expect(briefing.private).toBe(false)
     expect(briefing.commercial).toBe(true)
-    expect(briefing.atp).toBe(true)
   })
 
   it('includes Route weather briefing in Flight Planning', () => {

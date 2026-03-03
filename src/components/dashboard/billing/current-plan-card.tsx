@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router'
 import { Check, ExternalLink, Loader2 } from 'lucide-react'
 import type { PlanDefinition } from '@/lib/constants'
 import type { StripeSubscriptionStatus } from '@/types/plans'
@@ -7,28 +8,22 @@ import { Badge } from '@/components/ui/badge'
 
 interface CurrentPlanCardProps {
   currentPlan: PlanDefinition
-  plans: Array<PlanDefinition>
   stripeSub: StripeSubscriptionStatus | null | undefined
   isPaid: boolean
   isPastDue: boolean
   isCanceling: boolean
   cancelDate: string | null | undefined
-  onCheckout: (planId: string) => void
-  isCheckoutPending: boolean
   onPortal: () => void
   isPortalPending: boolean
 }
 
 export function CurrentPlanCard({
   currentPlan,
-  plans,
   stripeSub,
   isPaid,
   isPastDue,
   isCanceling,
   cancelDate,
-  onCheckout,
-  isCheckoutPending,
   onPortal,
   isPortalPending,
 }: CurrentPlanCardProps) {
@@ -86,23 +81,9 @@ export function CurrentPlanCard({
               {isCanceling ? 'Reactivate Subscription' : 'Manage Subscription'}
             </Button>
           ) : (
-            <div className="flex flex-col gap-2 sm:flex-row">
-              {plans
-                .filter((p) => p.id !== 'student' && !p.marketingOnly)
-                .map((plan) => (
-                  <Button
-                    key={plan.id}
-                    variant={plan.highlighted ? 'default' : 'outline'}
-                    onClick={() => onCheckout(plan.id)}
-                    disabled={isCheckoutPending}
-                  >
-                    {isCheckoutPending ? (
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    ) : null}
-                    {plan.cta}
-                  </Button>
-                ))}
-            </div>
+            <Button asChild className="w-full sm:w-auto">
+              <Link to="/pricing">Upgrade Plan</Link>
+            </Button>
           )}
         </div>
         <div className="mt-6">

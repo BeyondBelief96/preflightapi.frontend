@@ -3,7 +3,6 @@ import { env } from '@/env'
 export const PRICE_ID_MAP: Record<string, () => string | undefined> = {
   private: () => env.STRIPE_PRIVATE_PRICE_ID,
   commercial: () => env.STRIPE_COMMERCIAL_PRICE_ID,
-  atp: () => env.STRIPE_ATP_PRICE_ID,
 }
 
 export function getPriceIdForPlan(planId: string): string | undefined {

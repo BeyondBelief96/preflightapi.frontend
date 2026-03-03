@@ -52,21 +52,18 @@ function buildComparisonFeatures(
           'callsPerMonth',
           'Unlimited',
         ),
-        atp: formatLimit(plans, 'atp', 'callsPerMonth', 'Unlimited'),
       },
       {
         name: 'Rate Limit (req/min)',
         student: formatLimit(plans, 'student', 'ratePerMinute', 'Custom'),
         private: formatLimit(plans, 'private', 'ratePerMinute', 'Custom'),
         commercial: formatLimit(plans, 'commercial', 'ratePerMinute', 'Custom'),
-        atp: formatLimit(plans, 'atp', 'ratePerMinute', 'Custom'),
       },
       {
         name: 'Support',
         student: 'Email',
         private: 'Email',
         commercial: 'Priority',
-        atp: 'Dedicated Priority',
       },
     ],
   }
@@ -95,7 +92,7 @@ function PricingPage() {
           </div>
 
           {/* Plan cards */}
-          <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {selfServicePlans.map((plan) => (
               <PricingCard key={plan.id} plan={plan} />
             ))}
@@ -168,7 +165,7 @@ function ComparisonSection({
     <>
       <tr>
         <td
-          colSpan={5}
+          colSpan={4}
           className="pb-2 pt-6 text-sm font-semibold text-foreground"
         >
           {section.category}
@@ -199,7 +196,7 @@ function ComparisonSection({
   )
 }
 
-const PLAN_IDS = ['student', 'private', 'commercial', 'atp'] as const
+const PLAN_IDS = ['student', 'private', 'commercial'] as const
 
 function MobileComparison({
   plans,

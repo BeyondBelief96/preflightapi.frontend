@@ -195,7 +195,6 @@ async function fetchStripePrices(): Promise<Record<string, TierPrice>> {
   const priceIds: Array<{ planId: string; priceId: string | undefined }> = [
     { planId: 'private', priceId: env.STRIPE_PRIVATE_PRICE_ID },
     { planId: 'commercial', priceId: env.STRIPE_COMMERCIAL_PRICE_ID },
-    { planId: 'atp', priceId: env.STRIPE_ATP_PRICE_ID },
   ]
 
   const fetches = priceIds
@@ -233,10 +232,6 @@ function getDefaultProducts(): Record<string, TierProduct> {
     commercial: {
       apimProductId: productIds.commercial,
       displayName: 'Commercial Pilot',
-    },
-    atp: {
-      apimProductId: productIds.atp,
-      displayName: 'ATP',
     },
   }
 }
