@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 
 interface UpgradePlanCardsProps {
-  plans: PlanDefinition[]
+  plans: Array<PlanDefinition>
   onCheckout: (planId: string) => void
   isCheckoutPending: boolean
   pendingPlanId: string | null

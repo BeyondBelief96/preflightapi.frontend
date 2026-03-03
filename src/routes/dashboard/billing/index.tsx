@@ -121,9 +121,10 @@ function BillingPage() {
   const [pendingPlanId, setPendingPlanId] = useState<string | null>(null)
 
   const checkoutMutation = useMutation({
-    mutationFn: (planId: string) => {
+    mutationFn: (planId: string) =>
+      createCheckoutSession({ data: { planId } }),
+    onMutate: (planId) => {
       setPendingPlanId(planId)
-      return createCheckoutSession({ data: { planId } })
     },
     onSuccess: (data) => {
       if (data.url) {
