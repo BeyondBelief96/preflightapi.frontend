@@ -1617,7 +1617,7 @@ export interface components {
          * @description Airport data from the FAA National Airspace System Resources (NASR) database.
          *     Combines data from APT_BASE, APT_ATT, and APT_CON CSV files.
          *     Use the airport's IcaoId or ArptId to query related endpoints such as runways
-         *     (GET /api/v1/airports/{icaoCodeOrIdent}/runways), communication frequencies
+         *     (GET /api/v1/runways/airport/{icaoCodeOrIdent}), communication frequencies
          *     (GET /api/v1/communication-frequencies/{servicedFacility}), METARs
          *     (GET /api/v1/metars/{icaoCodeOrIdent}), TAFs (GET /api/v1/tafs/{icaoCodeOrIdent}),
          *     airport diagrams (GET /api/v1/airport-diagrams/{icaoCodeOrIdent}), and

@@ -4232,7 +4232,7 @@
       },
       "AirportDto": {
         "type": "object",
-        "description": "Airport data from the FAA National Airspace System Resources (NASR) database.\nCombines data from APT_BASE, APT_ATT, and APT_CON CSV files.\nUse the airport's IcaoId or ArptId to query related endpoints such as runways\n(GET /api/v1/airports/{icaoCodeOrIdent}/runways), communication frequencies\n(GET /api/v1/communication-frequencies/{servicedFacility}), METARs\n(GET /api/v1/metars/{icaoCodeOrIdent}), TAFs (GET /api/v1/tafs/{icaoCodeOrIdent}),\nairport diagrams (GET /api/v1/airport-diagrams/{icaoCodeOrIdent}), and\nchart supplements (GET /api/v1/chart-supplements/{icaoCodeOrIdent}).",
+        "description": "Airport data from the FAA National Airspace System Resources (NASR) database.\nCombines data from APT_BASE, APT_ATT, and APT_CON CSV files.\nUse the airport's IcaoId or ArptId to query related endpoints such as runways\n(GET /api/v1/runways/airport/{icaoCodeOrIdent}), communication frequencies\n(GET /api/v1/communication-frequencies/{servicedFacility}), METARs\n(GET /api/v1/metars/{icaoCodeOrIdent}), TAFs (GET /api/v1/tafs/{icaoCodeOrIdent}),\nairport diagrams (GET /api/v1/airport-diagrams/{icaoCodeOrIdent}), and\nchart supplements (GET /api/v1/chart-supplements/{icaoCodeOrIdent}).",
         "additionalProperties": false,
         "properties": {
           "siteNo": {
