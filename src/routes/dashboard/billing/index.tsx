@@ -128,6 +128,8 @@ function BillingPage() {
     onSuccess: (data) => {
       if (data.url) {
         window.location.href = data.url
+      } else {
+        setPendingPlanId(null)
       }
     },
     onError: (err) => {
