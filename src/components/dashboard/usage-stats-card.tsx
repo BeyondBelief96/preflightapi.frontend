@@ -12,7 +12,7 @@ interface UsageStatsCardsProps {
   usagePercent: number
   dailyPercent: number
   dailyBudget: number | null
-  projectedUsage: number
+  projectedUsage: number | null
   isDailyLoading: boolean
   isDailyError: boolean
   isMonthlyLoading: boolean
@@ -107,13 +107,16 @@ export function UsageStatsCards({
           <p className="text-xs text-muted-foreground">
             of {callsLimit?.toLocaleString() ?? 'unlimited'} limit
           </p>
-          {callsLimit && !isMonthlyLoading && callsThisMonth > 0 && (
-            <p
-              className={`mt-1 text-xs ${projectionColor(projectedUsage, callsLimit)}`}
-            >
-              Projected: ~{projectedUsage.toLocaleString()} by end of period
-            </p>
-          )}
+          {callsLimit != null &&
+            projectedUsage != null &&
+            !isMonthlyLoading &&
+            callsThisMonth > 0 && (
+              <p
+                className={`mt-1 text-xs ${projectionColor(projectedUsage, callsLimit)}`}
+              >
+                Projected: ~{projectedUsage.toLocaleString()} by end of period
+              </p>
+            )}
         </CardContent>
       </Card>
       <Card>

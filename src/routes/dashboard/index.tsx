@@ -117,16 +117,18 @@ function DashboardOverview() {
     ? Math.min((callsToday / dailyBudget) * 100, 100)
     : 0
 
-  const daysElapsed = Math.max(
-    (Date.now() - new Date(monthFromDate).getTime()) / 86_400_000,
-    1,
-  )
+  const daysElapsedRaw =
+    (Date.now() - new Date(monthFromDate).getTime()) / 86_400_000
+  const daysElapsed = Math.max(daysElapsedRaw, 1)
   const totalDays = Math.max(
     (new Date(monthToDate).getTime() - new Date(monthFromDate).getTime()) /
       86_400_000,
     1,
   )
-  const projectedUsage = Math.round((callsThisMonth / daysElapsed) * totalDays)
+  const projectedUsage =
+    daysElapsedRaw < 1
+      ? null
+      : Math.round((callsThisMonth / daysElapsed) * totalDays)
 
   return (
     <div className="space-y-8">

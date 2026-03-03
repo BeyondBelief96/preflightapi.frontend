@@ -302,7 +302,7 @@ ApiManagementGatewayLogs
   and isnotempty(OperationId)
 | summarize
     calls = count(),
-    clientErrors = countif(ResponseCode >= 400 and ResponseCode < 500),
+    clientErrors = countif(ResponseCode >= 400 and ResponseCode < 500 and ResponseCode != 429),
     serverErrors = countif(ResponseCode >= 500),
     avgLatencyMs = avg(todecimal(TotalTime))
   by OperationId
