@@ -815,11 +815,15 @@ export const getRevenueSummary = createServerFn({ method: 'GET' }).handler(
         recentChurn++
       }
 
-      const { createClerkClient } = await import('@clerk/backend')
-      const clerk = createClerkClient({ secretKey: env.CLERK_SECRET_KEY })
-      const { totalCount: totalUsers } = await clerk.users.getUserList({
-        limit: 1,
-      })
+      let totalUsers = 0
+      try {
+        const { createClerkClient } = await import('@clerk/backend')
+        const clerk = createClerkClient({ secretKey: env.CLERK_SECRET_KEY })
+        const { totalCount } = await clerk.users.getUserList({ limit: 1 })
+        totalUsers = totalCount
+      } catch (clerkErr) {
+        log.warn({ err: clerkErr }, 'Failed to fetch total user count')
+      }
 
       return {
         mrr,
