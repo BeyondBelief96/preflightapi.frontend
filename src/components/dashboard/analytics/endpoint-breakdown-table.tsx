@@ -27,6 +27,7 @@ function errorRateColor(rate: number): string {
 }
 
 function latencyColor(ms: number): string {
+  if (ms === 0) return 'text-muted-foreground'
   if (ms > 500) return 'text-destructive'
   if (ms > 200) return 'text-aviation-warning'
   return 'text-green-400'
