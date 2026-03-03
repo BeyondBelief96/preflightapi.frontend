@@ -1,42 +1,283 @@
 import { Link } from '@tanstack/react-router'
-import { useQuery } from '@tanstack/react-query'
-import { ArrowRight, Loader2, Play, Terminal } from 'lucide-react'
-import { useState } from 'react'
+import { ArrowRight, Terminal } from 'lucide-react'
+import {  useEffect, useState } from 'react'
+import type {ReactNode} from 'react';
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { API_BASE_URL } from '@/lib/gateway-url'
 import { isWaitlistMode } from '@/lib/waitlist'
 import { usePlans } from '@/hooks/use-plans'
-import { fetchDemoMetar } from '@/lib/server/demo'
-import { flightCategoryColors } from '@/components/marketing/demo-shared'
+import { useTypingEffect } from '@/hooks/use-typing-effect'
+import { cn } from '@/lib/utils'
 
-const heroAirports = [
-  { icao: 'KJFK', label: 'JFK' },
-  { icao: 'KLAX', label: 'LAX' },
-  { icao: 'KORD', label: 'ORD' },
-  { icao: 'KDEN', label: 'DEN' },
-  { icao: 'KSFO', label: 'SFO' },
-  { icao: 'KATL', label: 'ATL' },
+// ---------------------------------------------------------------------------
+// Token-based syntax-highlighted code examples
+// ---------------------------------------------------------------------------
+
+interface Token {
+  text: string
+  className: string
+}
+
+interface CodeExample {
+  label: string
+  tokens: Array<Token>
+  response: ReactNode
+}
+
+const Str = ({ children }: { children: string }) => (
+  <span className="text-green-400">"{children}"</span>
+)
+const Num = ({ children }: { children: number }) => (
+  <span className="text-orange-300">{children}</span>
+)
+
+function JsonLine({
+  propKey,
+  value,
+  isLast = false,
+}: {
+  propKey: string
+  value: ReactNode
+  isLast?: boolean
+}) {
+  return (
+    <>
+      {'  '}
+      <span className="text-sky-300">"{propKey}"</span>
+      <span className="text-white/30">: </span>
+      {value}
+      {!isLast && <span className="text-white/30">,</span>}
+      {'\n'}
+    </>
+  )
+}
+
+const EXAMPLES: Array<CodeExample> = [
+  {
+    label: 'Get METAR Weather',
+    tokens: [
+      { text: 'const ', className: 'text-purple-400' },
+      { text: 'res', className: 'text-white/90' },
+      { text: ' = ', className: 'text-white/30' },
+      { text: 'await ', className: 'text-purple-400' },
+      { text: 'fetch', className: 'text-yellow-300' },
+      { text: '(', className: 'text-white/30' },
+      { text: '`${API_URL}/metars/KJFK`', className: 'text-green-400' },
+      { text: ', {\n  ', className: 'text-white/30' },
+      { text: 'headers', className: 'text-sky-300' },
+      { text: ': { ', className: 'text-white/30' },
+      { text: "'Ocp-Apim-Subscription-Key'", className: 'text-green-400' },
+      { text: ': ', className: 'text-white/30' },
+      { text: 'API_KEY', className: 'text-white/90' },
+      { text: ' }\n})\n', className: 'text-white/30' },
+      { text: 'const ', className: 'text-purple-400' },
+      { text: 'metar', className: 'text-white/90' },
+      { text: ' = ', className: 'text-white/30' },
+      { text: 'await ', className: 'text-purple-400' },
+      { text: 'res', className: 'text-white/90' },
+      { text: '.', className: 'text-white/30' },
+      { text: 'json', className: 'text-yellow-300' },
+      { text: '()', className: 'text-white/30' },
+    ],
+    response: (
+      <>
+        <span className="text-white/30">{'{\n'}</span>
+        <JsonLine propKey="stationId" value={<Str>KJFK</Str>} />
+        <JsonLine propKey="flightCategory" value={<Str>VFR</Str>} />
+        <JsonLine propKey="tempC" value={<Num>{18}</Num>} />
+        <JsonLine propKey="dewpointC" value={<Num>{12}</Num>} />
+        <JsonLine propKey="windDirDegrees" value={<Str>220</Str>} />
+        <JsonLine propKey="windSpeedKt" value={<Num>{12}</Num>} />
+        <JsonLine propKey="visibilityStatuteMi" value={<Str>10</Str>} />
+        <JsonLine propKey="altimInHg" value={<Num>{29.92}</Num>} isLast />
+        <span className="text-white/30">{'}'}</span>
+      </>
+    ),
+  },
+  {
+    label: 'NAVAID Lookup',
+    tokens: [
+      { text: 'const ', className: 'text-purple-400' },
+      { text: 'res', className: 'text-white/90' },
+      { text: ' = ', className: 'text-white/30' },
+      { text: 'await ', className: 'text-purple-400' },
+      { text: 'fetch', className: 'text-yellow-300' },
+      { text: '(', className: 'text-white/30' },
+      { text: '`${API_URL}/navaids/DFW`', className: 'text-green-400' },
+      { text: ', {\n  ', className: 'text-white/30' },
+      { text: 'headers', className: 'text-sky-300' },
+      { text: ': { ', className: 'text-white/30' },
+      { text: "'Ocp-Apim-Subscription-Key'", className: 'text-green-400' },
+      { text: ': ', className: 'text-white/30' },
+      { text: 'API_KEY', className: 'text-white/90' },
+      { text: ' }\n})\n', className: 'text-white/30' },
+      { text: 'const ', className: 'text-purple-400' },
+      { text: 'navaid', className: 'text-white/90' },
+      { text: ' = ', className: 'text-white/30' },
+      { text: 'await ', className: 'text-purple-400' },
+      { text: 'res', className: 'text-white/90' },
+      { text: '.', className: 'text-white/30' },
+      { text: 'json', className: 'text-yellow-300' },
+      { text: '()', className: 'text-white/30' },
+    ],
+    response: (
+      <>
+        <span className="text-white/30">{'{\n'}</span>
+        <JsonLine propKey="navId" value={<Str>DFW</Str>} />
+        <JsonLine propKey="navType" value={<Str>Vortac</Str>} />
+        <JsonLine propKey="name" value={<Str>Dallas-Fort Worth</Str>} />
+        <JsonLine propKey="city" value={<Str>Dallas</Str>} />
+        <JsonLine propKey="stateCode" value={<Str>TX</Str>} />
+        <JsonLine propKey="latitude" value={<Num>{32.897}</Num>} />
+        <JsonLine propKey="elevation" value={<Num>{535}</Num>} isLast />
+        <span className="text-white/30">{'}'}</span>
+      </>
+    ),
+  },
+  {
+    label: 'Calculate Flight Plan',
+    tokens: [
+      { text: 'const ', className: 'text-purple-400' },
+      { text: 'res', className: 'text-white/90' },
+      { text: ' = ', className: 'text-white/30' },
+      { text: 'await ', className: 'text-purple-400' },
+      { text: 'fetch', className: 'text-yellow-300' },
+      { text: '(', className: 'text-white/30' },
+      { text: '`${API_URL}/navlog/calculate`', className: 'text-green-400' },
+      { text: ', {\n  ', className: 'text-white/30' },
+      { text: 'method', className: 'text-sky-300' },
+      { text: ': ', className: 'text-white/30' },
+      { text: "'POST'", className: 'text-green-400' },
+      { text: ',\n  ', className: 'text-white/30' },
+      { text: 'headers', className: 'text-sky-300' },
+      { text: ': { ', className: 'text-white/30' },
+      { text: "'Ocp-Apim-Subscription-Key'", className: 'text-green-400' },
+      { text: ': ', className: 'text-white/30' },
+      { text: 'API_KEY', className: 'text-white/90' },
+      { text: ' },\n  ', className: 'text-white/30' },
+      { text: 'body', className: 'text-sky-300' },
+      { text: ': ', className: 'text-white/30' },
+      { text: 'JSON', className: 'text-white/90' },
+      { text: '.', className: 'text-white/30' },
+      { text: 'stringify', className: 'text-yellow-300' },
+      { text: '({ ', className: 'text-white/30' },
+      { text: 'from', className: 'text-sky-300' },
+      { text: ': ', className: 'text-white/30' },
+      { text: "'KJFK'", className: 'text-green-400' },
+      { text: ', ', className: 'text-white/30' },
+      { text: 'to', className: 'text-sky-300' },
+      { text: ': ', className: 'text-white/30' },
+      { text: "'KLAX'", className: 'text-green-400' },
+      { text: ' })\n})\n', className: 'text-white/30' },
+      { text: 'const ', className: 'text-purple-400' },
+      { text: 'navlog', className: 'text-white/90' },
+      { text: ' = ', className: 'text-white/30' },
+      { text: 'await ', className: 'text-purple-400' },
+      { text: 'res', className: 'text-white/90' },
+      { text: '.', className: 'text-white/30' },
+      { text: 'json', className: 'text-yellow-300' },
+      { text: '()', className: 'text-white/30' },
+    ],
+    response: (
+      <>
+        <span className="text-white/30">{'{\n'}</span>
+        <JsonLine
+          propKey="totalRouteDistance"
+          value={<Num>{2145.8}</Num>}
+        />
+        <JsonLine
+          propKey="totalRouteTimeHours"
+          value={<Num>{4.87}</Num>}
+        />
+        <JsonLine propKey="totalFuelUsed" value={<Num>{68.3}</Num>} />
+        <JsonLine
+          propKey="averageWindComponent"
+          value={<Num>{-12.5}</Num>}
+        />
+        <JsonLine
+          propKey="legs"
+          value={
+            <span className="text-white/30">
+              [<span className="text-white/20 italic"> ...14 items </span>]
+            </span>
+          }
+          isLast
+        />
+        <span className="text-white/30">{'}'}</span>
+      </>
+    ),
+  },
 ]
 
-function LiveMetarDemo() {
-  const [selectedIcao, setSelectedIcao] = useState('KJFK')
-  const [enabled, setEnabled] = useState(false)
+// ---------------------------------------------------------------------------
+// Token rendering — clips tokens to match the typing cursor position
+// ---------------------------------------------------------------------------
 
-  const { data, isLoading, error, isFetching } = useQuery({
-    queryKey: ['demo', 'hero-metar', selectedIcao],
-    queryFn: () => fetchDemoMetar({ data: { icao: selectedIcao } }),
-    enabled,
-    staleTime: 2 * 60 * 1000,
-    retry: false,
+function renderTokens(tokens: Array<Token>, charLimit: number) {
+  let consumed = 0
+  return tokens.map((token, i) => {
+    if (consumed >= charLimit) return null
+    const available = charLimit - consumed
+    const text = token.text.slice(0, available)
+    consumed += token.text.length
+    return (
+      <span key={i} className={token.className}>
+        {text}
+      </span>
+    )
+  })
+}
+
+// ---------------------------------------------------------------------------
+// HeroCodeDemo — auto-cycling animated terminal
+// ---------------------------------------------------------------------------
+
+type Phase = 'typing' | 'showing' | 'fading'
+
+function HeroCodeDemo() {
+  const [exampleIndex, setExampleIndex] = useState(0)
+  const [phase, setPhase] = useState<Phase>('typing')
+
+  const example = EXAMPLES[exampleIndex]
+  const fullText = example.tokens.map((t) => t.text).join('')
+  const { displayedText, isComplete } = useTypingEffect({
+    text: fullText,
+    speed: 18,
   })
 
-  const metar = data?.data
-  const durationMs = data?.durationMs
+  // TYPING → SHOWING: wait for typing to finish
+  useEffect(() => {
+    if (phase === 'typing' && isComplete && displayedText === fullText) {
+      setPhase('showing')
+    }
+  }, [phase, isComplete, displayedText, fullText])
+
+  // SHOWING → FADING: hold 3s then fade
+  useEffect(() => {
+    if (phase !== 'showing') return
+    const id = setTimeout(() => setPhase('fading'), 3000)
+    return () => clearTimeout(id)
+  }, [phase])
+
+  // FADING → next TYPING: swap example after 300ms fade-out
+  useEffect(() => {
+    if (phase !== 'fading') return
+    const id = setTimeout(() => {
+      setExampleIndex((i) => (i + 1) % EXAMPLES.length)
+      setPhase('typing')
+    }, 300)
+    return () => clearTimeout(id)
+  }, [phase])
+
+  const goToExample = (index: number) => {
+    if (index === exampleIndex) return
+    setExampleIndex(index)
+    setPhase('typing')
+  }
 
   return (
     <div className="overflow-hidden rounded-xl border bg-aviation-dark shadow-2xl">
-      {/* Terminal header */}
+      {/* Terminal chrome */}
       <div className="flex items-center gap-2 border-b border-white/10 px-4 py-3">
         <div className="mr-2 flex items-center gap-1.5">
           <div className="h-3 w-3 rounded-full bg-red-500/80" />
@@ -44,190 +285,72 @@ function LiveMetarDemo() {
           <div className="h-3 w-3 rounded-full bg-green-500/80" />
         </div>
         <Terminal className="h-3.5 w-3.5 text-white/40" />
-        <span className="text-xs text-white/50">Live API Demo</span>
+        <span className="text-xs text-white/50">Terminal</span>
+        <span className="ml-auto text-xs text-white/40">{example.label}</span>
       </div>
 
-      {/* Request */}
-      <div className="border-b border-white/10 px-4 pb-4 pt-4">
-        <pre className="text-[13px] leading-relaxed sm:text-sm">
-          <code>
-            <span className="font-semibold text-green-400">GET</span>{' '}
-            <span className="text-white/50">{API_BASE_URL}/metars/</span>
-            <span className="font-semibold text-accent">{selectedIcao}</span>
-            {'\n'}
-            <span className="text-white/30">Header: </span>
-            <span className="text-blue-400/70">Ocp-Apim-Subscription-Key</span>
-            <span className="text-white/30">: ••••••••</span>
-          </code>
-        </pre>
-
-        <div className="mt-3 flex flex-wrap items-center gap-2">
-          {heroAirports.map((apt) => (
-            <button
-              key={apt.icao}
-              type="button"
-              onClick={() => setSelectedIcao(apt.icao)}
-              className={`rounded-md border px-2.5 py-1 font-mono text-xs font-medium transition-colors ${
-                selectedIcao === apt.icao
-                  ? 'border-accent/40 bg-accent/20 text-accent'
-                  : 'border-white/10 bg-white/5 text-white/60 hover:bg-white/10 hover:text-white/80'
-              }`}
-            >
-              {apt.label}
-            </button>
-          ))}
-          <Button
-            size="sm"
-            className="ml-auto h-7 gap-1.5 px-3 text-xs"
-            onClick={() => setEnabled(true)}
-            disabled={isFetching}
-          >
-            {isFetching ? (
-              <Loader2 className="h-3 w-3 animate-spin" />
-            ) : (
-              <Play className="h-3 w-3 fill-current" />
-            )}
-            {isFetching ? 'Fetching...' : 'Run'}
-          </Button>
+      {/* Content: code + response (fades out together) */}
+      <div
+        className={
+          phase === 'fading'
+            ? 'opacity-0 transition-opacity duration-300'
+            : 'opacity-100'
+        }
+      >
+        {/* Code */}
+        <div className="px-4 py-4">
+          <pre className="text-[13px] leading-relaxed sm:text-sm">
+            <code>
+              {renderTokens(example.tokens, displayedText.length)}
+              {!isComplete && (
+                <span className="animate-cursor-blink text-accent">
+                  &#x2588;
+                </span>
+              )}
+            </code>
+          </pre>
         </div>
-      </div>
 
-      {/* Response */}
-      <div className="px-4 py-4">
-        {!enabled ? (
-          <div className="flex flex-col items-center justify-center py-8 text-center text-white/25 sm:py-12">
-            <div className="mb-3 rounded-lg border border-dashed border-white/15 p-3">
-              <Play className="h-5 w-5" />
-            </div>
-            <p className="text-xs">Press Run to make a live API request</p>
-          </div>
-        ) : metar ? (
-          <>
-            {/* Response header */}
-            <div className="mb-4 flex items-center gap-2 text-xs">
+        {/* Response */}
+        {(phase === 'showing' || phase === 'fading') && (
+          <div className="animate-fade-in-up border-t border-white/10 px-4 py-4">
+            <div className="mb-3 flex items-center gap-2 text-xs">
               <span className="text-white/30">Response</span>
               <Badge className="border-green-500/30 bg-green-500/15 text-[10px] text-green-400">
                 200 OK
               </Badge>
-              {durationMs != null && (
-                <span className="text-white/30">{durationMs}ms</span>
-              )}
-              {isFetching && (
-                <Loader2 className="h-3 w-3 animate-spin text-white/30" />
-              )}
             </div>
-
-            {/* Flight category + station */}
-            <div className="mb-4 flex items-center gap-2.5">
-              {metar.flightCategory && (
-                <Badge
-                  className={`px-2.5 py-0.5 text-sm ${flightCategoryColors[metar.flightCategory] ?? ''}`}
-                >
-                  {metar.flightCategory}
-                </Badge>
-              )}
-              <span className="font-mono text-lg font-bold text-white">
-                {selectedIcao}
-              </span>
-              {metar.wxString && (
-                <span className="text-sm text-white/50">{metar.wxString}</span>
-              )}
-            </div>
-
-            {/* Weather data grid */}
-            <div className="grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-4">
-              <div>
-                <div className="text-[10px] font-medium uppercase tracking-wider text-white/35">
-                  Temp
-                </div>
-                <div className="mt-0.5 text-sm font-semibold text-white">
-                  {metar.tempC ?? '—'}°C
-                </div>
-              </div>
-              <div>
-                <div className="text-[10px] font-medium uppercase tracking-wider text-white/35">
-                  Wind
-                </div>
-                <div className="mt-0.5 text-sm font-semibold text-white">
-                  {metar.windDirDegrees ?? '—'}° @ {metar.windSpeedKt ?? '—'}kt
-                  {metar.windGustKt ? ` G${metar.windGustKt}` : ''}
-                </div>
-              </div>
-              <div>
-                <div className="text-[10px] font-medium uppercase tracking-wider text-white/35">
-                  Visibility
-                </div>
-                <div className="mt-0.5 text-sm font-semibold text-white">
-                  {metar.visibilityStatuteMi ?? '—'} SM
-                </div>
-              </div>
-              <div>
-                <div className="text-[10px] font-medium uppercase tracking-wider text-white/35">
-                  Altimeter
-                </div>
-                <div className="mt-0.5 text-sm font-semibold text-white">
-                  {metar.altimInHg?.toFixed(2) ?? '—'} inHg
-                </div>
-              </div>
-            </div>
-
-            {/* Sky conditions */}
-            {metar.skyCondition && metar.skyCondition.length > 0 && (
-              <div className="mt-3">
-                <div className="text-[10px] font-medium uppercase tracking-wider text-white/35">
-                  Sky Conditions
-                </div>
-                <div className="mt-1 flex flex-wrap gap-1.5">
-                  {metar.skyCondition.map(
-                    (
-                      sc: {
-                        skyCover?: string
-                        cloudBaseFtAgl?: number | null
-                      },
-                      i: number,
-                    ) => (
-                      <Badge
-                        key={i}
-                        variant="secondary"
-                        className="bg-white/10 text-xs text-white/80"
-                      >
-                        {sc.skyCover}
-                        {sc.cloudBaseFtAgl != null
-                          ? ` ${sc.cloudBaseFtAgl.toLocaleString()}'`
-                          : ''}
-                      </Badge>
-                    ),
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Raw METAR */}
-            {metar.rawText && (
-              <div className="mt-3 rounded-md bg-white/5 px-3 py-2 font-mono text-[11px] leading-relaxed text-white/40">
-                {metar.rawText}
-              </div>
-            )}
-          </>
-        ) : isLoading ? (
-          <div className="flex flex-col items-center justify-center py-8 sm:py-12">
-            <Loader2 className="h-6 w-6 animate-spin text-accent" />
-            <p className="mt-2 text-xs text-white/40">
-              Calling /metars/{selectedIcao}...
-            </p>
+            <pre className="text-[13px] leading-relaxed sm:text-sm">
+              <code>{example.response}</code>
+            </pre>
           </div>
-        ) : error ? (
-          <div className="flex flex-col items-center justify-center py-8 text-center sm:py-12">
-            <p className="text-sm text-red-400/80">Failed to fetch METAR</p>
-            <p className="mt-1 text-xs text-white/30">
-              Try again in a moment
-            </p>
-          </div>
-        ) : null}
+        )}
+      </div>
+
+      {/* Dot indicators */}
+      <div className="flex items-center justify-center gap-2 border-t border-white/10 px-4 py-3">
+        {EXAMPLES.map((_, i) => (
+          <button
+            key={i}
+            type="button"
+            onClick={() => goToExample(i)}
+            className={cn(
+              'h-1.5 rounded-full transition-all',
+              i === exampleIndex
+                ? 'w-6 bg-accent'
+                : 'w-1.5 bg-white/20 hover:bg-white/40',
+            )}
+            aria-label={`Show example: ${EXAMPLES[i].label}`}
+          />
+        ))}
       </div>
     </div>
   )
 }
+
+// ---------------------------------------------------------------------------
+// HeroSection
+// ---------------------------------------------------------------------------
 
 export function HeroSection() {
   const { plans } = usePlans()
@@ -251,9 +374,9 @@ export function HeroSection() {
               <span className="text-accent">Developer-Ready.</span>
             </h1>
             <p className="mt-4 text-lg font-medium text-muted-foreground sm:text-xl">
-              Airports, runways, frequencies, airspace, NOTAMs, obstacles, and
-              more — all with one API key. Your aviation data infrastructure,
-              already built.
+              Airports, runways, frequencies, NAVAIDs, airspace, NOTAMs,
+              obstacles, and more — all with one API key. Your aviation data
+              infrastructure, already built.
             </p>
             <p className="mt-6 text-base leading-relaxed text-muted-foreground">
               Built by a pilot and software engineer. All data sourced from the
@@ -278,9 +401,9 @@ export function HeroSection() {
             </p>
           </div>
 
-          {/* Right: Live Demo */}
+          {/* Right: Code Demo */}
           <div className="relative min-w-0">
-            <LiveMetarDemo />
+            <HeroCodeDemo />
             {/* Decorative glow */}
             <div className="absolute -inset-4 -z-10 rounded-2xl bg-gradient-to-br from-accent/20 via-primary/10 to-transparent blur-2xl" />
           </div>

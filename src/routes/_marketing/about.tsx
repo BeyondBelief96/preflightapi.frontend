@@ -178,7 +178,7 @@ function AboutPage() {
                   icon: Layers,
                   title: 'One Source of Truth',
                   description:
-                    'Weather, airports, airspace, NOTAMs, obstacles, charts — all behind a single API key.',
+                    'Weather, airports, NAVAIDs, airspace, NOTAMs, obstacles, charts — all behind a single API key.',
                 },
                 {
                   icon: RefreshCw,

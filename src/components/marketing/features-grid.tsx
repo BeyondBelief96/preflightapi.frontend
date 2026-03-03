@@ -42,8 +42,8 @@ const features = [
         >
           FAA NASR subscription
         </a>
-        . Runways, frequencies, terminal procedures, chart supplements. Updated
-        every 28 days.
+        . Runways, frequencies, NAVAIDs, terminal procedures, chart supplements.
+        Updated every 28 days.
       </>
     ),
   },

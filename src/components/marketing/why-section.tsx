@@ -7,7 +7,7 @@ const reasons = [
     icon: Layers,
     title: 'One API key, all the FAA data you need',
     description:
-      'Weather, airports, airspace, NOTAMs, obstacles, charts — all behind a single API key.',
+      'Weather, airports, NAVAIDs, airspace, NOTAMs, obstacles, charts — all behind a single API key.',
   },
   {
     icon: RefreshCw,
