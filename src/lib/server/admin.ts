@@ -766,6 +766,7 @@ export interface RevenueSummary {
   mrr: number
   customersByTier: Array<{ tier: string; count: number }>
   recentChurn: number
+  totalUsers: number
 }
 
 export const getRevenueSummary = createServerFn({ method: 'GET' }).handler(
@@ -794,14 +795,14 @@ export const getRevenueSummary = createServerFn({ method: 'GET' }).handler(
 
       const { planIdFromPriceId } = await import('./stripe-utils')
       const tierCounts: Record<string, number> = {
-        student: 0,
         private: 0,
         commercial: 0,
-        atp: 0,
       }
       for (const sub of allSubs) {
-        const planId = planIdFromPriceId(sub.priceId) || 'student'
-        tierCounts[planId] = (tierCounts[planId] ?? 0) + 1
+        const planId = planIdFromPriceId(sub.priceId)
+        if (planId && tierCounts[planId] !== undefined) {
+          tierCounts[planId]++
+        }
       }
 
       const thirtyDaysAgo = Math.floor(Date.now() / 1000) - 30 * 86400
@@ -814,6 +815,16 @@ export const getRevenueSummary = createServerFn({ method: 'GET' }).handler(
         recentChurn++
       }
 
+      let totalUsers = 0
+      try {
+        const { createClerkClient } = await import('@clerk/backend')
+        const clerk = createClerkClient({ secretKey: env.CLERK_SECRET_KEY })
+        const { totalCount } = await clerk.users.getUserList({ limit: 1 })
+        totalUsers = totalCount
+      } catch (clerkErr) {
+        log.warn({ err: clerkErr }, 'Failed to fetch total user count')
+      }
+
       return {
         mrr,
         customersByTier: Object.entries(tierCounts).map(([tier, count]) => ({
@@ -821,10 +832,11 @@ export const getRevenueSummary = createServerFn({ method: 'GET' }).handler(
           count,
         })),
         recentChurn,
+        totalUsers,
       }
     } catch (err) {
       log.error({ err }, 'Failed to fetch revenue summary')
-      return { mrr: 0, customersByTier: [], recentChurn: 0 }
+      return { mrr: 0, customersByTier: [], recentChurn: 0, totalUsers: 0 }
     }
   },
 )

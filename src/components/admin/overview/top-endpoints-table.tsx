@@ -9,9 +9,23 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Skeleton } from '@/components/ui/skeleton'
+import { formatMs } from '@/lib/format'
 
 function formatEndpoint(operationId: string): string {
   return operationId.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+}
+
+function errorRateColor(rate: number): string {
+  if (rate > 10) return 'text-destructive'
+  if (rate >= 5) return 'text-aviation-warning'
+  return ''
+}
+
+function latencyColor(ms: number): string {
+  if (ms === 0) return 'text-muted-foreground'
+  if (ms > 500) return 'text-destructive'
+  if (ms > 200) return 'text-aviation-warning'
+  return 'text-green-400'
 }
 
 export function TopEndpointsTable({
@@ -45,7 +59,12 @@ export function TopEndpointsTable({
               <TableHeader>
                 <TableRow>
                   <TableHead>Endpoint</TableHead>
-                  <TableHead className="text-right">Calls</TableHead>
+                  <TableHead className="w-[80px] text-right">Calls</TableHead>
+                  <TableHead className="w-[80px] text-right">4xx</TableHead>
+                  <TableHead className="w-[80px] text-right">5xx</TableHead>
+                  <TableHead className="w-[100px] text-right">
+                    Avg Latency
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -54,8 +73,23 @@ export function TopEndpointsTable({
                     <TableCell className="max-w-[200px] truncate font-mono text-sm sm:max-w-none">
                       {formatEndpoint(item.endpoint)}
                     </TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="tabular-nums text-right text-sm">
                       {item.calls.toLocaleString()}
+                    </TableCell>
+                    <TableCell
+                      className={`tabular-nums text-right text-sm ${errorRateColor(item.clientErrorRate)}`}
+                    >
+                      {item.clientErrorRate.toFixed(1)}%
+                    </TableCell>
+                    <TableCell
+                      className={`tabular-nums text-right text-sm ${errorRateColor(item.serverErrorRate)}`}
+                    >
+                      {item.serverErrorRate.toFixed(1)}%
+                    </TableCell>
+                    <TableCell
+                      className={`tabular-nums text-right text-sm ${latencyColor(item.avgLatencyMs)}`}
+                    >
+                      {formatMs(item.avgLatencyMs)}
                     </TableCell>
                   </TableRow>
                 ))}

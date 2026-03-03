@@ -6,7 +6,7 @@ import type {
   RecentError,
 } from '@/types/plans'
 import { DailyTrendChart } from '@/components/dashboard/analytics/daily-trend-chart'
-import { EndpointBreakdownChart } from '@/components/dashboard/analytics/endpoint-breakdown-chart'
+import { EndpointBreakdownTable } from '@/components/dashboard/analytics/endpoint-breakdown-table'
 import { ErrorBreakdownChart } from '@/components/dashboard/analytics/error-breakdown-chart'
 import { RecentErrorsTable } from '@/components/dashboard/analytics/recent-errors-table'
 import { ResponseBreakdownCard } from '@/components/dashboard/analytics/response-breakdown-card'
@@ -45,7 +45,7 @@ export function UserAnalyticsSection({
       <DailyTrendChart data={data?.dailyTrend} isLoading={isLoading} />
 
       <div className="grid min-w-0 gap-4 md:grid-cols-2">
-        <EndpointBreakdownChart data={data?.endpoints} isLoading={isLoading} />
+        <EndpointBreakdownTable data={data?.endpoints} isLoading={isLoading} />
         <ErrorBreakdownChart data={data?.errors} isLoading={isLoading} />
       </div>
 

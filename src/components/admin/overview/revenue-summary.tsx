@@ -5,10 +5,8 @@ import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 
 const tierLabels: Record<string, string> = {
-  student: 'Student Pilot',
   private: 'Private Pilot',
   commercial: 'Commercial Pilot',
-  atp: 'ATP',
 }
 
 export function RevenueSummaryCard({
@@ -20,7 +18,7 @@ export function RevenueSummaryCard({
 }) {
   if (isLoading || !data) {
     return (
-      <Card>
+      <Card className="h-full">
         <CardHeader>
           <CardTitle className="text-sm font-medium">Revenue</CardTitle>
         </CardHeader>
@@ -39,7 +37,7 @@ export function RevenueSummaryCard({
   )
 
   return (
-    <Card className="overflow-hidden">
+    <Card className="h-full overflow-hidden">
       <CardHeader>
         <CardTitle className="text-sm font-medium">Revenue</CardTitle>
       </CardHeader>
@@ -65,9 +63,13 @@ export function RevenueSummaryCard({
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Users className="h-3.5 w-3.5" />
-            <span>Paid Customers by Tier</span>
+            <span>Customers</span>
           </div>
           <div className="space-y-1.5">
+            <div className="flex items-center justify-between text-sm">
+              <span>Total Registered</span>
+              <Badge variant="secondary">{data.totalUsers}</Badge>
+            </div>
             {data.customersByTier.map((item) => (
               <div
                 key={item.tier}
