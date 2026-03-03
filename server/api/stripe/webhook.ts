@@ -147,7 +147,6 @@ export default defineHandler(async (event) => {
               | 'student'
               | 'private'
               | 'commercial'
-              | 'atp'
             syncResendSegment(clerkUserId, tier)
           } else {
             log.warn({ planId }, 'No APIM product found for planId')
@@ -250,7 +249,6 @@ export default defineHandler(async (event) => {
           | 'student'
           | 'private'
           | 'commercial'
-          | 'atp'
         syncResendSegment(clerkUserId, resumedTier)
         break
       }

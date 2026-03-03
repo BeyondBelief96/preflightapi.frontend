@@ -315,7 +315,7 @@ export function planHasEndpointAccess(
 
 /**
  * Builds rows for the docs overview "Endpoint Access by Plan" table.
- * Each row has { category, student, private, commercial, atp } booleans.
+ * Each row has { category, student, private, commercial } booleans.
  */
 export function buildEndpointAccessRows(
   endpointAccess: Record<string, EndpointTier> = ENDPOINT_ACCESS,
@@ -331,7 +331,7 @@ export function buildEndpointAccessRows(
 /**
  * Builds comparison feature sections for the pricing page.
  * Returns sections with { category, features: [{ name, student, private,
- * commercial, atp }] } where values are booleans.
+ * commercial }] } where values are booleans.
  */
 export function buildPricingComparisonFeatures(
   endpointAccess: Record<string, EndpointTier> = ENDPOINT_ACCESS,
