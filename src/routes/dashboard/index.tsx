@@ -117,6 +117,17 @@ function DashboardOverview() {
     ? Math.min((callsToday / dailyBudget) * 100, 100)
     : 0
 
+  const daysElapsed = Math.max(
+    (Date.now() - new Date(monthFromDate).getTime()) / 86_400_000,
+    1,
+  )
+  const totalDays = Math.max(
+    (new Date(monthToDate).getTime() - new Date(monthFromDate).getTime()) /
+      86_400_000,
+    1,
+  )
+  const projectedUsage = Math.round((callsThisMonth / daysElapsed) * totalDays)
+
   return (
     <div className="space-y-8">
       {/* Welcome */}
@@ -145,6 +156,7 @@ function DashboardOverview() {
         usagePercent={usagePercent}
         dailyPercent={dailyPercent}
         dailyBudget={dailyBudget}
+        projectedUsage={projectedUsage}
         isDailyLoading={dailyUsageQuery.isLoading}
         isDailyError={dailyUsageQuery.isError}
         isMonthlyLoading={monthlyUsageQuery.isLoading}

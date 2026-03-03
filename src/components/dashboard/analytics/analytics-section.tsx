@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { ResponseBreakdownCard } from './response-breakdown-card'
 import { PerformanceStatsCard } from './performance-stats-card'
 import { DailyTrendChart } from './daily-trend-chart'
-import { EndpointBreakdownChart } from './endpoint-breakdown-chart'
+import { EndpointBreakdownTable } from './endpoint-breakdown-table'
 import { ErrorBreakdownChart } from './error-breakdown-chart'
 import { RecentErrorsTable } from './recent-errors-table'
 import type { ApimUsageReport } from '@/types/plans'
@@ -74,7 +74,7 @@ export function AnalyticsSection({
         isLoading={dailyTrendQuery.isLoading}
       />
 
-      <EndpointBreakdownChart
+      <EndpointBreakdownTable
         data={endpointBreakdownQuery.data}
         isLoading={endpointBreakdownQuery.isLoading}
       />

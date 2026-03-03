@@ -12,6 +12,7 @@ interface UsageStatsCardsProps {
   usagePercent: number
   dailyPercent: number
   dailyBudget: number | null
+  projectedUsage: number
   isDailyLoading: boolean
   isDailyError: boolean
   isMonthlyLoading: boolean
@@ -21,6 +22,13 @@ interface UsageStatsCardsProps {
   cancelDate: string | null | undefined
 }
 
+function projectionColor(projected: number, limit: number): string {
+  const ratio = projected / limit
+  if (ratio > 1) return 'text-destructive'
+  if (ratio >= 0.8) return 'text-aviation-warning'
+  return 'text-green-400'
+}
+
 export function UsageStatsCards({
   callsToday,
   callsThisMonth,
@@ -28,6 +36,7 @@ export function UsageStatsCards({
   usagePercent,
   dailyPercent,
   dailyBudget,
+  projectedUsage,
   isDailyLoading,
   isDailyError,
   isMonthlyLoading,
@@ -98,6 +107,13 @@ export function UsageStatsCards({
           <p className="text-xs text-muted-foreground">
             of {callsLimit?.toLocaleString() ?? 'unlimited'} limit
           </p>
+          {callsLimit && !isMonthlyLoading && callsThisMonth > 0 && (
+            <p
+              className={`mt-1 text-xs ${projectionColor(projectedUsage, callsLimit)}`}
+            >
+              Projected: ~{projectedUsage.toLocaleString()} by end of period
+            </p>
+          )}
         </CardContent>
       </Card>
       <Card>

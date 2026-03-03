@@ -57,6 +57,9 @@ export interface DailyUsagePoint {
 export interface EndpointBreakdownItem {
   endpoint: string // APIM OperationId, e.g. 'get-metar'
   calls: number
+  clientErrorRate: number // 4xx percentage 0-100
+  serverErrorRate: number // 5xx percentage 0-100
+  avgLatencyMs: number // average TotalTime in ms
 }
 
 export interface ErrorCodeBreakdownItem {

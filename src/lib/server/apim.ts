@@ -300,8 +300,17 @@ ApiManagementGatewayLogs
 | where TimeGenerated >= ago(30d)
   ${subscriptionFilter}
   and isnotempty(OperationId)
-| summarize calls = count() by OperationId
+| summarize
+    calls = count(),
+    clientErrors = countif(ResponseCode >= 400 and ResponseCode < 500),
+    serverErrors = countif(ResponseCode >= 500),
+    avgLatencyMs = avg(todecimal(TotalTime))
+  by OperationId
+| extend
+    clientErrorRate = round(todecimal(clientErrors) / todecimal(calls) * 100, 1),
+    serverErrorRate = round(todecimal(serverErrors) / todecimal(calls) * 100, 1)
 | top ${topN} by calls desc
+| project OperationId, calls, clientErrorRate, serverErrorRate, avgLatencyMs
 `.trim()
 
   try {
@@ -312,10 +321,16 @@ ApiManagementGatewayLogs
     const columns = table.columns.map((c) => c.name)
     const endpointIdx = columns.indexOf('OperationId')
     const callsIdx = columns.indexOf('calls')
+    const clientErrorIdx = columns.indexOf('clientErrorRate')
+    const serverErrorIdx = columns.indexOf('serverErrorRate')
+    const latencyIdx = columns.indexOf('avgLatencyMs')
 
     return table.rows.map((row) => ({
       endpoint: String(row[endpointIdx]),
       calls: Number(row[callsIdx]) || 0,
+      clientErrorRate: Number(row[clientErrorIdx]) || 0,
+      serverErrorRate: Number(row[serverErrorIdx]) || 0,
+      avgLatencyMs: Number(row[latencyIdx]) || 0,
     }))
   } catch (err) {
     log.error({ err }, 'Failed to query Log Analytics for endpoint breakdown')
