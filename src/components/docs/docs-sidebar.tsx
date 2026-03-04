@@ -14,6 +14,8 @@ export const sections = [
       { label: 'Authentication', href: '/docs/authentication' },
       { label: 'Rate Limits', href: '/docs/rate-limits' },
       { label: 'Error Handling', href: '/docs/errors' },
+      { label: 'Data Currency', href: '/docs/data-currency' },
+      { label: 'OpenAPI Spec', href: '/docs/openapi' },
     ],
   },
   {
@@ -67,8 +69,6 @@ export const sections = [
   {
     title: 'Reference',
     items: [
-      { label: 'Data Currency', href: '/docs/data-currency' },
-      { label: 'OpenAPI Spec', href: '/docs/openapi' },
       { label: 'Data Models', href: '/docs/data-models', exact: true },
       { label: 'Weather', href: '/docs/data-models/weather' },
       { label: 'Airports', href: '/docs/data-models/airports' },
