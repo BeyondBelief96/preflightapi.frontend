@@ -4261,6 +4261,7 @@
           },
           "siteType": {
             "description": "FAA NASR field: SITE_TYPE_CODE. Landing facility type.",
+            "nullable": true,
             "oneOf": [
               {
                 "$ref": "#/components/schemas/AirportSiteType"
@@ -4269,6 +4270,7 @@
           },
           "ownershipType": {
             "description": "FAA NASR field: OWNERSHIP_TYPE_CODE. Airport ownership type.",
+            "nullable": true,
             "oneOf": [
               {
                 "$ref": "#/components/schemas/AirportOwnershipType"
@@ -4277,6 +4279,7 @@
           },
           "facilityUse": {
             "description": "FAA NASR field: FACILITY_USE_CODE. Facility use designation.",
+            "nullable": true,
             "oneOf": [
               {
                 "$ref": "#/components/schemas/AirportFacilityUse"
@@ -4285,6 +4288,7 @@
           },
           "arptStatus": {
             "description": "FAA NASR field: ARPT_STATUS. Airport operational status.",
+            "nullable": true,
             "oneOf": [
               {
                 "$ref": "#/components/schemas/AirportStatus"
@@ -4413,6 +4417,7 @@
           },
           "positionSurveyMethod": {
             "description": "FAA NASR field: SURVEY_METHOD_CODE. Method used to determine the airport reference point position.",
+            "nullable": true,
             "oneOf": [
               {
                 "$ref": "#/components/schemas/SurveyMethod"
@@ -4438,6 +4443,7 @@
           },
           "elevationSurveyMethod": {
             "description": "FAA NASR field: ELEV_METHOD_CODE. Method used to determine the airport elevation.",
+            "nullable": true,
             "oneOf": [
               {
                 "$ref": "#/components/schemas/SurveyMethod"
@@ -4564,6 +4570,7 @@
           },
           "inspectionMethod": {
             "description": "FAA NASR field: INSPECT_METHOD_CODE. Airport inspection method.",
+            "nullable": true,
             "oneOf": [
               {
                 "$ref": "#/components/schemas/AirportInspectionMethod"
@@ -4572,6 +4579,7 @@
           },
           "inspectorAgency": {
             "description": "FAA NASR field: INSPECTOR_CODE. Agency/Group Performing Physical Inspection.",
+            "nullable": true,
             "oneOf": [
               {
                 "$ref": "#/components/schemas/AirportInspectorAgency"
@@ -4601,6 +4609,7 @@
           },
           "airframeRepairService": {
             "description": "FAA NASR field: AIRFRAME_REPAIR_SER_CODE. Airframe repair service availability.",
+            "nullable": true,
             "oneOf": [
               {
                 "$ref": "#/components/schemas/RepairServiceAvailability"
@@ -4609,6 +4618,7 @@
           },
           "powerPlantRepairService": {
             "description": "FAA NASR field: PWR_PLANT_REPAIR_SER. Power plant (engine) repair service availability.",
+            "nullable": true,
             "oneOf": [
               {
                 "$ref": "#/components/schemas/RepairServiceAvailability"
@@ -4617,6 +4627,7 @@
           },
           "bottledOxygenType": {
             "description": "FAA NASR field: BOTTLED_OXY_TYPE. Type of bottled oxygen available.",
+            "nullable": true,
             "oneOf": [
               {
                 "$ref": "#/components/schemas/OxygenPressureType"
@@ -4625,6 +4636,7 @@
           },
           "bulkOxygenType": {
             "description": "FAA NASR field: BULK_OXY_TYPE. Type of bulk oxygen available.",
+            "nullable": true,
             "oneOf": [
               {
                 "$ref": "#/components/schemas/OxygenPressureType"
@@ -4660,6 +4672,7 @@
           },
           "beaconLensColor": {
             "description": "FAA NASR field: BCN_LENS_COLOR. Airport beacon lens color.",
+            "nullable": true,
             "oneOf": [
               {
                 "$ref": "#/components/schemas/BeaconLensColor"
@@ -4668,6 +4681,7 @@
           },
           "segmentedCircleMarker": {
             "description": "FAA NASR field: SEG_CIRCLE_MKR_FLAG. Segmented circle airport marker system.",
+            "nullable": true,
             "oneOf": [
               {
                 "$ref": "#/components/schemas/SegmentedCircleMarkerType"
@@ -4676,6 +4690,7 @@
           },
           "windIndicator": {
             "description": "FAA NASR field: WIND_INDCR_FLAG. Wind indicator type.",
+            "nullable": true,
             "oneOf": [
               {
                 "$ref": "#/components/schemas/WindIndicatorType"
@@ -4808,18 +4823,18 @@
         "type": "string",
         "description": "Landing Facility Site Type. Corresponds to FAA NASR field SITE_TYPE_CODE (APT_BASE).",
         "x-enumNames": [
-          "Unknown",
           "Airport",
           "Heliport",
           "SeaplaneBase",
+          "Balloonport",
           "Gliderport",
           "Ultralight"
         ],
         "enum": [
-          "Unknown",
           "Airport",
           "Heliport",
           "SeaplaneBase",
+          "Balloonport",
           "Gliderport",
           "Ultralight"
         ]
@@ -4828,7 +4843,6 @@
         "type": "string",
         "description": "Airport Ownership Type. Corresponds to FAA NASR field OWNERSHIP_TYPE_CODE (APT_BASE).",
         "x-enumNames": [
-          "Unknown",
           "PubliclyOwned",
           "PrivatelyOwned",
           "AirForce",
@@ -4837,7 +4851,6 @@
           "CoastGuard"
         ],
         "enum": [
-          "Unknown",
           "PubliclyOwned",
           "PrivatelyOwned",
           "AirForce",
@@ -4850,12 +4863,12 @@
         "type": "string",
         "description": "Airport Facility Use. Corresponds to FAA NASR field FACILITY_USE_CODE (APT_BASE).",
         "x-enumNames": [
-          "Unknown",
+          "Undetermined",
           "PublicUse",
           "PrivateUse"
         ],
         "enum": [
-          "Unknown",
+          "Undetermined",
           "PublicUse",
           "PrivateUse"
         ]
@@ -4864,13 +4877,11 @@
         "type": "string",
         "description": "Airport Operational Status. Corresponds to FAA NASR field ARPT_STATUS (APT_BASE).",
         "x-enumNames": [
-          "Unknown",
           "Operational",
           "ClosedIndefinitely",
           "ClosedPermanently"
         ],
         "enum": [
-          "Unknown",
           "Operational",
           "ClosedIndefinitely",
           "ClosedPermanently"
@@ -4880,12 +4891,10 @@
         "type": "string",
         "description": "Survey Method for position or elevation determination. Corresponds to FAA NASR fields SURVEY_METHOD_CODE and ELEV_METHOD_CODE (APT_BASE).",
         "x-enumNames": [
-          "Unknown",
           "Estimated",
           "Surveyed"
         ],
         "enum": [
-          "Unknown",
           "Estimated",
           "Surveyed"
         ]
@@ -4894,7 +4903,6 @@
         "type": "string",
         "description": "Airport Inspection Method. Corresponds to FAA NASR field INSPECT_METHOD_CODE (APT_BASE).",
         "x-enumNames": [
-          "Unknown",
           "Federal",
           "State",
           "Contractor",
@@ -4902,7 +4910,6 @@
           "PrivateUseMailout"
         ],
         "enum": [
-          "Unknown",
           "Federal",
           "State",
           "Contractor",
@@ -4914,14 +4921,12 @@
         "type": "string",
         "description": "Airport Inspector Agency. Corresponds to FAA NASR field INSPECTOR_CODE (APT_BASE).",
         "x-enumNames": [
-          "Unknown",
           "Faa",
           "State",
           "Contractor",
           "Owner"
         ],
         "enum": [
-          "Unknown",
           "Faa",
           "State",
           "Contractor",
@@ -4932,13 +4937,11 @@
         "type": "string",
         "description": "Repair Service Availability. Corresponds to FAA NASR fields AIRFRAME_REPAIR_SER_CODE and PWR_PLANT_REPAIR_SER (APT_BASE).",
         "x-enumNames": [
-          "Unknown",
           "None",
           "Major",
           "Minor"
         ],
         "enum": [
-          "Unknown",
           "None",
           "Major",
           "Minor"
@@ -4948,14 +4951,12 @@
         "type": "string",
         "description": "Oxygen Pressure Type. Corresponds to FAA NASR fields BOTTLED_OXY_TYPE and BULK_OXY_TYPE (APT_BASE).",
         "x-enumNames": [
-          "Unknown",
           "None",
           "High",
           "Low",
           "HighAndLow"
         ],
         "enum": [
-          "Unknown",
           "None",
           "High",
           "Low",
@@ -4966,7 +4967,6 @@
         "type": "string",
         "description": "Airport Beacon Lens Color. Corresponds to FAA NASR field BCN_LENS_COLOR (APT_BASE).",
         "x-enumNames": [
-          "Unknown",
           "WhiteGreen",
           "WhiteYellow",
           "WhiteGreenYellow",
@@ -4977,7 +4977,6 @@
           "None"
         ],
         "enum": [
-          "Unknown",
           "WhiteGreen",
           "WhiteYellow",
           "WhiteGreenYellow",
@@ -4992,13 +4991,11 @@
         "type": "string",
         "description": "Segmented Circle Airport Marker. Corresponds to FAA NASR field SEG_CIRCLE_MKR_FLAG (APT_BASE).",
         "x-enumNames": [
-          "Unknown",
           "None",
           "Yes",
           "YesLighted"
         ],
         "enum": [
-          "Unknown",
           "None",
           "Yes",
           "YesLighted"
@@ -5008,13 +5005,11 @@
         "type": "string",
         "description": "Wind Indicator Type. Corresponds to FAA NASR field WIND_INDCR_FLAG (APT_BASE).",
         "x-enumNames": [
-          "Unknown",
           "None",
           "Unlighted",
           "Lighted"
         ],
         "enum": [
-          "Unknown",
           "None",
           "Unlighted",
           "Lighted"
@@ -5124,7 +5119,7 @@
       },
       "AirspaceDto": {
         "type": "object",
-        "description": "Controlled airspace data (Class B, C, D, E) sourced from FAA ArcGIS.\nUse the GlobalId to cross-reference with navigation log results — the navlog response's\nAirspaceGlobalIds field contains GlobalIds from this endpoint for airspaces along a planned route.",
+        "description": "Controlled airspace data (Class B, C, D, E) sourced from FAA ArcGIS.\nGeometry boundaries are generalized (~1.1m accuracy) for efficient storage and rendering.\nUse the GlobalId to cross-reference with navigation log results — the navlog response's\nAirspaceGlobalIds field contains GlobalIds from this endpoint for airspaces along a planned route.",
         "additionalProperties": false,
         "properties": {
           "globalId": {
@@ -5280,7 +5275,7 @@
             "nullable": true
           },
           "geometry": {
-            "description": "GeoJSON boundary geometry.",
+            "description": "GeoJSON boundary geometry. Generalized with ~1.1m accuracy from source data.",
             "nullable": true,
             "oneOf": [
               {
@@ -5339,7 +5334,7 @@
       },
       "SpecialUseAirspaceDto": {
         "type": "object",
-        "description": "Special use airspace data (restricted, prohibited, warning, MOA, alert) sourced from FAA ArcGIS.\nUse the GlobalId to cross-reference with navigation log results — the navlog response's\nSpecialUseAirspaceGlobalIds field contains GlobalIds from this endpoint for special use airspaces along a planned route.",
+        "description": "Special use airspace data (restricted, prohibited, warning, MOA, alert) sourced from FAA ArcGIS.\nGeometry boundaries are generalized (~11m accuracy) for efficient storage and rendering.\nUse the GlobalId to cross-reference with navigation log results — the navlog response's\nSpecialUseAirspaceGlobalIds field contains GlobalIds from this endpoint for special use airspaces along a planned route.",
         "additionalProperties": false,
         "properties": {
           "globalId": {
@@ -5368,8 +5363,9 @@
             "nullable": true
           },
           "upperVal": {
-            "type": "string",
+            "type": "number",
             "description": "Upper altitude limit value.",
+            "format": "double",
             "nullable": true
           },
           "upperUom": {
@@ -5388,8 +5384,9 @@
             "nullable": true
           },
           "lowerVal": {
-            "type": "string",
+            "type": "number",
             "description": "Lower altitude limit value.",
+            "format": "double",
             "nullable": true
           },
           "lowerUom": {
@@ -5468,7 +5465,7 @@
             "nullable": true
           },
           "geometry": {
-            "description": "GeoJSON boundary geometry.",
+            "description": "GeoJSON boundary geometry. Generalized with ~11m accuracy from source data.",
             "nullable": true,
             "oneOf": [
               {
@@ -5577,25 +5574,25 @@
           "latitude": {
             "type": "number",
             "description": "Station latitude in decimal degrees.",
-            "format": "float",
+            "format": "double",
             "nullable": true
           },
           "longitude": {
             "type": "number",
             "description": "Station longitude in decimal degrees.",
-            "format": "float",
+            "format": "double",
             "nullable": true
           },
           "tempC": {
             "type": "number",
             "description": "Temperature in degrees Celsius.",
-            "format": "float",
+            "format": "double",
             "nullable": true
           },
           "dewpointC": {
             "type": "number",
             "description": "Dewpoint temperature in degrees Celsius.",
-            "format": "float",
+            "format": "double",
             "nullable": true
           },
           "windDirDegrees": {
@@ -5623,13 +5620,13 @@
           "altimInHg": {
             "type": "number",
             "description": "Altimeter setting in inches of mercury.",
-            "format": "float",
+            "format": "double",
             "nullable": true
           },
           "seaLevelPressureMb": {
             "type": "number",
             "description": "Sea level pressure in millibars. ex: 1016.2",
-            "format": "float",
+            "format": "double",
             "nullable": true
           },
           "qualityControlFlags": {
@@ -5655,9 +5652,13 @@
             }
           },
           "flightCategory": {
-            "type": "string",
             "description": "Flight category: VFR, MVFR, IFR, or LIFR.",
-            "nullable": true
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/FlightCategory"
+              }
+            ]
           }
         }
       },
@@ -5667,42 +5668,42 @@
         "additionalProperties": false,
         "properties": {
           "corrected": {
-            "type": "string",
+            "type": "boolean",
             "description": "Indicates a corrected observation.",
             "nullable": true
           },
           "auto": {
-            "type": "string",
+            "type": "boolean",
             "description": "Indicates an automated observation.",
             "nullable": true
           },
           "autoStation": {
-            "type": "string",
+            "type": "boolean",
             "description": "Indicates an automated station type.",
             "nullable": true
           },
           "maintenanceIndicatorOn": {
-            "type": "string",
+            "type": "boolean",
             "description": "Maintenance indicator is on.",
             "nullable": true
           },
           "noSignal": {
-            "type": "string",
+            "type": "boolean",
             "description": "No signal received.",
             "nullable": true
           },
           "lightningSensorOff": {
-            "type": "string",
+            "type": "boolean",
             "description": "Lightning sensor is off.",
             "nullable": true
           },
           "freezingRainSensorOff": {
-            "type": "string",
+            "type": "boolean",
             "description": "Freezing rain sensor is off.",
             "nullable": true
           },
           "presentWeatherSensorOff": {
-            "type": "string",
+            "type": "boolean",
             "description": "Present weather sensor is off.",
             "nullable": true
           }
@@ -5714,8 +5715,13 @@
         "additionalProperties": false,
         "properties": {
           "skyCover": {
-            "type": "string",
-            "description": "Sky cover type: SKC (sky clear), CLR (clear below 12,000), FEW (few), SCT (scattered), BKN (broken), OVC (overcast), or OVX (obscured)."
+            "description": "Sky cover type: SKC (sky clear), CLR (clear below 12,000), FEW (few), SCT (scattered), BKN (broken), OVC (overcast), or OVX (obscured).",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/SkyCover"
+              }
+            ]
           },
           "cloudBaseFtAgl": {
             "type": "integer",
@@ -5724,6 +5730,44 @@
             "nullable": true
           }
         }
+      },
+      "SkyCover": {
+        "type": "string",
+        "description": "",
+        "x-enumNames": [
+          "SKC",
+          "CLR",
+          "FEW",
+          "SCT",
+          "BKN",
+          "OVC",
+          "OVX"
+        ],
+        "enum": [
+          "SKC",
+          "CLR",
+          "FEW",
+          "SCT",
+          "BKN",
+          "OVC",
+          "OVX"
+        ]
+      },
+      "FlightCategory": {
+        "type": "string",
+        "description": "",
+        "x-enumNames": [
+          "VFR",
+          "MVFR",
+          "IFR",
+          "LIFR"
+        ],
+        "enum": [
+          "VFR",
+          "MVFR",
+          "IFR",
+          "LIFR"
+        ]
       },
       "TafDto": {
         "type": "object",
@@ -5768,19 +5812,19 @@
           "latitude": {
             "type": "number",
             "description": "Station latitude in decimal degrees.",
-            "format": "float",
+            "format": "double",
             "nullable": true
           },
           "longitude": {
             "type": "number",
             "description": "Station longitude in decimal degrees.",
-            "format": "float",
+            "format": "double",
             "nullable": true
           },
           "elevationM": {
             "type": "number",
             "description": "Station elevation in meters.",
-            "format": "float",
+            "format": "double",
             "nullable": true
           },
           "forecast": {
@@ -5865,7 +5909,7 @@
           "altimInHg": {
             "type": "number",
             "description": "Forecast altimeter setting in inches of mercury.",
-            "format": "float",
+            "format": "double",
             "nullable": true
           },
           "vertVisFt": {
@@ -6000,17 +6044,19 @@
           "sfcTempC": {
             "type": "number",
             "description": "Forecast surface temperature in degrees Celsius.",
-            "format": "float",
+            "format": "double",
             "nullable": true
           },
           "maxTempC": {
-            "type": "string",
+            "type": "number",
             "description": "Forecast maximum temperature in degrees Celsius.",
+            "format": "double",
             "nullable": true
           },
           "minTempC": {
-            "type": "string",
+            "type": "number",
             "description": "Forecast minimum temperature in degrees Celsius.",
+            "format": "double",
             "nullable": true
           }
         }
@@ -6057,13 +6103,13 @@
           "latitude": {
             "type": "number",
             "description": "Latitude of the report in decimal degrees.",
-            "format": "float",
+            "format": "double",
             "nullable": true
           },
           "longitude": {
             "type": "number",
             "description": "Longitude of the report in decimal degrees.",
-            "format": "float",
+            "format": "double",
             "nullable": true
           },
           "altitudeFtMsl": {
@@ -6110,7 +6156,7 @@
           "tempC": {
             "type": "number",
             "description": "Temperature in degrees Celsius.",
-            "format": "float",
+            "format": "double",
             "nullable": true
           },
           "windDirDegrees": {
@@ -6132,9 +6178,13 @@
             "nullable": true
           },
           "reportType": {
-            "type": "string",
             "description": "Report type: UA (routine PIREP) or UUA (urgent PIREP).",
-            "nullable": true
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PirepReportType"
+              }
+            ]
           }
         }
       },
@@ -6261,6 +6311,22 @@
           }
         }
       },
+      "PirepReportType": {
+        "type": "string",
+        "description": "",
+        "x-enumNames": [
+          "UA",
+          "UUA",
+          "PIREP",
+          "AIREP"
+        ],
+        "enum": [
+          "UA",
+          "UUA",
+          "PIREP",
+          "AIREP"
+        ]
+      },
       "SigmetDto": {
         "type": "object",
         "description": "Domestic SIGMET advisory data including hazard information and affected area.",
@@ -6365,9 +6431,13 @@
             ]
           },
           "severity": {
-            "type": "string",
-            "description": "Hazard severity: LGT (light), LT-MOD (light to moderate), MOD (moderate, typical for AIRMET), MOD-SEV (moderate to severe), SEV (severe, typical for SIGMET). Convective SIGMETs do not have a severity value.",
-            "nullable": true
+            "description": "Hazard severity: LGT (light), LT_MOD (light to moderate), MOD (moderate, typical for AIRMET), MOD_SEV (moderate to severe), SEV (severe, typical for SIGMET). Convective SIGMETs do not have a severity value.",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/HazardSeverity"
+              }
+            ]
           }
         }
       },
@@ -6389,6 +6459,24 @@
           "IFR",
           "ASH",
           "MTN_OBSCN"
+        ]
+      },
+      "HazardSeverity": {
+        "type": "string",
+        "description": "",
+        "x-enumNames": [
+          "LGT",
+          "LT_MOD",
+          "MOD",
+          "MOD_SEV",
+          "SEV"
+        ],
+        "enum": [
+          "LGT",
+          "LT_MOD",
+          "MOD",
+          "MOD_SEV",
+          "SEV"
         ]
       },
       "SigmetArea": {
@@ -6418,12 +6506,12 @@
           "longitude": {
             "type": "number",
             "description": "Longitude in decimal degrees.",
-            "format": "float"
+            "format": "double"
           },
           "latitude": {
             "type": "number",
             "description": "Latitude in decimal degrees.",
-            "format": "float"
+            "format": "double"
           }
         }
       },
@@ -6459,6 +6547,7 @@
           },
           "product": {
             "description": "Product type: SIERRA, TANGO, or ZULU.",
+            "nullable": true,
             "oneOf": [
               {
                 "$ref": "#/components/schemas/GAirmetProduct"
@@ -6485,9 +6574,13 @@
             ]
           },
           "hazardSeverity": {
-            "type": "string",
             "description": "Hazard severity: MOD (moderate) or null.",
-            "nullable": true
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/HazardSeverity"
+              }
+            ]
           },
           "geometryType": {
             "type": "string",
@@ -6788,14 +6881,22 @@
             "nullable": true
           },
           "type": {
-            "type": "string",
             "description": "NOTAM type (N=New, R=Replace, C=Cancel)",
-            "nullable": true
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/NotamType"
+              }
+            ]
           },
           "feature": {
-            "type": "string",
             "description": "Feature category: RWY, TWY, APRON, AD, OBST, NAV, COM, SVC, AIRSPACE, ODP, SID, STAR, CHART, DATA, DVA, IAP, VFP, ROUTE, SPECIAL, SECURITY",
-            "nullable": true
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/NotamFeature"
+              }
+            ]
           },
           "issued": {
             "type": "string",
@@ -6813,9 +6914,13 @@
             "nullable": true
           },
           "traffic": {
-            "type": "string",
             "description": "Traffic type (I=IFR, V=VFR, IV=Both)",
-            "nullable": true
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/NotamTraffic"
+              }
+            ]
           },
           "purpose": {
             "type": "string",
@@ -6823,9 +6928,13 @@
             "nullable": true
           },
           "scope": {
-            "type": "string",
             "description": "Scope (A=Aerodrome, E=En-route, W=Navigation warning)",
-            "nullable": true
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/NotamScope"
+              }
+            ]
           },
           "minimumFl": {
             "type": "string",
@@ -6863,8 +6972,8 @@
             "nullable": true
           },
           "estimated": {
-            "type": "string",
-            "description": "Whether end time is estimated (\"true\"/\"false\")",
+            "type": "boolean",
+            "description": "Whether end time is estimated.",
             "nullable": true
           },
           "text": {
@@ -6873,9 +6982,13 @@
             "nullable": true
           },
           "classification": {
-            "type": "string",
             "description": "Classification: INTERNATIONAL, MILITARY, LOCAL_MILITARY, DOMESTIC, FDC",
-            "nullable": true
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/NotamClassification"
+              }
+            ]
           },
           "cancelationDate": {
             "type": "string",
@@ -6923,6 +7036,114 @@
             "nullable": true
           }
         }
+      },
+      "NotamType": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "N",
+          "R",
+          "C"
+        ],
+        "enum": [
+          0,
+          1,
+          2
+        ]
+      },
+      "NotamFeature": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "RWY",
+          "TWY",
+          "APRON",
+          "AD",
+          "OBST",
+          "NAV",
+          "COM",
+          "SVC",
+          "AIRSPACE",
+          "ODP",
+          "SID",
+          "STAR",
+          "CHART",
+          "DATA",
+          "DVA",
+          "IAP",
+          "VFP",
+          "ROUTE",
+          "SPECIAL",
+          "SECURITY"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ]
+      },
+      "NotamTraffic": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "I",
+          "V",
+          "IV"
+        ],
+        "enum": [
+          0,
+          1,
+          2
+        ]
+      },
+      "NotamScope": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "A",
+          "E",
+          "W"
+        ],
+        "enum": [
+          0,
+          1,
+          2
+        ]
+      },
+      "NotamClassification": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "INTERNATIONAL",
+          "MILITARY",
+          "LOCAL_MILITARY",
+          "DOMESTIC",
+          "FDC"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ]
       },
       "NotamTranslationDto": {
         "type": "object",
@@ -7781,6 +8002,7 @@
           },
           "navType": {
             "description": "FAA NASR field: NAV_TYPE. Facility type (e.g., VOR, VORTAC, NDB, DME, TACAN).",
+            "nullable": true,
             "oneOf": [
               {
                 "$ref": "#/components/schemas/NavaidType"
@@ -8015,7 +8237,6 @@
         "type": "string",
         "description": "NAVAID facility type. Corresponds to FAA NASR field NAV_TYPE (NAV1).",
         "x-enumNames": [
-          "Unknown",
           "Consolan",
           "Dme",
           "FanMarker",
@@ -8031,7 +8252,6 @@
           "Vot"
         ],
         "enum": [
-          "Unknown",
           "Consolan",
           "Dme",
           "FanMarker",
@@ -8856,6 +9076,7 @@
           },
           "lighting": {
             "description": "Lighting type on the obstacle.",
+            "nullable": true,
             "oneOf": [
               {
                 "$ref": "#/components/schemas/ObstacleLighting"
@@ -8864,6 +9085,7 @@
           },
           "horizontalAccuracy": {
             "description": "Horizontal accuracy of the position data.",
+            "nullable": true,
             "oneOf": [
               {
                 "$ref": "#/components/schemas/HorizontalAccuracy"
@@ -8872,6 +9094,7 @@
           },
           "verticalAccuracy": {
             "description": "Vertical accuracy of the height data.",
+            "nullable": true,
             "oneOf": [
               {
                 "$ref": "#/components/schemas/VerticalAccuracy"
@@ -8880,6 +9103,7 @@
           },
           "marking": {
             "description": "Marking type on the obstacle.",
+            "nullable": true,
             "oneOf": [
               {
                 "$ref": "#/components/schemas/ObstacleMarking"
@@ -8888,6 +9112,7 @@
           },
           "verificationStatus": {
             "description": "Verification status of the obstacle data.",
+            "nullable": true,
             "oneOf": [
               {
                 "$ref": "#/components/schemas/VerificationStatus"
@@ -8900,7 +9125,6 @@
         "type": "string",
         "description": "",
         "x-enumNames": [
-          "Unknown",
           "Red",
           "DualMediumWhiteStrobeRed",
           "HighIntensityWhiteStrobeRed",
@@ -8910,10 +9134,10 @@
           "DualMediumCatenary",
           "SynchronizedRedLighting",
           "Lighted",
-          "None"
+          "None",
+          "Unknown"
         ],
         "enum": [
-          "Unknown",
           "Red",
           "DualMediumWhiteStrobeRed",
           "HighIntensityWhiteStrobeRed",
@@ -8923,14 +9147,14 @@
           "DualMediumCatenary",
           "SynchronizedRedLighting",
           "Lighted",
-          "None"
+          "None",
+          "Unknown"
         ]
       },
       "HorizontalAccuracy": {
         "type": "string",
         "description": "",
         "x-enumNames": [
-          "Unknown",
           "Within20Feet",
           "Within50Feet",
           "Within100Feet",
@@ -8938,10 +9162,10 @@
           "Within500Feet",
           "Within1000Feet",
           "WithinHalfNauticalMile",
-          "Within1NauticalMile"
+          "Within1NauticalMile",
+          "Unknown"
         ],
         "enum": [
-          "Unknown",
           "Within20Feet",
           "Within50Feet",
           "Within100Feet",
@@ -8949,14 +9173,14 @@
           "Within500Feet",
           "Within1000Feet",
           "WithinHalfNauticalMile",
-          "Within1NauticalMile"
+          "Within1NauticalMile",
+          "Unknown"
         ]
       },
       "VerticalAccuracy": {
         "type": "string",
         "description": "",
         "x-enumNames": [
-          "Unknown",
           "Within3Feet",
           "Within10Feet",
           "Within20Feet",
@@ -8964,10 +9188,10 @@
           "Within125Feet",
           "Within250Feet",
           "Within500Feet",
-          "Within1000Feet"
+          "Within1000Feet",
+          "Unknown"
         ],
         "enum": [
-          "Unknown",
           "Within3Feet",
           "Within10Feet",
           "Within20Feet",
@@ -8975,41 +9199,40 @@
           "Within125Feet",
           "Within250Feet",
           "Within500Feet",
-          "Within1000Feet"
+          "Within1000Feet",
+          "Unknown"
         ]
       },
       "ObstacleMarking": {
         "type": "string",
         "description": "",
         "x-enumNames": [
-          "Unknown",
           "OrangeOrOrangeWhitePaint",
           "WhitePaintOnly",
           "Marked",
           "FlagMarker",
           "SphericalMarker",
-          "None"
+          "None",
+          "Unknown"
         ],
         "enum": [
-          "Unknown",
           "OrangeOrOrangeWhitePaint",
           "WhitePaintOnly",
           "Marked",
           "FlagMarker",
           "SphericalMarker",
-          "None"
+          "None",
+          "Unknown"
         ]
       },
       "VerificationStatus": {
         "type": "string",
         "description": "",
         "x-enumNames": [
-          "Unknown",
           "Verified",
           "Unverified"
         ],
         "enum": [
-          "Unknown",
           "Verified",
           "Unverified"
         ]
@@ -9078,7 +9301,17 @@
             "nullable": true
           },
           "surfaceType": {
-            "description": "FAA NASR field: SURFACE_TYPE_CODE. Runway surface type.\nCommon values: Concrete (CONC), Asphalt (ASPH), Turf (TURF), Dirt (DIRT), Gravel (GRAVEL), Water (WATER).",
+            "description": "FAA NASR field: SURFACE_TYPE_CODE. Primary runway surface type.\nWhen the runway is composed of distinct sections the FAA reports a combined code (e.g., \"ASPH-CONC\").\nThis property contains the first (primary) surface type; see SecondarySurfaceType for the second.\nCommon values: Concrete (CONC), Asphalt (ASPH), Turf (TURF), Dirt (DIRT), Gravel (GRAVEL), Water (WATER).",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/RunwaySurfaceType"
+              }
+            ]
+          },
+          "secondarySurfaceType": {
+            "description": "Secondary runway surface type, present only when the runway is composed of two distinct surface sections.\nDerived from the FAA NASR SURFACE_TYPE_CODE combined format (e.g., \"ASPH-CONC\" → Secondary = Concrete).",
+            "nullable": true,
             "oneOf": [
               {
                 "$ref": "#/components/schemas/RunwaySurfaceType"
@@ -9087,6 +9320,7 @@
           },
           "surfaceTreatment": {
             "description": "FAA NASR field: TREATMENT_CODE. Runway surface treatment.\nPossible values: Grooved (GRVD), PorousFrictionCourse (PFC), AggregateFrictionSealCoat (AFSC),\nRubberizedFrictionSealCoat (RFSC), WireComb (WC), None (NONE).",
+            "nullable": true,
             "oneOf": [
               {
                 "$ref": "#/components/schemas/RunwaySurfaceTreatment"
@@ -9100,6 +9334,7 @@
           },
           "edgeLightIntensity": {
             "description": "FAA NASR field: RWY_LGT_CODE. Runway lights edge intensity.\nPossible values: High (HIGH), Medium (MED), Low (LOW), Flood (FLD), NonStandard (NSTD), Perimeter (PERI), Strobe (STRB), None (NONE).",
+            "nullable": true,
             "oneOf": [
               {
                 "$ref": "#/components/schemas/RunwayEdgeLightIntensity"
@@ -9131,29 +9366,49 @@
             "nullable": true
           },
           "surfaceCondition": {
-            "type": "string",
-            "description": "FAA NASR field: COND. Runway Surface Condition.\nPossible values: EXCELLENT, GOOD, FAIR, POOR, FAILED.",
-            "nullable": true
+            "description": "FAA NASR field: COND. Runway Surface Condition.\nPossible values: Excellent, Good, Fair, Poor, Failed.",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/RunwaySurfaceCondition"
+              }
+            ]
           },
-          "pavementTypeCode": {
-            "type": "string",
-            "description": "FAA NASR field: PAVEMENT_TYPE_CODE. Pavement Type.\nPossible values: R (Rigid), F (Flexible).",
-            "nullable": true
+          "pavementType": {
+            "description": "FAA NASR field: PAVEMENT_TYPE_CODE. Pavement Type.\nPossible values: Rigid (R), Flexible (F).",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PavementType"
+              }
+            ]
           },
-          "subgradeStrengthCode": {
-            "type": "string",
-            "description": "FAA NASR field: SUBGRADE_STRENGTH_CODE. Subgrade Strength (Letters A-F).",
-            "nullable": true
+          "subgradeStrength": {
+            "description": "FAA NASR field: SUBGRADE_STRENGTH_CODE. Subgrade Strength category (part of PCN system).\nPossible values: High (A), Medium (B), Low (C), UltraLow (D).",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/SubgradeStrength"
+              }
+            ]
           },
-          "tirePressureCode": {
-            "type": "string",
-            "description": "FAA NASR field: TIRE_PRES_CODE. Tire Pressure Code (Letters W-Z).",
-            "nullable": true
+          "tirePressure": {
+            "description": "FAA NASR field: TIRE_PRES_CODE. Maximum allowable tire pressure category (part of PCN system).\nPossible values: High/no limit (W), Medium/217 psi (X), Low/145 psi (Y), VeryLow/73 psi (Z).",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TirePressure"
+              }
+            ]
           },
-          "determinationMethodCode": {
-            "type": "string",
-            "description": "FAA NASR field: DTRM_METHOD_CODE. Determination Method for pavement strength.\nPossible values: T (Technical), U (Using Aircraft).",
-            "nullable": true
+          "determinationMethod": {
+            "description": "FAA NASR field: DTRM_METHOD_CODE. Pavement strength determination method.\nPossible values: Technical (T), UsingAircraft (U).",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PavementDeterminationMethod"
+              }
+            ]
           },
           "runwayLengthSource": {
             "type": "string",
@@ -9188,7 +9443,6 @@
         "type": "string",
         "description": "Runway Surface Type. Corresponds to FAA NASR field SURFACE_TYPE_CODE (APT_RWY).\nThe value will usually be one of the common types or a combination of two types\nwhen the runway is composed of distinct sections.",
         "x-enumNames": [
-          "Unknown",
           "Concrete",
           "Asphalt",
           "Snow",
@@ -9214,10 +9468,10 @@
           "Sand",
           "Sod",
           "Steel",
-          "Wood"
+          "Wood",
+          "PorousFrictionCourse"
         ],
         "enum": [
-          "Unknown",
           "Concrete",
           "Asphalt",
           "Snow",
@@ -9243,14 +9497,14 @@
           "Sand",
           "Sod",
           "Steel",
-          "Wood"
+          "Wood",
+          "PorousFrictionCourse"
         ]
       },
       "RunwaySurfaceTreatment": {
         "type": "string",
         "description": "Runway Surface Treatment. Corresponds to FAA NASR field TREATMENT_CODE (APT_RWY).",
         "x-enumNames": [
-          "Unknown",
           "None",
           "Grooved",
           "PorousFrictionCourse",
@@ -9259,7 +9513,6 @@
           "WireComb"
         ],
         "enum": [
-          "Unknown",
           "None",
           "Grooved",
           "PorousFrictionCourse",
@@ -9272,7 +9525,6 @@
         "type": "string",
         "description": "Runway Lights Edge Intensity. Corresponds to FAA NASR field RWY_LGT_CODE (APT_RWY).",
         "x-enumNames": [
-          "Unknown",
           "None",
           "High",
           "Medium",
@@ -9283,7 +9535,6 @@
           "Strobe"
         ],
         "enum": [
-          "Unknown",
           "None",
           "High",
           "Medium",
@@ -9292,6 +9543,80 @@
           "NonStandard",
           "Perimeter",
           "Strobe"
+        ]
+      },
+      "RunwaySurfaceCondition": {
+        "type": "string",
+        "description": "Runway Surface Condition (COND). Corresponds to FAA NASR field SURFACE_COND (APT_RWY).",
+        "x-enumNames": [
+          "Excellent",
+          "Good",
+          "Fair",
+          "Poor",
+          "Failed"
+        ],
+        "enum": [
+          "Excellent",
+          "Good",
+          "Fair",
+          "Poor",
+          "Failed"
+        ]
+      },
+      "PavementType": {
+        "type": "string",
+        "description": "Pavement Type. Corresponds to FAA NASR field PAVEMENT_TYPE_CODE (APT_RWY).",
+        "x-enumNames": [
+          "Rigid",
+          "Flexible"
+        ],
+        "enum": [
+          "Rigid",
+          "Flexible"
+        ]
+      },
+      "SubgradeStrength": {
+        "type": "string",
+        "description": "Subgrade Strength. Corresponds to FAA NASR field SUBGRADE_STRENGTH_CODE (APT_RWY).\nPart of the Pavement Classification Number (PCN) system.",
+        "x-enumNames": [
+          "High",
+          "Medium",
+          "Low",
+          "UltraLow"
+        ],
+        "enum": [
+          "High",
+          "Medium",
+          "Low",
+          "UltraLow"
+        ]
+      },
+      "TirePressure": {
+        "type": "string",
+        "description": "Tire Pressure Category. Corresponds to FAA NASR field TIRE_PRES_CODE (APT_RWY).\nPart of the Pavement Classification Number (PCN) system.",
+        "x-enumNames": [
+          "High",
+          "Medium",
+          "Low",
+          "VeryLow"
+        ],
+        "enum": [
+          "High",
+          "Medium",
+          "Low",
+          "VeryLow"
+        ]
+      },
+      "PavementDeterminationMethod": {
+        "type": "string",
+        "description": "Pavement strength determination method. Corresponds to FAA NASR field DTRM_METHOD_CODE (APT_RWY).",
+        "x-enumNames": [
+          "Technical",
+          "UsingAircraft"
+        ],
+        "enum": [
+          "Technical",
+          "UsingAircraft"
         ]
       },
       "RunwayEndDto": {
@@ -9316,6 +9641,7 @@
           },
           "approachType": {
             "description": "FAA NASR field: ILS_TYPE. Instrument Landing System (ILS) type.\nPossible values: Ils (ILS), Mls (MLS), Sdf (SDF), Localizer (LOCALIZER), Lda (LDA), Ismls (ISMLS),\nIlsDme (ILS/DME), SdfDme (SDF/DME), LocDme (LOC/DME), LocGs (LOC/GS), LdaDme (LDA/DME).",
+            "nullable": true,
             "oneOf": [
               {
                 "$ref": "#/components/schemas/InstrumentApproachType"
@@ -9328,6 +9654,7 @@
           },
           "markingsType": {
             "description": "FAA NASR field: RWY_MARKING_TYPE_CODE. Runway markings type.\nPossible values: PrecisionInstrument (PIR), NonPrecisionInstrument (NPI), Basic (BSC),\nNumbersOnly (NRS), NonStandard (NSTD), Buoys (BUOY), Stol (STOL), None (NONE).",
+            "nullable": true,
             "oneOf": [
               {
                 "$ref": "#/components/schemas/RunwayMarkingsType"
@@ -9336,6 +9663,7 @@
           },
           "markingsCondition": {
             "description": "FAA NASR field: RWY_MARKING_COND. Runway markings condition.\nPossible values: Good (G), Fair (F), Poor (P).",
+            "nullable": true,
             "oneOf": [
               {
                 "$ref": "#/components/schemas/RunwayMarkingsCondition"
@@ -9404,6 +9732,7 @@
           },
           "visualGlideSlopeIndicator": {
             "description": "FAA NASR field: VGSI_CODE. Visual Glide Slope Indicator type.\nCommon types: VASI (V2L/V4L/etc.), PAPI (P2L/P4L/etc.), SAVASI (S2L/S2R), Tri-Color, Pulsating, Panel systems.",
+            "nullable": true,
             "oneOf": [
               {
                 "$ref": "#/components/schemas/VisualGlideSlopeIndicatorType"
@@ -9412,6 +9741,7 @@
           },
           "runwayVisualRangeEquipment": {
             "description": "FAA NASR field: RWY_VISUAL_RANGE_EQUIP_CODE. Runway Visual Range (RVR) equipment location.\nPossible values: Touchdown (T), Midfield (M), Rollout (R), None (N), TouchdownMidfield (TM), TouchdownRollout (TR), MidfieldRollout (MR), TouchdownMidfieldRollout (TMR).",
+            "nullable": true,
             "oneOf": [
               {
                 "$ref": "#/components/schemas/RunwayVisualRangeEquipmentType"
@@ -9424,6 +9754,7 @@
           },
           "approachLightSystem": {
             "description": "FAA NASR field: APCH_LGT_SYSTEM_CODE. Approach light system type.\nSee ApproachLightSystemType enum for all possible values and their FAA descriptions.",
+            "nullable": true,
             "oneOf": [
               {
                 "$ref": "#/components/schemas/ApproachLightSystemType"
@@ -9449,6 +9780,7 @@
           },
           "controllingObjectMarking": {
             "description": "FAA NASR field: OBSTN_MRKD_CODE. Controlling object marked/lighted status.\nPossible values: Marked (M), Lighted (L), MarkedAndLighted (ML), None (NONE).",
+            "nullable": true,
             "oneOf": [
               {
                 "$ref": "#/components/schemas/ControllingObjectMarking"
@@ -9725,7 +10057,6 @@
         "type": "string",
         "description": "Instrument Landing System (ILS) Type. Corresponds to FAA NASR field ILS_TYPE (APT_RWY_END).",
         "x-enumNames": [
-          "Unknown",
           "None",
           "Ils",
           "Mls",
@@ -9740,7 +10071,6 @@
           "LdaDme"
         ],
         "enum": [
-          "Unknown",
           "None",
           "Ils",
           "Mls",
@@ -9759,7 +10089,6 @@
         "type": "string",
         "description": "Runway Markings Type. Corresponds to FAA NASR field RWY_MARKING_TYPE_CODE (APT_RWY_END).",
         "x-enumNames": [
-          "Unknown",
           "None",
           "PrecisionInstrument",
           "NonPrecisionInstrument",
@@ -9770,7 +10099,6 @@
           "Stol"
         ],
         "enum": [
-          "Unknown",
           "None",
           "PrecisionInstrument",
           "NonPrecisionInstrument",
@@ -9785,13 +10113,11 @@
         "type": "string",
         "description": "Runway Markings Condition. Corresponds to FAA NASR field RWY_MARKING_COND (APT_RWY_END).",
         "x-enumNames": [
-          "Unknown",
           "Good",
           "Fair",
           "Poor"
         ],
         "enum": [
-          "Unknown",
           "Good",
           "Fair",
           "Poor"
@@ -9801,7 +10127,6 @@
         "type": "string",
         "description": "Visual Glide Slope Indicators. Corresponds to FAA NASR field VGSI_CODE (APT_RWY_END).",
         "x-enumNames": [
-          "Unknown",
           "None",
           "Savasi2BoxLeft",
           "Savasi2BoxRight",
@@ -9828,7 +10153,6 @@
           "NonSpecificVasi"
         ],
         "enum": [
-          "Unknown",
           "None",
           "Savasi2BoxLeft",
           "Savasi2BoxRight",
@@ -9859,7 +10183,6 @@
         "type": "string",
         "description": "Runway Visual Range (RVR) Equipment Location. Corresponds to FAA NASR field RWY_VISUAL_RANGE_EQUIP_CODE (APT_RWY_END).",
         "x-enumNames": [
-          "Unknown",
           "None",
           "Touchdown",
           "Midfield",
@@ -9870,7 +10193,6 @@
           "TouchdownMidfieldRollout"
         ],
         "enum": [
-          "Unknown",
           "None",
           "Touchdown",
           "Midfield",
@@ -9885,7 +10207,6 @@
         "type": "string",
         "description": "Approach Light System. Corresponds to FAA NASR field APCH_LGT_SYSTEM_CODE (APT_RWY_END).",
         "x-enumNames": [
-          "Unknown",
           "None",
           "AirForceOverrun",
           "Alsaf",
@@ -9906,7 +10227,6 @@
           "NonStandard"
         ],
         "enum": [
-          "Unknown",
           "None",
           "AirForceOverrun",
           "Alsaf",
@@ -9931,14 +10251,12 @@
         "type": "string",
         "description": "Controlling Object Marked/Lighted. Corresponds to FAA NASR field OBSTN_MRKD_CODE (APT_RWY_END).",
         "x-enumNames": [
-          "Unknown",
           "None",
           "Marked",
           "Lighted",
           "MarkedAndLighted"
         ],
         "enum": [
-          "Unknown",
           "None",
           "Marked",
           "Lighted",
@@ -10023,8 +10341,13 @@
         "additionalProperties": false,
         "properties": {
           "chartCode": {
-            "type": "string",
-            "description": "Chart code indicating the procedure type (e.g., \"IAP\", \"DP\", \"STAR\", \"APD\", \"MIN\", \"HOT\")."
+            "description": "Chart code indicating the procedure type: IAP, DP, STAR, APD, MIN, or HOT.",
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TerminalProcedureChartCode"
+              }
+            ]
           },
           "chartName": {
             "type": "string",
@@ -10045,6 +10368,32 @@
             "nullable": true
           }
         }
+      },
+      "TerminalProcedureChartCode": {
+        "type": "string",
+        "description": "",
+        "x-enumNames": [
+          "IAP",
+          "DP",
+          "STAR",
+          "APD",
+          "MIN",
+          "HOT",
+          "DAU",
+          "LAH",
+          "ODP"
+        ],
+        "enum": [
+          "IAP",
+          "DP",
+          "STAR",
+          "APD",
+          "MIN",
+          "HOT",
+          "DAU",
+          "LAH",
+          "ODP"
+        ]
       }
     }
   },

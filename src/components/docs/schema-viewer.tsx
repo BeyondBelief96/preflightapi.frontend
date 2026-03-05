@@ -28,6 +28,29 @@ function TypeBadge({
   return <span className="font-mono text-xs text-blue-400">{type}</span>
 }
 
+/** Strip "Possible values: ..." / "Common values: ..." suffixes when enum data is shown separately */
+function cleanDescription(description: string | undefined, hasEnum: boolean) {
+  if (!description || !hasEnum) return description
+  return description
+    .replace(/\n?(?:Possible|Common) values:[\s\S]*$/i, '')
+    .trim() || undefined
+}
+
+function EnumValues({ values }: { values: Array<string> }) {
+  return (
+    <div className="flex flex-wrap gap-1 pt-0.5">
+      {values.map((v) => (
+        <span
+          key={v}
+          className="rounded bg-muted/80 px-1.5 py-0.5 font-mono text-[10px] leading-tight text-muted-foreground"
+        >
+          {v}
+        </span>
+      ))}
+    </div>
+  )
+}
+
 function FieldRow({
   field,
   depth,
@@ -40,58 +63,62 @@ function FieldRow({
     (field.fields && field.fields.length > 0) ||
     (field.items?.fields && field.items.fields.length > 0)
   const childFields = field.fields ?? field.items?.fields ?? []
+  const hasEnum = !!(field.enum && field.enum.length > 0)
+  const description = cleanDescription(field.description, hasEnum)
 
   return (
     <div>
       <div
         className={cn(
-          'flex items-start gap-2 border-b border-border/50 px-3 py-1.5',
+          'border-b border-border/50 px-3 py-1.5',
           hasChildren && 'cursor-pointer hover:bg-muted/50',
         )}
         style={{ paddingLeft: `${depth * 16 + 12}px` }}
         onClick={hasChildren ? () => setExpanded(!expanded) : undefined}
       >
-        {hasChildren ? (
-          <span className="mt-0.5 shrink-0 text-muted-foreground">
-            {expanded ? (
-              <ChevronDown className="h-3.5 w-3.5" />
-            ) : (
-              <ChevronRight className="h-3.5 w-3.5" />
-            )}
+        <div className="flex items-start gap-2">
+          {hasChildren ? (
+            <span className="mt-0.5 shrink-0 text-muted-foreground">
+              {expanded ? (
+                <ChevronDown className="h-3.5 w-3.5" />
+              ) : (
+                <ChevronRight className="h-3.5 w-3.5" />
+              )}
+            </span>
+          ) : (
+            <span className="mt-0.5 w-3.5 shrink-0" />
+          )}
+
+          <span className="min-w-[120px] shrink-0 font-mono text-sm text-foreground">
+            {field.name}
           </span>
-        ) : (
-          <span className="mt-0.5 w-3.5 shrink-0" />
-        )}
 
-        <span className="min-w-[120px] shrink-0 font-mono text-sm text-foreground">
-          {field.name}
-        </span>
+          <TypeBadge
+            type={field.type}
+            refName={field.refName}
+            itemRefName={field.items?.refName}
+          />
 
-        <TypeBadge
-          type={field.type}
-          refName={field.refName}
-          itemRefName={field.items?.refName}
-        />
+          {field.required && (
+            <span className="shrink-0 text-xs text-red-400">required</span>
+          )}
+          {field.nullable && (
+            <span className="shrink-0 text-xs text-muted-foreground">
+              nullable
+            </span>
+          )}
 
-        {field.required && (
-          <span className="shrink-0 text-xs text-red-400">required</span>
-        )}
-        {field.nullable && (
-          <span className="shrink-0 text-xs text-muted-foreground">
-            nullable
-          </span>
-        )}
+          {description && (
+            <span className="text-xs text-muted-foreground">
+              {description}
+            </span>
+          )}
+        </div>
 
-        {field.description && (
-          <span className="text-xs text-muted-foreground">
-            {field.description}
-          </span>
-        )}
-
-        {field.enum && (
-          <span className="text-xs text-muted-foreground/70">
-            {field.enum.join(' | ')}
-          </span>
+        {hasEnum && (
+          <div className="mt-1 pl-[22px]">
+            <EnumValues values={field.enum!} />
+          </div>
         )}
       </div>
 
