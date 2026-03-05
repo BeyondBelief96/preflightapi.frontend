@@ -156,8 +156,8 @@ function parseSchemaFields(
       refName,
     }
 
-    // nested object fields (cap at depth 3)
-    if (refName && depth < 3) {
+    // nested object fields (cap at depth 5)
+    if (refName && depth < 5) {
       const innerSchema = lookupSchema(refName)
       if (innerSchema && innerSchema.properties) {
         field.fields = parseSchemaFields(
@@ -179,7 +179,7 @@ function parseSchemaFields(
         required: true,
         refName: itemRef,
       }
-      if (itemRef && depth < 3) {
+      if (itemRef && depth < 5) {
         const itemSchema = lookupSchema(itemRef)
         if (itemSchema?.properties) {
           field.items.fields = parseSchemaFields(
@@ -188,7 +188,7 @@ function parseSchemaFields(
             depth + 1,
           )
         }
-      } else if (itemResolved?.properties && depth < 3) {
+      } else if (itemResolved?.properties && depth < 5) {
         field.items.fields = parseSchemaFields(
           itemResolved,
           new Set(visited),
