@@ -65,9 +65,16 @@ export function ParameterTable({ parameters }: ParameterTableProps) {
               <TableCell className="text-sm text-muted-foreground">
                 {param.description}
                 {param.enum && (
-                  <span className="ml-1 text-xs text-muted-foreground/70">
-                    ({param.enum.join(' | ')})
-                  </span>
+                  <div className="mt-1 flex flex-wrap gap-1">
+                    {param.enum.map((v) => (
+                      <span
+                        key={v}
+                        className="rounded bg-muted/80 px-1.5 py-0.5 font-mono text-[10px] leading-tight text-muted-foreground"
+                      >
+                        {v}
+                      </span>
+                    ))}
+                  </div>
                 )}
               </TableCell>
             </TableRow>
