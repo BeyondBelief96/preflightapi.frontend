@@ -89,15 +89,20 @@ function FieldRow({
   const hasEnum = !!(field.enum && field.enum.length > 0)
   const description = cleanDescription(field.description, hasEnum)
 
+  const Wrapper = hasChildren ? 'button' : 'div'
+
   return (
     <div>
-      <div
+      <Wrapper
+        {...(hasChildren && {
+          type: 'button' as const,
+          onClick: () => setExpanded(!expanded),
+        })}
         className={cn(
-          'border-b border-border/50 px-4 py-2.5',
+          'w-full border-b border-border/50 px-4 py-2.5 text-left',
           hasChildren && 'cursor-pointer hover:bg-muted/30',
         )}
         style={{ paddingLeft: `${depth * 20 + 16}px` }}
-        onClick={hasChildren ? () => setExpanded(!expanded) : undefined}
       >
         {/* Line 1: name + type + badges */}
         <div className="flex items-center gap-2">
@@ -148,7 +153,7 @@ function FieldRow({
             <EnumValues values={field.enum!} />
           </div>
         )}
-      </div>
+      </Wrapper>
 
       {/* Nested children with left border */}
       {expanded && childFields.length > 0 && (

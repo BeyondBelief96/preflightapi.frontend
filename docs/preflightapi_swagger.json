@@ -94,7 +94,7 @@
             "description": "Latitude in decimal degrees (-90 to 90)",
             "schema": {
               "type": "number",
-              "format": "decimal"
+              "format": "double"
             },
             "x-position": 1
           },
@@ -104,7 +104,7 @@
             "description": "Longitude in decimal degrees (-180 to 180)",
             "schema": {
               "type": "number",
-              "format": "decimal"
+              "format": "double"
             },
             "x-position": 2
           },
@@ -1450,7 +1450,7 @@
             "description": "Latitude in decimal degrees (-90 to 90)",
             "schema": {
               "type": "number",
-              "format": "decimal"
+              "format": "double"
             },
             "x-position": 1
           },
@@ -1460,7 +1460,7 @@
             "description": "Longitude in decimal degrees (-180 to 180)",
             "schema": {
               "type": "number",
-              "format": "decimal"
+              "format": "double"
             },
             "x-position": 2
           },
@@ -1920,7 +1920,7 @@
             "description": "Latitude in decimal degrees (-90 to 90)",
             "schema": {
               "type": "number",
-              "format": "decimal"
+              "format": "double"
             },
             "x-position": 1
           },
@@ -1930,7 +1930,7 @@
             "description": "Longitude in decimal degrees (-180 to 180)",
             "schema": {
               "type": "number",
-              "format": "decimal"
+              "format": "double"
             },
             "x-position": 2
           },
@@ -2354,7 +2354,7 @@
             "description": "Latitude in decimal degrees (-90 to 90)",
             "schema": {
               "type": "number",
-              "format": "decimal"
+              "format": "double"
             },
             "x-position": 1
           },
@@ -2364,7 +2364,7 @@
             "description": "Longitude in decimal degrees (-180 to 180)",
             "schema": {
               "type": "number",
-              "format": "decimal"
+              "format": "double"
             },
             "x-position": 2
           },
@@ -2613,7 +2613,7 @@
             "description": "Optional latitude in decimal degrees (-90 to 90). Must be paired with longitude and radius.",
             "schema": {
               "type": "number",
-              "format": "decimal",
+              "format": "double",
               "nullable": true
             },
             "x-position": 9
@@ -2624,7 +2624,7 @@
             "description": "Optional longitude in decimal degrees (-180 to 180). Must be paired with latitude and radius.",
             "schema": {
               "type": "number",
-              "format": "decimal",
+              "format": "double",
               "nullable": true
             },
             "x-position": 10
@@ -2886,7 +2886,7 @@
             "description": "Latitude in decimal degrees (-90 to 90)",
             "schema": {
               "type": "number",
-              "format": "decimal"
+              "format": "double"
             },
             "x-position": 1
           },
@@ -2896,7 +2896,7 @@
             "description": "Longitude in decimal degrees (-180 to 180)",
             "schema": {
               "type": "number",
-              "format": "decimal"
+              "format": "double"
             },
             "x-position": 2
           },
@@ -3158,7 +3158,7 @@
             "description": "Southwest corner latitude (-90 to 90)",
             "schema": {
               "type": "number",
-              "format": "decimal"
+              "format": "double"
             },
             "x-position": 1
           },
@@ -3168,7 +3168,7 @@
             "description": "Northeast corner latitude (-90 to 90, must be greater than minLat)",
             "schema": {
               "type": "number",
-              "format": "decimal"
+              "format": "double"
             },
             "x-position": 2
           },
@@ -3178,7 +3178,7 @@
             "description": "Southwest corner longitude (-180 to 180)",
             "schema": {
               "type": "number",
-              "format": "decimal"
+              "format": "double"
             },
             "x-position": 3
           },
@@ -3188,7 +3188,7 @@
             "description": "Northeast corner longitude (-180 to 180, must be greater than minLon)",
             "schema": {
               "type": "number",
-              "format": "decimal"
+              "format": "double"
             },
             "x-position": 4
           },
@@ -3312,7 +3312,7 @@
             "description": "Latitude in decimal degrees (-90 to 90)",
             "schema": {
               "type": "number",
-              "format": "decimal"
+              "format": "double"
             },
             "x-position": 1
           },
@@ -3322,7 +3322,7 @@
             "description": "Longitude in decimal degrees (-180 to 180)",
             "schema": {
               "type": "number",
-              "format": "decimal"
+              "format": "double"
             },
             "x-position": 2
           },
@@ -3661,7 +3661,7 @@
             "description": "Latitude in decimal degrees (-90 to 90)",
             "schema": {
               "type": "number",
-              "format": "decimal"
+              "format": "double"
             },
             "x-position": 1
           },
@@ -3671,7 +3671,7 @@
             "description": "Longitude in decimal degrees (-180 to 180)",
             "schema": {
               "type": "number",
-              "format": "decimal"
+              "format": "double"
             },
             "x-position": 2
           },
@@ -3902,7 +3902,7 @@
             "description": "Latitude in decimal degrees (-90 to 90)",
             "schema": {
               "type": "number",
-              "format": "decimal"
+              "format": "double"
             },
             "x-position": 1
           },
@@ -3912,7 +3912,7 @@
             "description": "Longitude in decimal degrees (-180 to 180)",
             "schema": {
               "type": "number",
-              "format": "decimal"
+              "format": "double"
             },
             "x-position": 2
           },
@@ -3979,7 +3979,7 @@
             "description": "Minimum latitude (-90 to 90)",
             "schema": {
               "type": "number",
-              "format": "decimal"
+              "format": "double"
             },
             "x-position": 1
           },
@@ -3989,7 +3989,7 @@
             "description": "Maximum latitude (-90 to 90)",
             "schema": {
               "type": "number",
-              "format": "decimal"
+              "format": "double"
             },
             "x-position": 2
           },
@@ -3999,7 +3999,7 @@
             "description": "Minimum longitude (-180 to 180)",
             "schema": {
               "type": "number",
-              "format": "decimal"
+              "format": "double"
             },
             "x-position": 3
           },
@@ -4009,7 +4009,7 @@
             "description": "Maximum longitude (-180 to 180)",
             "schema": {
               "type": "number",
-              "format": "decimal"
+              "format": "double"
             },
             "x-position": 4
           },
@@ -4343,7 +4343,7 @@
           "distCityToAirport": {
             "type": "number",
             "description": "FAA NASR field: DIST_CITY_TO_AIRPORT. Distance from Central Business District of the Associated City to the Airport, in nautical miles.",
-            "format": "decimal",
+            "format": "double",
             "nullable": true
           },
           "directionCode": {
@@ -4360,13 +4360,13 @@
           "latDecimal": {
             "type": "number",
             "description": "FAA NASR field: LAT_DECIMAL. Latitude of airport reference point in decimal degrees (WGS 84).",
-            "format": "decimal",
+            "format": "double",
             "nullable": true
           },
           "longDecimal": {
             "type": "number",
             "description": "FAA NASR field: LONG_DECIMAL. Longitude of airport reference point in decimal degrees (WGS 84).",
-            "format": "decimal",
+            "format": "double",
             "nullable": true
           },
           "latDeg": {
@@ -4384,7 +4384,7 @@
           "latSec": {
             "type": "number",
             "description": "FAA NASR field: LAT_SEC. Latitude seconds of airport reference point.",
-            "format": "decimal",
+            "format": "double",
             "nullable": true
           },
           "latHemis": {
@@ -4407,7 +4407,7 @@
           "longSec": {
             "type": "number",
             "description": "FAA NASR field: LONG_SEC. Longitude seconds of airport reference point.",
-            "format": "decimal",
+            "format": "double",
             "nullable": true
           },
           "longHemis": {
@@ -4438,7 +4438,7 @@
           "elev": {
             "type": "number",
             "description": "FAA NASR field: ELEV. Airport elevation in feet MSL, to the nearest tenth of a foot. Measured at the highest point on the centerline of the usable landing surface.",
-            "format": "decimal",
+            "format": "double",
             "nullable": true
           },
           "elevationSurveyMethod": {
@@ -4464,7 +4464,7 @@
           "magVarn": {
             "type": "number",
             "description": "FAA NASR field: MAG_VARN. Magnetic Variation in degrees. Use with MagHemis (E or W) to determine sign.",
-            "format": "decimal",
+            "format": "double",
             "nullable": true
           },
           "magHemis": {
@@ -7451,13 +7451,13 @@
           "latitude": {
             "type": "number",
             "description": "FAA NASR field: LAT_DECIMAL. Facility Reference Point Latitude in decimal degrees (WGS 84).",
-            "format": "decimal",
+            "format": "double",
             "nullable": true
           },
           "longitude": {
             "type": "number",
             "description": "FAA NASR field: LONG_DECIMAL. Facility Reference Point Longitude in decimal degrees (WGS 84).",
-            "format": "decimal",
+            "format": "double",
             "nullable": true
           },
           "servicedCity": {
@@ -8119,19 +8119,19 @@
           "latitude": {
             "type": "number",
             "description": "FAA NASR field: LAT_DECIMAL. Latitude in decimal degrees (WGS 84).",
-            "format": "decimal",
+            "format": "double",
             "nullable": true
           },
           "longitude": {
             "type": "number",
             "description": "FAA NASR field: LONG_DECIMAL. Longitude in decimal degrees (WGS 84).",
-            "format": "decimal",
+            "format": "double",
             "nullable": true
           },
           "elevation": {
             "type": "number",
             "description": "FAA NASR field: ELEV. Elevation in feet above MSL.",
-            "format": "decimal",
+            "format": "double",
             "nullable": true
           },
           "owner": {
@@ -8172,7 +8172,7 @@
           "frequency": {
             "type": "number",
             "description": "FAA NASR field: FREQ. Transmitted frequency in MHz (VOR) or kHz (NDB).",
-            "format": "decimal",
+            "format": "double",
             "nullable": true
           },
           "channel": {
@@ -8243,13 +8243,13 @@
           "tacanDmeLatitude": {
             "type": "number",
             "description": "FAA NASR field: TACAN_DME_LAT_DECIMAL. Latitude of the TACAN/DME antenna in decimal degrees (WGS 84). May differ from the VOR position.",
-            "format": "decimal",
+            "format": "double",
             "nullable": true
           },
           "tacanDmeLongitude": {
             "type": "number",
             "description": "FAA NASR field: TACAN_DME_LONG_DECIMAL. Longitude of the TACAN/DME antenna in decimal degrees (WGS 84).",
-            "format": "decimal",
+            "format": "double",
             "nullable": true
           },
           "highAltArtccId": {
@@ -9119,13 +9119,13 @@
           "latitude": {
             "type": "number",
             "description": "Latitude in decimal degrees (WGS 84).",
-            "format": "decimal",
+            "format": "double",
             "nullable": true
           },
           "longitude": {
             "type": "number",
             "description": "Longitude in decimal degrees (WGS 84).",
-            "format": "decimal",
+            "format": "double",
             "nullable": true
           },
           "obstacleType": {
@@ -9750,49 +9750,49 @@
           "latitude": {
             "type": "number",
             "description": "FAA NASR field: LAT_DECIMAL. Latitude of physical runway end in decimal degrees (WGS 84).",
-            "format": "decimal",
+            "format": "double",
             "nullable": true
           },
           "longitude": {
             "type": "number",
             "description": "FAA NASR field: LONG_DECIMAL. Longitude of physical runway end in decimal degrees (WGS 84).",
-            "format": "decimal",
+            "format": "double",
             "nullable": true
           },
           "elevation": {
             "type": "number",
             "description": "FAA NASR field: RWY_END_ELEV. Elevation at the physical runway end in feet MSL.",
-            "format": "decimal",
+            "format": "double",
             "nullable": true
           },
           "thresholdCrossingHeight": {
             "type": "number",
             "description": "FAA NASR field: THR_CROSSING_HGT. Threshold Crossing Height in feet AGL. Height that the effective visual glide path crosses above the runway threshold.",
-            "format": "decimal",
+            "format": "double",
             "nullable": true
           },
           "visualGlidePathAngle": {
             "type": "number",
             "description": "FAA NASR field: VISUAL_GLIDE_PATH_ANGLE. Visual glide path angle in hundredths of degrees (e.g., 300 = 3.00°).",
-            "format": "decimal",
+            "format": "double",
             "nullable": true
           },
           "displacedThresholdLatitude": {
             "type": "number",
             "description": "FAA NASR field: LAT_DISPLACED_THR_DECIMAL. Latitude of displaced threshold in decimal degrees (WGS 84).",
-            "format": "decimal",
+            "format": "double",
             "nullable": true
           },
           "displacedThresholdLongitude": {
             "type": "number",
             "description": "FAA NASR field: LONG_DISPLACED_THR_DECIMAL. Longitude of displaced threshold in decimal degrees (WGS 84).",
-            "format": "decimal",
+            "format": "double",
             "nullable": true
           },
           "displacedThresholdElevation": {
             "type": "number",
             "description": "FAA NASR field: DISPLACED_THR_ELEV. Elevation at the displaced threshold in feet MSL.",
-            "format": "decimal",
+            "format": "double",
             "nullable": true
           },
           "displacedThresholdLength": {
@@ -9804,7 +9804,7 @@
           "touchdownZoneElevation": {
             "type": "number",
             "description": "FAA NASR field: TDZ_ELEV. Elevation at the touchdown zone in feet MSL.",
-            "format": "decimal",
+            "format": "double",
             "nullable": true
           },
           "visualGlideSlopeIndicator": {
@@ -9902,7 +9902,7 @@
           "rwyEndLatSec": {
             "type": "number",
             "description": "FAA NASR field: RWY_END_LAT_SEC. Runway end latitude seconds.",
-            "format": "decimal",
+            "format": "double",
             "nullable": true
           },
           "rwyEndLatHemis": {
@@ -9925,7 +9925,7 @@
           "rwyEndLongSec": {
             "type": "number",
             "description": "FAA NASR field: RWY_END_LONG_SEC. Runway end longitude seconds.",
-            "format": "decimal",
+            "format": "double",
             "nullable": true
           },
           "rwyEndLongHemis": {
@@ -9948,7 +9948,7 @@
           "displacedThrLatSec": {
             "type": "number",
             "description": "FAA NASR field: DISPLACED_THR_LAT_SEC. Displaced threshold latitude seconds.",
-            "format": "decimal",
+            "format": "double",
             "nullable": true
           },
           "displacedThrLatHemis": {
@@ -9971,7 +9971,7 @@
           "displacedThrLongSec": {
             "type": "number",
             "description": "FAA NASR field: DISPLACED_THR_LONG_SEC. Displaced threshold longitude seconds.",
-            "format": "decimal",
+            "format": "double",
             "nullable": true
           },
           "displacedThrLongHemis": {
@@ -9992,7 +9992,7 @@
           "runwayGradient": {
             "type": "number",
             "description": "FAA NASR field: RWY_GRAD. Runway End Gradient as a percentage (e.g., 0.3 = 0.3% grade).",
-            "format": "decimal",
+            "format": "double",
             "nullable": true
           },
           "runwayGradientDirection": {
@@ -10103,7 +10103,7 @@
           "lahsoLatDecimal": {
             "type": "number",
             "description": "FAA NASR field: LAT_LAHSO_DECIMAL. LAHSO hold short point latitude in decimal degrees (WGS 84).",
-            "format": "decimal",
+            "format": "double",
             "nullable": true
           },
           "lahsoLongitude": {
@@ -10114,7 +10114,7 @@
           "lahsoLongDecimal": {
             "type": "number",
             "description": "FAA NASR field: LONG_LAHSO_DECIMAL. LAHSO hold short point longitude in decimal degrees (WGS 84).",
-            "format": "decimal",
+            "format": "double",
             "nullable": true
           },
           "lahsoPositionSource": {

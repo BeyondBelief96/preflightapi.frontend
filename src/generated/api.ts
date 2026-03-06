@@ -1664,7 +1664,7 @@ export interface components {
             /** @description FAA NASR field: COUNTY_ASSOC_STATE. Two-letter state, territory, or country code associated with the county (e.g., US state codes, CN for Canada, GU for Guam, VI for Virgin Islands). */
             countyAssocState?: string | null;
             /**
-             * Format: decimal
+             * Format: double
              * @description FAA NASR field: DIST_CITY_TO_AIRPORT. Distance from Central Business District of the Associated City to the Airport, in nautical miles.
              */
             distCityToAirport?: number | null;
@@ -1676,12 +1676,12 @@ export interface components {
              */
             acreage?: number | null;
             /**
-             * Format: decimal
+             * Format: double
              * @description FAA NASR field: LAT_DECIMAL. Latitude of airport reference point in decimal degrees (WGS 84).
              */
             latDecimal?: number | null;
             /**
-             * Format: decimal
+             * Format: double
              * @description FAA NASR field: LONG_DECIMAL. Longitude of airport reference point in decimal degrees (WGS 84).
              */
             longDecimal?: number | null;
@@ -1696,7 +1696,7 @@ export interface components {
              */
             latMin?: number | null;
             /**
-             * Format: decimal
+             * Format: double
              * @description FAA NASR field: LAT_SEC. Latitude seconds of airport reference point.
              */
             latSec?: number | null;
@@ -1713,7 +1713,7 @@ export interface components {
              */
             longMin?: number | null;
             /**
-             * Format: decimal
+             * Format: double
              * @description FAA NASR field: LONG_SEC. Longitude seconds of airport reference point.
              */
             longSec?: number | null;
@@ -1729,7 +1729,7 @@ export interface components {
              */
             positionSrcDate?: string | null;
             /**
-             * Format: decimal
+             * Format: double
              * @description FAA NASR field: ELEV. Airport elevation in feet MSL, to the nearest tenth of a foot. Measured at the highest point on the centerline of the usable landing surface.
              */
             elev?: number | null;
@@ -1743,7 +1743,7 @@ export interface components {
              */
             elevationSrcDate?: string | null;
             /**
-             * Format: decimal
+             * Format: double
              * @description FAA NASR field: MAG_VARN. Magnetic Variation in degrees. Use with MagHemis (E or W) to determine sign.
              */
             magVarn?: number | null;
@@ -3099,12 +3099,12 @@ export interface components {
             /** @description FAA NASR field: SERVICED_SITE_TYPE. Facility Type of SERVICED FACILITY. */
             servicedSiteType?: string | null;
             /**
-             * Format: decimal
+             * Format: double
              * @description FAA NASR field: LAT_DECIMAL. Facility Reference Point Latitude in decimal degrees (WGS 84).
              */
             latitude?: number | null;
             /**
-             * Format: decimal
+             * Format: double
              * @description FAA NASR field: LONG_DECIMAL. Facility Reference Point Longitude in decimal degrees (WGS 84).
              */
             longitude?: number | null;
@@ -3584,17 +3584,17 @@ export interface components {
             /** @description FAA NASR field: COUNTRY_NAME. Full country name. */
             countryName?: string;
             /**
-             * Format: decimal
+             * Format: double
              * @description FAA NASR field: LAT_DECIMAL. Latitude in decimal degrees (WGS 84).
              */
             latitude?: number | null;
             /**
-             * Format: decimal
+             * Format: double
              * @description FAA NASR field: LONG_DECIMAL. Longitude in decimal degrees (WGS 84).
              */
             longitude?: number | null;
             /**
-             * Format: decimal
+             * Format: double
              * @description FAA NASR field: ELEV. Elevation in feet above MSL.
              */
             elevation?: number | null;
@@ -3619,7 +3619,7 @@ export interface components {
              */
             magneticVariationYear?: number | null;
             /**
-             * Format: decimal
+             * Format: double
              * @description FAA NASR field: FREQ. Transmitted frequency in MHz (VOR) or kHz (NDB).
              */
             frequency?: number | null;
@@ -3651,12 +3651,12 @@ export interface components {
             /** @description FAA NASR field: TACAN_DME_STATUS. Operational status of the co-located TACAN or DME component. */
             tacanDmeStatus?: string | null;
             /**
-             * Format: decimal
+             * Format: double
              * @description FAA NASR field: TACAN_DME_LAT_DECIMAL. Latitude of the TACAN/DME antenna in decimal degrees (WGS 84). May differ from the VOR position.
              */
             tacanDmeLatitude?: number | null;
             /**
-             * Format: decimal
+             * Format: double
              * @description FAA NASR field: TACAN_DME_LONG_DECIMAL. Longitude of the TACAN/DME antenna in decimal degrees (WGS 84).
              */
             tacanDmeLongitude?: number | null;
@@ -4242,12 +4242,12 @@ export interface components {
             /** @description City nearest to the obstacle. */
             cityName?: string | null;
             /**
-             * Format: decimal
+             * Format: double
              * @description Latitude in decimal degrees (WGS 84).
              */
             latitude?: number | null;
             /**
-             * Format: decimal
+             * Format: double
              * @description Longitude in decimal degrees (WGS 84).
              */
             longitude?: number | null;
@@ -4491,42 +4491,42 @@ export interface components {
              */
             markingsCondition?: components["schemas"]["RunwayMarkingsCondition"] | null;
             /**
-             * Format: decimal
+             * Format: double
              * @description FAA NASR field: LAT_DECIMAL. Latitude of physical runway end in decimal degrees (WGS 84).
              */
             latitude?: number | null;
             /**
-             * Format: decimal
+             * Format: double
              * @description FAA NASR field: LONG_DECIMAL. Longitude of physical runway end in decimal degrees (WGS 84).
              */
             longitude?: number | null;
             /**
-             * Format: decimal
+             * Format: double
              * @description FAA NASR field: RWY_END_ELEV. Elevation at the physical runway end in feet MSL.
              */
             elevation?: number | null;
             /**
-             * Format: decimal
+             * Format: double
              * @description FAA NASR field: THR_CROSSING_HGT. Threshold Crossing Height in feet AGL. Height that the effective visual glide path crosses above the runway threshold.
              */
             thresholdCrossingHeight?: number | null;
             /**
-             * Format: decimal
+             * Format: double
              * @description FAA NASR field: VISUAL_GLIDE_PATH_ANGLE. Visual glide path angle in hundredths of degrees (e.g., 300 = 3.00°).
              */
             visualGlidePathAngle?: number | null;
             /**
-             * Format: decimal
+             * Format: double
              * @description FAA NASR field: LAT_DISPLACED_THR_DECIMAL. Latitude of displaced threshold in decimal degrees (WGS 84).
              */
             displacedThresholdLatitude?: number | null;
             /**
-             * Format: decimal
+             * Format: double
              * @description FAA NASR field: LONG_DISPLACED_THR_DECIMAL. Longitude of displaced threshold in decimal degrees (WGS 84).
              */
             displacedThresholdLongitude?: number | null;
             /**
-             * Format: decimal
+             * Format: double
              * @description FAA NASR field: DISPLACED_THR_ELEV. Elevation at the displaced threshold in feet MSL.
              */
             displacedThresholdElevation?: number | null;
@@ -4536,7 +4536,7 @@ export interface components {
              */
             displacedThresholdLength?: number | null;
             /**
-             * Format: decimal
+             * Format: double
              * @description FAA NASR field: TDZ_ELEV. Elevation at the touchdown zone in feet MSL.
              */
             touchdownZoneElevation?: number | null;
@@ -4598,7 +4598,7 @@ export interface components {
              */
             rwyEndLatMin?: number | null;
             /**
-             * Format: decimal
+             * Format: double
              * @description FAA NASR field: RWY_END_LAT_SEC. Runway end latitude seconds.
              */
             rwyEndLatSec?: number | null;
@@ -4615,7 +4615,7 @@ export interface components {
              */
             rwyEndLongMin?: number | null;
             /**
-             * Format: decimal
+             * Format: double
              * @description FAA NASR field: RWY_END_LONG_SEC. Runway end longitude seconds.
              */
             rwyEndLongSec?: number | null;
@@ -4632,7 +4632,7 @@ export interface components {
              */
             displacedThrLatMin?: number | null;
             /**
-             * Format: decimal
+             * Format: double
              * @description FAA NASR field: DISPLACED_THR_LAT_SEC. Displaced threshold latitude seconds.
              */
             displacedThrLatSec?: number | null;
@@ -4649,7 +4649,7 @@ export interface components {
              */
             displacedThrLongMin?: number | null;
             /**
-             * Format: decimal
+             * Format: double
              * @description FAA NASR field: DISPLACED_THR_LONG_SEC. Displaced threshold longitude seconds.
              */
             displacedThrLongSec?: number | null;
@@ -4665,7 +4665,7 @@ export interface components {
             /** @description FAA NASR field: CNTRLN_DIR_CODE. Controlling Object Centerline Offset Direction. Indicates direction (left or right) to the object from the centerline as seen by an approaching pilot. */
             centerlineDirectionCode?: string | null;
             /**
-             * Format: decimal
+             * Format: double
              * @description FAA NASR field: RWY_GRAD. Runway End Gradient as a percentage (e.g., 0.3 = 0.3% grade).
              */
             runwayGradient?: number | null;
@@ -4738,14 +4738,14 @@ export interface components {
             /** @description FAA NASR field: LAHSO_LAT. LAHSO hold short point latitude (DMS format). */
             lahsoLatitude?: string | null;
             /**
-             * Format: decimal
+             * Format: double
              * @description FAA NASR field: LAT_LAHSO_DECIMAL. LAHSO hold short point latitude in decimal degrees (WGS 84).
              */
             lahsoLatDecimal?: number | null;
             /** @description FAA NASR field: LAHSO_LONG. LAHSO hold short point longitude (DMS format). */
             lahsoLongitude?: string | null;
             /**
-             * Format: decimal
+             * Format: double
              * @description FAA NASR field: LONG_LAHSO_DECIMAL. LAHSO hold short point longitude in decimal degrees (WGS 84).
              */
             lahsoLongDecimal?: number | null;
