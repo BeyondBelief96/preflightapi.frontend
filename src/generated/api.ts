@@ -1634,7 +1634,7 @@ export interface components {
             arptName?: string | null;
             /**
              * Format: date-time
-             * @description FAA NASR field: EFF_DATE. Effective date of the airport information.
+             * @description FAA NASR field: EFF_DATE. Effective date of the airport information. ISO 8601 UTC format.
              */
             effDate?: string;
             /** @description FAA NASR field: SITE_TYPE_CODE. Landing facility type. */
@@ -1665,7 +1665,7 @@ export interface components {
             countyAssocState?: string | null;
             /**
              * Format: decimal
-             * @description FAA NASR field: DIST_CITY_TO_AIRPORT. Distance from Central Business District of the Associated City to the Airport.
+             * @description FAA NASR field: DIST_CITY_TO_AIRPORT. Distance from Central Business District of the Associated City to the Airport, in nautical miles.
              */
             distCityToAirport?: number | null;
             /** @description FAA NASR field: DIRECTION_CODE. Direction of Airport from Central Business District of Associated City (Nearest 1/8 Compass Point). */
@@ -1677,12 +1677,12 @@ export interface components {
             acreage?: number | null;
             /**
              * Format: decimal
-             * @description FAA NASR field: LAT_DECIMAL. Latitude of airport reference point in decimal degrees.
+             * @description FAA NASR field: LAT_DECIMAL. Latitude of airport reference point in decimal degrees (WGS 84).
              */
             latDecimal?: number | null;
             /**
              * Format: decimal
-             * @description FAA NASR field: LONG_DECIMAL. Longitude of airport reference point in decimal degrees.
+             * @description FAA NASR field: LONG_DECIMAL. Longitude of airport reference point in decimal degrees (WGS 84).
              */
             longDecimal?: number | null;
             /**
@@ -1725,7 +1725,7 @@ export interface components {
             arptPsnSource?: string | null;
             /**
              * Format: date-time
-             * @description FAA NASR field: POSITION_SRC_DATE. Date the airport position information was determined.
+             * @description FAA NASR field: POSITION_SRC_DATE. Date the airport position information was determined. ISO 8601 UTC format.
              */
             positionSrcDate?: string | null;
             /**
@@ -1739,12 +1739,12 @@ export interface components {
             arptElevSource?: string | null;
             /**
              * Format: date-time
-             * @description FAA NASR field: ELEVATION_SRC_DATE. Date the airport elevation information was determined.
+             * @description FAA NASR field: ELEVATION_SRC_DATE. Date the airport elevation information was determined. ISO 8601 UTC format.
              */
             elevationSrcDate?: string | null;
             /**
              * Format: decimal
-             * @description FAA NASR field: MAG_VARN. Magnetic Variation in degrees.
+             * @description FAA NASR field: MAG_VARN. Magnetic Variation in degrees. Use with MagHemis (E or W) to determine sign.
              */
             magVarn?: number | null;
             /** @description FAA NASR field: MAG_HEMIS. Magnetic Variation Direction (E or W). */
@@ -1801,12 +1801,12 @@ export interface components {
             inspectorAgency?: components["schemas"]["AirportInspectorAgency"] | null;
             /**
              * Format: date-time
-             * @description FAA NASR field: LAST_INSPECTION. Date of the last physical inspection.
+             * @description FAA NASR field: LAST_INSPECTION. Date of the last physical inspection. ISO 8601 UTC format.
              */
             lastInspection?: string | null;
             /**
              * Format: date-time
-             * @description FAA NASR field: LAST_INFO_RESPONSE. Date of the last information request response.
+             * @description FAA NASR field: LAST_INFO_RESPONSE. Date of the last information request response. ISO 8601 UTC format.
              */
             lastInfoResponse?: string | null;
             /** @description FAA NASR field: FUEL_TYPES. Fuel Types available for public use at the Airport (e.g., 100LL, A, A+, MOGAS, UL94). */
@@ -1859,7 +1859,7 @@ export interface components {
             far139CarrierSerCode?: string | null;
             /**
              * Format: date-time
-             * @description FAA NASR field: ARFF_CERT_TYPE_DATE. Airport ARFF Certification Date (YYYY/MM).
+             * @description FAA NASR field: ARFF_CERT_TYPE_DATE. Airport ARFF Certification Date. ISO 8601 UTC format.
              */
             arffCertTypeDate?: string | null;
             /** @description FAA NASR field: ASP_ANLYS_DTRM_CODE. Airport Airspace Analysis Determination (CONDL, NOT ANALYZED, NO OBJECTION, OBJECTIONABLE). */
@@ -2024,7 +2024,7 @@ export interface components {
             upperDesc?: string | null;
             /**
              * Format: double
-             * @description Upper altitude limit value.
+             * @description Upper altitude limit value. Unit determined by UpperUom (FT = feet, FL = flight level). Reference determined by UpperCode (MSL or AGL).
              */
             upperVal?: number | null;
             /** @description Upper altitude unit of measure (e.g., FT, FL). */
@@ -2035,7 +2035,7 @@ export interface components {
             lowerDesc?: string | null;
             /**
              * Format: double
-             * @description Lower altitude limit value.
+             * @description Lower altitude limit value. Unit determined by LowerUom (FT = feet, FL = flight level). Reference determined by LowerCode (MSL or AGL).
              */
             lowerVal?: number | null;
             /** @description Lower altitude unit of measure (e.g., FT, FL). */
@@ -2118,23 +2118,23 @@ export interface components {
             upperDesc?: string | null;
             /**
              * Format: double
-             * @description Upper altitude limit value.
+             * @description Upper altitude limit value. Unit determined by UpperUom (FT = feet, FL = flight level). Reference determined by UpperCode (MSL or AGL).
              */
             upperVal?: number | null;
-            /** @description Upper altitude unit of measure. */
+            /** @description Upper altitude unit of measure (e.g., FT, FL). */
             upperUom?: string | null;
-            /** @description Upper altitude reference code. */
+            /** @description Upper altitude reference code (e.g., MSL, AGL). */
             upperCode?: string | null;
             /** @description Lower altitude limit description. */
             lowerDesc?: string | null;
             /**
              * Format: double
-             * @description Lower altitude limit value.
+             * @description Lower altitude limit value. Unit determined by LowerUom (FT = feet, FL = flight level). Reference determined by LowerCode (MSL or AGL).
              */
             lowerVal?: number | null;
-            /** @description Lower altitude unit of measure. */
+            /** @description Lower altitude unit of measure (e.g., FT, FL). */
             lowerUom?: string | null;
-            /** @description Lower altitude reference code. */
+            /** @description Lower altitude reference code (e.g., MSL, AGL). */
             lowerCode?: string | null;
             /** @description Level code. */
             levelCode?: string | null;
@@ -2212,12 +2212,12 @@ export interface components {
             observationTime?: string | null;
             /**
              * Format: double
-             * @description Station latitude in decimal degrees.
+             * @description Station latitude in decimal degrees (WGS 84).
              */
             latitude?: number | null;
             /**
              * Format: double
-             * @description Station longitude in decimal degrees.
+             * @description Station longitude in decimal degrees (WGS 84).
              */
             longitude?: number | null;
             /**
@@ -2262,6 +2262,68 @@ export interface components {
             skyCondition?: components["schemas"]["MetarSkyConditionDto"][] | null;
             /** @description Flight category: VFR, MVFR, IFR, or LIFR. */
             flightCategory?: components["schemas"]["FlightCategory"] | null;
+            /**
+             * Format: double
+             * @description Three-hour pressure tendency in millibars.
+             */
+            threeHrPressureTendencyMb?: number | null;
+            /**
+             * Format: double
+             * @description Maximum temperature in degrees Celsius.
+             */
+            maxTC?: number | null;
+            /**
+             * Format: double
+             * @description Minimum temperature in degrees Celsius.
+             */
+            minTC?: number | null;
+            /**
+             * Format: double
+             * @description Maximum temperature over the past 24 hours in degrees Celsius.
+             */
+            maxT24hrC?: number | null;
+            /**
+             * Format: double
+             * @description Minimum temperature over the past 24 hours in degrees Celsius.
+             */
+            minT24hrC?: number | null;
+            /**
+             * Format: double
+             * @description Precipitation accumulation in inches since the last routine observation.
+             */
+            precipIn?: number | null;
+            /**
+             * Format: double
+             * @description Precipitation accumulation in inches over the past 3 hours.
+             */
+            pcp3hrIn?: number | null;
+            /**
+             * Format: double
+             * @description Precipitation accumulation in inches over the past 6 hours.
+             */
+            pcp6hrIn?: number | null;
+            /**
+             * Format: double
+             * @description Precipitation accumulation in inches over the past 24 hours.
+             */
+            pcp24hrIn?: number | null;
+            /**
+             * Format: double
+             * @description Snow depth in inches.
+             */
+            snowIn?: number | null;
+            /**
+             * Format: int32
+             * @description Vertical visibility in feet AGL.
+             */
+            vertVisFt?: number | null;
+            /** @description Type of encoding: METAR or SPECI. */
+            metarType?: string | null;
+            /**
+             * Format: double
+             * @description Station elevation in meters MSL.
+             */
+            elevationM?: number | null;
         };
         /** @description Quality control flags indicating METAR observation characteristics. */
         MetarQualityControlFlagsDto: {
@@ -2314,17 +2376,17 @@ export interface components {
             remarks?: string | null;
             /**
              * Format: double
-             * @description Station latitude in decimal degrees.
+             * @description Station latitude in decimal degrees (WGS 84).
              */
             latitude?: number | null;
             /**
              * Format: double
-             * @description Station longitude in decimal degrees.
+             * @description Station longitude in decimal degrees (WGS 84).
              */
             longitude?: number | null;
             /**
              * Format: double
-             * @description Station elevation in meters.
+             * @description Station elevation in meters MSL. This field is in meters (not feet) because it originates from the NOAA Aviation Weather API which uses ICAO standard units.
              */
             elevationM?: number | null;
             /** @description Forecast periods within the TAF. */
@@ -2462,9 +2524,9 @@ export interface components {
             id?: number;
             /** @description Raw PIREP text string. */
             rawText?: string | null;
-            /** @description Time the PIREP was received. */
+            /** @description Time the PIREP was received. ISO 8601 UTC format. */
             receiptTime?: string | null;
-            /** @description Time of the pilot observation. */
+            /** @description Time of the pilot observation. ISO 8601 UTC format. */
             observationTime?: string | null;
             /** @description Quality control flags for the report. */
             qualityControlFlags?: components["schemas"]["PirepQualityControlFlags"] | null;
@@ -2472,12 +2534,12 @@ export interface components {
             aircraftRef?: string | null;
             /**
              * Format: double
-             * @description Latitude of the report in decimal degrees.
+             * @description Latitude of the report in decimal degrees (WGS 84).
              */
             latitude?: number | null;
             /**
              * Format: double
-             * @description Longitude of the report in decimal degrees.
+             * @description Longitude of the report in decimal degrees (WGS 84).
              */
             longitude?: number | null;
             /**
@@ -2680,22 +2742,22 @@ export interface components {
             id?: number;
             /**
              * Format: date-time
-             * @description Time the advisory was received.
+             * @description Time the advisory was received. ISO 8601 UTC format.
              */
             receiptTime?: string;
             /**
              * Format: date-time
-             * @description Time the advisory was issued.
+             * @description Time the advisory was issued. ISO 8601 UTC format.
              */
             issueTime?: string;
             /**
              * Format: date-time
-             * @description Time the advisory expires, typically 6 hours after issuance.
+             * @description Time the advisory expires, typically 6 hours after issuance. ISO 8601 UTC format.
              */
             expireTime?: string;
             /**
              * Format: date-time
-             * @description The valid time of the G-AIRMET snapshot.
+             * @description The valid time of the G-AIRMET snapshot. ISO 8601 UTC format.
              */
             validTime?: string;
             /** @description Product type: SIERRA, TANGO, or ZULU. */
@@ -2963,12 +3025,12 @@ export interface components {
             airportIdentifier?: string | null;
             /**
              * Format: decimal
-             * @description Latitude in decimal degrees (-90 to 90). Required when AirportIdentifier is null.
+             * @description Latitude in decimal degrees (WGS 84), range -90 to 90. Required when AirportIdentifier is null.
              */
             latitude?: number | null;
             /**
              * Format: decimal
-             * @description Longitude in decimal degrees (-180 to 180). Required when AirportIdentifier is null.
+             * @description Longitude in decimal degrees (WGS 84), range -180 to 180. Required when AirportIdentifier is null.
              */
             longitude?: number | null;
         };
@@ -3017,7 +3079,7 @@ export interface components {
             facilityCode?: string | null;
             /**
              * Format: date-time
-             * @description FAA NASR field: EFF_DATE. The 28 Day NASR Subscription Effective Date (YYYY/MM/DD).
+             * @description FAA NASR field: EFF_DATE. The 28 Day NASR Subscription Effective Date. ISO 8601 UTC format.
              */
             effectiveDate?: string;
             /** @description FAA NASR field: FAC_NAME. Official Facility Name. NULL for AFIS, CTAF, GCO, UNICOM (no FACILITY ID or NAME in NASR) and ASOS/AWOS (no FACILITY NAME in NASR). */
@@ -3038,12 +3100,12 @@ export interface components {
             servicedSiteType?: string | null;
             /**
              * Format: decimal
-             * @description FAA NASR field: LAT_DECIMAL. Facility Reference Point Latitude in Decimal Format.
+             * @description FAA NASR field: LAT_DECIMAL. Facility Reference Point Latitude in decimal degrees (WGS 84).
              */
             latitude?: number | null;
             /**
              * Format: decimal
-             * @description FAA NASR field: LONG_DECIMAL. Facility Reference Point Longitude in Decimal Format.
+             * @description FAA NASR field: LONG_DECIMAL. Facility Reference Point Longitude in decimal degrees (WGS 84).
              */
             longitude?: number | null;
             /** @description FAA NASR field: SERVICED_CITY. Serviced Facility Associated City Name. */
@@ -3056,7 +3118,7 @@ export interface components {
             towerOrCommCall?: string | null;
             /** @description FAA NASR field: PRIMARY_APPROACH_RADIO_CALL. Radio call of facility that furnishes primary approach control. */
             primaryApproachRadioCall?: string | null;
-            /** @description FAA NASR field: FREQ. Frequency for SERVICED FACILITY use. In the case of a NAVAID with DME/TACAN Channel, the Frequency is displayed with the Channel (FREQ/CHAN). */
+            /** @description FAA NASR field: FREQ. Frequency for SERVICED FACILITY use, in MHz (e.g., "118.300"). For NAVAIDs with DME/TACAN Channel, the value includes the channel (e.g., "110.60/CH43X"). */
             frequency?: string | null;
             /** @description FAA NASR field: SECTORIZATION. Sectorization based on SERVICED FACILITY or airway boundaries, or limitations based on runway usage. For ARTCC and RCAG, identifies the Frequency Altitude as Low, High, Low/High or Ultra-High. */
             sectorization?: string | null;
@@ -3614,7 +3676,7 @@ export interface components {
             notamId?: string | null;
             /**
              * Format: date-time
-             * @description FAA NASR field: EFFECTIVE_DATE. Date the current NASR data cycle became effective.
+             * @description FAA NASR field: EFFECTIVE_DATE. Date the current NASR data cycle became effective. ISO 8601 UTC format.
              */
             effectiveDate?: string;
             /** @description VOR receiver checkpoints associated with this NAVAID (from NAV2 records). */
@@ -3753,12 +3815,12 @@ export interface components {
             distanceRemaining?: number;
             /**
              * Format: date-time
-             * @description Estimated time at the start of this leg (UTC).
+             * @description Estimated time at the start of this leg. ISO 8601 UTC format.
              */
             startLegTime?: string;
             /**
              * Format: date-time
-             * @description Estimated time at the end of this leg (UTC).
+             * @description Estimated time at the end of this leg. ISO 8601 UTC format.
              */
             endLegTime?: string;
             /**
@@ -3800,12 +3862,12 @@ export interface components {
             name?: string;
             /**
              * Format: double
-             * @description Latitude in decimal degrees.
+             * @description Latitude in decimal degrees (WGS 84).
              */
             latitude?: number;
             /**
              * Format: double
-             * @description Longitude in decimal degrees.
+             * @description Longitude in decimal degrees (WGS 84).
              */
             longitude?: number;
             /**
@@ -3840,7 +3902,7 @@ export interface components {
             plannedCruisingAltitude?: number;
             /**
              * Format: date-time
-             * @description Planned departure time in UTC.
+             * @description Planned departure time. ISO 8601 UTC format.
              */
             timeOfDeparture?: string;
         };
@@ -3964,12 +4026,12 @@ export interface components {
             id?: string;
             /**
              * Format: float
-             * @description Site latitude in decimal degrees.
+             * @description Site latitude in decimal degrees (WGS 84).
              */
             lat?: number;
             /**
              * Format: float
-             * @description Site longitude in decimal degrees.
+             * @description Site longitude in decimal degrees (WGS 84).
              */
             lon?: number;
             /** @description Wind and temperature data keyed by altitude level (e.g., "3000", "6000"). */
@@ -4181,12 +4243,12 @@ export interface components {
             cityName?: string | null;
             /**
              * Format: decimal
-             * @description Latitude in decimal degrees.
+             * @description Latitude in decimal degrees (WGS 84).
              */
             latitude?: number | null;
             /**
              * Format: decimal
-             * @description Longitude in decimal degrees.
+             * @description Longitude in decimal degrees (WGS 84).
              */
             longitude?: number | null;
             /** @description Type of obstacle (e.g., TOWER, BLDG, STACK). */
@@ -4340,7 +4402,7 @@ export interface components {
             runwayLengthSource?: string | null;
             /**
              * Format: date-time
-             * @description FAA NASR field: LENGTH_SOURCE_DATE. Date of runway length source information.
+             * @description FAA NASR field: LENGTH_SOURCE_DATE. Date of runway length source information. ISO 8601 UTC format.
              */
             lengthSourceDate?: string | null;
             /** @description GeoJSON polygon geometry of the physical runway boundary. Only included when includeGeometry=true. */
@@ -4430,12 +4492,12 @@ export interface components {
             markingsCondition?: components["schemas"]["RunwayMarkingsCondition"] | null;
             /**
              * Format: decimal
-             * @description FAA NASR field: LAT_DECIMAL. Latitude of physical runway end in decimal degrees.
+             * @description FAA NASR field: LAT_DECIMAL. Latitude of physical runway end in decimal degrees (WGS 84).
              */
             latitude?: number | null;
             /**
              * Format: decimal
-             * @description FAA NASR field: LONG_DECIMAL. Longitude of physical runway end in decimal degrees.
+             * @description FAA NASR field: LONG_DECIMAL. Longitude of physical runway end in decimal degrees (WGS 84).
              */
             longitude?: number | null;
             /**
@@ -4450,17 +4512,17 @@ export interface components {
             thresholdCrossingHeight?: number | null;
             /**
              * Format: decimal
-             * @description FAA NASR field: VISUAL_GLIDE_PATH_ANGLE. Visual glide path angle in hundredths of degrees.
+             * @description FAA NASR field: VISUAL_GLIDE_PATH_ANGLE. Visual glide path angle in hundredths of degrees (e.g., 300 = 3.00°).
              */
             visualGlidePathAngle?: number | null;
             /**
              * Format: decimal
-             * @description FAA NASR field: LAT_DISPLACED_THR_DECIMAL. Latitude of displaced threshold in decimal degrees.
+             * @description FAA NASR field: LAT_DISPLACED_THR_DECIMAL. Latitude of displaced threshold in decimal degrees (WGS 84).
              */
             displacedThresholdLatitude?: number | null;
             /**
              * Format: decimal
-             * @description FAA NASR field: LONG_DISPLACED_THR_DECIMAL. Longitude of displaced threshold in decimal degrees.
+             * @description FAA NASR field: LONG_DISPLACED_THR_DECIMAL. Longitude of displaced threshold in decimal degrees (WGS 84).
              */
             displacedThresholdLongitude?: number | null;
             /**
@@ -4523,7 +4585,7 @@ export interface components {
              * @description FAA NASR field: DIST_FROM_THR. Controlling object distance from the physical runway end in feet.
              */
             controllingObjectDistanceFromRunway?: number | null;
-            /** @description FAA NASR field: CNTRLN_OFFSET. Controlling object centerline offset distance in feet from the extended runway centerline. */
+            /** @description FAA NASR field: CNTRLN_OFFSET. Controlling object centerline offset distance from the extended runway centerline, in feet. */
             controllingObjectCenterlineOffset?: string | null;
             /**
              * Format: int32
@@ -4604,7 +4666,7 @@ export interface components {
             centerlineDirectionCode?: string | null;
             /**
              * Format: decimal
-             * @description FAA NASR field: RWY_GRAD. Runway End Gradient.
+             * @description FAA NASR field: RWY_GRAD. Runway End Gradient as a percentage (e.g., 0.3 = 0.3% grade).
              */
             runwayGradient?: number | null;
             /** @description FAA NASR field: RWY_GRAD_DIRECTION. Runway End Gradient Direction (Up or Down). */
@@ -4613,35 +4675,35 @@ export interface components {
             rwyEndPositionSource?: string | null;
             /**
              * Format: date-time
-             * @description FAA NASR field: RWY_END_PSN_DATE. Date of runway end position information.
+             * @description FAA NASR field: RWY_END_PSN_DATE. Date of runway end position information. ISO 8601 UTC format.
              */
             rwyEndPositionDate?: string | null;
             /** @description FAA NASR field: RWY_END_ELEV_SOURCE. Source of runway end elevation information. */
             rwyEndElevationSource?: string | null;
             /**
              * Format: date-time
-             * @description FAA NASR field: RWY_END_ELEV_DATE. Date of runway end elevation information.
+             * @description FAA NASR field: RWY_END_ELEV_DATE. Date of runway end elevation information. ISO 8601 UTC format.
              */
             rwyEndElevationDate?: string | null;
             /** @description FAA NASR field: DSPL_THR_PSN_SOURCE. Source of displaced threshold position information. */
             displacedThrPositionSource?: string | null;
             /**
              * Format: date-time
-             * @description FAA NASR field: RWY_END_DSPL_THR_PSN_DATE. Date of displaced threshold position information.
+             * @description FAA NASR field: RWY_END_DSPL_THR_PSN_DATE. Date of displaced threshold position information. ISO 8601 UTC format.
              */
             displacedThrPositionDate?: string | null;
             /** @description FAA NASR field: DSPL_THR_ELEV_SOURCE. Source of displaced threshold elevation information. */
             displacedThrElevationSource?: string | null;
             /**
              * Format: date-time
-             * @description FAA NASR field: RWY_END_DSPL_THR_ELEV_DATE. Date of displaced threshold elevation information.
+             * @description FAA NASR field: RWY_END_DSPL_THR_ELEV_DATE. Date of displaced threshold elevation information. ISO 8601 UTC format.
              */
             displacedThrElevationDate?: string | null;
             /** @description FAA NASR field: TDZ_ELEV_SOURCE. Source of touchdown zone elevation information. */
             touchdownZoneElevSource?: string | null;
             /**
              * Format: date-time
-             * @description FAA NASR field: RWY_END_TDZ_ELEV_DATE. Date of touchdown zone elevation information.
+             * @description FAA NASR field: RWY_END_TDZ_ELEV_DATE. Date of touchdown zone elevation information. ISO 8601 UTC format.
              */
             touchdownZoneElevDate?: string | null;
             /**
@@ -4677,21 +4739,21 @@ export interface components {
             lahsoLatitude?: string | null;
             /**
              * Format: decimal
-             * @description FAA NASR field: LAT_LAHSO_DECIMAL. LAHSO hold short point latitude in decimal degrees.
+             * @description FAA NASR field: LAT_LAHSO_DECIMAL. LAHSO hold short point latitude in decimal degrees (WGS 84).
              */
             lahsoLatDecimal?: number | null;
             /** @description FAA NASR field: LAHSO_LONG. LAHSO hold short point longitude (DMS format). */
             lahsoLongitude?: string | null;
             /**
              * Format: decimal
-             * @description FAA NASR field: LONG_LAHSO_DECIMAL. LAHSO hold short point longitude in decimal degrees.
+             * @description FAA NASR field: LONG_LAHSO_DECIMAL. LAHSO hold short point longitude in decimal degrees (WGS 84).
              */
             lahsoLongDecimal?: number | null;
             /** @description FAA NASR field: LAHSO_PSN_SOURCE. Source of LAHSO position information. */
             lahsoPositionSource?: string | null;
             /**
              * Format: date-time
-             * @description FAA NASR field: RWY_END_LAHSO_PSN_DATE. Date of LAHSO position information.
+             * @description FAA NASR field: RWY_END_LAHSO_PSN_DATE. Date of LAHSO position information. ISO 8601 UTC format.
              */
             lahsoPositionDate?: string | null;
         };
@@ -4967,12 +5029,12 @@ export interface operations {
                 lat?: number;
                 /** @description Longitude in decimal degrees (-180 to 180) */
                 lon?: number;
-                /** @description Search radius in nautical miles (default 30, max 500) */
-                radiusNm?: number;
                 /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
                 cursor?: string | null;
                 /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
                 limit?: number;
+                /** @description Search radius in nautical miles (default 30, max 500) */
+                radiusNm?: number;
             };
             header?: never;
             path?: never;
@@ -5999,16 +6061,16 @@ export interface operations {
     Navaid_GetNavaids: {
         parameters: {
             query?: {
+                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+                cursor?: string | null;
+                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+                limit?: number;
                 /** @description Search across NavId (starts with), Name (contains), and City (contains) */
                 search?: string | null;
                 /** @description Filter by navaid facility type (e.g., VOR, VORTAC, VOR/DME, NDB, NDB/DME, TACAN, DME) */
                 type?: string | null;
                 /** @description Filter by two-letter state code (e.g., TX, CA) */
                 state?: string | null;
-                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
-                cursor?: string | null;
-                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
-                limit?: number;
             };
             header?: never;
             path?: never;
@@ -6135,14 +6197,14 @@ export interface operations {
                 lat?: number;
                 /** @description Longitude in decimal degrees (-180 to 180) */
                 lon?: number;
-                /** @description Search radius in nautical miles (default 30, must be greater than 0) */
-                radiusNm?: number;
-                /** @description Optional navaid type filter (e.g., VOR, VORTAC, NDB) */
-                type?: string | null;
                 /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
                 cursor?: string | null;
                 /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
                 limit?: number;
+                /** @description Search radius in nautical miles (default 30, must be greater than 0) */
+                radiusNm?: number;
+                /** @description Optional navaid type filter (e.g., VOR, VORTAC, NDB) */
+                type?: string | null;
             };
             header?: never;
             path?: never;
@@ -6627,14 +6689,14 @@ export interface operations {
     Obstacle_SearchNearAirport: {
         parameters: {
             query?: {
-                /** @description Search radius in nautical miles (default 10, must be greater than 0) */
-                radiusNm?: number;
-                /** @description Optional minimum height AGL in feet — only return obstacles at or above this height */
-                minHeightAgl?: number | null;
                 /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
                 cursor?: string | null;
                 /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
                 limit?: number;
+                /** @description Search radius in nautical miles (default 10, must be greater than 0) */
+                radiusNm?: number;
+                /** @description Optional minimum height AGL in feet — only return obstacles at or above this height */
+                minHeightAgl?: number | null;
             };
             header?: never;
             path: {
@@ -6681,14 +6743,14 @@ export interface operations {
                 lat?: number;
                 /** @description Longitude in decimal degrees (-180 to 180) */
                 lon?: number;
-                /** @description Search radius in nautical miles (default 5, must be greater than 0) */
-                radiusNm?: number;
-                /** @description Optional minimum height AGL in feet — only return obstacles at or above this height */
-                minHeightAgl?: number | null;
                 /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
                 cursor?: string | null;
                 /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
                 limit?: number;
+                /** @description Search radius in nautical miles (default 5, must be greater than 0) */
+                radiusNm?: number;
+                /** @description Optional minimum height AGL in feet — only return obstacles at or above this height */
+                minHeightAgl?: number | null;
             };
             header?: never;
             path?: never;
@@ -6719,12 +6781,12 @@ export interface operations {
     Obstacle_GetByState: {
         parameters: {
             query?: {
-                /** @description Optional minimum height AGL in feet — only return obstacles at or above this height */
-                minHeightAgl?: number | null;
                 /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
                 cursor?: string | null;
                 /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
                 limit?: number;
+                /** @description Optional minimum height AGL in feet — only return obstacles at or above this height */
+                minHeightAgl?: number | null;
             };
             header?: never;
             path: {
@@ -6832,12 +6894,12 @@ export interface operations {
                 minLon?: number;
                 /** @description Northeast corner longitude (-180 to 180, must be greater than minLon) */
                 maxLon?: number;
-                /** @description Optional minimum height AGL in feet — only return obstacles at or above this height */
-                minHeightAgl?: number | null;
                 /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
                 cursor?: string | null;
                 /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
                 limit?: number;
+                /** @description Optional minimum height AGL in feet — only return obstacles at or above this height */
+                minHeightAgl?: number | null;
             };
             header?: never;
             path?: never;
@@ -6897,12 +6959,12 @@ export interface operations {
                 lat?: number;
                 /** @description Longitude in decimal degrees (-180 to 180) */
                 lon?: number;
-                /** @description Search radius in nautical miles (default 50, max 500) */
-                radiusNm?: number;
                 /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
                 cursor?: string | null;
                 /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
                 limit?: number;
+                /** @description Search radius in nautical miles (default 50, max 500) */
+                radiusNm?: number;
             };
             header?: never;
             path?: never;
@@ -6933,12 +6995,12 @@ export interface operations {
     Pirep_SearchNearAirport: {
         parameters: {
             query?: {
-                /** @description Search radius in nautical miles (default 50, max 500) */
-                radiusNm?: number;
                 /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
                 cursor?: string | null;
                 /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
                 limit?: number;
+                /** @description Search radius in nautical miles (default 50, max 500) */
+                radiusNm?: number;
             };
             header?: never;
             path: {
@@ -7025,9 +7087,13 @@ export interface operations {
     Runway_GetRunways: {
         parameters: {
             query?: {
+                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
+                cursor?: string | null;
+                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
+                limit?: number;
                 /** @description Search across airport identifier, ICAO code, name, and city */
                 search?: string | null;
-                /** @description Filter by runway surface type enum (e.g., Asphalt, Concrete, Turf) */
+                /** @description Filter by runway surface type enum (e.g., Asphalt, Concrete, Turf). Matches runways where the type appears as either the primary or secondary surface. */
                 surfaceType?: components["schemas"]["RunwaySurfaceType"] | null;
                 /** @description Minimum runway length in feet */
                 minLength?: number | null;
@@ -7035,10 +7101,6 @@ export interface operations {
                 state?: string | null;
                 /** @description Filter by whether the runway has edge lighting */
                 lighted?: boolean | null;
-                /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
-                cursor?: string | null;
-                /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
-                limit?: number;
             };
             header?: never;
             path?: never;
@@ -7064,18 +7126,18 @@ export interface operations {
                 lat?: number;
                 /** @description Longitude in decimal degrees (-180 to 180) */
                 lon?: number;
-                /** @description Search radius in nautical miles (default 30, max 500) */
-                radiusNm?: number;
-                /** @description Minimum runway length in feet */
-                minLength?: number | null;
-                /** @description Filter by runway surface type enum (e.g., Asphalt, Concrete) */
-                surfaceType?: components["schemas"]["RunwaySurfaceType"] | null;
-                /** @description Include ArcGIS runway polygon geometry in the response (default false) */
-                includeGeometry?: boolean;
                 /** @description Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page. */
                 cursor?: string | null;
                 /** @description Maximum number of items to return per page. Minimum 1, maximum 500, default 100. */
                 limit?: number;
+                /** @description Search radius in nautical miles (default 30, max 500) */
+                radiusNm?: number;
+                /** @description Minimum runway length in feet */
+                minLength?: number | null;
+                /** @description Filter by runway surface type enum (e.g., Asphalt, Concrete). Matches runways where the type appears as either the primary or secondary surface. */
+                surfaceType?: components["schemas"]["RunwaySurfaceType"] | null;
+                /** @description Include ArcGIS runway polygon geometry in the response (default false) */
+                includeGeometry?: boolean;
             };
             header?: never;
             path?: never;

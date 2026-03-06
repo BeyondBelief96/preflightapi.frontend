@@ -109,17 +109,6 @@
             "x-position": 2
           },
           {
-            "name": "radiusNm",
-            "in": "query",
-            "description": "Search radius in nautical miles (default 30, max 500)",
-            "schema": {
-              "type": "number",
-              "format": "double",
-              "default": 30
-            },
-            "x-position": 3
-          },
-          {
             "name": "cursor",
             "in": "query",
             "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
@@ -127,7 +116,7 @@
               "type": "string",
               "nullable": true
             },
-            "x-position": 4
+            "x-position": 3
           },
           {
             "name": "limit",
@@ -139,6 +128,17 @@
               "default": 100,
               "maximum": 500,
               "minimum": 1
+            },
+            "x-position": 4
+          },
+          {
+            "name": "radiusNm",
+            "in": "query",
+            "description": "Search radius in nautical miles (default 30, max 500)",
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "default": 30
             },
             "x-position": 5
           }
@@ -1678,36 +1678,6 @@
         "operationId": "Navaid_GetNavaids",
         "parameters": [
           {
-            "name": "search",
-            "in": "query",
-            "description": "Search across NavId (starts with), Name (contains), and City (contains)",
-            "schema": {
-              "type": "string",
-              "nullable": true
-            },
-            "x-position": 1
-          },
-          {
-            "name": "type",
-            "in": "query",
-            "description": "Filter by navaid facility type (e.g., VOR, VORTAC, VOR/DME, NDB, NDB/DME, TACAN, DME)",
-            "schema": {
-              "type": "string",
-              "nullable": true
-            },
-            "x-position": 2
-          },
-          {
-            "name": "state",
-            "in": "query",
-            "description": "Filter by two-letter state code (e.g., TX, CA)",
-            "schema": {
-              "type": "string",
-              "nullable": true
-            },
-            "x-position": 3
-          },
-          {
             "name": "cursor",
             "in": "query",
             "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
@@ -1715,7 +1685,7 @@
               "type": "string",
               "nullable": true
             },
-            "x-position": 4
+            "x-position": 1
           },
           {
             "name": "limit",
@@ -1727,6 +1697,36 @@
               "default": 100,
               "maximum": 500,
               "minimum": 1
+            },
+            "x-position": 2
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Search across NavId (starts with), Name (contains), and City (contains)",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "Filter by navaid facility type (e.g., VOR, VORTAC, VOR/DME, NDB, NDB/DME, TACAN, DME)",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "description": "Filter by two-letter state code (e.g., TX, CA)",
+            "schema": {
+              "type": "string",
+              "nullable": true
             },
             "x-position": 5
           }
@@ -1935,27 +1935,6 @@
             "x-position": 2
           },
           {
-            "name": "radiusNm",
-            "in": "query",
-            "description": "Search radius in nautical miles (default 30, must be greater than 0)",
-            "schema": {
-              "type": "number",
-              "format": "double",
-              "default": 30
-            },
-            "x-position": 3
-          },
-          {
-            "name": "type",
-            "in": "query",
-            "description": "Optional navaid type filter (e.g., VOR, VORTAC, NDB)",
-            "schema": {
-              "type": "string",
-              "nullable": true
-            },
-            "x-position": 4
-          },
-          {
             "name": "cursor",
             "in": "query",
             "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
@@ -1963,7 +1942,7 @@
               "type": "string",
               "nullable": true
             },
-            "x-position": 5
+            "x-position": 3
           },
           {
             "name": "limit",
@@ -1975,6 +1954,27 @@
               "default": 100,
               "maximum": 500,
               "minimum": 1
+            },
+            "x-position": 4
+          },
+          {
+            "name": "radiusNm",
+            "in": "query",
+            "description": "Search radius in nautical miles (default 30, must be greater than 0)",
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "default": 30
+            },
+            "x-position": 5
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "Optional navaid type filter (e.g., VOR, VORTAC, NDB)",
+            "schema": {
+              "type": "string",
+              "nullable": true
             },
             "x-position": 6
           }
@@ -2354,7 +2354,7 @@
             "description": "Latitude in decimal degrees (-90 to 90)",
             "schema": {
               "type": "number",
-              "format": "double"
+              "format": "decimal"
             },
             "x-position": 1
           },
@@ -2364,7 +2364,7 @@
             "description": "Longitude in decimal degrees (-180 to 180)",
             "schema": {
               "type": "number",
-              "format": "double"
+              "format": "decimal"
             },
             "x-position": 2
           },
@@ -2613,7 +2613,7 @@
             "description": "Optional latitude in decimal degrees (-90 to 90). Must be paired with longitude and radius.",
             "schema": {
               "type": "number",
-              "format": "double",
+              "format": "decimal",
               "nullable": true
             },
             "x-position": 9
@@ -2624,7 +2624,7 @@
             "description": "Optional longitude in decimal degrees (-180 to 180). Must be paired with latitude and radius.",
             "schema": {
               "type": "number",
-              "format": "double",
+              "format": "decimal",
               "nullable": true
             },
             "x-position": 10
@@ -2792,28 +2792,6 @@
             "x-position": 1
           },
           {
-            "name": "radiusNm",
-            "in": "query",
-            "description": "Search radius in nautical miles (default 10, must be greater than 0)",
-            "schema": {
-              "type": "number",
-              "format": "double",
-              "default": 10
-            },
-            "x-position": 2
-          },
-          {
-            "name": "minHeightAgl",
-            "in": "query",
-            "description": "Optional minimum height AGL in feet — only return obstacles at or above this height",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            },
-            "x-position": 3
-          },
-          {
             "name": "cursor",
             "in": "query",
             "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
@@ -2821,7 +2799,7 @@
               "type": "string",
               "nullable": true
             },
-            "x-position": 4
+            "x-position": 2
           },
           {
             "name": "limit",
@@ -2833,6 +2811,28 @@
               "default": 100,
               "maximum": 500,
               "minimum": 1
+            },
+            "x-position": 3
+          },
+          {
+            "name": "radiusNm",
+            "in": "query",
+            "description": "Search radius in nautical miles (default 10, must be greater than 0)",
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "default": 10
+            },
+            "x-position": 4
+          },
+          {
+            "name": "minHeightAgl",
+            "in": "query",
+            "description": "Optional minimum height AGL in feet — only return obstacles at or above this height",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
             },
             "x-position": 5
           }
@@ -2901,28 +2901,6 @@
             "x-position": 2
           },
           {
-            "name": "radiusNm",
-            "in": "query",
-            "description": "Search radius in nautical miles (default 5, must be greater than 0)",
-            "schema": {
-              "type": "number",
-              "format": "double",
-              "default": 5
-            },
-            "x-position": 3
-          },
-          {
-            "name": "minHeightAgl",
-            "in": "query",
-            "description": "Optional minimum height AGL in feet — only return obstacles at or above this height",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            },
-            "x-position": 4
-          },
-          {
             "name": "cursor",
             "in": "query",
             "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
@@ -2930,7 +2908,7 @@
               "type": "string",
               "nullable": true
             },
-            "x-position": 5
+            "x-position": 3
           },
           {
             "name": "limit",
@@ -2942,6 +2920,28 @@
               "default": 100,
               "maximum": 500,
               "minimum": 1
+            },
+            "x-position": 4
+          },
+          {
+            "name": "radiusNm",
+            "in": "query",
+            "description": "Search radius in nautical miles (default 5, must be greater than 0)",
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "default": 5
+            },
+            "x-position": 5
+          },
+          {
+            "name": "minHeightAgl",
+            "in": "query",
+            "description": "Optional minimum height AGL in feet — only return obstacles at or above this height",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
             },
             "x-position": 6
           }
@@ -2990,17 +2990,6 @@
             "x-position": 1
           },
           {
-            "name": "minHeightAgl",
-            "in": "query",
-            "description": "Optional minimum height AGL in feet — only return obstacles at or above this height",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            },
-            "x-position": 2
-          },
-          {
             "name": "cursor",
             "in": "query",
             "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
@@ -3008,7 +2997,7 @@
               "type": "string",
               "nullable": true
             },
-            "x-position": 3
+            "x-position": 2
           },
           {
             "name": "limit",
@@ -3020,6 +3009,17 @@
               "default": 100,
               "maximum": 500,
               "minimum": 1
+            },
+            "x-position": 3
+          },
+          {
+            "name": "minHeightAgl",
+            "in": "query",
+            "description": "Optional minimum height AGL in feet — only return obstacles at or above this height",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
             },
             "x-position": 4
           }
@@ -3193,17 +3193,6 @@
             "x-position": 4
           },
           {
-            "name": "minHeightAgl",
-            "in": "query",
-            "description": "Optional minimum height AGL in feet — only return obstacles at or above this height",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "nullable": true
-            },
-            "x-position": 5
-          },
-          {
             "name": "cursor",
             "in": "query",
             "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
@@ -3211,7 +3200,7 @@
               "type": "string",
               "nullable": true
             },
-            "x-position": 6
+            "x-position": 5
           },
           {
             "name": "limit",
@@ -3223,6 +3212,17 @@
               "default": 100,
               "maximum": 500,
               "minimum": 1
+            },
+            "x-position": 6
+          },
+          {
+            "name": "minHeightAgl",
+            "in": "query",
+            "description": "Optional minimum height AGL in feet — only return obstacles at or above this height",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
             },
             "x-position": 7
           }
@@ -3327,17 +3327,6 @@
             "x-position": 2
           },
           {
-            "name": "radiusNm",
-            "in": "query",
-            "description": "Search radius in nautical miles (default 50, max 500)",
-            "schema": {
-              "type": "number",
-              "format": "double",
-              "default": 50
-            },
-            "x-position": 3
-          },
-          {
             "name": "cursor",
             "in": "query",
             "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
@@ -3345,7 +3334,7 @@
               "type": "string",
               "nullable": true
             },
-            "x-position": 4
+            "x-position": 3
           },
           {
             "name": "limit",
@@ -3357,6 +3346,17 @@
               "default": 100,
               "maximum": 500,
               "minimum": 1
+            },
+            "x-position": 4
+          },
+          {
+            "name": "radiusNm",
+            "in": "query",
+            "description": "Search radius in nautical miles (default 50, max 500)",
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "default": 50
             },
             "x-position": 5
           }
@@ -3405,17 +3405,6 @@
             "x-position": 1
           },
           {
-            "name": "radiusNm",
-            "in": "query",
-            "description": "Search radius in nautical miles (default 50, max 500)",
-            "schema": {
-              "type": "number",
-              "format": "double",
-              "default": 50
-            },
-            "x-position": 2
-          },
-          {
             "name": "cursor",
             "in": "query",
             "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
@@ -3423,7 +3412,7 @@
               "type": "string",
               "nullable": true
             },
-            "x-position": 3
+            "x-position": 2
           },
           {
             "name": "limit",
@@ -3435,6 +3424,17 @@
               "default": 100,
               "maximum": 500,
               "minimum": 1
+            },
+            "x-position": 3
+          },
+          {
+            "name": "radiusNm",
+            "in": "query",
+            "description": "Search radius in nautical miles (default 50, max 500)",
+            "schema": {
+              "type": "number",
+              "format": "double",
+              "default": 50
             },
             "x-position": 4
           }
@@ -3550,9 +3550,9 @@
         "operationId": "Runway_GetRunways",
         "parameters": [
           {
-            "name": "search",
+            "name": "cursor",
             "in": "query",
-            "description": "Search across airport identifier, ICAO code, name, and city",
+            "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
             "schema": {
               "type": "string",
               "nullable": true
@@ -3560,9 +3560,32 @@
             "x-position": 1
           },
           {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1
+            },
+            "x-position": 2
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Search across airport identifier, ICAO code, name, and city",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
             "name": "surfaceType",
             "in": "query",
-            "description": "Filter by runway surface type enum (e.g., Asphalt, Concrete, Turf)",
+            "description": "Filter by runway surface type enum (e.g., Asphalt, Concrete, Turf). Matches runways where the type appears as either the primary or secondary surface.",
             "schema": {
               "oneOf": [
                 {
@@ -3575,7 +3598,7 @@
                 }
               ]
             },
-            "x-position": 2
+            "x-position": 4
           },
           {
             "name": "minLength",
@@ -3586,7 +3609,7 @@
               "format": "int32",
               "nullable": true
             },
-            "x-position": 3
+            "x-position": 5
           },
           {
             "name": "state",
@@ -3596,7 +3619,7 @@
               "type": "string",
               "nullable": true
             },
-            "x-position": 4
+            "x-position": 6
           },
           {
             "name": "lighted",
@@ -3605,29 +3628,6 @@
             "schema": {
               "type": "boolean",
               "nullable": true
-            },
-            "x-position": 5
-          },
-          {
-            "name": "cursor",
-            "in": "query",
-            "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
-            "schema": {
-              "type": "string",
-              "nullable": true
-            },
-            "x-position": 6
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 100,
-              "maximum": 500,
-              "minimum": 1
             },
             "x-position": 7
           }
@@ -3676,6 +3676,29 @@
             "x-position": 2
           },
           {
+            "name": "cursor",
+            "in": "query",
+            "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1
+            },
+            "x-position": 4
+          },
+          {
             "name": "radiusNm",
             "in": "query",
             "description": "Search radius in nautical miles (default 30, max 500)",
@@ -3684,7 +3707,7 @@
               "format": "double",
               "default": 30
             },
-            "x-position": 3
+            "x-position": 5
           },
           {
             "name": "minLength",
@@ -3695,12 +3718,12 @@
               "format": "int32",
               "nullable": true
             },
-            "x-position": 4
+            "x-position": 6
           },
           {
             "name": "surfaceType",
             "in": "query",
-            "description": "Filter by runway surface type enum (e.g., Asphalt, Concrete)",
+            "description": "Filter by runway surface type enum (e.g., Asphalt, Concrete). Matches runways where the type appears as either the primary or secondary surface.",
             "schema": {
               "oneOf": [
                 {
@@ -3713,7 +3736,7 @@
                 }
               ]
             },
-            "x-position": 5
+            "x-position": 7
           },
           {
             "name": "includeGeometry",
@@ -3722,29 +3745,6 @@
             "schema": {
               "type": "boolean",
               "default": false
-            },
-            "x-position": 6
-          },
-          {
-            "name": "cursor",
-            "in": "query",
-            "description": "Opaque cursor value from a previous response's pagination.nextCursor field. Omit or leave null to start from the first page.",
-            "schema": {
-              "type": "string",
-              "nullable": true
-            },
-            "x-position": 7
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "Maximum number of items to return per page. Minimum 1, maximum 500, default 100.",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 100,
-              "maximum": 500,
-              "minimum": 1
             },
             "x-position": 8
           }
@@ -4256,7 +4256,7 @@
           },
           "effDate": {
             "type": "string",
-            "description": "FAA NASR field: EFF_DATE. Effective date of the airport information.",
+            "description": "FAA NASR field: EFF_DATE. Effective date of the airport information. ISO 8601 UTC format.",
             "format": "date-time"
           },
           "siteType": {
@@ -4342,7 +4342,7 @@
           },
           "distCityToAirport": {
             "type": "number",
-            "description": "FAA NASR field: DIST_CITY_TO_AIRPORT. Distance from Central Business District of the Associated City to the Airport.",
+            "description": "FAA NASR field: DIST_CITY_TO_AIRPORT. Distance from Central Business District of the Associated City to the Airport, in nautical miles.",
             "format": "decimal",
             "nullable": true
           },
@@ -4359,13 +4359,13 @@
           },
           "latDecimal": {
             "type": "number",
-            "description": "FAA NASR field: LAT_DECIMAL. Latitude of airport reference point in decimal degrees.",
+            "description": "FAA NASR field: LAT_DECIMAL. Latitude of airport reference point in decimal degrees (WGS 84).",
             "format": "decimal",
             "nullable": true
           },
           "longDecimal": {
             "type": "number",
-            "description": "FAA NASR field: LONG_DECIMAL. Longitude of airport reference point in decimal degrees.",
+            "description": "FAA NASR field: LONG_DECIMAL. Longitude of airport reference point in decimal degrees (WGS 84).",
             "format": "decimal",
             "nullable": true
           },
@@ -4431,7 +4431,7 @@
           },
           "positionSrcDate": {
             "type": "string",
-            "description": "FAA NASR field: POSITION_SRC_DATE. Date the airport position information was determined.",
+            "description": "FAA NASR field: POSITION_SRC_DATE. Date the airport position information was determined. ISO 8601 UTC format.",
             "format": "date-time",
             "nullable": true
           },
@@ -4457,13 +4457,13 @@
           },
           "elevationSrcDate": {
             "type": "string",
-            "description": "FAA NASR field: ELEVATION_SRC_DATE. Date the airport elevation information was determined.",
+            "description": "FAA NASR field: ELEVATION_SRC_DATE. Date the airport elevation information was determined. ISO 8601 UTC format.",
             "format": "date-time",
             "nullable": true
           },
           "magVarn": {
             "type": "number",
-            "description": "FAA NASR field: MAG_VARN. Magnetic Variation in degrees.",
+            "description": "FAA NASR field: MAG_VARN. Magnetic Variation in degrees. Use with MagHemis (E or W) to determine sign.",
             "format": "decimal",
             "nullable": true
           },
@@ -4588,13 +4588,13 @@
           },
           "lastInspection": {
             "type": "string",
-            "description": "FAA NASR field: LAST_INSPECTION. Date of the last physical inspection.",
+            "description": "FAA NASR field: LAST_INSPECTION. Date of the last physical inspection. ISO 8601 UTC format.",
             "format": "date-time",
             "nullable": true
           },
           "lastInfoResponse": {
             "type": "string",
-            "description": "FAA NASR field: LAST_INFO_RESPONSE. Date of the last information request response.",
+            "description": "FAA NASR field: LAST_INFO_RESPONSE. Date of the last information request response. ISO 8601 UTC format.",
             "format": "date-time",
             "nullable": true
           },
@@ -4742,7 +4742,7 @@
           },
           "arffCertTypeDate": {
             "type": "string",
-            "description": "FAA NASR field: ARFF_CERT_TYPE_DATE. Airport ARFF Certification Date (YYYY/MM).",
+            "description": "FAA NASR field: ARFF_CERT_TYPE_DATE. Airport ARFF Certification Date. ISO 8601 UTC format.",
             "format": "date-time",
             "nullable": true
           },
@@ -5149,7 +5149,7 @@
           },
           "upperVal": {
             "type": "number",
-            "description": "Upper altitude limit value.",
+            "description": "Upper altitude limit value. Unit determined by UpperUom (FT = feet, FL = flight level). Reference determined by UpperCode (MSL or AGL).",
             "format": "double",
             "nullable": true
           },
@@ -5170,7 +5170,7 @@
           },
           "lowerVal": {
             "type": "number",
-            "description": "Lower altitude limit value.",
+            "description": "Lower altitude limit value. Unit determined by LowerUom (FT = feet, FL = flight level). Reference determined by LowerCode (MSL or AGL).",
             "format": "double",
             "nullable": true
           },
@@ -5364,18 +5364,18 @@
           },
           "upperVal": {
             "type": "number",
-            "description": "Upper altitude limit value.",
+            "description": "Upper altitude limit value. Unit determined by UpperUom (FT = feet, FL = flight level). Reference determined by UpperCode (MSL or AGL).",
             "format": "double",
             "nullable": true
           },
           "upperUom": {
             "type": "string",
-            "description": "Upper altitude unit of measure.",
+            "description": "Upper altitude unit of measure (e.g., FT, FL).",
             "nullable": true
           },
           "upperCode": {
             "type": "string",
-            "description": "Upper altitude reference code.",
+            "description": "Upper altitude reference code (e.g., MSL, AGL).",
             "nullable": true
           },
           "lowerDesc": {
@@ -5385,18 +5385,18 @@
           },
           "lowerVal": {
             "type": "number",
-            "description": "Lower altitude limit value.",
+            "description": "Lower altitude limit value. Unit determined by LowerUom (FT = feet, FL = flight level). Reference determined by LowerCode (MSL or AGL).",
             "format": "double",
             "nullable": true
           },
           "lowerUom": {
             "type": "string",
-            "description": "Lower altitude unit of measure.",
+            "description": "Lower altitude unit of measure (e.g., FT, FL).",
             "nullable": true
           },
           "lowerCode": {
             "type": "string",
-            "description": "Lower altitude reference code.",
+            "description": "Lower altitude reference code (e.g., MSL, AGL).",
             "nullable": true
           },
           "levelCode": {
@@ -5573,13 +5573,13 @@
           },
           "latitude": {
             "type": "number",
-            "description": "Station latitude in decimal degrees.",
+            "description": "Station latitude in decimal degrees (WGS 84).",
             "format": "double",
             "nullable": true
           },
           "longitude": {
             "type": "number",
-            "description": "Station longitude in decimal degrees.",
+            "description": "Station longitude in decimal degrees (WGS 84).",
             "format": "double",
             "nullable": true
           },
@@ -5659,6 +5659,83 @@
                 "$ref": "#/components/schemas/FlightCategory"
               }
             ]
+          },
+          "threeHrPressureTendencyMb": {
+            "type": "number",
+            "description": "Three-hour pressure tendency in millibars.",
+            "format": "double",
+            "nullable": true
+          },
+          "maxTC": {
+            "type": "number",
+            "description": "Maximum temperature in degrees Celsius.",
+            "format": "double",
+            "nullable": true
+          },
+          "minTC": {
+            "type": "number",
+            "description": "Minimum temperature in degrees Celsius.",
+            "format": "double",
+            "nullable": true
+          },
+          "maxT24hrC": {
+            "type": "number",
+            "description": "Maximum temperature over the past 24 hours in degrees Celsius.",
+            "format": "double",
+            "nullable": true
+          },
+          "minT24hrC": {
+            "type": "number",
+            "description": "Minimum temperature over the past 24 hours in degrees Celsius.",
+            "format": "double",
+            "nullable": true
+          },
+          "precipIn": {
+            "type": "number",
+            "description": "Precipitation accumulation in inches since the last routine observation.",
+            "format": "double",
+            "nullable": true
+          },
+          "pcp3hrIn": {
+            "type": "number",
+            "description": "Precipitation accumulation in inches over the past 3 hours.",
+            "format": "double",
+            "nullable": true
+          },
+          "pcp6hrIn": {
+            "type": "number",
+            "description": "Precipitation accumulation in inches over the past 6 hours.",
+            "format": "double",
+            "nullable": true
+          },
+          "pcp24hrIn": {
+            "type": "number",
+            "description": "Precipitation accumulation in inches over the past 24 hours.",
+            "format": "double",
+            "nullable": true
+          },
+          "snowIn": {
+            "type": "number",
+            "description": "Snow depth in inches.",
+            "format": "double",
+            "nullable": true
+          },
+          "vertVisFt": {
+            "type": "integer",
+            "description": "Vertical visibility in feet AGL.",
+            "format": "int32",
+            "nullable": true
+          },
+          "metarType": {
+            "type": "string",
+            "description": "Type of encoding: METAR or SPECI.",
+            "nullable": true
+          },
+          "elevationM": {
+            "type": "number",
+            "description": "Station elevation in meters MSL.",
+            "format": "double",
+            "nullable": true
           }
         }
       },
@@ -5811,19 +5888,19 @@
           },
           "latitude": {
             "type": "number",
-            "description": "Station latitude in decimal degrees.",
+            "description": "Station latitude in decimal degrees (WGS 84).",
             "format": "double",
             "nullable": true
           },
           "longitude": {
             "type": "number",
-            "description": "Station longitude in decimal degrees.",
+            "description": "Station longitude in decimal degrees (WGS 84).",
             "format": "double",
             "nullable": true
           },
           "elevationM": {
             "type": "number",
-            "description": "Station elevation in meters.",
+            "description": "Station elevation in meters MSL. This field is in meters (not feet) because it originates from the NOAA Aviation Weather API which uses ICAO standard units.",
             "format": "double",
             "nullable": true
           },
@@ -6078,12 +6155,12 @@
           },
           "receiptTime": {
             "type": "string",
-            "description": "Time the PIREP was received.",
+            "description": "Time the PIREP was received. ISO 8601 UTC format.",
             "nullable": true
           },
           "observationTime": {
             "type": "string",
-            "description": "Time of the pilot observation.",
+            "description": "Time of the pilot observation. ISO 8601 UTC format.",
             "nullable": true
           },
           "qualityControlFlags": {
@@ -6102,13 +6179,13 @@
           },
           "latitude": {
             "type": "number",
-            "description": "Latitude of the report in decimal degrees.",
+            "description": "Latitude of the report in decimal degrees (WGS 84).",
             "format": "double",
             "nullable": true
           },
           "longitude": {
             "type": "number",
-            "description": "Longitude of the report in decimal degrees.",
+            "description": "Longitude of the report in decimal degrees (WGS 84).",
             "format": "double",
             "nullable": true
           },
@@ -6527,22 +6604,22 @@
           },
           "receiptTime": {
             "type": "string",
-            "description": "Time the advisory was received.",
+            "description": "Time the advisory was received. ISO 8601 UTC format.",
             "format": "date-time"
           },
           "issueTime": {
             "type": "string",
-            "description": "Time the advisory was issued.",
+            "description": "Time the advisory was issued. ISO 8601 UTC format.",
             "format": "date-time"
           },
           "expireTime": {
             "type": "string",
-            "description": "Time the advisory expires, typically 6 hours after issuance.",
+            "description": "Time the advisory expires, typically 6 hours after issuance. ISO 8601 UTC format.",
             "format": "date-time"
           },
           "validTime": {
             "type": "string",
-            "description": "The valid time of the G-AIRMET snapshot.",
+            "description": "The valid time of the G-AIRMET snapshot. ISO 8601 UTC format.",
             "format": "date-time"
           },
           "product": {
@@ -7239,13 +7316,13 @@
           },
           "latitude": {
             "type": "number",
-            "description": "Latitude in decimal degrees (-90 to 90). Required when AirportIdentifier is null.",
+            "description": "Latitude in decimal degrees (WGS 84), range -90 to 90. Required when AirportIdentifier is null.",
             "format": "decimal",
             "nullable": true
           },
           "longitude": {
             "type": "number",
-            "description": "Longitude in decimal degrees (-180 to 180). Required when AirportIdentifier is null.",
+            "description": "Longitude in decimal degrees (WGS 84), range -180 to 180. Required when AirportIdentifier is null.",
             "format": "decimal",
             "nullable": true
           }
@@ -7330,7 +7407,7 @@
           },
           "effectiveDate": {
             "type": "string",
-            "description": "FAA NASR field: EFF_DATE. The 28 Day NASR Subscription Effective Date (YYYY/MM/DD).",
+            "description": "FAA NASR field: EFF_DATE. The 28 Day NASR Subscription Effective Date. ISO 8601 UTC format.",
             "format": "date-time"
           },
           "facilityName": {
@@ -7373,13 +7450,13 @@
           },
           "latitude": {
             "type": "number",
-            "description": "FAA NASR field: LAT_DECIMAL. Facility Reference Point Latitude in Decimal Format.",
+            "description": "FAA NASR field: LAT_DECIMAL. Facility Reference Point Latitude in decimal degrees (WGS 84).",
             "format": "decimal",
             "nullable": true
           },
           "longitude": {
             "type": "number",
-            "description": "FAA NASR field: LONG_DECIMAL. Facility Reference Point Longitude in Decimal Format.",
+            "description": "FAA NASR field: LONG_DECIMAL. Facility Reference Point Longitude in decimal degrees (WGS 84).",
             "format": "decimal",
             "nullable": true
           },
@@ -7410,7 +7487,7 @@
           },
           "frequency": {
             "type": "string",
-            "description": "FAA NASR field: FREQ. Frequency for SERVICED FACILITY use. In the case of a NAVAID with DME/TACAN Channel, the Frequency is displayed with the Channel (FREQ/CHAN).",
+            "description": "FAA NASR field: FREQ. Frequency for SERVICED FACILITY use, in MHz (e.g., \"118.300\"). For NAVAIDs with DME/TACAN Channel, the value includes the channel (e.g., \"110.60/CH43X\").",
             "nullable": true
           },
           "sectorization": {
@@ -8212,7 +8289,7 @@
           },
           "effectiveDate": {
             "type": "string",
-            "description": "FAA NASR field: EFFECTIVE_DATE. Date the current NASR data cycle became effective.",
+            "description": "FAA NASR field: EFFECTIVE_DATE. Date the current NASR data cycle became effective. ISO 8601 UTC format.",
             "format": "date-time"
           },
           "checkpoints": {
@@ -8472,12 +8549,12 @@
           },
           "startLegTime": {
             "type": "string",
-            "description": "Estimated time at the start of this leg (UTC).",
+            "description": "Estimated time at the start of this leg. ISO 8601 UTC format.",
             "format": "date-time"
           },
           "endLegTime": {
             "type": "string",
-            "description": "Estimated time at the end of this leg (UTC).",
+            "description": "Estimated time at the end of this leg. ISO 8601 UTC format.",
             "format": "date-time"
           },
           "legFuelBurnGals": {
@@ -8527,12 +8604,12 @@
           },
           "latitude": {
             "type": "number",
-            "description": "Latitude in decimal degrees.",
+            "description": "Latitude in decimal degrees (WGS 84).",
             "format": "double"
           },
           "longitude": {
             "type": "number",
-            "description": "Longitude in decimal degrees.",
+            "description": "Longitude in decimal degrees (WGS 84).",
             "format": "double"
           },
           "altitude": {
@@ -8610,7 +8687,7 @@
           },
           "timeOfDeparture": {
             "type": "string",
-            "description": "Planned departure time in UTC.",
+            "description": "Planned departure time. ISO 8601 UTC format.",
             "format": "date-time"
           }
         }
@@ -8761,12 +8838,12 @@
           },
           "lat": {
             "type": "number",
-            "description": "Site latitude in decimal degrees.",
+            "description": "Site latitude in decimal degrees (WGS 84).",
             "format": "float"
           },
           "lon": {
             "type": "number",
-            "description": "Site longitude in decimal degrees.",
+            "description": "Site longitude in decimal degrees (WGS 84).",
             "format": "float"
           },
           "windTemp": {
@@ -9041,13 +9118,13 @@
           },
           "latitude": {
             "type": "number",
-            "description": "Latitude in decimal degrees.",
+            "description": "Latitude in decimal degrees (WGS 84).",
             "format": "decimal",
             "nullable": true
           },
           "longitude": {
             "type": "number",
-            "description": "Longitude in decimal degrees.",
+            "description": "Longitude in decimal degrees (WGS 84).",
             "format": "decimal",
             "nullable": true
           },
@@ -9417,7 +9494,7 @@
           },
           "lengthSourceDate": {
             "type": "string",
-            "description": "FAA NASR field: LENGTH_SOURCE_DATE. Date of runway length source information.",
+            "description": "FAA NASR field: LENGTH_SOURCE_DATE. Date of runway length source information. ISO 8601 UTC format.",
             "format": "date-time",
             "nullable": true
           },
@@ -9672,13 +9749,13 @@
           },
           "latitude": {
             "type": "number",
-            "description": "FAA NASR field: LAT_DECIMAL. Latitude of physical runway end in decimal degrees.",
+            "description": "FAA NASR field: LAT_DECIMAL. Latitude of physical runway end in decimal degrees (WGS 84).",
             "format": "decimal",
             "nullable": true
           },
           "longitude": {
             "type": "number",
-            "description": "FAA NASR field: LONG_DECIMAL. Longitude of physical runway end in decimal degrees.",
+            "description": "FAA NASR field: LONG_DECIMAL. Longitude of physical runway end in decimal degrees (WGS 84).",
             "format": "decimal",
             "nullable": true
           },
@@ -9696,19 +9773,19 @@
           },
           "visualGlidePathAngle": {
             "type": "number",
-            "description": "FAA NASR field: VISUAL_GLIDE_PATH_ANGLE. Visual glide path angle in hundredths of degrees.",
+            "description": "FAA NASR field: VISUAL_GLIDE_PATH_ANGLE. Visual glide path angle in hundredths of degrees (e.g., 300 = 3.00°).",
             "format": "decimal",
             "nullable": true
           },
           "displacedThresholdLatitude": {
             "type": "number",
-            "description": "FAA NASR field: LAT_DISPLACED_THR_DECIMAL. Latitude of displaced threshold in decimal degrees.",
+            "description": "FAA NASR field: LAT_DISPLACED_THR_DECIMAL. Latitude of displaced threshold in decimal degrees (WGS 84).",
             "format": "decimal",
             "nullable": true
           },
           "displacedThresholdLongitude": {
             "type": "number",
-            "description": "FAA NASR field: LONG_DISPLACED_THR_DECIMAL. Longitude of displaced threshold in decimal degrees.",
+            "description": "FAA NASR field: LONG_DISPLACED_THR_DECIMAL. Longitude of displaced threshold in decimal degrees (WGS 84).",
             "format": "decimal",
             "nullable": true
           },
@@ -9807,7 +9884,7 @@
           },
           "controllingObjectCenterlineOffset": {
             "type": "string",
-            "description": "FAA NASR field: CNTRLN_OFFSET. Controlling object centerline offset distance in feet from the extended runway centerline.",
+            "description": "FAA NASR field: CNTRLN_OFFSET. Controlling object centerline offset distance from the extended runway centerline, in feet.",
             "nullable": true
           },
           "rwyEndLatDeg": {
@@ -9914,7 +9991,7 @@
           },
           "runwayGradient": {
             "type": "number",
-            "description": "FAA NASR field: RWY_GRAD. Runway End Gradient.",
+            "description": "FAA NASR field: RWY_GRAD. Runway End Gradient as a percentage (e.g., 0.3 = 0.3% grade).",
             "format": "decimal",
             "nullable": true
           },
@@ -9930,7 +10007,7 @@
           },
           "rwyEndPositionDate": {
             "type": "string",
-            "description": "FAA NASR field: RWY_END_PSN_DATE. Date of runway end position information.",
+            "description": "FAA NASR field: RWY_END_PSN_DATE. Date of runway end position information. ISO 8601 UTC format.",
             "format": "date-time",
             "nullable": true
           },
@@ -9941,7 +10018,7 @@
           },
           "rwyEndElevationDate": {
             "type": "string",
-            "description": "FAA NASR field: RWY_END_ELEV_DATE. Date of runway end elevation information.",
+            "description": "FAA NASR field: RWY_END_ELEV_DATE. Date of runway end elevation information. ISO 8601 UTC format.",
             "format": "date-time",
             "nullable": true
           },
@@ -9952,7 +10029,7 @@
           },
           "displacedThrPositionDate": {
             "type": "string",
-            "description": "FAA NASR field: RWY_END_DSPL_THR_PSN_DATE. Date of displaced threshold position information.",
+            "description": "FAA NASR field: RWY_END_DSPL_THR_PSN_DATE. Date of displaced threshold position information. ISO 8601 UTC format.",
             "format": "date-time",
             "nullable": true
           },
@@ -9963,7 +10040,7 @@
           },
           "displacedThrElevationDate": {
             "type": "string",
-            "description": "FAA NASR field: RWY_END_DSPL_THR_ELEV_DATE. Date of displaced threshold elevation information.",
+            "description": "FAA NASR field: RWY_END_DSPL_THR_ELEV_DATE. Date of displaced threshold elevation information. ISO 8601 UTC format.",
             "format": "date-time",
             "nullable": true
           },
@@ -9974,7 +10051,7 @@
           },
           "touchdownZoneElevDate": {
             "type": "string",
-            "description": "FAA NASR field: RWY_END_TDZ_ELEV_DATE. Date of touchdown zone elevation information.",
+            "description": "FAA NASR field: RWY_END_TDZ_ELEV_DATE. Date of touchdown zone elevation information. ISO 8601 UTC format.",
             "format": "date-time",
             "nullable": true
           },
@@ -10025,7 +10102,7 @@
           },
           "lahsoLatDecimal": {
             "type": "number",
-            "description": "FAA NASR field: LAT_LAHSO_DECIMAL. LAHSO hold short point latitude in decimal degrees.",
+            "description": "FAA NASR field: LAT_LAHSO_DECIMAL. LAHSO hold short point latitude in decimal degrees (WGS 84).",
             "format": "decimal",
             "nullable": true
           },
@@ -10036,7 +10113,7 @@
           },
           "lahsoLongDecimal": {
             "type": "number",
-            "description": "FAA NASR field: LONG_LAHSO_DECIMAL. LAHSO hold short point longitude in decimal degrees.",
+            "description": "FAA NASR field: LONG_LAHSO_DECIMAL. LAHSO hold short point longitude in decimal degrees (WGS 84).",
             "format": "decimal",
             "nullable": true
           },
@@ -10047,7 +10124,7 @@
           },
           "lahsoPositionDate": {
             "type": "string",
-            "description": "FAA NASR field: RWY_END_LAHSO_PSN_DATE. Date of LAHSO position information.",
+            "description": "FAA NASR field: RWY_END_LAHSO_PSN_DATE. Date of LAHSO position information. ISO 8601 UTC format.",
             "format": "date-time",
             "nullable": true
           }
