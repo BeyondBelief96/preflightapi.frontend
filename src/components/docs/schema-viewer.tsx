@@ -150,7 +150,7 @@ function FieldRow({
         {/* Collapsible enum values */}
         {hasEnum && (
           <div className="pl-[22px]">
-            <EnumValues values={field.enum!} />
+            <EnumValues values={field.enumNames ?? field.enum!} />
           </div>
         )}
       </Wrapper>
