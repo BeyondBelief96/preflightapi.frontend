@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { Check, Loader2 } from 'lucide-react'
-import { useAuth } from '@clerk/clerk-react'
+import { useAuth } from '@clerk/tanstack-react-start'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import type { PlanDefinition } from '@/lib/constants'
 import { toastError } from '@/lib/toast-error'

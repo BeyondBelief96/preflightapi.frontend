@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { SignedIn, SignedOut, UserButton } from '@clerk/clerk-react'
+import { Show, UserButton } from '@clerk/tanstack-react-start'
 import { Menu, X } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
@@ -43,7 +43,7 @@ export function SiteHeader() {
 
         {/* Desktop Auth Buttons */}
         <div className="hidden items-center gap-3 md:flex">
-          <SignedOut>
+          <Show when="signed-out">
             {isWaitlistMode ? (
               <Link to="/waitlist">
                 <Button size="sm">Join Waitlist</Button>
@@ -60,18 +60,18 @@ export function SiteHeader() {
                 </Link>
               </>
             )}
-          </SignedOut>
-          <SignedIn>
+          </Show>
+          <Show when="signed-in">
             <Link to="/dashboard">
               <Button size="sm">Dashboard</Button>
             </Link>
             <UserButton />
-          </SignedIn>
+          </Show>
         </div>
 
         {/* Mobile Header Actions */}
         <div className="flex items-center gap-3 md:hidden">
-          <SignedIn>
+          <Show when="signed-in">
             <UserButton
               appearance={{
                 elements: {
@@ -79,7 +79,7 @@ export function SiteHeader() {
                 },
               }}
             />
-          </SignedIn>
+          </Show>
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -107,7 +107,7 @@ export function SiteHeader() {
                 {link.label}
               </Link>
             ))}
-            <SignedOut>
+            <Show when="signed-out">
               <div className="mt-3 flex flex-col gap-2 border-t pt-3">
                 {isWaitlistMode ? (
                   <Link to="/waitlist" onClick={() => setMobileMenuOpen(false)}>
@@ -136,8 +136,8 @@ export function SiteHeader() {
                   </>
                 )}
               </div>
-            </SignedOut>
-            <SignedIn>
+            </Show>
+            <Show when="signed-in">
               <div className="mt-3 flex flex-col gap-2 border-t pt-3">
                 <Link to="/dashboard" onClick={() => setMobileMenuOpen(false)}>
                   <Button className="w-full" size="sm">
@@ -145,7 +145,7 @@ export function SiteHeader() {
                   </Button>
                 </Link>
               </div>
-            </SignedIn>
+            </Show>
           </div>
         </div>
       )}

@@ -1,4 +1,4 @@
-import { UserButton } from '@clerk/clerk-react'
+import { UserButton } from '@clerk/tanstack-react-start'
 import { useRouterState } from '@tanstack/react-router'
 import { Menu } from 'lucide-react'
 import { Button } from '@/components/ui/button'
