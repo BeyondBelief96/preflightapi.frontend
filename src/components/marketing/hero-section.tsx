@@ -228,6 +228,22 @@ function renderTokens(tokens: Array<Token>, charLimit: number) {
   })
 }
 
+/** Renders the not-yet-typed portion of tokens as invisible text to reserve height. */
+function renderRemainingTokens(tokens: Array<Token>, charLimit: number) {
+  let consumed = 0
+  return tokens.map((token, i) => {
+    const start = consumed
+    consumed += token.text.length
+    if (consumed <= charLimit) return null
+    const untypedStart = Math.max(0, charLimit - start)
+    return (
+      <span key={`r${i}`} className="invisible" aria-hidden="true">
+        {token.text.slice(untypedStart)}
+      </span>
+    )
+  })
+}
+
 // ---------------------------------------------------------------------------
 // HeroCodeDemo — auto-cycling animated terminal
 // ---------------------------------------------------------------------------
@@ -307,24 +323,28 @@ function HeroCodeDemo() {
                   &#x2588;
                 </span>
               )}
+              {renderRemainingTokens(example.tokens, displayedText.length)}
             </code>
           </pre>
         </div>
 
-        {/* Response */}
-        {(phase === 'showing' || phase === 'fading') && (
-          <div className="animate-fade-in-up border-t border-white/10 px-4 py-4">
-            <div className="mb-3 flex items-center gap-2 text-xs">
-              <span className="text-white/30">Response</span>
-              <Badge className="border-green-500/30 bg-green-500/15 text-[10px] text-green-400">
-                200 OK
-              </Badge>
-            </div>
-            <pre className="text-[13px] leading-relaxed sm:text-sm">
-              <code>{example.response}</code>
-            </pre>
+        {/* Response — always rendered to reserve height; invisible during typing */}
+        <div
+          className={cn(
+            'border-t border-white/10 px-4 py-4',
+            phase === 'typing' ? 'invisible' : 'animate-fade-in-up',
+          )}
+        >
+          <div className="mb-3 flex items-center gap-2 text-xs">
+            <span className="text-white/30">Response</span>
+            <Badge className="border-green-500/30 bg-green-500/15 text-[10px] text-green-400">
+              200 OK
+            </Badge>
           </div>
-        )}
+          <pre className="text-[13px] leading-relaxed sm:text-sm">
+            <code>{example.response}</code>
+          </pre>
+        </div>
       </div>
 
       {/* Dot indicators */}

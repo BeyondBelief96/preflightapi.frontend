@@ -173,13 +173,14 @@
           "Airports"
         ],
         "summary": "Gets a specific airport by ICAO code or FAA identifier",
+        "description": "Accepts both ICAO codes and FAA identifiers. If the exact identifier is not found, the API automatically tries the alternate format (e.g., `KW05` resolves to `W05`, `PA88` resolves to `A88`, `DFW` resolves to `KDFW`).\n\n``` GET /api/v1/airports/KDFW — by ICAO code GET /api/v1/airports/DFW — by FAA identifier GET /api/v1/airports/KW05 — resolves to FAA identifier W05 GET /api/v1/airports/PA88 — resolves to FAA identifier A88 (Alaska) ```",
         "operationId": "Airport_GetAirportByIcaoCodeOrIdent",
         "parameters": [
           {
             "name": "icaoCodeOrIdent",
             "in": "path",
             "required": true,
-            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW)",
+            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW, KW05). Case-insensitive. Automatically resolves ICAO/FAA format mismatches.",
             "schema": {
               "type": "string"
             },
@@ -216,7 +217,7 @@
           "Airports"
         ],
         "summary": "Gets multiple airports by their ICAO codes or FAA identifiers",
-        "description": "Pass ICAO codes or FAA identifiers as a single comma-separated query parameter:\n\n``` GET /api/v1/airports/batch?ids=KDFW,KAUS,KHOU ```\n\nBoth ICAO codes (KDFW) and FAA identifiers (DFW) can be mixed in the same request.",
+        "description": "Pass ICAO codes or FAA identifiers as a single comma-separated query parameter. Both ICAO codes (KDFW) and FAA identifiers (DFW) can be mixed in the same request. ICAO/FAA format mismatches are automatically resolved (e.g., `KW05` resolves to `W05`).\n\n``` GET /api/v1/airports/batch?ids=KDFW,KAUS,KHOU GET /api/v1/airports/batch?ids=KDFW,W05,PA88 ```",
         "operationId": "Airport_GetAirportsBatch",
         "parameters": [
           {
@@ -664,7 +665,7 @@
           "Briefing"
         ],
         "summary": "Generates a composite weather briefing for a flight route. Accepts a list of waypoints\n(airport identifiers or lat/lon coordinates) and returns all weather products affecting\nthe route corridor: METARs and TAFs for airports along the route, PIREPs within the\ncorridor, SIGMETs and G-AIRMETs intersecting the route, and active NOTAMs.",
-        "description": "Each waypoint is either an airport identifier (ICAO or FAA) or a lat/lon coordinate. At least two waypoints are required. The corridor width controls how far from the route centerline to search for PIREPs, airports, and NOTAMs (default 25 NM each side).\n\n**Airport-only route**\n\n``` { \"waypoints\": [ { \"airportIdentifier\": \"KDFW\" }, { \"airportIdentifier\": \"KAUS\" } ] } ```\n\n**Mixed route with coordinate waypoints and custom corridor**\n\n``` { \"waypoints\": [ { \"airportIdentifier\": \"KDFW\" }, { \"latitude\": 31.5, \"longitude\": -97.2 }, { \"airportIdentifier\": \"KAUS\" } ], \"corridorWidthNm\": 30 } ```\n\n**Response Contents**\n\n- `Metars` — latest METARs for airports within the corridor\n\n- `Tafs` — current TAFs for airports within the corridor\n\n- `Pireps` — pilot reports within the corridor\n\n- `Sigmets` — active SIGMETs whose boundaries intersect the route\n\n- `GAirmets` — active G-AIRMETs whose boundaries intersect the route\n\n- `Notams` — active NOTAMs for airports along the route",
+        "description": "Each waypoint is either an airport identifier (ICAO or FAA) or a lat/lon coordinate. At least two waypoints are required. The corridor width controls how far from the route centerline to search for PIREPs, airports, and NOTAMs (default 25 NM each side). Airport identifiers automatically resolve ICAO/FAA format mismatches — for example, `KW05` resolves to `W05`, and `PA88` resolves to `A88`.\n\n**Airport-only route**\n\n``` { \"waypoints\": [ { \"airportIdentifier\": \"KDFW\" }, { \"airportIdentifier\": \"KAUS\" } ] } ```\n\n**Mixed route with coordinate waypoints and custom corridor**\n\n``` { \"waypoints\": [ { \"airportIdentifier\": \"KDFW\" }, { \"latitude\": 31.5, \"longitude\": -97.2 }, { \"airportIdentifier\": \"KAUS\" } ], \"corridorWidthNm\": 30 } ```\n\n**Response Contents**\n\n- `Metars` — latest METARs for airports within the corridor\n\n- `Tafs` — current TAFs for airports within the corridor\n\n- `Pireps` — pilot reports within the corridor\n\n- `Sigmets` — active SIGMETs whose boundaries intersect the route\n\n- `GAirmets` — active G-AIRMETs whose boundaries intersect the route\n\n- `Notams` — active NOTAMs for airports along the route",
         "operationId": "Briefing_GetRouteBriefing",
         "requestBody": {
           "x-name": "request",
@@ -719,14 +720,14 @@
           "Chart Supplements"
         ],
         "summary": "Gets time-limited pre-signed URLs for all chart supplement pages for an airport.\nMulti-page supplements will have one URL per page. The URLs expire after a limited period;\nrequest new URLs if they have expired.",
-        "description": "Returns the airport's ICAO code, name, and a list of page URLs.\n\n``` GET /api/v1/chart-supplements/KDFW GET /api/v1/chart-supplements/DFW ```",
+        "description": "Returns the airport's name, city, code, and a list of page URLs. Accepts both ICAO codes and FAA identifiers — ICAO prefixes (`K`, `P`) are automatically stripped to resolve the FAA identifier (e.g., `KDFW` resolves to `DFW`, `PA88` resolves to `A88`).\n\n``` GET /api/v1/chart-supplements/KDFW GET /api/v1/chart-supplements/DFW GET /api/v1/chart-supplements/KW05 — resolves to FAA identifier W05 ```",
         "operationId": "ChartSupplement_GetChartSupplements",
         "parameters": [
           {
             "name": "icaoCodeOrIdent",
             "in": "path",
             "required": true,
-            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW). Case-insensitive.",
+            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW). Case-insensitive. Automatically resolves ICAO/FAA format mismatches.",
             "schema": {
               "type": "string"
             },
@@ -763,14 +764,14 @@
           "Communication Frequencies"
         ],
         "summary": "Gets all communication frequencies for a serviced facility (airport or ATC facility).\nReturns frequencies including their intended use (e.g., TWR, GND, ATIS, APP, DEP),\ncall signs, operating hours, and sectorization details.",
-        "description": "The facility identifier is the FAA airport code — typically the ICAO code without the leading \"K\" prefix (e.g., `DFW` not `KDFW`). This corresponds to the `ArptId` field returned by the Airports endpoint.\n\n``` GET /api/v1/communication-frequencies/DFW GET /api/v1/communication-frequencies/AUS ```",
+        "description": "Frequencies are stored under the FAA airport code (e.g., `DFW`), but you can pass either format — ICAO prefixes (`K`, `P`, `H`) are automatically stripped (e.g., `KDFW` resolves to `DFW`, `PA88` resolves to `A88`).\n\n``` GET /api/v1/communication-frequencies/DFW — by FAA identifier GET /api/v1/communication-frequencies/KDFW — ICAO prefix stripped automatically GET /api/v1/communication-frequencies/KW05 — resolves to FAA identifier W05 ```",
         "operationId": "CommunicationFrequency_GetFrequenciesByServicedFacility",
         "parameters": [
           {
             "name": "servicedFacility",
             "in": "path",
             "required": true,
-            "description": "FAA facility identifier — the FAA airport code without the \"K\" prefix (e.g., DFW, AUS). Use the ArptId field from the Airports endpoint.",
+            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW). Case-insensitive. ICAO prefixes are automatically stripped to resolve the FAA facility code.",
             "schema": {
               "type": "string"
             },
@@ -847,7 +848,7 @@
             "name": "icaoCodeOrIdent",
             "in": "path",
             "required": true,
-            "description": "ICAO code (e.g., KDFW) or FAA identifier (e.g., DFW)",
+            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW). Case-insensitive. Automatically resolves ICAO/FAA format mismatches (e.g., KW05 resolves to W05).",
             "schema": {
               "type": "string"
             },
@@ -956,7 +957,7 @@
             "name": "icaoCodeOrIdent",
             "in": "path",
             "required": true,
-            "description": "ICAO code (e.g., KDFW) or FAA identifier (e.g., DFW)",
+            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW). Case-insensitive. Automatically resolves ICAO/FAA format mismatches (e.g., KW05 resolves to W05).",
             "schema": {
               "type": "string"
             },
@@ -1518,14 +1519,14 @@
           "Weather - METARs"
         ],
         "summary": "Gets the most recent METAR observation for a specific airport.\nReturns decoded weather data including wind, visibility, sky conditions, temperature, and flight category.",
-        "description": "``` GET /api/v1/metars/KDFW — by ICAO code GET /api/v1/metars/DFW — by FAA identifier ```",
+        "description": "Accepts both ICAO codes and FAA identifiers. If the exact identifier is not found, the API automatically tries the alternate format (e.g., `KW05` resolves to `W05`, `DFW` resolves to `KDFW`). Note that many small airports do not have weather reporting stations and will return 404 regardless of identifier format.\n\n``` GET /api/v1/metars/KDFW — by ICAO code GET /api/v1/metars/DFW — by FAA identifier GET /api/v1/metars/KW05 — resolves to W05 (may still 404 if airport has no weather station) ```",
         "operationId": "Metar_GetMetarForAirport",
         "parameters": [
           {
             "name": "icaoCodeOrIdent",
             "in": "path",
             "required": true,
-            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW). Case-insensitive.",
+            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW). Case-insensitive. Automatically resolves ICAO/FAA format mismatches.",
             "schema": {
               "type": "string"
             },
@@ -1562,7 +1563,7 @@
           "Weather - METARs"
         ],
         "summary": "Gets the most recent METAR observations for multiple airports in a single request.\nAccepts ICAO codes or FAA identifiers. Identifiers that don't resolve to a METAR are silently skipped.",
-        "description": "Both ICAO codes and FAA identifiers can be mixed in the same request. Maximum 100 identifiers per request.\n\n``` GET /api/v1/metars/batch?ids=KDFW,KAUS,KHOU GET /api/v1/metars/batch?ids=DFW,AUS ```",
+        "description": "Both ICAO codes and FAA identifiers can be mixed in the same request. ICAO/FAA format mismatches are automatically resolved (e.g., `KW05` resolves to `W05`). Maximum 100 identifiers per request.\n\n``` GET /api/v1/metars/batch?ids=KDFW,KAUS,KHOU GET /api/v1/metars/batch?ids=DFW,AUS,KW05 ```",
         "operationId": "Metar_GetMetarsBatch",
         "parameters": [
           {
@@ -2778,14 +2779,14 @@
           "Obstacles"
         ],
         "summary": "Searches for obstacles near an airport. Looks up the airport coordinates, then finds\nobstacles within the specified radius. Use minHeightAgl to filter out low obstacles.",
-        "description": "``` GET /api/v1/obstacles/airport/KDFW — default 10 NM radius GET /api/v1/obstacles/airport/DFW?radiusNm=5&minHeightAgl=200 — towers 200+ ft AGL within 5 NM ```",
+        "description": "Accepts both ICAO codes and FAA identifiers. ICAO/FAA format mismatches are automatically resolved (e.g., `KW05` resolves to `W05`).\n\n``` GET /api/v1/obstacles/airport/KDFW — default 10 NM radius GET /api/v1/obstacles/airport/DFW?radiusNm=5&minHeightAgl=200 — towers 200+ ft AGL within 5 NM ```",
         "operationId": "Obstacle_SearchNearAirport",
         "parameters": [
           {
             "name": "icaoCodeOrIdent",
             "in": "path",
             "required": true,
-            "description": "ICAO code (e.g., KDFW) or FAA identifier (e.g., DFW)",
+            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW). Case-insensitive. Automatically resolves ICAO/FAA format mismatches.",
             "schema": {
               "type": "string"
             },
@@ -3391,14 +3392,14 @@
           "Weather - PIREPs"
         ],
         "summary": "Searches for PIREPs near an airport. Looks up the airport coordinates by ICAO code or\nFAA identifier, then returns pilot reports within the specified radius.",
-        "description": "``` GET /api/v1/pireps/airport/KDFW — default 50 NM radius GET /api/v1/pireps/airport/DFW?radiusNm=100 — custom radius with FAA identifier ```",
+        "description": "Accepts both ICAO codes and FAA identifiers. If the exact identifier is not found, the API automatically tries the alternate format (e.g., `KW05` resolves to `W05`, `DFW` resolves to `KDFW`).\n\n``` GET /api/v1/pireps/airport/KDFW — default 50 NM radius GET /api/v1/pireps/airport/DFW?radiusNm=100 — custom radius with FAA identifier GET /api/v1/pireps/airport/KW05 — resolves to FAA identifier W05 ```",
         "operationId": "Pirep_SearchNearAirport",
         "parameters": [
           {
             "name": "icaoCodeOrIdent",
             "in": "path",
             "required": true,
-            "description": "ICAO code (e.g., KDFW) or FAA identifier (e.g., DFW)",
+            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW). Case-insensitive. Automatically resolves ICAO/FAA format mismatches.",
             "schema": {
               "type": "string"
             },
@@ -3479,14 +3480,14 @@
           "Runways"
         ],
         "summary": "Gets runways for a specific airport by ICAO code or FAA identifier.",
-        "description": "``` GET /api/v1/runways/airport/KDFW — runways at DFW GET /api/v1/runways/airport/DFW?includeGeometry=true — with ArcGIS polygon geometry ```",
+        "description": "Accepts both ICAO codes and FAA identifiers. If the exact identifier is not found, the API automatically tries the alternate format (e.g., `KW05` resolves to `W05`, `PA88` resolves to `A88`, `DFW` resolves to `KDFW`).\n\n``` GET /api/v1/runways/airport/KDFW — runways at DFW GET /api/v1/runways/airport/DFW?includeGeometry=true — with ArcGIS polygon geometry GET /api/v1/runways/airport/KW05 — resolves to FAA identifier W05 ```",
         "operationId": "Runway_GetRunwaysByAirport",
         "parameters": [
           {
             "name": "icaoCodeOrIdent",
             "in": "path",
             "required": true,
-            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW)",
+            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW). Case-insensitive. Automatically resolves ICAO/FAA format mismatches.",
             "schema": {
               "type": "string"
             },
@@ -4067,7 +4068,7 @@
           "Weather - TAFs"
         ],
         "summary": "Gets the current TAFs for multiple airports in a single request.\nAccepts ICAO codes or FAA identifiers. Identifiers that don't resolve to a TAF are silently skipped.",
-        "description": "Both ICAO codes and FAA identifiers can be mixed in the same request. Maximum 100 identifiers per request.\n\n``` GET /api/v1/tafs/batch?ids=KDFW,KAUS,KHOU GET /api/v1/tafs/batch?ids=DFW,AUS ```",
+        "description": "Both ICAO codes and FAA identifiers can be mixed in the same request. ICAO/FAA format mismatches are automatically resolved (e.g., `KW05` resolves to `W05`). Maximum 100 identifiers per request.\n\n``` GET /api/v1/tafs/batch?ids=KDFW,KAUS,KHOU GET /api/v1/tafs/batch?ids=DFW,AUS ```",
         "operationId": "Taf_GetTafsBatch",
         "parameters": [
           {
@@ -4113,14 +4114,14 @@
           "Weather - TAFs"
         ],
         "summary": "Gets the current TAF for a specific airport, including all forecast periods with expected\nweather conditions (wind, visibility, sky cover, precipitation, turbulence, and icing).",
-        "description": "``` GET /api/v1/tafs/KDFW — by ICAO code GET /api/v1/tafs/DFW — by FAA identifier ```",
+        "description": "Accepts both ICAO codes and FAA identifiers. If the exact identifier is not found, the API automatically tries the alternate format (e.g., `KW05` resolves to `W05`, `DFW` resolves to `KDFW`). Note that many small airports do not issue TAFs and will return 404 regardless of identifier format.\n\n``` GET /api/v1/tafs/KDFW — by ICAO code GET /api/v1/tafs/DFW — by FAA identifier ```",
         "operationId": "Taf_GetTafByIcaoCodeOrIdent",
         "parameters": [
           {
             "name": "icaoCodeOrIdent",
             "in": "path",
             "required": true,
-            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW). Case-insensitive.",
+            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW). Case-insensitive. Automatically resolves ICAO/FAA format mismatches.",
             "schema": {
               "type": "string"
             },
@@ -4157,14 +4158,14 @@
           "Terminal Procedures"
         ],
         "summary": "Gets time-limited pre-signed URLs for all available terminal procedure chart PDFs.\nThe URLs expire after a limited period; request new URLs if they have expired.",
-        "description": "Returns the airport's ICAO code, name, and a list of procedure chart URLs. Optionally filter by chart code (IAP, DP, STAR, APD, MIN, HOT, etc.).\n\n``` GET /api/v1/terminal-procedures/KDFW GET /api/v1/terminal-procedures/DFW?chartCode=IAP ```",
+        "description": "Returns the airport's ICAO code, name, and a list of procedure chart URLs. Optionally filter by chart code (IAP, DP, STAR, APD, MIN, HOT, etc.).\n\nAccepts both ICAO codes and FAA identifiers. If the exact identifier is not found, the API automatically tries the alternate format (e.g., `KW05` resolves to `W05`, `DFW` resolves to `KDFW`).\n\n``` GET /api/v1/terminal-procedures/KDFW GET /api/v1/terminal-procedures/DFW?chartCode=IAP GET /api/v1/terminal-procedures/KW05 — resolves to FAA identifier W05 ```",
         "operationId": "TerminalProcedure_GetTerminalProcedures",
         "parameters": [
           {
             "name": "icaoCodeOrIdent",
             "in": "path",
             "required": true,
-            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW). Case-insensitive.",
+            "description": "ICAO code or FAA identifier (e.g., KDFW, DFW). Case-insensitive. Automatically resolves ICAO/FAA format mismatches.",
             "schema": {
               "type": "string"
             },
@@ -10477,7 +10478,7 @@
   "tags": [
     {
       "name": "Airports",
-      "description": "Provides access to FAA airport data from the National Airspace System Resources (NASR) database. Airports can be queried by ICAO code, FAA identifier, state, or text search. Use an airport's ICAO code or identifier to query related data from other endpoints such as METARs, TAFs, runways, communication frequencies, airport diagrams, and chart supplements."
+      "description": "Provides access to FAA airport data from the National Airspace System Resources (NASR) database. Airports can be queried by ICAO code, FAA identifier, state, or text search. Use an airport's ICAO code or identifier to query related data from other endpoints such as METARs, TAFs, runways, communication frequencies, airport diagrams, and chart supplements.\n\n**Identifier Resolution**\n\nAll identifier-based lookups accept both ICAO codes (e.g., KDFW) and FAA identifiers (e.g., DFW). If an exact match is not found, the API automatically tries the alternate format. This handles the common case where a user provides an ICAO-formatted code for a small airport that only has an FAA identifier — for example, `KW05` automatically resolves to `W05`, and `K9D4` resolves to `9D4`. Regional ICAO prefixes are also resolved: `K` for the contiguous US, `PA` for Alaska, and `PH` for Hawaii (e.g., `PA88` resolves to `A88`)."
     },
     {
       "name": "Airspace",
