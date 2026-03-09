@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from 'react'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { useAuth, useUser } from '@clerk/clerk-react'
+import { useAuth, useUser } from '@clerk/tanstack-react-start'
 import { useQuery } from '@tanstack/react-query'
 import { createPageHead } from '@/lib/seo'
 import { getSubscriptionKeys, getUserSubscription } from '@/lib/server/apim'

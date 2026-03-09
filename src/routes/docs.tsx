@@ -13,7 +13,7 @@ import {
   X,
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { SignedIn, SignedOut, UserButton } from '@clerk/clerk-react'
+import { Show, UserButton } from '@clerk/tanstack-react-start'
 import { createPageHead } from '@/lib/seo'
 import { DocsSidebar } from '@/components/docs/docs-sidebar'
 import { DocsPrevNext } from '@/components/docs/docs-prev-next'
@@ -69,22 +69,22 @@ function DocsLayout() {
           <Link to="/" className="flex items-center gap-2">
             <PlaneAnimation size="sm" />
           </Link>
-          <SignedIn>
+          <Show when="signed-in">
             <Link to="/dashboard">
               <Button variant="ghost" size="sm" className="gap-1 text-xs">
                 <ArrowLeft className="h-3 w-3" />
                 Dashboard
               </Button>
             </Link>
-          </SignedIn>
-          <SignedOut>
+          </Show>
+          <Show when="signed-out">
             <Link to="/">
               <Button variant="ghost" size="sm" className="gap-1 text-xs">
                 <ArrowLeft className="h-3 w-3" />
                 Home
               </Button>
             </Link>
-          </SignedOut>
+          </Show>
         </div>
         <DocsSidebar onNavigate={() => setSidebarOpen(false)} />
       </aside>
@@ -125,21 +125,21 @@ function DocsLayout() {
               OpenAPI Spec
             </Button>
           </a>
-          <SignedOut>
+          <Show when="signed-out">
             <Link to={isWaitlistMode ? '/waitlist' : '/sign-in'}>
               <Button variant="ghost" size="sm">
                 {isWaitlistMode ? 'Join Waitlist' : 'Sign In'}
               </Button>
             </Link>
-          </SignedOut>
-          <SignedIn>
+          </Show>
+          <Show when="signed-in">
             <Link to="/dashboard" className="hidden sm:inline-flex">
               <Button variant="ghost" size="sm">
                 Dashboard
               </Button>
             </Link>
             <UserButton />
-          </SignedIn>
+          </Show>
         </div>
         <div className="mx-auto max-w-5xl px-6 py-10 lg:px-12">
           <Outlet />

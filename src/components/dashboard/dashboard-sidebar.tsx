@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { UserButton } from '@clerk/clerk-react'
+import { UserButton } from '@clerk/tanstack-react-start'
 import { useQuery } from '@tanstack/react-query'
 import {
   Activity,

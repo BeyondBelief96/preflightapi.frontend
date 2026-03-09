@@ -1,5 +1,5 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
-import { SignUp } from '@clerk/clerk-react'
+import { SignUp } from '@clerk/tanstack-react-start'
 import { AnimatedBackdrop } from '@/components/animated-backdrop'
 import { PlaneAnimation } from '@/components/plane-animation'
 import { createPageHead } from '@/lib/seo'

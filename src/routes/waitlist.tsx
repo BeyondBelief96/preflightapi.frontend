@@ -1,5 +1,5 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
-import { Waitlist } from '@clerk/clerk-react'
+import { Waitlist } from '@clerk/tanstack-react-start'
 import { createPageHead } from '@/lib/seo'
 import { isWaitlistMode } from '@/lib/waitlist'
 import { AnimatedBackdrop } from '@/components/animated-backdrop'

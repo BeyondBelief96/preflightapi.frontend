@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useAuth, useUser } from '@clerk/clerk-react'
+import { useAuth, useUser } from '@clerk/tanstack-react-start'
 import { useQuery } from '@tanstack/react-query'
 import { createPageHead } from '@/lib/seo'
 import { getUsageAnalytics, getUserSubscription } from '@/lib/server/apim'
