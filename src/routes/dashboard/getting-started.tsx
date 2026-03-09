@@ -85,7 +85,9 @@ function GettingStartedPage() {
       }
       // Mark onboarding complete once the user reaches the Try It step
       if (step === 3) {
-        completeOnboarding({ data: { useCase } })
+        completeOnboarding({ data: { useCase } }).catch((err) => {
+          console.error('Failed to mark onboarding complete:', err)
+        })
       }
       setCurrentStep(step)
       topRef.current?.scrollIntoView({ behavior: 'smooth' })
