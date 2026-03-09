@@ -25,8 +25,7 @@ function SignInPage() {
         </a>
       </div>
       <SignIn
-        routing="path"
-        path="/sign-in"
+        routing="hash"
         signUpUrl="/sign-up"
         fallbackRedirectUrl="/dashboard"
       />
