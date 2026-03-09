@@ -18,6 +18,8 @@ import { Route as MarketingRouteImport } from './routes/_marketing'
 import { Route as DocsIndexRouteImport } from './routes/docs/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as MarketingIndexRouteImport } from './routes/_marketing/index'
+import { Route as SignUpSplatRouteImport } from './routes/sign-up.$'
+import { Route as SignInSplatRouteImport } from './routes/sign-in.$'
 import { Route as DocsRateLimitsRouteImport } from './routes/docs/rate-limits'
 import { Route as DocsOpenapiRouteImport } from './routes/docs/openapi'
 import { Route as DocsGettingStartedRouteImport } from './routes/docs/getting-started'
@@ -90,6 +92,16 @@ const MarketingIndexRoute = MarketingIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => MarketingRoute,
+} as any)
+const SignUpSplatRoute = SignUpSplatRouteImport.update({
+  id: '/$',
+  path: '/$',
+  getParentRoute: () => SignUpRoute,
+} as any)
+const SignInSplatRoute = SignInSplatRouteImport.update({
+  id: '/$',
+  path: '/$',
+  getParentRoute: () => SignInRoute,
 } as any)
 const DocsRateLimitsRoute = DocsRateLimitsRouteImport.update({
   id: '/rate-limits',
@@ -239,8 +251,8 @@ export interface FileRoutesByFullPath {
   '/': typeof MarketingIndexRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/docs': typeof DocsRouteWithChildren
-  '/sign-in': typeof SignInRoute
-  '/sign-up': typeof SignUpRoute
+  '/sign-in': typeof SignInRouteWithChildren
+  '/sign-up': typeof SignUpRouteWithChildren
   '/waitlist': typeof WaitlistRoute
   '/about': typeof MarketingAboutRoute
   '/contact': typeof MarketingContactRoute
@@ -255,6 +267,8 @@ export interface FileRoutesByFullPath {
   '/docs/getting-started': typeof DocsGettingStartedRoute
   '/docs/openapi': typeof DocsOpenapiRoute
   '/docs/rate-limits': typeof DocsRateLimitsRoute
+  '/sign-in/$': typeof SignInSplatRoute
+  '/sign-up/$': typeof SignUpSplatRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/docs/': typeof DocsIndexRoute
   '/legal/cookie-policy': typeof MarketingLegalCookiePolicyRoute
@@ -274,8 +288,8 @@ export interface FileRoutesByFullPath {
   '/dashboard/admin/users/': typeof DashboardAdminUsersIndexRoute
 }
 export interface FileRoutesByTo {
-  '/sign-in': typeof SignInRoute
-  '/sign-up': typeof SignUpRoute
+  '/sign-in': typeof SignInRouteWithChildren
+  '/sign-up': typeof SignUpRouteWithChildren
   '/waitlist': typeof WaitlistRoute
   '/about': typeof MarketingAboutRoute
   '/contact': typeof MarketingContactRoute
@@ -289,6 +303,8 @@ export interface FileRoutesByTo {
   '/docs/getting-started': typeof DocsGettingStartedRoute
   '/docs/openapi': typeof DocsOpenapiRoute
   '/docs/rate-limits': typeof DocsRateLimitsRoute
+  '/sign-in/$': typeof SignInSplatRoute
+  '/sign-up/$': typeof SignUpSplatRoute
   '/': typeof MarketingIndexRoute
   '/dashboard': typeof DashboardIndexRoute
   '/docs': typeof DocsIndexRoute
@@ -313,8 +329,8 @@ export interface FileRoutesById {
   '/_marketing': typeof MarketingRouteWithChildren
   '/dashboard': typeof DashboardRouteWithChildren
   '/docs': typeof DocsRouteWithChildren
-  '/sign-in': typeof SignInRoute
-  '/sign-up': typeof SignUpRoute
+  '/sign-in': typeof SignInRouteWithChildren
+  '/sign-up': typeof SignUpRouteWithChildren
   '/waitlist': typeof WaitlistRoute
   '/_marketing/about': typeof MarketingAboutRoute
   '/_marketing/contact': typeof MarketingContactRoute
@@ -329,6 +345,8 @@ export interface FileRoutesById {
   '/docs/getting-started': typeof DocsGettingStartedRoute
   '/docs/openapi': typeof DocsOpenapiRoute
   '/docs/rate-limits': typeof DocsRateLimitsRoute
+  '/sign-in/$': typeof SignInSplatRoute
+  '/sign-up/$': typeof SignUpSplatRoute
   '/_marketing/': typeof MarketingIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/docs/': typeof DocsIndexRoute
@@ -370,6 +388,8 @@ export interface FileRouteTypes {
     | '/docs/getting-started'
     | '/docs/openapi'
     | '/docs/rate-limits'
+    | '/sign-in/$'
+    | '/sign-up/$'
     | '/dashboard/'
     | '/docs/'
     | '/legal/cookie-policy'
@@ -404,6 +424,8 @@ export interface FileRouteTypes {
     | '/docs/getting-started'
     | '/docs/openapi'
     | '/docs/rate-limits'
+    | '/sign-in/$'
+    | '/sign-up/$'
     | '/'
     | '/dashboard'
     | '/docs'
@@ -443,6 +465,8 @@ export interface FileRouteTypes {
     | '/docs/getting-started'
     | '/docs/openapi'
     | '/docs/rate-limits'
+    | '/sign-in/$'
+    | '/sign-up/$'
     | '/_marketing/'
     | '/dashboard/'
     | '/docs/'
@@ -467,8 +491,8 @@ export interface RootRouteChildren {
   MarketingRoute: typeof MarketingRouteWithChildren
   DashboardRoute: typeof DashboardRouteWithChildren
   DocsRoute: typeof DocsRouteWithChildren
-  SignInRoute: typeof SignInRoute
-  SignUpRoute: typeof SignUpRoute
+  SignInRoute: typeof SignInRouteWithChildren
+  SignUpRoute: typeof SignUpRouteWithChildren
   WaitlistRoute: typeof WaitlistRoute
 }
 
@@ -536,6 +560,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof MarketingIndexRouteImport
       parentRoute: typeof MarketingRoute
+    }
+    '/sign-up/$': {
+      id: '/sign-up/$'
+      path: '/$'
+      fullPath: '/sign-up/$'
+      preLoaderRoute: typeof SignUpSplatRouteImport
+      parentRoute: typeof SignUpRoute
+    }
+    '/sign-in/$': {
+      id: '/sign-in/$'
+      path: '/$'
+      fullPath: '/sign-in/$'
+      preLoaderRoute: typeof SignInSplatRouteImport
+      parentRoute: typeof SignInRoute
     }
     '/docs/rate-limits': {
       id: '/docs/rate-limits'
@@ -836,12 +874,34 @@ const DocsRouteChildren: DocsRouteChildren = {
 
 const DocsRouteWithChildren = DocsRoute._addFileChildren(DocsRouteChildren)
 
+interface SignInRouteChildren {
+  SignInSplatRoute: typeof SignInSplatRoute
+}
+
+const SignInRouteChildren: SignInRouteChildren = {
+  SignInSplatRoute: SignInSplatRoute,
+}
+
+const SignInRouteWithChildren =
+  SignInRoute._addFileChildren(SignInRouteChildren)
+
+interface SignUpRouteChildren {
+  SignUpSplatRoute: typeof SignUpSplatRoute
+}
+
+const SignUpRouteChildren: SignUpRouteChildren = {
+  SignUpSplatRoute: SignUpSplatRoute,
+}
+
+const SignUpRouteWithChildren =
+  SignUpRoute._addFileChildren(SignUpRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   MarketingRoute: MarketingRouteWithChildren,
   DashboardRoute: DashboardRouteWithChildren,
   DocsRoute: DocsRouteWithChildren,
-  SignInRoute: SignInRoute,
-  SignUpRoute: SignUpRoute,
+  SignInRoute: SignInRouteWithChildren,
+  SignUpRoute: SignUpRouteWithChildren,
   WaitlistRoute: WaitlistRoute,
 }
 export const routeTree = rootRouteImport
