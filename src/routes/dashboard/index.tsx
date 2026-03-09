@@ -173,6 +173,7 @@ function DashboardOverview() {
           subscriptionId={activeSubscription.id}
           monthlyReport={monthlyUsageQuery.data}
           isMonthlyLoading={monthlyUsageQuery.isLoading}
+          isPaid={isPaid}
         />
       )}
 

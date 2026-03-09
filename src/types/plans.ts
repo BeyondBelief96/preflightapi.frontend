@@ -74,6 +74,51 @@ export interface RecentError {
   method: string // HTTP method (GET, POST, etc.)
 }
 
+export interface RateLimitAccessStats {
+  rateLimitHits: number
+  quotaExceeded: number
+  tierRestricted: number
+  tierRestrictedEndpoints: Array<{ endpoint: string; count: number }>
+}
+
+export interface ServiceIssue {
+  timestamp: string
+  endpoint: string
+  statusCode: number
+  errorReason: string
+  errorMessage: string
+}
+
+export interface ServiceHealthStats {
+  totalIssues: number // last 7 days
+  backendErrors: number
+  backendUnavailable: number
+  recentIssues: Array<ServiceIssue> // last 24h, max 10
+}
+
+export interface RequestLogEntry {
+  timestamp: string
+  method: string
+  endpoint: string
+  url: string
+  statusCode: number
+  backendStatusCode: number | null
+  totalTimeMs: number
+  callerIp: string
+  errorReason: string
+  errorMessage: string
+  errorSource: string
+}
+
+export type RequestLogFilter =
+  | 'all'
+  | 'success'
+  | 'client-error'
+  | 'server-error'
+  | 'rate-limited'
+
+export type RequestLogTimeRange = '1h' | '6h' | '24h' | '7d' | '30d'
+
 export interface StripeSubscriptionStatus {
   status: string
   planId: PlanId
