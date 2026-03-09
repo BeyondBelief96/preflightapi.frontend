@@ -36,7 +36,14 @@ function GettingStartedPage() {
   const topRef = useRef<HTMLDivElement>(null)
   const [currentStep, setCurrentStep] = useState(0)
   const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set())
-  const [useCase, setUseCase] = useState<string | null>(null)
+  type UseCase =
+    | 'flight-school'
+    | 'efb'
+    | 'weather'
+    | 'drone'
+    | 'research'
+    | 'other'
+  const [useCase, setUseCase] = useState<UseCase | null>(null)
   const [revealKey, setRevealKey] = useState(false)
   const [hasFirstSuccess, setHasFirstSuccess] = useState(false)
 
@@ -76,16 +83,19 @@ function GettingStartedPage() {
           return next
         })
       }
+      // Mark onboarding complete once the user reaches the Try It step
+      if (step === 3) {
+        completeOnboarding({ data: { useCase } })
+      }
       setCurrentStep(step)
       topRef.current?.scrollIntoView({ behavior: 'smooth' })
     },
-    [currentStep],
+    [currentStep, useCase],
   )
 
-  const handleComplete = useCallback(async () => {
-    await completeOnboarding({ data: { useCase } })
+  const handleComplete = useCallback(() => {
     navigate({ to: '/dashboard' })
-  }, [useCase, navigate])
+  }, [navigate])
 
   const handleTryItSuccess = useCallback(() => {
     setHasFirstSuccess(true)
@@ -109,7 +119,7 @@ function GettingStartedPage() {
         {currentStep === 1 && (
           <UseCaseStep
             selectedUseCase={useCase}
-            onSelect={setUseCase}
+            onSelect={(v) => setUseCase(v as UseCase)}
             onNext={() => goToStep(2)}
           />
         )}

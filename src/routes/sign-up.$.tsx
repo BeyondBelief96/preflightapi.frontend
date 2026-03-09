@@ -1,42 +1,7 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
-import { SignUp } from '@clerk/clerk-react'
-import { AnimatedBackdrop } from '@/components/animated-backdrop'
-import { PlaneAnimation } from '@/components/plane-animation'
-import { createPageHead } from '@/lib/seo'
-import { isWaitlistMode } from '@/lib/waitlist'
+import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/sign-up/$')({
-  beforeLoad: () => {
-    if (isWaitlistMode) {
-      throw redirect({ to: '/waitlist' })
-    }
-  },
-  head: () =>
-    createPageHead({
-      title: 'Sign Up',
-      description:
-        'Create your free PreflightAPI account and start accessing aviation data in minutes.',
-      path: '/sign-up',
-      noIndex: true,
-    }),
-  component: SignUpCatchAll,
+  // Parent route (sign-up.tsx) handles rendering; this route exists
+  // only to prevent a TanStack Router 404 for Clerk sub-paths.
+  component: () => null,
 })
-
-function SignUpCatchAll() {
-  return (
-    <div className="flex min-h-screen flex-col items-center justify-center px-4">
-      <AnimatedBackdrop />
-      <div className="mb-8">
-        <a href="/">
-          <PlaneAnimation size="lg" />
-        </a>
-      </div>
-      <SignUp
-        routing="path"
-        path="/sign-up"
-        signInUrl="/sign-in"
-        fallbackRedirectUrl="/dashboard/getting-started"
-      />
-    </div>
-  )
-}
