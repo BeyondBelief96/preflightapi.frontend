@@ -462,7 +462,7 @@ export const getAdminUserAnalytics = createServerFn({ method: 'GET' })
 const cursorTimestampSchema = z
   .string()
   .regex(
-    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z?(\|.+)?$/,
+    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z?(\|[\w-]+)?$/,
     'Invalid cursor',
   )
 
