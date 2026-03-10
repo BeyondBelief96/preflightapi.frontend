@@ -97,6 +97,7 @@ export interface ServiceHealthStats {
 }
 
 export interface RequestLogEntry {
+  id: string
   timestamp: string
   method: string
   endpoint: string

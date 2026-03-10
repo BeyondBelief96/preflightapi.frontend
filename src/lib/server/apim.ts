@@ -457,7 +457,7 @@ ApiManagementGatewayLogs
     ])
 
     const statsTable = statsResult.tables[0]
-    let stats = ZERO_RATE_LIMIT_ACCESS
+    let stats = { ...ZERO_RATE_LIMIT_ACCESS }
     if (statsTable && statsTable.rows.length > 0) {
       const cols = statsTable.columns.map((c) => c.name)
       const row = statsTable.rows[0]
@@ -602,9 +602,17 @@ export async function _queryRequestLog(
 
   const timeRangeExpr = TIME_RANGE_KQL[options.timeRange]
   const statusExpr = STATUS_FILTER_KQL[options.statusFilter]
-  const cursorExpr = options.cursor
-    ? `and TimeGenerated < datetime('${options.cursor}')`
-    : ''
+  let cursorExpr = ''
+  if (options.cursor) {
+    const pipeIdx = options.cursor.indexOf('|')
+    if (pipeIdx !== -1) {
+      const ts = options.cursor.slice(0, pipeIdx)
+      const itemId = options.cursor.slice(pipeIdx + 1)
+      cursorExpr = `and (TimeGenerated < datetime('${ts}') or (TimeGenerated == datetime('${ts}') and _ItemId < '${itemId}'))`
+    } else {
+      cursorExpr = `and TimeGenerated < datetime('${options.cursor}')`
+    }
+  }
 
   const kql = `
 ApiManagementGatewayLogs
@@ -612,10 +620,10 @@ ApiManagementGatewayLogs
   ${subscriptionFilter}
   ${statusExpr}
   ${cursorExpr}
-| project TimeGenerated, Method, OperationId, Url,
+| project _ItemId, TimeGenerated, Method, OperationId, Url,
     ResponseCode, BackendResponseCode, TotalTime,
     CallerIpAddress, LastErrorReason, LastErrorMessage, LastErrorSource
-| order by TimeGenerated desc
+| order by TimeGenerated desc, _ItemId desc
 | take ${options.limit}
 `.trim()
 
@@ -630,6 +638,7 @@ ApiManagementGatewayLogs
     return table.rows.map((row): RequestLogEntry => {
       const backendCode = row[idx('BackendResponseCode')]
       return {
+        id: String(row[idx('_ItemId')] ?? ''),
         timestamp: String(row[idx('TimeGenerated')]),
         method: String(row[idx('Method')] ?? ''),
         endpoint: String(row[idx('OperationId')] ?? ''),

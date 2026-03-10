@@ -228,7 +228,8 @@ export function RequestLogTable({
       initialPageParam: undefined as string | undefined,
       getNextPageParam: (lastPage) => {
         if (lastPage.length < PAGE_SIZE) return undefined
-        return lastPage[lastPage.length - 1]?.timestamp
+        const last = lastPage[lastPage.length - 1]
+        return last ? `${last.timestamp}|${last.id}` : undefined
       },
       staleTime: 30_000,
     })

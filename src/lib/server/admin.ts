@@ -458,12 +458,12 @@ export const getAdminUserAnalytics = createServerFn({ method: 'GET' })
     return { usageReport, dailyTrend, endpoints, errors, recentErrors }
   })
 
-// More permissive than apim.ts — allows variable fractional seconds from Log Analytics
+// Compound cursor: "timestamp|itemId" or legacy "timestamp"
 const cursorTimestampSchema = z
   .string()
   .regex(
-    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z?$/,
-    'Invalid cursor timestamp',
+    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z?(\|.+)?$/,
+    'Invalid cursor',
   )
 
 const requestLogFilterSchema = z.enum([
