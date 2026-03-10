@@ -11,7 +11,13 @@ import type {
   DailyUsagePoint,
   EndpointBreakdownItem,
   ErrorCodeBreakdownItem,
+  RateLimitAccessStats,
   RecentError,
+  RequestLogEntry,
+  RequestLogFilter,
+  RequestLogTimeRange,
+  ServiceHealthStats,
+  ServiceIssue,
 } from '@/types/plans'
 import type { SubscriptionListResponse } from '@/types/apim'
 import { env } from '@/env'
@@ -409,6 +415,252 @@ ApiManagementGatewayLogs
   }
 }
 
+const ZERO_RATE_LIMIT_ACCESS: RateLimitAccessStats = {
+  rateLimitHits: 0,
+  quotaExceeded: 0,
+  tierRestricted: 0,
+  tierRestrictedEndpoints: [],
+}
+
+export async function _queryRateLimitAccess(
+  subscriptionFilter: string,
+): Promise<RateLimitAccessStats> {
+  if (!env.APIM_LOG_ANALYTICS_WORKSPACE_ID) return ZERO_RATE_LIMIT_ACCESS
+
+  const statsKql = `
+ApiManagementGatewayLogs
+| where TimeGenerated >= ago(30d)
+  ${subscriptionFilter}
+  and (LastErrorSource in ("rate-limit-by-key", "quota-by-key")
+       or (ResponseCode == 403 and (isnull(BackendResponseCode) or BackendResponseCode == 0)))
+| summarize
+    rateLimitHits = countif(LastErrorSource == "rate-limit-by-key"),
+    quotaExceeded = countif(LastErrorSource == "quota-by-key"),
+    tierRestricted = countif(ResponseCode == 403 and (isnull(BackendResponseCode) or BackendResponseCode == 0))
+`.trim()
+
+  const endpointsKql = `
+ApiManagementGatewayLogs
+| where TimeGenerated >= ago(30d)
+  ${subscriptionFilter}
+  and ResponseCode == 403
+  and (isnull(BackendResponseCode) or BackendResponseCode == 0)
+  and isnotempty(OperationId)
+| summarize count = count() by OperationId
+| top 5 by count desc
+`.trim()
+
+  try {
+    const [statsResult, endpointsResult] = await Promise.all([
+      logAnalyticsQuery(statsKql),
+      logAnalyticsQuery(endpointsKql),
+    ])
+
+    const statsTable = statsResult.tables[0]
+    let stats = { ...ZERO_RATE_LIMIT_ACCESS }
+    if (statsTable && statsTable.rows.length > 0) {
+      const cols = statsTable.columns.map((c) => c.name)
+      const row = statsTable.rows[0]
+      const col = (name: string) => {
+        const idx = cols.indexOf(name)
+        return idx === -1 ? 0 : Number(row[idx]) || 0
+      }
+      stats = {
+        rateLimitHits: col('rateLimitHits'),
+        quotaExceeded: col('quotaExceeded'),
+        tierRestricted: col('tierRestricted'),
+        tierRestrictedEndpoints: [],
+      }
+    }
+
+    const epTable = endpointsResult.tables[0]
+    if (epTable && epTable.rows.length > 0) {
+      const cols = epTable.columns.map((c) => c.name)
+      const opIdx = cols.indexOf('OperationId')
+      const countIdx = cols.indexOf('count')
+      stats.tierRestrictedEndpoints = epTable.rows.map((row) => ({
+        endpoint: String(row[opIdx]),
+        count: Number(row[countIdx]) || 0,
+      }))
+    }
+
+    return stats
+  } catch (err) {
+    log.error({ err }, 'Failed to query Log Analytics for rate limit/access')
+    return ZERO_RATE_LIMIT_ACCESS
+  }
+}
+
+const ZERO_SERVICE_HEALTH: ServiceHealthStats = {
+  totalIssues: 0,
+  backendErrors: 0,
+  backendUnavailable: 0,
+  recentIssues: [],
+}
+
+export async function _queryServiceHealth(
+  subscriptionFilter: string,
+): Promise<ServiceHealthStats> {
+  if (!env.APIM_LOG_ANALYTICS_WORKSPACE_ID) return ZERO_SERVICE_HEALTH
+
+  const statsKql = `
+ApiManagementGatewayLogs
+| where TimeGenerated >= ago(7d)
+  ${subscriptionFilter}
+  and (ResponseCode >= 500 or LastErrorSource == "forward-request")
+| summarize
+    totalIssues = count(),
+    backendErrors = countif(ResponseCode >= 500 and LastErrorSource != "forward-request"),
+    backendUnavailable = countif(LastErrorSource == "forward-request")
+`.trim()
+
+  const recentKql = `
+ApiManagementGatewayLogs
+| where TimeGenerated >= ago(24h)
+  ${subscriptionFilter}
+  and (ResponseCode >= 500 or LastErrorSource == "forward-request")
+| project TimeGenerated, OperationId, ResponseCode, LastErrorReason, LastErrorMessage
+| order by TimeGenerated desc
+| take 10
+`.trim()
+
+  try {
+    const [statsResult, recentResult] = await Promise.all([
+      logAnalyticsQuery(statsKql),
+      logAnalyticsQuery(recentKql),
+    ])
+
+    const stats = { ...ZERO_SERVICE_HEALTH }
+
+    const statsTable = statsResult.tables[0]
+    if (statsTable && statsTable.rows.length > 0) {
+      const cols = statsTable.columns.map((c) => c.name)
+      const row = statsTable.rows[0]
+      const col = (name: string) => {
+        const idx = cols.indexOf(name)
+        return idx === -1 ? 0 : Number(row[idx]) || 0
+      }
+      stats.totalIssues = col('totalIssues')
+      stats.backendErrors = col('backendErrors')
+      stats.backendUnavailable = col('backendUnavailable')
+    }
+
+    const recentTable = recentResult.tables[0]
+    if (recentTable && recentTable.rows.length > 0) {
+      const cols = recentTable.columns.map((c) => c.name)
+      const timeIdx = cols.indexOf('TimeGenerated')
+      const opIdx = cols.indexOf('OperationId')
+      const codeIdx = cols.indexOf('ResponseCode')
+      const reasonIdx = cols.indexOf('LastErrorReason')
+      const msgIdx = cols.indexOf('LastErrorMessage')
+
+      stats.recentIssues = recentTable.rows.map(
+        (row): ServiceIssue => ({
+          timestamp: String(row[timeIdx]),
+          endpoint: String(row[opIdx]),
+          statusCode: Number(row[codeIdx]) || 0,
+          errorReason: String(row[reasonIdx] ?? ''),
+          errorMessage: String(row[msgIdx] ?? ''),
+        }),
+      )
+    }
+
+    return stats
+  } catch (err) {
+    log.error({ err }, 'Failed to query Log Analytics for service health')
+    return ZERO_SERVICE_HEALTH
+  }
+}
+
+const TIME_RANGE_KQL: Record<RequestLogTimeRange, string> = {
+  '1h': 'ago(1h)',
+  '6h': 'ago(6h)',
+  '24h': 'ago(24h)',
+  '7d': 'ago(7d)',
+  '30d': 'ago(30d)',
+}
+
+const STATUS_FILTER_KQL: Record<RequestLogFilter, string> = {
+  all: '',
+  success: 'and ResponseCode >= 200 and ResponseCode < 300',
+  'client-error':
+    'and ResponseCode >= 400 and ResponseCode < 500 and ResponseCode != 429',
+  'server-error': 'and ResponseCode >= 500',
+  'rate-limited': 'and ResponseCode == 429',
+}
+
+export async function _queryRequestLog(
+  subscriptionFilter: string,
+  options: {
+    timeRange: RequestLogTimeRange
+    statusFilter: RequestLogFilter
+    cursor?: string
+    limit: number
+  },
+): Promise<Array<RequestLogEntry>> {
+  if (!env.APIM_LOG_ANALYTICS_WORKSPACE_ID) return []
+
+  const timeRangeExpr = TIME_RANGE_KQL[options.timeRange]
+  const statusExpr = STATUS_FILTER_KQL[options.statusFilter]
+  let cursorExpr = ''
+  if (options.cursor) {
+    const pipeIdx = options.cursor.indexOf('|')
+    if (pipeIdx !== -1) {
+      const ts = options.cursor.slice(0, pipeIdx)
+      const itemId = options.cursor.slice(pipeIdx + 1)
+      cursorExpr = `and (TimeGenerated < datetime('${ts}') or (TimeGenerated == datetime('${ts}') and _ItemId < '${itemId}'))`
+    } else {
+      cursorExpr = `and TimeGenerated < datetime('${options.cursor}')`
+    }
+  }
+
+  const kql = `
+ApiManagementGatewayLogs
+| where TimeGenerated >= ${timeRangeExpr}
+  ${subscriptionFilter}
+  ${statusExpr}
+  ${cursorExpr}
+| project _ItemId, TimeGenerated, Method, OperationId, Url,
+    ResponseCode, BackendResponseCode, TotalTime,
+    CallerIpAddress, LastErrorReason, LastErrorMessage, LastErrorSource
+| order by TimeGenerated desc, _ItemId desc
+| take ${options.limit}
+`.trim()
+
+  try {
+    const result = await logAnalyticsQuery(kql)
+    const table = result.tables[0]
+    if (!table || table.rows.length === 0) return []
+
+    const cols = table.columns.map((c) => c.name)
+    const idx = (name: string) => cols.indexOf(name)
+
+    return table.rows.map((row): RequestLogEntry => {
+      const backendCode = row[idx('BackendResponseCode')]
+      return {
+        id: String(row[idx('_ItemId')] ?? ''),
+        timestamp: String(row[idx('TimeGenerated')]),
+        method: String(row[idx('Method')] ?? ''),
+        endpoint: String(row[idx('OperationId')] ?? ''),
+        url: String(row[idx('Url')] ?? ''),
+        statusCode: Number(row[idx('ResponseCode')]) || 0,
+        backendStatusCode:
+          backendCode != null && backendCode !== '' && Number(backendCode) !== 0
+            ? Number(backendCode)
+            : null,
+        totalTimeMs: Number(row[idx('TotalTime')]) || 0,
+        callerIp: String(row[idx('CallerIpAddress')] ?? ''),
+        errorReason: String(row[idx('LastErrorReason')] ?? ''),
+        errorMessage: String(row[idx('LastErrorMessage')] ?? ''),
+        errorSource: String(row[idx('LastErrorSource')] ?? ''),
+      }
+    })
+  } catch (err) {
+    log.error({ err }, 'Failed to query Log Analytics for request log')
+    return []
+  }
+}
+
 // --- Server Functions (delegate to internal helpers) ---
 
 export const getUsageAnalytics = createServerFn({ method: 'GET' })
@@ -465,6 +717,26 @@ export const getRecentErrors = createServerFn({ method: 'GET' })
 
     const filter = `and ApimSubscriptionId == '${data.subscriptionId}'`
     return _queryRecentErrors(filter)
+  })
+
+export const getRateLimitAccess = createServerFn({ method: 'GET' })
+  .inputValidator(z.object({ subscriptionId: subscriptionIdSchema }).parse)
+  .handler(async ({ data }): Promise<RateLimitAccessStats> => {
+    const userId = await requireAuth()
+    requireOwnership(userId, data.subscriptionId)
+
+    const filter = `and ApimSubscriptionId == '${data.subscriptionId}'`
+    return _queryRateLimitAccess(filter)
+  })
+
+export const getServiceHealth = createServerFn({ method: 'GET' })
+  .inputValidator(z.object({ subscriptionId: subscriptionIdSchema }).parse)
+  .handler(async ({ data }): Promise<ServiceHealthStats> => {
+    const userId = await requireAuth()
+    requireOwnership(userId, data.subscriptionId)
+
+    const filter = `and ApimSubscriptionId == '${data.subscriptionId}'`
+    return _queryServiceHealth(filter)
   })
 
 // --- Tier Configuration (public, no auth required) ---

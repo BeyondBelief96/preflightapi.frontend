@@ -10,6 +10,7 @@ import { UserApimCard } from '@/components/admin/users/user-apim-card'
 import { UserAdminActions } from '@/components/admin/users/user-admin-actions'
 import { UserQuotaCard } from '@/components/admin/users/user-quota-card'
 import { UserAnalyticsSection } from '@/components/admin/users/user-analytics-section'
+import { RequestLogTable } from '@/components/admin/users/request-log-table'
 import { Button } from '@/components/ui/button'
 
 export const Route = createFileRoute('/dashboard/admin/users/$userId')({
@@ -76,6 +77,10 @@ function AdminUserDetailPage() {
 
       {activeSubscription && (
         <UserAnalyticsSection data={analytics} isLoading={analyticsLoading} />
+      )}
+
+      {activeSubscription && (
+        <RequestLogTable subscriptionId={activeSubscription.id} />
       )}
     </div>
   )

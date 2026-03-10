@@ -15,6 +15,10 @@ export const apimKeys = {
     [...apimKeys.all, 'error-breakdown', subscriptionId] as const,
   recentErrors: (subscriptionId: string) =>
     [...apimKeys.all, 'recent-errors', subscriptionId] as const,
+  rateLimitAccess: (subscriptionId: string) =>
+    [...apimKeys.all, 'rate-limit-access', subscriptionId] as const,
+  serviceHealth: (subscriptionId: string) =>
+    [...apimKeys.all, 'service-health', subscriptionId] as const,
   tierConfig: () => [...apimKeys.all, 'tier-config'] as const,
 }
 
@@ -36,6 +40,18 @@ export const adminKeys = {
     [...adminKeys.all, 'user-detail', userId] as const,
   userAnalytics: (subscriptionId: string) =>
     [...adminKeys.all, 'user-analytics', subscriptionId] as const,
+  requestLog: (
+    subscriptionId: string,
+    timeRange: string,
+    statusFilter: string,
+  ) =>
+    [
+      ...adminKeys.all,
+      'request-log',
+      subscriptionId,
+      timeRange,
+      statusFilter,
+    ] as const,
   abuse: () => [...adminKeys.all, 'abuse'] as const,
   revenue: () => [...adminKeys.all, 'revenue'] as const,
   segments: () => [...adminKeys.all, 'segments'] as const,

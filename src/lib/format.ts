@@ -28,6 +28,27 @@ export function formatBytes(bytes: number): string {
   return `${value < 10 ? value.toFixed(1) : Math.round(value)} ${units[i]}`
 }
 
+export function cleanEndpointName(name: string): string {
+  if (!name) return '—'
+  return name.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+}
+
+export function formatRelativeTime(timestamp: string): string {
+  const now = Date.now()
+  const then = new Date(timestamp).getTime()
+  const diffMs = now - then
+
+  const minutes = Math.floor(diffMs / 60_000)
+  if (minutes < 1) return 'just now'
+  if (minutes < 60) return `${minutes}m ago`
+
+  const hours = Math.floor(minutes / 60)
+  if (hours < 24) return `${hours}h ago`
+
+  const days = Math.floor(hours / 24)
+  return `${days}d ago`
+}
+
 export function formatMs(ms: number): string {
   if (ms === 0) return '0 ms'
   if (ms < 1000) return `${Math.round(ms)} ms`

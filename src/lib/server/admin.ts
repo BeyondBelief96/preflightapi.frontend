@@ -9,6 +9,7 @@ import {
   _queryEndpointBreakdown,
   _queryErrorBreakdown,
   _queryRecentErrors,
+  _queryRequestLog,
   _queryUsageReport,
 } from './apim'
 import { getApimProductIds, planIdFromProductId } from './apim-products'
@@ -455,6 +456,46 @@ export const getAdminUserAnalytics = createServerFn({ method: 'GET' })
       ])
 
     return { usageReport, dailyTrend, endpoints, errors, recentErrors }
+  })
+
+// Compound cursor: "timestamp|itemId" or legacy "timestamp"
+const cursorTimestampSchema = z
+  .string()
+  .regex(
+    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z?(\|[\w-]+)?$/,
+    'Invalid cursor',
+  )
+
+const requestLogFilterSchema = z.enum([
+  'all',
+  'success',
+  'client-error',
+  'server-error',
+  'rate-limited',
+])
+
+const requestLogTimeRangeSchema = z.enum(['1h', '6h', '24h', '7d', '30d'])
+
+export const getAdminRequestLog = createServerFn({ method: 'GET' })
+  .inputValidator(
+    z.object({
+      subscriptionId: subscriptionIdSchema,
+      timeRange: requestLogTimeRangeSchema,
+      statusFilter: requestLogFilterSchema,
+      cursor: cursorTimestampSchema.optional(),
+      limit: z.number().int().min(1).max(200).default(50),
+    }),
+  )
+  .handler(async ({ data }) => {
+    await requireAdmin()
+
+    const filter = `and ApimSubscriptionId == '${data.subscriptionId}'`
+    return _queryRequestLog(filter, {
+      timeRange: data.timeRange,
+      statusFilter: data.statusFilter,
+      cursor: data.cursor,
+      limit: data.limit,
+    })
   })
 
 // --- Abuse Detection ---

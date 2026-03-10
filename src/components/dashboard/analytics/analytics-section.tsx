@@ -3,14 +3,14 @@ import { ResponseBreakdownCard } from './response-breakdown-card'
 import { PerformanceStatsCard } from './performance-stats-card'
 import { DailyTrendChart } from './daily-trend-chart'
 import { EndpointBreakdownTable } from './endpoint-breakdown-table'
-import { ErrorBreakdownChart } from './error-breakdown-chart'
-import { RecentErrorsTable } from './recent-errors-table'
+import { RateLimitAccessCard } from './rate-limit-access-card'
+import { ServiceHealthCard } from './service-health-card'
 import type { ApimUsageReport } from '@/types/plans'
 import {
   getDailyUsageTrend,
   getEndpointBreakdown,
-  getErrorBreakdown,
-  getRecentErrors,
+  getRateLimitAccess,
+  getServiceHealth,
 } from '@/lib/server/apim'
 import { apimKeys } from '@/lib/server/apim-queries'
 
@@ -18,12 +18,14 @@ interface AnalyticsSectionProps {
   subscriptionId: string
   monthlyReport: ApimUsageReport | undefined
   isMonthlyLoading: boolean
+  isPaid: boolean
 }
 
 export function AnalyticsSection({
   subscriptionId,
   monthlyReport,
   isMonthlyLoading,
+  isPaid,
 }: AnalyticsSectionProps) {
   const dailyTrendQuery = useQuery({
     queryKey: apimKeys.dailyTrend(subscriptionId),
@@ -37,15 +39,15 @@ export function AnalyticsSection({
     staleTime: 5 * 60 * 1000,
   })
 
-  const errorBreakdownQuery = useQuery({
-    queryKey: apimKeys.errorBreakdown(subscriptionId),
-    queryFn: () => getErrorBreakdown({ data: { subscriptionId } }),
+  const rateLimitQuery = useQuery({
+    queryKey: apimKeys.rateLimitAccess(subscriptionId),
+    queryFn: () => getRateLimitAccess({ data: { subscriptionId } }),
     staleTime: 5 * 60 * 1000,
   })
 
-  const recentErrorsQuery = useQuery({
-    queryKey: apimKeys.recentErrors(subscriptionId),
-    queryFn: () => getRecentErrors({ data: { subscriptionId } }),
+  const serviceHealthQuery = useQuery({
+    queryKey: apimKeys.serviceHealth(subscriptionId),
+    queryFn: () => getServiceHealth({ data: { subscriptionId } }),
     staleTime: 5 * 60 * 1000,
   })
 
@@ -64,10 +66,17 @@ export function AnalyticsSection({
         />
       </div>
 
-      <ErrorBreakdownChart
-        data={errorBreakdownQuery.data}
-        isLoading={errorBreakdownQuery.isLoading}
-      />
+      <div className="grid gap-4 sm:grid-cols-2">
+        <RateLimitAccessCard
+          data={rateLimitQuery.data}
+          isLoading={rateLimitQuery.isLoading}
+          isPaid={isPaid}
+        />
+        <ServiceHealthCard
+          data={serviceHealthQuery.data}
+          isLoading={serviceHealthQuery.isLoading}
+        />
+      </div>
 
       <DailyTrendChart
         data={dailyTrendQuery.data}
@@ -77,11 +86,6 @@ export function AnalyticsSection({
       <EndpointBreakdownTable
         data={endpointBreakdownQuery.data}
         isLoading={endpointBreakdownQuery.isLoading}
-      />
-
-      <RecentErrorsTable
-        data={recentErrorsQuery.data}
-        isLoading={recentErrorsQuery.isLoading}
       />
     </div>
   )
