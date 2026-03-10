@@ -44,7 +44,6 @@ export const adminKeys = {
     subscriptionId: string,
     timeRange: string,
     statusFilter: string,
-    cursor?: string,
   ) =>
     [
       ...adminKeys.all,
@@ -52,7 +51,6 @@ export const adminKeys = {
       subscriptionId,
       timeRange,
       statusFilter,
-      cursor ?? '',
     ] as const,
   abuse: () => [...adminKeys.all, 'abuse'] as const,
   revenue: () => [...adminKeys.all, 'revenue'] as const,

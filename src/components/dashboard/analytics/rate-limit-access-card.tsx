@@ -3,13 +3,13 @@ import { ArrowUpRight, Gauge, Lock, ShieldAlert } from 'lucide-react'
 import type { RateLimitAccessStats } from '@/types/plans'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
+import { cleanEndpointName } from '@/lib/format'
 
 interface RateLimitAccessCardProps {
   data: RateLimitAccessStats | undefined
   isLoading: boolean
   isPaid: boolean
 }
-import { cleanEndpointName } from '@/lib/format'
 
 export function RateLimitAccessCard({
   data,

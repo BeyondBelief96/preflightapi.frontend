@@ -1,4 +1,4 @@
-import { cleanEndpointName } from '@/lib/format'
+import { cleanEndpointName, formatRelativeTime } from '@/lib/format'
 import { Link } from '@tanstack/react-router'
 import { Activity, ArrowUpRight, CheckCircle2, ServerCrash } from 'lucide-react'
 import type { ServiceHealthStats } from '@/types/plans'
@@ -9,22 +9,6 @@ import { Skeleton } from '@/components/ui/skeleton'
 interface ServiceHealthCardProps {
   data: ServiceHealthStats | undefined
   isLoading: boolean
-}
-
-function formatRelativeTime(timestamp: string): string {
-  const now = Date.now()
-  const then = new Date(timestamp).getTime()
-  const diffMs = now - then
-
-  const minutes = Math.floor(diffMs / 60_000)
-  if (minutes < 1) return 'just now'
-  if (minutes < 60) return `${minutes}m ago`
-
-  const hours = Math.floor(minutes / 60)
-  if (hours < 24) return `${hours}h ago`
-
-  const days = Math.floor(hours / 24)
-  return `${days}d ago`
 }
 
 function issueLabel(issue: {
@@ -95,9 +79,9 @@ export function ServiceHealthCard({
                 <p className="text-xs font-medium text-muted-foreground">
                   Recent (last 24h)
                 </p>
-                {data.recentIssues.slice(0, 5).map((issue, i) => (
+                {data.recentIssues.slice(0, 5).map((issue) => (
                   <div
-                    key={i}
+                    key={`${issue.timestamp}-${issue.endpoint}`}
                     className="flex items-center justify-between gap-2 text-xs"
                   >
                     <div className="flex min-w-0 items-center gap-2">
