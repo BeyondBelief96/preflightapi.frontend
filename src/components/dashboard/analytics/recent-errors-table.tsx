@@ -1,3 +1,4 @@
+import { cleanEndpointName } from '@/lib/format'
 import type { RecentError } from '@/types/plans'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -30,10 +31,6 @@ function formatRelativeTime(timestamp: string): string {
 
   const days = Math.floor(hours / 24)
   return `${days}d ago`
-}
-
-function cleanEndpointName(name: string): string {
-  return name.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
 }
 
 function statusVariant(code: number) {

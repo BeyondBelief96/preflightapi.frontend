@@ -28,6 +28,11 @@ export function formatBytes(bytes: number): string {
   return `${value < 10 ? value.toFixed(1) : Math.round(value)} ${units[i]}`
 }
 
+export function cleanEndpointName(name: string): string {
+  if (!name) return '—'
+  return name.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+}
+
 export function formatMs(ms: number): string {
   if (ms === 0) return '0 ms'
   if (ms < 1000) return `${Math.round(ms)} ms`

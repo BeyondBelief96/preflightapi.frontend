@@ -1,3 +1,4 @@
+import { cleanEndpointName } from '@/lib/format'
 import { Link } from '@tanstack/react-router'
 import { Activity, ArrowUpRight, CheckCircle2, ServerCrash } from 'lucide-react'
 import type { ServiceHealthStats } from '@/types/plans'
@@ -24,10 +25,6 @@ function formatRelativeTime(timestamp: string): string {
 
   const days = Math.floor(hours / 24)
   return `${days}d ago`
-}
-
-function cleanEndpointName(name: string): string {
-  return name.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
 }
 
 function issueLabel(issue: {

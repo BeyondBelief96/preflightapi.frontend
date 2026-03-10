@@ -3,17 +3,13 @@ import { ArrowUpRight, Gauge, Lock, ShieldAlert } from 'lucide-react'
 import type { RateLimitAccessStats } from '@/types/plans'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { cn } from '@/lib/utils'
 
 interface RateLimitAccessCardProps {
   data: RateLimitAccessStats | undefined
   isLoading: boolean
   isPaid: boolean
 }
-
-function cleanEndpointName(name: string): string {
-  return name.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
-}
+import { cleanEndpointName } from '@/lib/format'
 
 export function RateLimitAccessCard({
   data,
@@ -121,9 +117,7 @@ export function RateLimitAccessCard({
             {(data.tierRestricted > 0 || data.quotaExceeded > 0) && !isPaid && (
               <Link
                 to="/dashboard/billing"
-                className={cn(
-                  'flex items-center gap-1.5 text-xs font-medium text-accent hover:underline',
-                )}
+                className="flex items-center gap-1.5 text-xs font-medium text-accent hover:underline"
               >
                 Upgrade your plan
                 <ArrowUpRight className="h-3 w-3" />

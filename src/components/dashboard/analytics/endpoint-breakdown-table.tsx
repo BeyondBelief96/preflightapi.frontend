@@ -1,3 +1,4 @@
+import { cleanEndpointName } from '@/lib/format'
 import type { EndpointBreakdownItem } from '@/types/plans'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -14,10 +15,6 @@ import { formatMs } from '@/lib/format'
 interface EndpointBreakdownTableProps {
   data: Array<EndpointBreakdownItem> | undefined
   isLoading: boolean
-}
-
-function cleanEndpointName(name: string): string {
-  return name.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
 }
 
 function errorRateColor(rate: number): string {

@@ -1,3 +1,4 @@
+import { cleanEndpointName } from '@/lib/format'
 import { useState } from 'react'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { ChevronDown, ChevronRight, Loader2 } from 'lucide-react'
@@ -73,11 +74,6 @@ function formatTimestamp(ts: string): string {
     second: '2-digit',
     hour12: false,
   })
-}
-
-function cleanEndpointName(name: string): string {
-  if (!name) return '—'
-  return name.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
 }
 
 function latencyColor(ms: number): string {
@@ -299,8 +295,8 @@ export function RequestLogTable({
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {allEntries.map((entry, i) => (
-                    <RequestRow key={`${entry.timestamp}-${i}`} entry={entry} />
+                  {allEntries.map((entry) => (
+                    <RequestRow key={entry.id} entry={entry} />
                   ))}
                 </TableBody>
               </Table>
