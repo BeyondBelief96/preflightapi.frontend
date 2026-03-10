@@ -274,7 +274,7 @@ export function RequestLogTable({
               <Skeleton key={i} className="h-8 w-full" />
             ))}
           </div>
-        ) : isError ? (
+        ) : isError && allEntries.length === 0 ? (
           <div className="flex h-[120px] items-center justify-center text-sm text-destructive">
             Failed to load request logs.{error?.message && ` (${error.message})`}
           </div>
@@ -284,6 +284,11 @@ export function RequestLogTable({
           </div>
         ) : (
           <>
+            {isError && (
+              <div className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
+                Failed to refresh request logs.{error?.message && ` (${error.message})`}
+              </div>
+            )}
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
