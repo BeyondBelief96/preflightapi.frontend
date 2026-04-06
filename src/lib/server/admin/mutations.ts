@@ -149,7 +149,7 @@ export const adminResetQuota = createServerFn({ method: 'POST' })
       throw new Error('No active APIM subscription found for user')
     }
 
-    await Promise.allSettled(
+    const patchResults = await Promise.allSettled(
       activeSubs.map((sub) =>
         apimFetch(`/subscriptions/${sub.name}`, {
           method: 'PATCH',
@@ -159,6 +159,15 @@ export const adminResetQuota = createServerFn({ method: 'POST' })
         }),
       ),
     )
+
+    const failures = patchResults.filter(
+      (r): r is PromiseRejectedResult => r.status === 'rejected',
+    )
+    if (failures.length > 0) {
+      throw new Error(
+        `Failed to reset quota for ${failures.length}/${activeSubs.length} subscriptions`,
+      )
+    }
 
     log.info({ userId: data.userId }, 'Admin reset user quota')
 
