@@ -1,11 +1,11 @@
-import { apimFetch } from './apim-client'
-import { getStripe } from './stripe-client'
+import { getStripe } from '../stripe/client'
+import { createLogger } from '../logger'
+import { apimFetch } from './client'
 import {
   PLAN_IDS,
   getApimProductIds,
   planIdFromProductId,
-} from './apim-products'
-import { createLogger } from './logger'
+} from './products'
 import type { EndpointTier } from '@/lib/constants'
 import { env } from '@/env'
 import {

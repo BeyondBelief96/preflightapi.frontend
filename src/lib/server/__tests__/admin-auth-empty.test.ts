@@ -20,12 +20,12 @@ vi.mock('@clerk/backend', () => ({
 
 describe('getAdminEmails with empty env', () => {
   it('returns empty array when ADMIN_EMAILS is not set', async () => {
-    const { getAdminEmails } = await import('../admin-auth')
+    const { getAdminEmails } = await import('../admin/auth')
     expect(getAdminEmails()).toEqual([])
   })
 
   it('isAdmin returns false when ADMIN_EMAILS is not set', async () => {
-    const { isAdmin } = await import('../admin-auth')
+    const { isAdmin } = await import('../admin/auth')
     expect(await isAdmin('user_123')).toBe(false)
   })
 })

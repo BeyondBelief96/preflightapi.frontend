@@ -1,5 +1,5 @@
 import { Activity, AlertTriangle, Clock, Users } from 'lucide-react'
-import type { SystemOverview } from '@/lib/server/admin'
+import type { SystemOverview } from '@/lib/server/admin/analytics'
 import { StatCard } from '@/components/admin/stat-card'
 
 function formatNumber(n: number): string {

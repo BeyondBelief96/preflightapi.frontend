@@ -10,13 +10,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { usePlans } from '@/hooks/use-plans'
-import { getUsageAnalytics, getUserSubscription } from '@/lib/server/apim'
+import { getUsageAnalytics } from '@/lib/server/apim/analytics'
+import { getUserSubscription } from '@/lib/server/apim/subscriptions'
 import {
   createCheckoutSession,
   createPortalSession,
   getStripeSubscription,
-} from '@/lib/server/stripe'
-import { apimKeys, stripeKeys } from '@/lib/server/apim-queries'
+} from '@/lib/server/stripe/subscriptions'
+import { apimKeys, stripeKeys } from '@/lib/server/queries'
 import { UpgradeSuccessBanner } from '@/components/dashboard/billing/upgrade-success-banner'
 import { CurrentPlanCard } from '@/components/dashboard/billing/current-plan-card'
 import { UpgradePlanCards } from '@/components/dashboard/billing/upgrade-plan-cards'

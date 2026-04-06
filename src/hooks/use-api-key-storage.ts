@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useAuth } from '@clerk/tanstack-react-start'
 import { useQuery } from '@tanstack/react-query'
-import { getSubscriptionKeys, getUserSubscription } from '@/lib/server/apim'
-import { apimKeys } from '@/lib/server/apim-queries'
+import { getSubscriptionKeys, getUserSubscription } from '@/lib/server/apim/subscriptions'
+import { apimKeys } from '@/lib/server/queries'
 
 export function useApiKeyStorage() {
   const { userId } = useAuth()

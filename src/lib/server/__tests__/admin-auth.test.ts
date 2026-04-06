@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { getAdminEmails, isAdmin, requireAdmin } from '../admin-auth'
+import { getAdminEmails, isAdmin, requireAdmin } from '../admin/auth'
 
 vi.mock('@/env', () => ({
   env: {

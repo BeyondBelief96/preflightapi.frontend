@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { apimFetch } from '../apim-client'
+import { apimFetch } from '../apim/client'
 
 // --- Mocks ---
 

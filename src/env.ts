@@ -28,6 +28,7 @@ export const env = createEnv({
     APIM_SERVICE_NAME: requiredInProd(z.string()),
     RESEND_API_KEY: requiredInProd(z.string()),
     DEMO_API_KEY: requiredInProd(z.string()),
+    DEMO_APIM_SUBSCRIPTION_ID: z.string().optional(),
     // --- Optional (have defaults or non-critical) ---
 
     PREFLIGHT_API_BASE_URL: z.url().optional(),

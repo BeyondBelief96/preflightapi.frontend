@@ -8,6 +8,7 @@ import {
 import { Toaster } from '../components/ui/sonner'
 import { TermlyRouteSync } from '../components/termly-cmp'
 import ClerkProvider from '../integrations/clerk/provider'
+import { TooltipProvider } from '../components/ui/tooltip'
 
 import appCss from '../styles.css?url'
 import type { ErrorComponentProps } from '@tanstack/react-router'
@@ -173,7 +174,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <body>
         <TermlyRouteSync />
         <ClerkProvider>
-          {children}
+          <TooltipProvider>
+            {children}
+          </TooltipProvider>
           <Toaster />
         </ClerkProvider>
         <Scripts />

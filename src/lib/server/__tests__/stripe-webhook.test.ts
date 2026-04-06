@@ -42,7 +42,7 @@ vi.mock('@/lib/server/logger', () => ({
   }),
 }))
 
-vi.mock('@/lib/server/stripe-client', () => ({
+vi.mock('@/lib/server/stripe/client', () => ({
   getStripe: () => ({
     webhooks: {
       constructEvent: (...a: Array<any>) => mockConstructEvent(...a),
@@ -56,11 +56,11 @@ vi.mock('@/lib/server/stripe-client', () => ({
   }),
 }))
 
-vi.mock('@/lib/server/apim-client', () => ({
+vi.mock('@/lib/server/apim/client', () => ({
   apimFetch: (...a: Array<any>) => mockApimFetch(...a),
 }))
 
-vi.mock('@/lib/server/apim-products', () => ({
+vi.mock('@/lib/server/apim/products', () => ({
   getApimProductIds: () => ({
     student: 'student-pilot',
     private: 'private-pilot',
@@ -70,7 +70,7 @@ vi.mock('@/lib/server/apim-products', () => ({
   planIdFromProductId: (...a: Array<any>) => mockPlanIdFromProductId(...a),
 }))
 
-vi.mock('@/lib/server/stripe-tier-resolver', () => ({
+vi.mock('@/lib/server/stripe/tier-resolver', () => ({
   resolveApimProductId: (...a: Array<any>) => mockResolveApimProductId(...a),
 }))
 

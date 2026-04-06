@@ -1,4 +1,4 @@
-import type { AdminUserDetail } from '@/lib/server/admin'
+import type { AdminUserDetail } from '@/lib/server/admin/users'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 

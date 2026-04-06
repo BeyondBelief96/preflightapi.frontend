@@ -43,20 +43,32 @@ Sign-in/sign-up routes are at root level (not under `_marketing`). Use `createFi
 
 Server-side logic uses `createServerFn()` from `@tanstack/react-start`. Two distinct locations:
 
-**`src/lib/server/`** — Modules imported by server functions:
+**`src/lib/server/`** — Organized into domain subdirectories:
 
-| Module                    | Purpose                                         |
-| ------------------------- | ----------------------------------------------- |
-| `apim.ts`                 | APIM user & subscription management             |
-| `apim-client.ts`          | Authenticated Azure APIM REST client            |
-| `apim-products.ts`        | APIM product ID mapping (`getApimProductIds`)   |
-| `stripe.ts`               | Checkout, portal, subscription management       |
-| `stripe-client.ts`        | Stripe SDK singleton                            |
-| `stripe-utils.ts`         | Price/plan ID mapping utilities                 |
-| `stripe-tier-resolver.ts` | Resolves Stripe price → APIM product ID         |
-| `tier-config.ts`          | Dynamic plan data (APIM limits + Stripe prices) |
-| `auth.ts`                 | `requireAuth()` helper                          |
-| `contact.ts`              | Contact form handler (sends via Resend)         |
+| Directory/Module          | Purpose                                              |
+| ------------------------- | ---------------------------------------------------- |
+| `apim/client.ts`          | Authenticated Azure APIM REST client                 |
+| `apim/products.ts`        | APIM product ID mapping (`getApimProductIds`)        |
+| `apim/subscriptions.ts`   | APIM user & subscription management                  |
+| `apim/analytics.ts`       | KQL analytics queries (usage, trends, errors)        |
+| `apim/tier-config.ts`     | Dynamic plan data (APIM limits + Stripe prices)      |
+| `stripe/client.ts`        | Stripe SDK singleton                                 |
+| `stripe/utils.ts`         | Price/plan ID mapping utilities                      |
+| `stripe/tier-resolver.ts` | Resolves Stripe price → APIM product ID              |
+| `stripe/subscriptions.ts` | Checkout, portal, subscription management            |
+| `admin/auth.ts`           | Admin email check, `requireAdmin()`, `checkIsAdmin`  |
+| `admin/analytics.ts`      | System overview, daily trends, top endpoints         |
+| `admin/users.ts`          | Admin user listing, detail, per-user analytics       |
+| `admin/abuse.ts`          | Abuse detection (error rates, spikes, IPs)           |
+| `admin/mutations.ts`      | Admin tier change, cancel subscription, reset quota  |
+| `admin/revenue.ts`        | MRR, churn, customer-by-tier revenue summary         |
+| `admin/email.ts`          | Email broadcast management (Resend)                  |
+| `email/client.ts`         | Resend SDK singleton                                 |
+| `email/contacts.ts`       | Resend contact management (create, remove, segment)  |
+| `email/contact-form.ts`   | Contact form handler with rate limiting              |
+| `auth.ts`                 | `requireAuth()` helper                               |
+| `queries.ts`              | React Query key factories                            |
+| `logger.ts`               | Pino logger                                          |
 
 **`server/api/`** — Nitro HTTP endpoints (webhooks, public APIs):
 

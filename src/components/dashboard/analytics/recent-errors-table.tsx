@@ -1,5 +1,5 @@
-import { cleanEndpointName, formatRelativeTime } from '@/lib/format'
 import type { RecentError } from '@/types/plans'
+import { cleanEndpointName, formatRelativeTime } from '@/lib/format'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'

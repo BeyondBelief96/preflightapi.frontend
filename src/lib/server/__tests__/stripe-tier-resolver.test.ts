@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 
-import { resolveApimProductId } from '../stripe-tier-resolver'
+import { resolveApimProductId } from '../stripe/tier-resolver'
 
 // Mock the env module before importing anything that uses it
 vi.mock('@/env', () => ({

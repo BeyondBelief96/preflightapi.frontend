@@ -15,8 +15,8 @@ import {
   getSubscriptionKeys,
   getUserSubscription,
   regenerateKey,
-} from '@/lib/server/apim'
-import { apimKeys } from '@/lib/server/apim-queries'
+} from '@/lib/server/apim/subscriptions'
+import { apimKeys } from '@/lib/server/queries'
 import { API_BASE_URL } from '@/lib/gateway-url'
 import { maskApiKey } from '@/lib/format'
 

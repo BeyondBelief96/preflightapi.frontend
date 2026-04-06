@@ -1,5 +1,5 @@
 import { AlertCircle, ExternalLink } from 'lucide-react'
-import type { AdminUserDetail } from '@/lib/server/admin'
+import type { AdminUserDetail } from '@/lib/server/admin/users'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
