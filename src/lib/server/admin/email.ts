@@ -122,12 +122,9 @@ export const getBroadcastHistory = createServerFn({ method: 'POST' })
 
     const resend = getResend()
 
-    const params: { cursor?: string } = {}
-    if (data.cursor) {
-      params.cursor = data.cursor
-    }
-
-    const response = await resend.broadcasts.list(params)
+    const response = await resend.broadcasts.list(
+      data.cursor ? { after: data.cursor } : undefined,
+    )
 
     if (response.error) {
       throw new Error(response.error.message)
@@ -139,7 +136,6 @@ export const getBroadcastHistory = createServerFn({ method: 'POST' })
       broadcasts: broadcasts.map((b) => ({
         id: b.id,
         name: b.name,
-        subject: b.subject,
         status: b.status,
         createdAt: b.created_at,
         sentAt: b.sent_at,

@@ -1,4 +1,5 @@
 import { SubscriptionLink } from './subscription-link'
+import { useResolveEmails } from './use-resolve-emails'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Table,
@@ -22,6 +23,8 @@ export function QuotaExceeders({
   data: Array<QuotaExceeder> | undefined
   isLoading: boolean
 }) {
+  useResolveEmails(data?.map((r) => r.subscriptionId) ?? [])
+
   return (
     <Card>
       <CardHeader>

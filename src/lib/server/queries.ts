@@ -59,11 +59,12 @@ export const adminKeys = {
     [...adminKeys.all, 'error-correlation', timeRange] as const,
   endpointTopUsers: (operationId: string) =>
     [...adminKeys.all, 'endpoint-top-users', operationId] as const,
-  upgradeSignals: () => [...adminKeys.all, 'upgrade-signals'] as const,
   userActivityHeatmap: (subscriptionId: string) =>
     [...adminKeys.all, 'user-activity-heatmap', subscriptionId] as const,
   globalSearch: (query: string) =>
     [...adminKeys.all, 'global-search', query] as const,
+  userEmail: (userId: string) =>
+    [...adminKeys.all, 'user-email', userId] as const,
   abuse: () => [...adminKeys.all, 'abuse'] as const,
   revenue: () => [...adminKeys.all, 'revenue'] as const,
   segments: () => [...adminKeys.all, 'segments'] as const,
