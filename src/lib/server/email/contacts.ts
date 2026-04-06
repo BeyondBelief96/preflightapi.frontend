@@ -1,4 +1,4 @@
-import { createLogger } from './logger'
+import { createLogger } from '../logger'
 import { env } from '@/env'
 
 const log = createLogger('resend-contacts')
@@ -16,7 +16,7 @@ export async function createResendContact(
   tier: 'student' | 'private' | 'commercial' | 'atp',
 ): Promise<void> {
   try {
-    const { getResend } = await import('./resend-client')
+    const { getResend } = await import('./client')
     const resend = getResend()
 
     const segmentAllId = env.RESEND_SEGMENT_ALL_ID
@@ -72,7 +72,7 @@ export async function createResendContact(
  */
 export async function removeResendContact(email: string): Promise<void> {
   try {
-    const { getResend } = await import('./resend-client')
+    const { getResend } = await import('./client')
     const resend = getResend()
 
     const { error } = await resend.contacts.remove({ email })
@@ -100,7 +100,7 @@ export async function updateContactTierSegment(
   newTier: 'student' | 'private' | 'commercial' | 'atp',
 ): Promise<void> {
   try {
-    const { getResend } = await import('./resend-client')
+    const { getResend } = await import('./client')
     const resend = getResend()
 
     const segmentAllId = env.RESEND_SEGMENT_ALL_ID

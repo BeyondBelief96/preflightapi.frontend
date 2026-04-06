@@ -60,6 +60,9 @@ export interface EndpointBreakdownItem {
   clientErrorRate: number // 4xx percentage 0-100
   serverErrorRate: number // 5xx percentage 0-100
   avgLatencyMs: number // average TotalTime in ms
+  p50LatencyMs?: number
+  p95LatencyMs?: number
+  p99LatencyMs?: number
 }
 
 export interface ErrorCodeBreakdownItem {
@@ -105,6 +108,8 @@ export interface RequestLogEntry {
   statusCode: number
   backendStatusCode: number | null
   totalTimeMs: number
+  backendTimeMs: number
+  responseSize: number
   callerIp: string
   errorReason: string
   errorMessage: string

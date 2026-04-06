@@ -9,8 +9,8 @@ import { Badge } from '@/components/ui/badge'
 import {
   createCheckoutSession,
   getStripeSubscription,
-} from '@/lib/server/stripe'
-import { stripeKeys } from '@/lib/server/apim-queries'
+} from '@/lib/server/stripe/subscriptions'
+import { stripeKeys } from '@/lib/server/queries'
 import { isWaitlistMode } from '@/lib/waitlist'
 
 interface PricingCardProps {

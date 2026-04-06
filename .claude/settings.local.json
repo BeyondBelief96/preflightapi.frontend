@@ -57,7 +57,9 @@
       "Bash(npx tsx:*)",
       "Bash(npm run sync-api:*)",
       "WebFetch(domain:resend.com)",
-      "WebFetch(domain:llmstxt.org)"
+      "WebFetch(domain:llmstxt.org)",
+      "Bash(wc -l /c/Users/brand/source/repos/preflightapi.frontend/src/lib/server/__tests__/*.ts | tail -1)",
+      "Bash(xargs ls:*)"
     ]
   }
 }

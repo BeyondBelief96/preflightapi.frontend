@@ -127,7 +127,7 @@ async function handleUserCreated(event: ClerkUserEvent) {
 
   // Add user as a Resend contact (non-fatal)
   try {
-    const { createResendContact } = await import('@/lib/server/resend-contacts')
+    const { createResendContact } = await import('@/lib/server/email/contacts')
     await createResendContact(
       primaryEmail,
       first_name,
@@ -146,7 +146,7 @@ async function handleUserDeleted(event: ClerkUserEvent) {
 
   // 1. Delete the Stripe customer (triggers customer.deleted webhook → APIM downgrade)
   try {
-    const { getStripe } = await import('@/lib/server/stripe-client')
+    const { getStripe } = await import('@/lib/server/stripe/client')
     const stripe = getStripe()
 
     // Validate userId format before using in search query (defense-in-depth)
@@ -178,7 +178,7 @@ async function handleUserDeleted(event: ClerkUserEvent) {
 
   // 2. Delete the APIM user
   try {
-    const { apimFetch } = await import('@/lib/server/apim-client')
+    const { apimFetch } = await import('@/lib/server/apim/client')
 
     // Delete subscriptions first, then the user
     const subs = await apimFetch<{ value: Array<{ name: string }> }>(
@@ -215,7 +215,7 @@ async function handleUserDeleted(event: ClerkUserEvent) {
   if (primaryEmail) {
     try {
       const { removeResendContact } =
-        await import('@/lib/server/resend-contacts')
+        await import('@/lib/server/email/contacts')
       await removeResendContact(primaryEmail)
     } catch (err) {
       log.error({ err, userId }, 'Error removing Resend contact')

@@ -6,8 +6,8 @@ import {
   adminCancelSubscription,
   adminChangeTier,
   adminResetQuota,
-} from '@/lib/server/admin'
-import { adminKeys } from '@/lib/server/apim-queries'
+} from '@/lib/server/admin/mutations'
+import { adminKeys } from '@/lib/server/queries'
 import { toastError } from '@/lib/toast-error'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'

@@ -1,9 +1,9 @@
 import { createServerFn } from '@tanstack/react-start'
 import { render } from '@react-email/render'
 import { z } from 'zod'
-import { requireAdmin } from './admin-auth'
-import { getResend } from './resend-client'
-import { createLogger } from './logger'
+import { getResend } from '../email/client'
+import { createLogger } from '../logger'
+import { requireAdmin } from './auth'
 import { AdminBroadcastEmail } from '@/emails/admin-broadcast'
 
 const log = createLogger('admin-email')

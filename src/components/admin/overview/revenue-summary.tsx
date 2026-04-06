@@ -1,5 +1,5 @@
 import { DollarSign, TrendingDown, Users } from 'lucide-react'
-import type { RevenueSummary } from '@/lib/server/admin'
+import type { RevenueSummary } from '@/lib/server/admin/revenue'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'

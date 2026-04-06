@@ -1,17 +1,21 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { createPageHead } from '@/lib/seo'
-import { adminKeys } from '@/lib/server/apim-queries'
+import { adminKeys } from '@/lib/server/queries'
+import { getRevenueSummary } from '@/lib/server/admin/revenue'
 import {
-  getRevenueSummary,
   getSystemDailyTrend,
   getSystemOverview,
+  getSystemServiceHealth,
   getTopEndpoints,
-} from '@/lib/server/admin'
+} from '@/lib/server/admin/analytics'
 import { SystemStatsCards } from '@/components/admin/overview/system-stats-cards'
 import { SystemDailyTrend } from '@/components/admin/overview/system-daily-trend'
 import { TopEndpointsTable } from '@/components/admin/overview/top-endpoints-table'
 import { RevenueSummaryCard } from '@/components/admin/overview/revenue-summary'
+import { ErrorCorrelationTable } from '@/components/admin/overview/error-correlation-table'
+import { UpgradeSignalsCard } from '@/components/admin/overview/upgrade-signals-card'
+import { ServiceHealthCard } from '@/components/dashboard/analytics/service-health-card'
 
 export const Route = createFileRoute('/dashboard/admin/')({
   head: () =>
@@ -48,6 +52,12 @@ function AdminOverview() {
     staleTime: 120_000,
   })
 
+  const serviceHealth = useQuery({
+    queryKey: adminKeys.serviceHealth(),
+    queryFn: () => getSystemServiceHealth(),
+    staleTime: 60_000,
+  })
+
   return (
     <div className="min-w-0 space-y-8">
       <div>
@@ -58,6 +68,11 @@ function AdminOverview() {
       </div>
 
       <SystemStatsCards data={overview.data} isLoading={overview.isLoading} />
+
+      <ServiceHealthCard
+        data={serviceHealth.data}
+        isLoading={serviceHealth.isLoading}
+      />
 
       <div className="grid min-w-0 gap-6 lg:grid-cols-3">
         <div className="min-w-0 lg:col-span-2">
@@ -74,10 +89,19 @@ function AdminOverview() {
         </div>
       </div>
 
-      <TopEndpointsTable
-        data={topEndpoints.data}
-        isLoading={topEndpoints.isLoading}
-      />
+      <div className="grid min-w-0 gap-6 lg:grid-cols-3">
+        <div className="min-w-0 lg:col-span-2">
+          <TopEndpointsTable
+            data={topEndpoints.data}
+            isLoading={topEndpoints.isLoading}
+          />
+        </div>
+        <div className="min-w-0">
+          <UpgradeSignalsCard />
+        </div>
+      </div>
+
+      <ErrorCorrelationTable />
     </div>
   )
 }

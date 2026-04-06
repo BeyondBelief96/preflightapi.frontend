@@ -7,8 +7,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Skeleton } from '@/components/ui/skeleton'
-import { getBroadcastDetail } from '@/lib/server/admin-email'
-import { adminKeys } from '@/lib/server/apim-queries'
+import { getBroadcastDetail } from '@/lib/server/admin/email'
+import { adminKeys } from '@/lib/server/queries'
 
 const statusColors: Record<string, string> = {
   sent: 'bg-green-500/10 text-green-500',

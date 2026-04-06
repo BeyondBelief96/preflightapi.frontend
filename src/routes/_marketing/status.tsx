@@ -20,7 +20,7 @@ import type {
 } from '@/types/health'
 import { createPageHead } from '@/lib/seo'
 import { fetchDataCurrency, fetchSystemHealth } from '@/lib/server/health'
-import { healthKeys } from '@/lib/server/apim-queries'
+import { healthKeys } from '@/lib/server/queries'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'

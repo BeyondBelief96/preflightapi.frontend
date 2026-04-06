@@ -2,8 +2,8 @@ import { Link, createFileRoute } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { ArrowLeft } from 'lucide-react'
 import { createPageHead } from '@/lib/seo'
-import { adminKeys } from '@/lib/server/apim-queries'
-import { getAdminUserAnalytics, getAdminUserDetail } from '@/lib/server/admin'
+import { adminKeys } from '@/lib/server/queries'
+import { getAdminUserAnalytics, getAdminUserDetail } from '@/lib/server/admin/users'
 import { UserProfileCard } from '@/components/admin/users/user-profile-card'
 import { UserStripeCard } from '@/components/admin/users/user-stripe-card'
 import { UserApimCard } from '@/components/admin/users/user-apim-card'
@@ -11,6 +11,7 @@ import { UserAdminActions } from '@/components/admin/users/user-admin-actions'
 import { UserQuotaCard } from '@/components/admin/users/user-quota-card'
 import { UserAnalyticsSection } from '@/components/admin/users/user-analytics-section'
 import { RequestLogTable } from '@/components/admin/users/request-log-table'
+import { ActivityHeatmap } from '@/components/admin/users/activity-heatmap'
 import { Button } from '@/components/ui/button'
 
 export const Route = createFileRoute('/dashboard/admin/users/$userId')({
@@ -50,7 +51,10 @@ function AdminUserDetailPage() {
     <div className="min-w-0 space-y-6">
       <div className="flex items-center gap-3">
         <Button variant="ghost" size="icon" asChild>
-          <Link to="/dashboard/admin/users" search={{ page: 1, search: '' }}>
+          <Link
+            to="/dashboard/admin/users"
+            search={{ page: 1, search: '', tier: 'all', filter: 'all' }}
+          >
             <ArrowLeft className="h-4 w-4" />
           </Link>
         </Button>
@@ -77,6 +81,10 @@ function AdminUserDetailPage() {
 
       {activeSubscription && (
         <UserAnalyticsSection data={analytics} isLoading={analyticsLoading} />
+      )}
+
+      {activeSubscription && (
+        <ActivityHeatmap subscriptionId={activeSubscription.id} />
       )}
 
       {activeSubscription && (

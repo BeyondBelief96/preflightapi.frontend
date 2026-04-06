@@ -6,8 +6,8 @@ import {
   TIER_UI,
   buildPlanFeatures,
 } from '@/lib/constants'
-import { fetchTierConfig } from '@/lib/server/apim'
-import { apimKeys } from '@/lib/server/apim-queries'
+import { fetchTierConfig } from '@/lib/server/apim/subscriptions'
+import { apimKeys } from '@/lib/server/queries'
 
 export function usePlans(): {
   plans: Array<PlanDefinition>

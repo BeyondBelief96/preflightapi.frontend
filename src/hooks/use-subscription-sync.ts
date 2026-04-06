@@ -2,12 +2,12 @@ import { useEffect } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '@clerk/tanstack-react-start'
 import { usePlans } from '@/hooks/use-plans'
-import { getUserSubscription } from '@/lib/server/apim'
+import { getUserSubscription } from '@/lib/server/apim/subscriptions'
 import {
   getStripeSubscription,
   reconcileSubscription,
-} from '@/lib/server/stripe'
-import { apimKeys, stripeKeys } from '@/lib/server/apim-queries'
+} from '@/lib/server/stripe/subscriptions'
+import { apimKeys, stripeKeys } from '@/lib/server/queries'
 import { toastError } from '@/lib/toast-error'
 
 // Module-level flag — only run once per page session

@@ -34,8 +34,10 @@ export const adminKeys = {
   overview: () => [...adminKeys.all, 'overview'] as const,
   dailyTrend: () => [...adminKeys.all, 'daily-trend'] as const,
   topEndpoints: () => [...adminKeys.all, 'top-endpoints'] as const,
-  users: (page: number, search: string) =>
-    [...adminKeys.all, 'users', page, search] as const,
+  users: (page: number, search: string, tier = 'all', filter = 'all') =>
+    [...adminKeys.all, 'users', page, search, tier, filter] as const,
+  userHealth: (page: number, search: string) =>
+    [...adminKeys.all, 'user-health', page, search] as const,
   userDetail: (userId: string) =>
     [...adminKeys.all, 'user-detail', userId] as const,
   userAnalytics: (subscriptionId: string) =>
@@ -52,6 +54,16 @@ export const adminKeys = {
       timeRange,
       statusFilter,
     ] as const,
+  serviceHealth: () => [...adminKeys.all, 'service-health'] as const,
+  errorCorrelation: (timeRange: string) =>
+    [...adminKeys.all, 'error-correlation', timeRange] as const,
+  endpointTopUsers: (operationId: string) =>
+    [...adminKeys.all, 'endpoint-top-users', operationId] as const,
+  upgradeSignals: () => [...adminKeys.all, 'upgrade-signals'] as const,
+  userActivityHeatmap: (subscriptionId: string) =>
+    [...adminKeys.all, 'user-activity-heatmap', subscriptionId] as const,
+  globalSearch: (query: string) =>
+    [...adminKeys.all, 'global-search', query] as const,
   abuse: () => [...adminKeys.all, 'abuse'] as const,
   revenue: () => [...adminKeys.all, 'revenue'] as const,
   segments: () => [...adminKeys.all, 'segments'] as const,

@@ -1,13 +1,13 @@
 import { HTTPError, defineHandler } from 'h3'
 import type Stripe from 'stripe'
-import type { getStripe as GetStripeFn } from '@/lib/server/stripe-client'
-import type { apimFetch } from '@/lib/server/apim-client'
+import type { getStripe as GetStripeFn } from '@/lib/server/stripe/client'
+import type { apimFetch } from '@/lib/server/apim/client'
 import type {
   getApimProductIds as GetApimProductIdsFn,
   isDowngrade as IsDowngradeFn,
   planIdFromProductId as PlanIdFromProductIdFn,
-} from '@/lib/server/apim-products'
-import type { resolveApimProductId as ResolveApimProductIdFn } from '@/lib/server/stripe-tier-resolver'
+} from '@/lib/server/apim/products'
+import type { resolveApimProductId as ResolveApimProductIdFn } from '@/lib/server/stripe/tier-resolver'
 import type { SubscriptionListResponse } from '@/types/apim'
 import { createLogger } from '@/lib/server/logger'
 
@@ -43,10 +43,10 @@ export default defineHandler(async (event) => {
   let planIdFromProductId: typeof PlanIdFromProductIdFn
 
   try {
-    const stripeClientMod = await import('@/lib/server/stripe-client')
-    const apimClientMod = await import('@/lib/server/apim-client')
-    const apimProductsMod = await import('@/lib/server/apim-products')
-    const tierResolverMod = await import('@/lib/server/stripe-tier-resolver')
+    const stripeClientMod = await import('@/lib/server/stripe/client')
+    const apimClientMod = await import('@/lib/server/apim/client')
+    const apimProductsMod = await import('@/lib/server/apim/products')
+    const tierResolverMod = await import('@/lib/server/stripe/tier-resolver')
     getStripe = stripeClientMod.getStripe
     apimFetch = apimClientMod.apimFetch
     getApimProductIds = apimProductsMod.getApimProductIds
@@ -476,7 +476,7 @@ async function syncResendSegment(
     }
 
     const { updateContactTierSegment } =
-      await import('@/lib/server/resend-contacts')
+      await import('@/lib/server/email/contacts')
     await updateContactTierSegment(email, newTier)
   } catch (err) {
     log.warn(

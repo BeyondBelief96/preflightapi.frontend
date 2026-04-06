@@ -1,7 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
-import { getResend } from './resend-client'
-import { createLogger } from './logger'
+import { createLogger } from '../logger'
+import { getResend } from './client'
 
 const CONTACT_TO = 'support@preflightapi.io'
 const logger = createLogger('contact-form')

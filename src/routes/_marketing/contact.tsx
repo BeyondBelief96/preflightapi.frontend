@@ -14,7 +14,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { SITE_CONFIG } from '@/lib/constants'
-import { sendContactEmail } from '@/lib/server/contact'
+import { sendContactEmail } from '@/lib/server/email/contact-form'
 
 export const Route = createFileRoute('/_marketing/contact')({
   head: () =>

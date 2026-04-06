@@ -1,5 +1,6 @@
 import { Outlet, createFileRoute, redirect } from '@tanstack/react-router'
-import { checkIsAdmin } from '@/lib/server/admin'
+import { checkIsAdmin } from '@/lib/server/admin/auth'
+import { AdminSearchCommand } from '@/components/admin/admin-search-command'
 
 export const Route = createFileRoute('/dashboard/admin')({
   beforeLoad: async () => {
@@ -12,5 +13,10 @@ export const Route = createFileRoute('/dashboard/admin')({
 })
 
 function AdminLayout() {
-  return <Outlet />
+  return (
+    <>
+      <AdminSearchCommand />
+      <Outlet />
+    </>
+  )
 }

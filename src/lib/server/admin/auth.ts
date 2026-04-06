@@ -1,5 +1,6 @@
 import { auth } from '@clerk/tanstack-react-start/server'
 import { createClerkClient } from '@clerk/backend'
+import { createServerFn } from '@tanstack/react-start'
 import { env } from '@/env'
 
 export function getAdminEmails(): Array<string> {
@@ -39,3 +40,13 @@ export async function requireAdmin(): Promise<string> {
 
   return session.userId
 }
+
+// --- Admin check (used by sidebar + route guard) ---
+
+export const checkIsAdmin = createServerFn({ method: 'GET' }).handler(
+  async () => {
+    const { requireAuth } = await import('../auth')
+    const session = await requireAuth()
+    return isAdmin(session)
+  },
+)

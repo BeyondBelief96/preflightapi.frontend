@@ -35,8 +35,8 @@ import {
   getResendSegments,
   getResendTopics,
   sendBroadcast,
-} from '@/lib/server/admin-email'
-import { adminKeys } from '@/lib/server/apim-queries'
+} from '@/lib/server/admin/email'
+import { adminKeys } from '@/lib/server/queries'
 
 export function EmailComposeForm() {
   const queryClient = useQueryClient()

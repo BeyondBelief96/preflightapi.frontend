@@ -17,8 +17,8 @@ import {
 } from 'lucide-react'
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet'
 import { PlaneAnimation } from '@/components/plane-animation'
-import { checkIsAdmin } from '@/lib/server/admin'
-import { adminKeys } from '@/lib/server/apim-queries'
+import { checkIsAdmin } from '@/lib/server/admin/auth'
+import { adminKeys } from '@/lib/server/queries'
 
 const sidebarLinks = [
   { label: 'Overview', href: '/dashboard', icon: LayoutDashboard },

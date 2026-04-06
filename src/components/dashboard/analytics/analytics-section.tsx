@@ -11,8 +11,8 @@ import {
   getEndpointBreakdown,
   getRateLimitAccess,
   getServiceHealth,
-} from '@/lib/server/apim'
-import { apimKeys } from '@/lib/server/apim-queries'
+} from '@/lib/server/apim/analytics'
+import { apimKeys } from '@/lib/server/queries'
 
 interface AnalyticsSectionProps {
   subscriptionId: string

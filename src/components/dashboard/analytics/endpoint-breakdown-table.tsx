@@ -1,5 +1,5 @@
-import { cleanEndpointName } from '@/lib/format'
 import type { EndpointBreakdownItem } from '@/types/plans'
+import { cleanEndpointName, formatMs  } from '@/lib/format'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { formatMs } from '@/lib/format'
+
 
 interface EndpointBreakdownTableProps {
   data: Array<EndpointBreakdownItem> | undefined

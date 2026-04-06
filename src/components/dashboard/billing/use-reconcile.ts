@@ -2,8 +2,8 @@ import { useEffect, useRef } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toastError } from '@/lib/toast-error'
 import { SITE_CONFIG } from '@/lib/constants'
-import { reconcileSubscription } from '@/lib/server/stripe'
-import { apimKeys, stripeKeys } from '@/lib/server/apim-queries'
+import { reconcileSubscription } from '@/lib/server/stripe/subscriptions'
+import { apimKeys, stripeKeys } from '@/lib/server/queries'
 
 const MAX_RECONCILE_RETRIES = 5
 const RECONCILE_BASE_DELAY = 8000

@@ -60,7 +60,7 @@ vi.mock('@/emails/welcome', () => ({
   WelcomeEmail: (props: any) => props,
 }))
 
-vi.mock('@/lib/server/stripe-client', () => ({
+vi.mock('@/lib/server/stripe/client', () => ({
   getStripe: () => ({
     customers: {
       search: (...a: Array<any>) => mockCustomerSearch(...a),
@@ -69,7 +69,7 @@ vi.mock('@/lib/server/stripe-client', () => ({
   }),
 }))
 
-vi.mock('@/lib/server/apim-client', () => ({
+vi.mock('@/lib/server/apim/client', () => ({
   apimFetch: (...a: Array<any>) => mockApimFetch(...a),
 }))
 

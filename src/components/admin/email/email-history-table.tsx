@@ -13,8 +13,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { getBroadcastHistory } from '@/lib/server/admin-email'
-import { adminKeys } from '@/lib/server/apim-queries'
+import { getBroadcastHistory } from '@/lib/server/admin/email'
+import { adminKeys } from '@/lib/server/queries'
 
 const statusColors: Record<string, string> = {
   sent: 'bg-green-500/10 text-green-500',

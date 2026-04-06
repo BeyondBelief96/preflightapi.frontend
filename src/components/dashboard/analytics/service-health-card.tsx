@@ -1,7 +1,7 @@
-import { cleanEndpointName, formatRelativeTime } from '@/lib/format'
 import { Link } from '@tanstack/react-router'
 import { Activity, ArrowUpRight, CheckCircle2, ServerCrash } from 'lucide-react'
 import type { ServiceHealthStats } from '@/types/plans'
+import { cleanEndpointName, formatRelativeTime } from '@/lib/format'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'

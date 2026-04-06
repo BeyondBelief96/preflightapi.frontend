@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 
-import { getPriceIdForPlan, planIdFromPriceId } from '../stripe-utils'
-import { getApimProductIds, planIdFromProductId } from '../apim-products'
+import { getPriceIdForPlan, planIdFromPriceId } from '../stripe/utils'
+import { getApimProductIds, planIdFromProductId } from '../apim/products'
 
 // Mock the env module before importing anything that uses it
 vi.mock('@/env', () => ({

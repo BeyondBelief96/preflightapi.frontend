@@ -1,4 +1,4 @@
-import { planIdFromPriceId } from './stripe-utils'
+import { planIdFromPriceId } from './utils'
 
 /**
  * Resolves the APIM product ID for a Stripe subscription.

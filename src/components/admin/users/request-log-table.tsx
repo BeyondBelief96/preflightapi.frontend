@@ -1,4 +1,3 @@
-import { cleanEndpointName } from '@/lib/format'
 import { useState } from 'react'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { ChevronDown, ChevronRight, Loader2 } from 'lucide-react'
@@ -7,8 +6,9 @@ import type {
   RequestLogFilter,
   RequestLogTimeRange,
 } from '@/types/plans'
-import { getAdminRequestLog } from '@/lib/server/admin'
-import { adminKeys } from '@/lib/server/apim-queries'
+import { cleanEndpointName, formatBytes, formatMs  } from '@/lib/format'
+import { getAdminRequestLog } from '@/lib/server/admin/users'
+import { adminKeys } from '@/lib/server/queries'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -29,7 +29,6 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { formatMs } from '@/lib/format'
 
 const PAGE_SIZE = 50
 
@@ -83,22 +82,50 @@ function latencyColor(ms: number): string {
   return 'text-destructive'
 }
 
+function parseQueryParams(url: string): Array<[string, string]> {
+  try {
+    const u = new URL(url)
+    return [...u.searchParams.entries()]
+  } catch {
+    return []
+  }
+}
+
 function ErrorDetail({ entry }: { entry: RequestLogEntry }) {
   const hasError = entry.errorReason || entry.errorMessage || entry.errorSource
   const showBackend =
     entry.backendStatusCode != null &&
     entry.backendStatusCode !== entry.statusCode
+  const queryParams = entry.url ? parseQueryParams(entry.url) : []
+  const apimOverhead =
+    entry.backendTimeMs > 0 ? entry.totalTimeMs - entry.backendTimeMs : null
 
   if (!hasError && !showBackend && !entry.url) return null
 
   return (
     <TableRow className="border-b-0 bg-muted/30 hover:bg-muted/30">
-      <TableCell colSpan={6} className="py-2 pl-12 pr-4">
+      <TableCell colSpan={7} className="py-2 pl-12 pr-4">
         <div className="space-y-1 text-xs">
           {entry.url && (
             <div>
               <span className="font-medium text-muted-foreground">URL: </span>
               <span className="break-all font-mono">{entry.url}</span>
+            </div>
+          )}
+          {queryParams.length > 0 && (
+            <div>
+              <span className="font-medium text-muted-foreground">
+                Query Params:{' '}
+              </span>
+              <div className="ml-4 mt-0.5 space-y-0.5">
+                {queryParams.map(([key, value]) => (
+                  <div key={key} className="font-mono">
+                    <span className="text-muted-foreground">{key}</span>
+                    <span className="text-muted-foreground"> = </span>
+                    <span>{value}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
           {showBackend && (
@@ -107,6 +134,27 @@ function ErrorDetail({ entry }: { entry: RequestLogEntry }) {
                 Backend Status:{' '}
               </span>
               <span>{entry.backendStatusCode}</span>
+            </div>
+          )}
+          {entry.backendTimeMs > 0 && (
+            <div>
+              <span className="font-medium text-muted-foreground">
+                Backend Time:{' '}
+              </span>
+              <span>{formatMs(entry.backendTimeMs)}</span>
+              {apimOverhead != null && (
+                <span className="ml-2 text-muted-foreground">
+                  (APIM overhead: {formatMs(apimOverhead)})
+                </span>
+              )}
+            </div>
+          )}
+          {entry.responseSize > 0 && (
+            <div>
+              <span className="font-medium text-muted-foreground">
+                Response Size:{' '}
+              </span>
+              <span>{formatBytes(entry.responseSize)}</span>
             </div>
           )}
           {entry.errorSource && (
@@ -189,6 +237,9 @@ function RequestRow({ entry }: { entry: RequestLogEntry }) {
           className={`tabular-nums text-right text-sm ${latencyColor(entry.totalTimeMs)}`}
         >
           {formatMs(entry.totalTimeMs)}
+        </TableCell>
+        <TableCell className="hidden tabular-nums text-right text-xs text-muted-foreground md:table-cell">
+          {entry.responseSize > 0 ? formatBytes(entry.responseSize) : '—'}
         </TableCell>
       </TableRow>
       {expanded && <ErrorDetail entry={entry} />}
@@ -300,6 +351,9 @@ export function RequestLogTable({
                     <TableHead className="w-[70px]">Status</TableHead>
                     <TableHead className="w-[90px] text-right">
                       Latency
+                    </TableHead>
+                    <TableHead className="hidden w-[70px] text-right md:table-cell">
+                      Size
                     </TableHead>
                   </TableRow>
                 </TableHeader>
