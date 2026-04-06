@@ -6,6 +6,7 @@ import { formatMs } from '@/lib/format'
 import { adminKeys } from '@/lib/server/queries'
 import { getEndpointTopUsers } from '@/lib/server/admin/analytics'
 import { SubscriptionLink } from '@/components/admin/abuse/subscription-link'
+import { useResolveEmails } from '@/components/admin/abuse/use-resolve-emails'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Table,
@@ -41,6 +42,8 @@ function EndpointDrillDown({ operationId }: { operationId: string }) {
       getEndpointTopUsers({ data: { operationId, timeRange: '30d' } }),
     staleTime: 60_000,
   })
+
+  useResolveEmails(data?.map((u) => u.subscriptionId) ?? [])
 
   if (isLoading) {
     return (

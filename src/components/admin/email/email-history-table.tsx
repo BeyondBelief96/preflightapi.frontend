@@ -80,7 +80,7 @@ export function EmailHistoryTable() {
                         onClick={() => setSelectedBroadcastId(broadcast.id)}
                       >
                         <TableCell className="max-w-[200px] truncate font-medium">
-                          {broadcast.subject ?? broadcast.name}
+                          {broadcast.name}
                         </TableCell>
                         <TableCell>
                           <Badge
