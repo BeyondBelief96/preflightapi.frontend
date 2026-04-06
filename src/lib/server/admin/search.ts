@@ -126,6 +126,7 @@ ApiManagementGatewayLogs
             const stripe = getStripe()
             const customer = await stripe.customers.retrieve(q)
             if (!customer.deleted && customer.email) {
+              const stripeResultIdx = results.length
               results.push({
                 type: 'user',
                 title: customer.email,
@@ -143,9 +144,7 @@ ApiManagementGatewayLogs
                 limit: 1,
               })
               if (clerkResult.data.length > 0) {
-                // Replace the href with the actual user detail page
-                const last = results[results.length - 1]
-                last.href = `/dashboard/admin/users/${clerkResult.data[0].id}`
+                results[stripeResultIdx].href = `/dashboard/admin/users/${clerkResult.data[0].id}`
               }
             }
           } catch (err) {

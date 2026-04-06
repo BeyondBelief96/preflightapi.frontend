@@ -63,14 +63,15 @@ export const getAdminUsers = createServerFn({ method: 'POST' })
       const { createClerkClient } = await import('@clerk/backend')
       const clerk = createClerkClient({ secretKey: env.CLERK_SECRET_KEY })
 
-      // When filtering by tier, over-fetch to compensate for post-filter reduction
-      const fetchMultiplier = data.tier !== 'all' ? 3 : 1
-      const fetchSize = data.pageSize * fetchMultiplier
+      const isTierFiltered = data.tier !== 'all'
       const offset = (data.page - 1) * data.pageSize
 
+      // When filtering by tier we must fetch a larger batch and filter client-side
+      // since Clerk doesn't support tier as a server-side filter. This only works
+      // reliably for page 1 — pagination with tier filter is not supported.
       const clerkResponse = await clerk.users.getUserList({
-        limit: data.tier !== 'all' ? Math.min(fetchSize, 100) : data.pageSize,
-        offset: data.tier !== 'all' ? 0 : offset,
+        limit: isTierFiltered ? 100 : data.pageSize,
+        offset: isTierFiltered ? 0 : offset,
         ...(data.search ? { query: data.search } : {}),
       })
 
@@ -118,22 +119,20 @@ export const getAdminUsers = createServerFn({ method: 'POST' })
         }),
       )
 
-      // Apply tier filter if set
-      const filtered =
-        data.tier !== 'all'
-          ? allUsers.filter((u) => u.tier === data.tier)
-          : allUsers
+      // Apply tier filter if set (client-side — only reliable for page 1)
+      const filtered = isTierFiltered
+        ? allUsers.filter((u) => u.tier === data.tier)
+        : allUsers
 
-      // Paginate filtered results when tier filter is active
-      const users =
-        data.tier !== 'all'
-          ? filtered.slice(0, data.pageSize)
-          : filtered
+      const users = isTierFiltered
+        ? filtered.slice(0, data.pageSize)
+        : filtered
 
-      const totalCount =
-        data.tier !== 'all'
-          ? filtered.length
-          : clerkResponse.totalCount
+      // When tier-filtered, report filtered.length as total so the UI
+      // won't render pagination controls for pages we can't serve.
+      const totalCount = isTierFiltered
+        ? filtered.length
+        : clerkResponse.totalCount
 
       return {
         users,

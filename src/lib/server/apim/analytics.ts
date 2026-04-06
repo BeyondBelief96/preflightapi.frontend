@@ -37,6 +37,13 @@ const subscriptionIdSchema = z
 export function demoExclusion(): string {
   const id = env.DEMO_APIM_SUBSCRIPTION_ID
   if (!id) return ''
+  if (!/^[\w-]+$/.test(id)) {
+    log.warn(
+      { id },
+      'DEMO_APIM_SUBSCRIPTION_ID contains unexpected characters — skipping demo exclusion',
+    )
+    return ''
+  }
   return `and ApimSubscriptionId != '${id}'`
 }
 

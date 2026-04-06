@@ -101,7 +101,7 @@ export const adminCancelSubscription = createServerFn({ method: 'POST' })
       (s) => s.properties.state === 'active',
     )
 
-    await Promise.allSettled(
+    const patchResults = await Promise.allSettled(
       activeSubs.map((sub) =>
         apimFetch(`/subscriptions/${sub.name}`, {
           method: 'PATCH',
@@ -114,6 +114,16 @@ export const adminCancelSubscription = createServerFn({ method: 'POST' })
         }),
       ),
     )
+
+    const failures = patchResults.filter(
+      (r): r is PromiseRejectedResult => r.status === 'rejected',
+    )
+    if (failures.length > 0) {
+      log.error(
+        { userId: data.userId, failures: failures.length },
+        'Failed to downgrade APIM subscriptions after cancellation',
+      )
+    }
 
     log.info(
       { userId: data.userId },
