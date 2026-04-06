@@ -14,7 +14,6 @@ import { SystemDailyTrend } from '@/components/admin/overview/system-daily-trend
 import { TopEndpointsTable } from '@/components/admin/overview/top-endpoints-table'
 import { RevenueSummaryCard } from '@/components/admin/overview/revenue-summary'
 import { ErrorCorrelationTable } from '@/components/admin/overview/error-correlation-table'
-import { UpgradeSignalsCard } from '@/components/admin/overview/upgrade-signals-card'
 import { ServiceHealthCard } from '@/components/dashboard/analytics/service-health-card'
 
 export const Route = createFileRoute('/dashboard/admin/')({
@@ -89,17 +88,10 @@ function AdminOverview() {
         </div>
       </div>
 
-      <div className="grid min-w-0 gap-6 lg:grid-cols-3">
-        <div className="min-w-0 lg:col-span-2">
-          <TopEndpointsTable
-            data={topEndpoints.data}
-            isLoading={topEndpoints.isLoading}
-          />
-        </div>
-        <div className="min-w-0">
-          <UpgradeSignalsCard />
-        </div>
-      </div>
+      <TopEndpointsTable
+        data={topEndpoints.data}
+        isLoading={topEndpoints.isLoading}
+      />
 
       <ErrorCorrelationTable />
     </div>
