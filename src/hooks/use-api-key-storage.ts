@@ -1,44 +1,10 @@
-import { useCallback, useEffect, useState } from 'react'
-import { useAuth } from '@clerk/tanstack-react-start'
-import { useQuery } from '@tanstack/react-query'
-import { getSubscriptionKeys, getUserSubscription } from '@/lib/server/apim/subscriptions'
-import { apimKeys } from '@/lib/server/queries'
+import { useState } from 'react'
 
+/**
+ * The API key typed into the docs playground. Keys are shown only once at
+ * creation, so this can't be prefilled — signed-in users can leave it empty
+ * and requests are made as their account instead.
+ */
 export function useApiKeyStorage() {
-  const { userId } = useAuth()
-  const [apiKey, setApiKeyState] = useState('')
-  const [userEdited, setUserEdited] = useState(false)
-
-  const subsQuery = useQuery({
-    queryKey: apimKeys.subscription(userId ?? ''),
-    queryFn: () => getUserSubscription(),
-    enabled: !!userId,
-    staleTime: 5 * 60 * 1000,
-  })
-
-  const activeSubscription = subsQuery.data?.find((s) => s.state === 'active')
-
-  const keysQuery = useQuery({
-    queryKey: apimKeys.keys(activeSubscription?.id ?? ''),
-    queryFn: () =>
-      getSubscriptionKeys({
-        data: { subscriptionId: activeSubscription!.id },
-      }),
-    enabled: !!activeSubscription?.id,
-    staleTime: 5 * 60 * 1000,
-  })
-
-  // Prefill with the user's primary key once fetched, unless they've typed something
-  useEffect(() => {
-    if (!userEdited && keysQuery.data?.primaryKey) {
-      setApiKeyState(keysQuery.data.primaryKey)
-    }
-  }, [keysQuery.data?.primaryKey, userEdited])
-
-  const setApiKey = useCallback((key: string) => {
-    setUserEdited(true)
-    setApiKeyState(key)
-  }, [])
-
-  return [apiKey, setApiKey] as const
+  return useState('')
 }

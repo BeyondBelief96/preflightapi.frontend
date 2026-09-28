@@ -79,8 +79,8 @@ function OpenApiDocs() {
           <li>
             After import, go to the collection's{' '}
             <strong className="text-foreground">Variables</strong> tab and set{' '}
-            <code>Ocp-Apim-Subscription-Key</code> to your API key. All requests
-            in the collection will use it automatically.
+            <code>X-API-Key</code> to your API key. All requests in the
+            collection will use it automatically.
           </li>
         </ol>
       </section>
@@ -218,7 +218,7 @@ import type { paths } from './types/api'
 export const api = createClient<paths>({
   baseUrl: process.env.PREFLIGHT_API_URL,
   headers: {
-    'Ocp-Apim-Subscription-Key': process.env.PREFLIGHT_API_KEY!,
+    'X-API-Key': process.env.PREFLIGHT_API_KEY!,
   },
 })`}
             />

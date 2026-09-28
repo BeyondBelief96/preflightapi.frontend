@@ -1,26 +1,28 @@
 import { useEffect } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '@clerk/tanstack-react-start'
-import { usePlans } from '@/hooks/use-plans'
-import { getUserSubscription } from '@/lib/server/apim/subscriptions'
+import { getAccount } from '@/lib/server/gateway/keys'
 import {
   getStripeSubscription,
   reconcileSubscription,
 } from '@/lib/server/stripe/subscriptions'
-import { apimKeys, stripeKeys } from '@/lib/server/queries'
+import { accountKeys, stripeKeys } from '@/lib/server/queries'
 import { toastError } from '@/lib/toast-error'
 
 // Module-level flag — only run once per page session
 let synced = false
 
+/**
+ * Safety net for missed Stripe webhooks: if the gateway's tier for this user
+ * doesn't match their Stripe subscription, ask the server to reconcile.
+ */
 export function useSubscriptionSync() {
   const { userId } = useAuth()
   const queryClient = useQueryClient()
-  const { plans } = usePlans()
 
-  const apimQuery = useQuery({
-    queryKey: apimKeys.subscription(userId ?? ''),
-    queryFn: () => getUserSubscription(),
+  const accountQuery = useQuery({
+    queryKey: accountKeys.summary(userId ?? ''),
+    queryFn: () => getAccount(),
     enabled: !!userId && !synced,
   })
 
@@ -35,7 +37,7 @@ export function useSubscriptionSync() {
     onSuccess: (result) => {
       if (result.status === 'synced') {
         queryClient.invalidateQueries({
-          queryKey: apimKeys.subscription(userId ?? ''),
+          queryKey: accountKeys.summary(userId ?? ''),
         })
         queryClient.invalidateQueries({
           queryKey: stripeKeys.subscription(userId ?? ''),
@@ -49,19 +51,12 @@ export function useSubscriptionSync() {
 
   useEffect(() => {
     if (synced) return
-    if (!stripeQuery.data || !apimQuery.data) return
-
-    const stripeSub = stripeQuery.data
-    const activeSub = apimQuery.data.find((s) => s.state === 'active')
-    if (!activeSub) return
-
-    const expectedPlan = plans.find((p) => p.id === stripeSub.planId)
-    if (!expectedPlan) return
+    if (!stripeQuery.data || !accountQuery.data) return
 
     synced = true
 
-    if (activeSub.productId !== expectedPlan.apimProductId) {
+    if (accountQuery.data.tier !== stripeQuery.data.planId) {
       reconcileMutation.mutate()
     }
-  }, [stripeQuery.data, apimQuery.data, plans])
+  }, [stripeQuery.data, accountQuery.data])
 }

@@ -20,29 +20,21 @@ export const env = createEnv({
     STRIPE_WEBHOOK_SECRET: requiredInProd(z.string()),
     STRIPE_PRIVATE_PRICE_ID: requiredInProd(z.string()),
     STRIPE_COMMERCIAL_PRICE_ID: requiredInProd(z.string()),
-    AZURE_TENANT_ID: requiredInProd(z.string()),
-    AZURE_CLIENT_ID: requiredInProd(z.string()),
-    AZURE_CLIENT_SECRET: requiredInProd(z.string()),
-    AZURE_SUBSCRIPTION_ID: requiredInProd(z.string()),
-    APIM_RESOURCE_GROUP: requiredInProd(z.string()),
-    APIM_SERVICE_NAME: requiredInProd(z.string()),
     RESEND_API_KEY: requiredInProd(z.string()),
-    DEMO_API_KEY: requiredInProd(z.string()),
-    DEMO_APIM_SUBSCRIPTION_ID: z.string().optional(),
+    /** Server-side URL of the API gateway (private network URL on Railway). */
+    GATEWAY_URL: requiredInProd(z.url()),
+    /** Shared secret for admin endpoints and on-behalf-of calls (gateway INTERNAL_API_SECRET). */
+    GATEWAY_INTERNAL_SECRET: requiredInProd(z.string()),
+    /** Postgres connection used read-only for usage analytics (gateway schema). */
+    GATEWAY_DATABASE_URL: requiredInProd(z.string()),
     // --- Optional (have defaults or non-critical) ---
+
+    /** Gateway user ID for marketing-demo calls; excluded from analytics. Must match the gateway's DEMO_USER_ID. */
+    DEMO_USER_ID: z.string().optional().default('demo'),
 
     PREFLIGHT_API_BASE_URL: z.url().optional(),
     PREFLIGHT_API_GATEWAY_SECRET: z.string().optional(),
-    APIM_API_VERSION: z.string().optional(),
-    APIM_LOG_ANALYTICS_WORKSPACE_ID: z.string().optional(),
-    APIM_STUDENT_PRODUCT_ID: z.string().optional().default('student-pilot'),
-    APIM_PRIVATE_PRODUCT_ID: z.string().optional().default('private-pilot'),
-    APIM_COMMERCIAL_PRODUCT_ID: z
-      .string()
-      .optional()
-      .default('commercial-pilot'),
     CLERK_WEBHOOK_SECRET: z.string().optional(),
-    APIM_HEALTH_CHECK_PATH: z.string().optional(),
     ADMIN_EMAILS: z.string().optional(),
     RESEND_SEGMENT_ALL_ID: z.string().optional(),
     RESEND_SEGMENT_PAID_ID: z.string().optional(),
@@ -60,7 +52,8 @@ export const env = createEnv({
 
   client: {
     VITE_CLERK_PUBLISHABLE_KEY: z.string().min(1),
-    VITE_APIM_GATEWAY_URL: requiredInProd(z.string().url()),
+    /** Public API URL shown in docs and code samples, e.g. https://api.preflightapi.io */
+    VITE_API_GATEWAY_URL: requiredInProd(z.string().url()),
     VITE_APP_TITLE: z.string().min(1).optional(),
     VITE_BASE_URL: z.url().optional(),
     VITE_WAITLIST_MODE: z.string().optional().default('false'),
@@ -68,7 +61,7 @@ export const env = createEnv({
 
   /**
    * What object holds the environment variables at runtime.
-   * import.meta.env only has VITE_* vars. Server-side vars (AZURE_*, CLERK_*,
+   * import.meta.env only has VITE_* vars. Server-side vars (GATEWAY_*, CLERK_*,
    * STRIPE_*, etc.) are only on process.env, so we merge both.
    */
   runtimeEnv: {

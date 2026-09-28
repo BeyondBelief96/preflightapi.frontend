@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/select'
 import { CodeBlock } from '@/components/docs/code-block'
 import { API_BASE_URL } from '@/lib/gateway-url'
+import { API_BASE_PATH } from '@/lib/api-metadata'
 import { createPageHead } from '@/lib/seo'
 
 export const Route = createFileRoute('/docs/authentication')({
@@ -18,7 +19,7 @@ export const Route = createFileRoute('/docs/authentication')({
     createPageHead({
       title: 'Authentication',
       description:
-        'Learn how to authenticate with the PreflightAPI using subscription keys. Includes examples for cURL, TypeScript, Python, Java, Go, C#, and PHP.',
+        'Learn how to authenticate with the PreflightAPI using API keys. Includes examples for cURL, TypeScript, Python, Java, Go, C#, and PHP.',
       path: '/docs/authentication',
     }),
   component: AuthenticationDocs,
@@ -57,12 +58,10 @@ interface CodeExample {
   highlight: string
 }
 
-function getAuthExamples(
-  baseUrl: string,
-): Record<LanguageId, CodeExample> {
+function getAuthExamples(baseUrl: string): Record<LanguageId, CodeExample> {
   return {
     curl: {
-      code: `curl -H "Ocp-Apim-Subscription-Key: YOUR_API_KEY" \\
+      code: `curl -H "X-API-Key: YOUR_API_KEY" \\
   "${baseUrl}/metars/KJFK"`,
       highlight: 'bash',
     },
@@ -71,7 +70,7 @@ function getAuthExamples(
   '${baseUrl}/metars/KJFK',
   {
     headers: {
-      'Ocp-Apim-Subscription-Key': process.env.PREFLIGHT_API_KEY!,
+      'X-API-Key': process.env.PREFLIGHT_API_KEY!,
     },
   },
 )`,
@@ -82,7 +81,7 @@ function getAuthExamples(
 
 response = requests.get(
     "${baseUrl}/metars/KJFK",
-    headers={"Ocp-Apim-Subscription-Key": "YOUR_API_KEY"},
+    headers={"X-API-Key": "YOUR_API_KEY"},
 )`,
       highlight: 'python',
     },
@@ -96,7 +95,7 @@ HttpClient client = HttpClient.newHttpClient();
 
 HttpRequest request = HttpRequest.newBuilder()
     .uri(URI.create("${baseUrl}/metars/KJFK"))
-    .header("Ocp-Apim-Subscription-Key", "YOUR_API_KEY")
+    .header("X-API-Key", "YOUR_API_KEY")
     .GET()
     .build();
 
@@ -107,7 +106,7 @@ HttpResponse<String> response = client.send(
     },
     go: {
       code: `req, _ := http.NewRequest("GET", "${baseUrl}/metars/KJFK", nil)
-req.Header.Set("Ocp-Apim-Subscription-Key", "YOUR_API_KEY")
+req.Header.Set("X-API-Key", "YOUR_API_KEY")
 
 resp, _ := http.DefaultClient.Do(req)`,
       highlight: 'go',
@@ -117,7 +116,7 @@ resp, _ := http.DefaultClient.Do(req)`,
 
 var client = new HttpClient();
 client.DefaultRequestHeaders.Add(
-    "Ocp-Apim-Subscription-Key", "YOUR_API_KEY"
+    "X-API-Key", "YOUR_API_KEY"
 );
 
 var response = await client.GetAsync("${baseUrl}/metars/KJFK");`,
@@ -130,7 +129,7 @@ $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, "${baseUrl}/metars/KJFK");
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    "Ocp-Apim-Subscription-Key: YOUR_API_KEY",
+    "X-API-Key: YOUR_API_KEY",
 ]);
 
 $response = curl_exec($ch);
@@ -140,15 +139,13 @@ curl_close($ch);`,
   }
 }
 
-function getEnvExamples(
-  baseUrl: string,
-): Record<LanguageId, CodeExample> {
+function getEnvExamples(baseUrl: string): Record<LanguageId, CodeExample> {
   return {
     curl: {
       code: `# Export the key in your shell
-export PREFLIGHT_API_KEY="your-subscription-key-here"
+export PREFLIGHT_API_KEY="pf_live_your_api_key_here"
 
-curl -H "Ocp-Apim-Subscription-Key: $PREFLIGHT_API_KEY" \\
+curl -H "X-API-Key: $PREFLIGHT_API_KEY" \\
   "${baseUrl}/metars/KJFK"`,
       highlight: 'bash',
     },
@@ -159,7 +156,7 @@ const API_KEY = process.env.PREFLIGHT_API_KEY!
 const response = await fetch(
   '${baseUrl}/metars/KJFK',
   {
-    headers: { 'Ocp-Apim-Subscription-Key': API_KEY },
+    headers: { 'X-API-Key': API_KEY },
   },
 )`,
       highlight: 'typescript',
@@ -172,7 +169,7 @@ api_key = os.environ["PREFLIGHT_API_KEY"]
 
 response = requests.get(
     "${baseUrl}/metars/KJFK",
-    headers={"Ocp-Apim-Subscription-Key": api_key},
+    headers={"X-API-Key": api_key},
 )`,
       highlight: 'python',
     },
@@ -181,7 +178,7 @@ response = requests.get(
 
 HttpRequest request = HttpRequest.newBuilder()
     .uri(URI.create("${baseUrl}/metars/KJFK"))
-    .header("Ocp-Apim-Subscription-Key", apiKey)
+    .header("X-API-Key", apiKey)
     .GET()
     .build();`,
       highlight: 'java',
@@ -190,7 +187,7 @@ HttpRequest request = HttpRequest.newBuilder()
       code: `apiKey := os.Getenv("PREFLIGHT_API_KEY")
 
 req, _ := http.NewRequest("GET", "${baseUrl}/metars/KJFK", nil)
-req.Header.Set("Ocp-Apim-Subscription-Key", apiKey)`,
+req.Header.Set("X-API-Key", apiKey)`,
       highlight: 'go',
     },
     csharp: {
@@ -198,7 +195,7 @@ req.Header.Set("Ocp-Apim-Subscription-Key", apiKey)`,
 
 var client = new HttpClient();
 client.DefaultRequestHeaders.Add(
-    "Ocp-Apim-Subscription-Key", apiKey
+    "X-API-Key", apiKey
 );
 
 var response = await client.GetAsync("${baseUrl}/metars/KJFK");`,
@@ -212,7 +209,7 @@ $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, "${baseUrl}/metars/KJFK");
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    "Ocp-Apim-Subscription-Key: " . $apiKey,
+    "X-API-Key: " . $apiKey,
 ]);
 
 $response = curl_exec($ch);
@@ -294,9 +291,9 @@ function AuthenticationDocs() {
       <div>
         <h1 className="text-3xl font-bold">Authentication</h1>
         <p className="mt-4 text-lg text-muted-foreground">
-          All API requests must be authenticated with a subscription key. This
-          page covers how to obtain your keys, include them in requests, and
-          handle authentication errors.
+          All API requests must be authenticated with an API key. This page
+          covers how to obtain your keys, include them in requests, and handle
+          authentication errors.
         </p>
       </div>
 
@@ -306,7 +303,7 @@ function AuthenticationDocs() {
           Add this header to every request:
         </p>
         <code className="mt-2 block text-base font-semibold text-accent">
-          Ocp-Apim-Subscription-Key: YOUR_API_KEY
+          X-API-Key: YOUR_API_KEY
         </code>
         <p className="mt-2 text-sm text-muted-foreground">
           Get your key from the{' '}
@@ -317,13 +314,13 @@ function AuthenticationDocs() {
         </p>
       </div>
 
-      {/* Subscription Key Header */}
+      {/* API Key Header */}
       <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">Subscription Key Header</h2>
+        <h2 className="text-2xl font-semibold">API Key Header</h2>
         <p className="text-muted-foreground">
-          Include your subscription key in the{' '}
-          <code>Ocp-Apim-Subscription-Key</code> header with every request. This
-          is the recommended authentication method.
+          Include your API key in the <code>X-API-Key</code> header with every
+          request. This is the only supported authentication method — keys sent
+          in any other header or in the query string are not accepted.
         </p>
 
         <MultiLangBlock
@@ -337,8 +334,7 @@ function AuthenticationDocs() {
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold">Obtaining Your Keys</h2>
         <p className="text-muted-foreground">
-          API keys are provisioned automatically when you create an account. You
-          can view and manage them from the{' '}
+          Create and manage your API keys from the{' '}
           <Link to="/dashboard/keys" className="text-accent hover:underline">
             API Keys
           </Link>{' '}
@@ -346,14 +342,24 @@ function AuthenticationDocs() {
         </p>
         <ul className="list-inside list-disc space-y-2 text-muted-foreground">
           <li>
-            Each subscription includes a{' '}
-            <strong className="text-foreground">primary</strong> and{' '}
-            <strong className="text-foreground">secondary</strong> key. Both
-            work identically for authenticating requests.
+            Keys look like <code>pf_live_</code> followed by 43 random letters
+            and digits.
           </li>
           <li>
-            Keys are scoped to your subscription and carry the permissions of
-            your current plan tier.
+            The full key is{' '}
+            <strong className="text-foreground">shown only once</strong>, when
+            it is created. Copy it somewhere safe right away — it cannot be
+            displayed again. If you lose it, rotate the key to get a new one.
+          </li>
+          <li>
+            You can have up to{' '}
+            <strong className="text-foreground">two active keys</strong> at a
+            time. Both work identically for authenticating requests.
+          </li>
+          <li>
+            Keys belong to your account and carry the permissions of your
+            current plan tier. Rate limits and monthly quotas are shared across
+            all of your keys.
           </li>
           <li>
             When you upgrade or downgrade your plan, your existing keys remain
@@ -362,25 +368,30 @@ function AuthenticationDocs() {
         </ul>
       </section>
 
-      {/* Primary & Secondary Keys */}
+      {/* Key Rotation */}
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold">Key Rotation</h2>
         <p className="text-muted-foreground">
-          Having two keys allows zero-downtime rotation. Here's the recommended
-          process:
+          Because you can hold two active keys at once, you can rotate without
+          downtime. Here's the recommended process:
         </p>
         <ol className="list-inside list-decimal space-y-2 text-muted-foreground">
           <li>
-            Update your application to use the{' '}
-            <strong className="text-foreground">secondary</strong> key.
+            Create a <strong className="text-foreground">new key</strong> from
+            the API Keys page in your dashboard.
           </li>
+          <li>Update your application to use the new key.</li>
           <li>
-            Regenerate the <strong className="text-foreground">primary</strong>{' '}
-            key from your dashboard.
+            Once no traffic is using the old key,{' '}
+            <strong className="text-foreground">revoke</strong> it. Revoked keys
+            stop working immediately.
           </li>
-          <li>Update your application to use the new primary key.</li>
-          <li>Optionally regenerate the secondary key for a full rotation.</li>
         </ol>
+        <p className="text-muted-foreground">
+          You can also <strong className="text-foreground">rotate</strong> a key
+          in a single step, which replaces it with a new key and revokes the old
+          one.
+        </p>
       </section>
 
       {/* Environment Variables */}
@@ -400,7 +411,7 @@ function AuthenticationDocs() {
         <CodeBlock
           language="bash"
           code={`# .env (add to .gitignore!)
-PREFLIGHT_API_KEY=your-subscription-key-here`}
+PREFLIGHT_API_KEY=pf_live_your_api_key_here`}
         />
       </section>
 
@@ -418,14 +429,13 @@ PREFLIGHT_API_KEY=your-subscription-key-here`}
           </li>
           <li>
             Use environment variables or a secrets manager in production (e.g.,
-            AWS Secrets Manager, Azure Key Vault).
+            AWS Secrets Manager, HashiCorp Vault).
           </li>
           <li>
-            Rotate keys periodically using the regenerate function in your
-            dashboard.
+            Rotate keys periodically from the API Keys page in your dashboard.
           </li>
           <li>
-            If a key is compromised, regenerate it immediately from the{' '}
+            If a key is compromised, rotate or revoke it immediately from the{' '}
             <Link to="/dashboard/keys" className="text-accent hover:underline">
               API Keys
             </Link>{' '}
@@ -438,15 +448,19 @@ PREFLIGHT_API_KEY=your-subscription-key-here`}
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold">Tier-Based Access Control</h2>
         <p className="text-muted-foreground">
-          Your API key carries the permissions of your subscription plan.
-          Certain endpoints are restricted to higher tiers. If your key is valid
-          but your plan does not include access to the requested endpoint, the
-          API returns a <code>403 Forbidden</code> response:
+          Your API key carries the permissions of your plan. Certain endpoints
+          are restricted to higher tiers. If your key is valid but your plan
+          does not include access to the requested endpoint, the API returns a{' '}
+          <code>403 Forbidden</code> response:
         </p>
         <CodeBlock
           language="json"
           code={`{
-  "error": "This endpoint is not available on the Free tier. Please upgrade to Private or Commercial."
+  "code": "TIER_RESTRICTED",
+  "message": "This endpoint requires the Commercial Pilot plan or higher. Your current plan is Student Pilot.",
+  "timestamp": "2026-01-15T18:56:00.000Z",
+  "traceId": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+  "path": "${API_BASE_PATH}/notams/KJFK"
 }`}
         />
         <p className="text-muted-foreground">
@@ -467,15 +481,17 @@ PREFLIGHT_API_KEY=your-subscription-key-here`}
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold">Authentication Errors</h2>
         <p className="text-muted-foreground">
-          If authentication fails (missing key, invalid key, or expired
-          subscription), the API gateway returns a <code>401 Unauthorized</code>{' '}
-          response:
+          If authentication fails (missing, invalid, or revoked key), the API
+          gateway returns a <code>401 Unauthorized</code> response:
         </p>
         <CodeBlock
           language="json"
           code={`{
-  "statusCode": 401,
-  "message": "Access denied due to invalid subscription key. Make sure to provide a valid key for an active subscription."
+  "code": "UNAUTHORIZED",
+  "message": "Invalid or revoked API key.",
+  "timestamp": "2026-01-15T18:56:00.000Z",
+  "traceId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "path": "${API_BASE_PATH}/metars/KJFK"
 }`}
         />
 
@@ -494,11 +510,11 @@ PREFLIGHT_API_KEY=your-subscription-key-here`}
                   <code className="rounded bg-muted px-1.5 py-0.5">401</code>
                 </td>
                 <td className="py-3 text-muted-foreground">
-                  Missing or invalid subscription key
+                  Missing, invalid, or revoked API key
                 </td>
                 <td className="py-3 text-muted-foreground">
-                  Check that the <code>Ocp-Apim-Subscription-Key</code> header
-                  is present and contains a valid key
+                  Check that the <code>X-API-Key</code> header is present and
+                  contains an active key
                 </td>
               </tr>
               <tr className="border-b">
@@ -509,8 +525,7 @@ PREFLIGHT_API_KEY=your-subscription-key-here`}
                   Valid key, but endpoint not available on your plan
                 </td>
                 <td className="py-3 text-muted-foreground">
-                  Upgrade your subscription to a plan that includes access to
-                  this endpoint
+                  Upgrade to a plan that includes access to this endpoint
                 </td>
               </tr>
               <tr className="border-b">
@@ -521,9 +536,10 @@ PREFLIGHT_API_KEY=your-subscription-key-here`}
                   Rate limit or monthly quota exceeded
                 </td>
                 <td className="py-3 text-muted-foreground">
-                  Check the <code>error</code> field:{' '}
-                  <code>RateLimitExceeded</code> (retry after delay) or{' '}
-                  <code>QuotaExceeded</code> (wait for reset or upgrade)
+                  Check the <code>code</code> field:{' '}
+                  <code>RATE_LIMIT_EXCEEDED</code> (retry after the{' '}
+                  <code>Retry-After</code> delay) or <code>QUOTA_EXCEEDED</code>{' '}
+                  (wait for reset or upgrade)
                 </td>
               </tr>
             </tbody>

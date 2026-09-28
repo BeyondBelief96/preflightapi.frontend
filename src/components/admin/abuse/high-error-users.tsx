@@ -1,4 +1,4 @@
-import { SubscriptionLink } from './subscription-link'
+import { UserLink } from './user-link'
 import { useResolveEmails } from './use-resolve-emails'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -12,7 +12,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 
 interface HighErrorUser {
-  subscriptionId: string
+  userId: string
   totalCalls: number
   errorCount: number
   errorRate: number
@@ -25,7 +25,7 @@ export function HighErrorUsers({
   data: Array<HighErrorUser> | undefined
   isLoading: boolean
 }) {
-  useResolveEmails(data?.map((r) => r.subscriptionId) ?? [])
+  useResolveEmails(data?.map((r) => r.userId) ?? [])
 
   return (
     <Card>
@@ -62,9 +62,9 @@ export function HighErrorUsers({
               </TableHeader>
               <TableBody>
                 {data.map((row) => (
-                  <TableRow key={row.subscriptionId}>
+                  <TableRow key={row.userId}>
                     <TableCell>
-                      <SubscriptionLink subscriptionId={row.subscriptionId} />
+                      <UserLink userId={row.userId} />
                     </TableCell>
                     <TableCell className="hidden text-right sm:table-cell">
                       {row.totalCalls.toLocaleString()}

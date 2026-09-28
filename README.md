@@ -16,7 +16,7 @@ Built with [TanStack Start](https://tanstack.com/start), React 19, and deployed 
   - [Authentication](#authentication)
   - [Subscription Tiers](#subscription-tiers)
   - [Stripe Billing](#stripe-billing)
-  - [Azure APIM Integration](#azure-apim-integration)
+  - [API Gateway Integration](#api-gateway-integration)
 - [Styling](#styling)
 - [Environment Variables](#environment-variables)
 - [Scripts](#scripts)
@@ -37,7 +37,7 @@ Built with [TanStack Start](https://tanstack.com/start), React 19, and deployed 
 | **Data**        | TanStack Query, TanStack Form, TanStack Table         |
 | **Auth**        | Clerk                                                 |
 | **Payments**    | Stripe (SDK v20, API `2026-01-28.clover`)             |
-| **API Gateway** | Azure API Management                                  |
+| **API Gateway** | Self-hosted Hono gateway (`../preflight/apps/api`)    |
 | **Validation**  | Zod v4                                                |
 | **Build**       | Vite 7                                                |
 | **Language**    | TypeScript 5.7 (strict mode)                          |
@@ -48,7 +48,7 @@ Built with [TanStack Start](https://tanstack.com/start), React 19, and deployed 
 
 - **Node.js 25.6.0** — install via [nvm](https://github.com/nvm-sh/nvm) or [nvm-windows](https://github.com/coreybutler/nvm-windows), then run `nvm use` in the project root
 - **npm 11+** (ships with Node 25)
-- Access credentials for Clerk, Stripe, Azure APIM, and Resend (see [Environment Variables](#environment-variables))
+- Access credentials for Clerk, Stripe and Resend, plus a running API gateway and its Postgres database (see [Environment Variables](#environment-variables))
 
 ## Getting Started
 
@@ -106,7 +106,7 @@ preflightapi.frontend/
 │   ├── integrations/      # Third-party setup (Clerk, TanStack Query)
 │   ├── lib/               # Utilities + server-side logic
 │   │   ├── docs/          # Doc page utilities (spec parser, search)
-│   │   └── server/        # BFF server functions (APIM, Stripe, auth)
+│   │   └── server/        # BFF server functions (gateway, Stripe, auth)
 │   ├── routes/            # File-based routing (TanStack Router)
 │   ├── types/             # Shared TypeScript types
 │   ├── env.ts             # Environment variable validation (T3Env + Zod)
@@ -217,20 +217,19 @@ Server-side logic uses the **Backend for Frontend (BFF)** pattern via TanStack S
 
 **Server function modules** (`src/lib/server/`):
 
-| Module             | Purpose                                                       |
-| ------------------ | ------------------------------------------------------------- |
-| `apim.ts`          | APIM user & subscription management                           |
-| `apim-client.ts`   | Authenticated Azure APIM REST client                          |
-| `apim-products.ts` | APIM product ID mapping                                       |
-| `apim-queries.ts`  | TanStack Query keys for APIM data                             |
-| `stripe.ts`        | Checkout, portal, subscription management                     |
-| `stripe-client.ts` | Stripe SDK singleton                                          |
-| `stripe-utils.ts`  | Price/plan ID mapping utilities                               |
-| `tier-config.ts`   | Dynamic plan data (APIM limits + Stripe prices, cached 5 min) |
-| `auth.ts`          | `requireAuth()` and `requireOwnership()` helpers              |
-| `api-proxy.ts`     | Gateway proxy for authenticated API calls                     |
-| `contact.ts`       | Contact form handler (sends via Resend)                       |
-| `health.ts`        | Health check endpoint                                         |
+| Module                 | Purpose                                                 |
+| ---------------------- | ------------------------------------------------------- |
+| `gateway/keys.ts`      | API key list/create/rotate/revoke via the gateway       |
+| `gateway/analytics.ts` | Usage analytics (SQL over the gateway's request log)    |
+| `gateway/client.ts`    | Gateway HTTP client (session / internal-secret auth)    |
+| `stripe.ts`            | Checkout, portal, subscription management               |
+| `stripe-client.ts`     | Stripe SDK singleton                                    |
+| `stripe-utils.ts`      | Price/plan ID mapping utilities                         |
+| `tier-config.ts`       | Plan data (static limits + Stripe prices, cached 5 min) |
+| `auth.ts`              | `requireAuth()` and `requireOwnership()` helpers        |
+| `api-proxy.ts`         | Gateway proxy for authenticated API calls               |
+| `contact.ts`           | Contact form handler (sends via Resend)                 |
+| `health.ts`            | Health check endpoint                                   |
 
 **Conventions for writing server functions:**
 
@@ -250,11 +249,11 @@ const myServerFn = createServerFn()
 
 **HTTP endpoints** (`server/api/`) — for webhooks and other external-facing routes:
 
-| Endpoint            | Purpose                                                        |
-| ------------------- | -------------------------------------------------------------- |
-| `stripe/webhook.ts` | Handles Stripe subscription events, syncs tier changes to APIM |
-| `clerk/`            | Clerk webhook handlers                                         |
-| `openapi.get.ts`    | Serves the OpenAPI JSON spec                                   |
+| Endpoint            | Purpose                                                |
+| ------------------- | ------------------------------------------------------ |
+| `stripe/webhook.ts` | Resend segment sync and Clerk cleanup on Stripe events |
+| `clerk/`            | Clerk webhook handlers                                 |
+| `openapi.get.ts`    | Serves the OpenAPI JSON spec                           |
 
 > **Note:** `src/lib/server/` contains modules imported by server functions. `server/api/` contains Nitro HTTP endpoints (webhooks, public APIs). These are different concerns.
 
@@ -272,14 +271,13 @@ Authentication is handled by [Clerk](https://clerk.com):
 
 ### Subscription Tiers
 
-Three subscription tiers. Plan data (names, limits, prices) is fetched dynamically from APIM and Stripe at runtime:
+Three subscription tiers. Limits match what the API gateway enforces; prices are fetched from Stripe at runtime:
 
-| Tier             | Plan ID      | APIM Product ID    | Default Price | Default Calls/Month | Rate Limit  |
-| ---------------- | ------------ | ------------------ | ------------- | ------------------- | ----------- |
-| Student Pilot    | `student`    | `student-pilot`    | Free          | 5000                | 10 req/min  |
-| Private Pilot    | `private`    | `private-pilot`    | $14.99/mo     | 150,000             | 60 req/min  |
-| Commercial Pilot | `commercial` | `commercial-pilot` | $49.99/mo     | 750,000             | 300 req/min |
-| ATP              | `atp`        | `atp`              | $149.99/mo    | 2,000,000           | 500 req/min |
+| Tier             | Plan ID      | Default Price | Calls/Month | Rate Limit  |
+| ---------------- | ------------ | ------------- | ----------- | ----------- |
+| Student Pilot    | `student`    | Free          | 5,000       | 10 req/min  |
+| Private Pilot    | `private`    | $14.99/mo     | 150,000     | 60 req/min  |
+| Commercial Pilot | `commercial` | $49.99/mo     | 750,000     | 300 req/min |
 
 - `ENDPOINT_ACCESS` in `src/lib/constants.ts` maps each API endpoint to its minimum required tier
 - UI pages use the `usePlans()` hook for dynamic plan data — avoid hardcoding tier names or prices
@@ -289,21 +287,20 @@ Three subscription tiers. Plan data (names, limits, prices) is fetched dynamical
 
 - **Checkout:** Redirect-based (no `@stripe/stripe-js` needed on the client)
 - **Portal:** Stripe's hosted customer portal for managing subscriptions
-- **Webhook:** `server/api/stripe/webhook.ts` listens for subscription events and syncs tier changes to APIM
+- **Webhooks:** Stripe sends events to two endpoints — the gateway's `/webhooks/stripe` (applies tier and billing-period changes) and this app's `server/api/stripe/webhook.ts` (Resend segments, Clerk cleanup)
 - **Price mapping:** Price IDs are server-only env vars that differ between test and live environments
 - **Clover API note:** In Stripe API version `2026-01-28.clover`, `current_period_end` is on `SubscriptionItem`, not `Subscription`
 - **Portal upgrades:** Change the price but not custom metadata — price ID takes priority over metadata for tier mapping
 - **Duplicate guard:** `createCheckoutSession` prevents duplicate subscriptions server-side
 - **Legacy IDs:** `normalizePlanId()` handles old `free`/`starter`/`professional` metadata from before the tier rename
 
-### Azure APIM Integration
+### API Gateway Integration
 
-Azure API Management sits between consumers and the backend API:
+The API gateway (`../preflight/apps/api`) sits between consumers and the backend API and owns API keys, tiers, rate limits, quotas and the request log:
 
-- **User management:** APIM users are created/linked when a Clerk user first accesses the dashboard
-- **Subscription scoping:** API keys are scoped to APIM products (tiers). On tier change, the subscription scope is PATCHed — keys stay the same
-- **Azure credentials:** Service principal auth via `@azure/identity` (`AZURE_TENANT_ID`, `AZURE_CLIENT_ID`, `AZURE_CLIENT_SECRET`)
-- **Product IDs:** Configured via env vars (`APIM_STUDENT_PRODUCT_ID`, `APIM_PRIVATE_PRODUCT_ID`, `APIM_COMMERCIAL_PRODUCT_ID`)
+- **Keys:** `X-API-Key: pf_live_…`, shown once at creation, up to 2 active per user. The dashboard manages them through the gateway's `/account/*` routes with the user's Clerk session token.
+- **Admin & playground:** Server-to-server calls use `GATEWAY_INTERNAL_SECRET` — `/admin/*` for tier changes, quota resets and key revocation, and `/api/v1/*` with `X-On-Behalf-Of` so signed-in users (and the marketing demo) can try endpoints without pasting a key.
+- **Analytics:** Read directly from the gateway's Postgres (`GATEWAY_DATABASE_URL`, `gateway.api_requests`).
 
 ## Styling
 
@@ -337,37 +334,31 @@ All environment variables are validated at startup via [T3Env](https://env.t3.gg
 
 ### Client-side (`VITE_` prefix — exposed to browser)
 
-| Variable                     | Description                                 | Default       |
-| ---------------------------- | ------------------------------------------- | ------------- |
-| `VITE_CLERK_PUBLISHABLE_KEY` | Clerk publishable key                       | _(required)_  |
-| `VITE_WAITLIST_MODE`         | Enable waitlist mode (`"true"` / `"false"`) | `"false"`     |
-| `VITE_APIM_GATEWAY_URL`      | API gateway base URL                        | test instance |
-| `VITE_APP_TITLE`             | App title override                          | _(optional)_  |
+| Variable                     | Description                                 | Default      |
+| ---------------------------- | ------------------------------------------- | ------------ |
+| `VITE_CLERK_PUBLISHABLE_KEY` | Clerk publishable key                       | _(required)_ |
+| `VITE_WAITLIST_MODE`         | Enable waitlist mode (`"true"` / `"false"`) | `"false"`    |
+| `VITE_API_GATEWAY_URL`       | Public API URL shown in docs/code samples   | _(required)_ |
+| `VITE_APP_TITLE`             | App title override                          | _(optional)_ |
 
 ### Server-side (never exposed to browser)
 
-| Variable                     | Description                          | Default            |
-| ---------------------------- | ------------------------------------ | ------------------ |
-| **Clerk**                    |                                      |                    |
-| `CLERK_SECRET_KEY`           | Clerk secret key                     | _(required)_       |
-| **Resend**                   |                                      |                    |
-| `RESEND_API_KEY`             | Resend API key (contact form emails) | _(required)_       |
-| **Azure**                    |                                      |                    |
-| `AZURE_TENANT_ID`            | Azure AD tenant ID                   | _(required)_       |
-| `AZURE_CLIENT_ID`            | Service principal client ID          | _(required)_       |
-| `AZURE_CLIENT_SECRET`        | Service principal secret             | _(required)_       |
-| `AZURE_SUBSCRIPTION_ID`      | Azure subscription ID                | _(required)_       |
-| `APIM_RESOURCE_GROUP`        | APIM resource group name             | _(required)_       |
-| `APIM_SERVICE_NAME`          | APIM service instance name           | _(required)_       |
-| `APIM_API_VERSION`           | Azure APIM REST API version          | `2024-05-01`       |
-| `APIM_STUDENT_PRODUCT_ID`    | APIM product for student tier        | `student-pilot`    |
-| `APIM_PRIVATE_PRODUCT_ID`    | APIM product for private tier        | `private-pilot`    |
-| `APIM_COMMERCIAL_PRODUCT_ID` | APIM product for commercial tier     | `commercial-pilot` |
-| **Stripe**                   |                                      |                    |
-| `STRIPE_SECRET_KEY`          | Stripe secret key                    | _(required)_       |
-| `STRIPE_WEBHOOK_SECRET`      | Stripe webhook signing secret        | _(required)_       |
-| `STRIPE_PRIVATE_PRICE_ID`    | Stripe price ID for private tier     | _(required)_       |
-| `STRIPE_COMMERCIAL_PRICE_ID` | Stripe price ID for commercial tier  | _(required)_       |
+| Variable                     | Description                                              | Default      |
+| ---------------------------- | -------------------------------------------------------- | ------------ |
+| **Clerk**                    |                                                          |              |
+| `CLERK_SECRET_KEY`           | Clerk secret key                                         | _(required)_ |
+| **Resend**                   |                                                          |              |
+| `RESEND_API_KEY`             | Resend API key (contact form emails)                     | _(required)_ |
+| **API gateway**              |                                                          |              |
+| `GATEWAY_URL`                | Server-side gateway URL (private network on Railway)     | _(required)_ |
+| `GATEWAY_INTERNAL_SECRET`    | Shared secret (gateway `INTERNAL_API_SECRET`)            | _(required)_ |
+| `GATEWAY_DATABASE_URL`       | Postgres with the `gateway` schema (read-only analytics) | _(required)_ |
+| `DEMO_USER_ID`               | Gateway user for marketing-demo calls                    | `demo`       |
+| **Stripe**                   |                                                          |              |
+| `STRIPE_SECRET_KEY`          | Stripe secret key                                        | _(required)_ |
+| `STRIPE_WEBHOOK_SECRET`      | Stripe webhook signing secret                            | _(required)_ |
+| `STRIPE_PRIVATE_PRICE_ID`    | Stripe price ID for private tier                         | _(required)_ |
+| `STRIPE_COMMERCIAL_PRICE_ID` | Stripe price ID for commercial tier                      | _(required)_ |
 
 > **Note:** Stripe price IDs differ between test and live environments. Use your test mode IDs for local development.
 
@@ -461,4 +452,3 @@ Alternative deployment via nixpacks is also supported (see `nixpacks.toml` — N
 - [shadcn/ui](https://ui.shadcn.com/)
 - [Tailwind CSS v4](https://tailwindcss.com/docs)
 - [Stripe API Docs](https://docs.stripe.com/api)
-- [Azure APIM REST API](https://learn.microsoft.com/en-us/rest/api/apimanagement/)

@@ -2,10 +2,9 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useAuth, useUser } from '@clerk/tanstack-react-start'
 import { useQuery } from '@tanstack/react-query'
 import { createPageHead } from '@/lib/seo'
-import { getUsageAnalytics } from '@/lib/server/apim/analytics'
-import { getUserSubscription } from '@/lib/server/apim/subscriptions'
+import { getUsageAnalytics } from '@/lib/server/gateway/analytics'
 import { getStripeSubscription } from '@/lib/server/stripe/subscriptions'
-import { apimKeys, stripeKeys } from '@/lib/server/queries'
+import { accountKeys, stripeKeys } from '@/lib/server/queries'
 import { usePlans } from '@/hooks/use-plans'
 import { PlanOverviewCard } from '@/components/dashboard/plan-overview-card'
 import { UsageStatsCards } from '@/components/dashboard/usage-stats-card'
@@ -34,13 +33,6 @@ function DashboardOverview() {
     enabled: !!userId,
   })
 
-  // APIM query is only used for usage analytics (needs APIM subscription ID)
-  const subscriptionsQuery = useQuery({
-    queryKey: apimKeys.subscription(userId ?? ''),
-    queryFn: () => getUserSubscription(),
-    enabled: !!userId,
-  })
-
   const stripeSub = stripeSubQuery.data
   const currentPlan = plans.find((p) => p.id === stripeSub?.planId) ?? plans[0]
   const isPaid = stripeSub != null
@@ -48,10 +40,6 @@ function DashboardOverview() {
     stripeSub?.cancelAtPeriodEnd || stripeSub?.cancelAt,
   )
   const cancelDate = stripeSub?.cancelAt ?? stripeSub?.currentPeriodEnd
-
-  const activeSubscription = subscriptionsQuery.data?.find(
-    (s) => s.state === 'active',
-  )
 
   const now = new Date()
   const todayStart = new Date(
@@ -76,31 +64,23 @@ function DashboardOverview() {
     new Date(now.getFullYear(), now.getMonth() + 1, 1).toISOString()
 
   const monthlyUsageQuery = useQuery({
-    queryKey: apimKeys.usage(activeSubscription?.id ?? '', monthFromDate),
+    queryKey: accountKeys.usage(userId ?? '', monthFromDate),
     queryFn: () =>
       getUsageAnalytics({
-        data: {
-          subscriptionId: activeSubscription!.id,
-          fromDate: monthFromDate,
-          toDate: monthToDate,
-        },
+        data: { fromDate: monthFromDate, toDate: monthToDate },
       }),
-    enabled: !!activeSubscription?.id && stripeSettled,
+    enabled: !!userId && stripeSettled,
     staleTime: 0,
     refetchOnMount: 'always',
   })
 
   const dailyUsageQuery = useQuery({
-    queryKey: apimKeys.usage(activeSubscription?.id ?? '', todayStart),
+    queryKey: accountKeys.usage(userId ?? '', todayStart),
     queryFn: () =>
       getUsageAnalytics({
-        data: {
-          subscriptionId: activeSubscription!.id,
-          fromDate: todayStart,
-          toDate: tomorrowStart,
-        },
+        data: { fromDate: todayStart, toDate: tomorrowStart },
       }),
-    enabled: !!activeSubscription?.id,
+    enabled: !!userId,
     staleTime: 0,
     refetchOnMount: 'always',
   })
@@ -169,9 +149,9 @@ function DashboardOverview() {
         cancelDate={cancelDate}
       />
 
-      {activeSubscription?.id && (
+      {userId && (
         <AnalyticsSection
-          subscriptionId={activeSubscription.id}
+          userId={userId}
           monthlyReport={monthlyUsageQuery.data}
           isMonthlyLoading={monthlyUsageQuery.isLoading}
           isPaid={isPaid}

@@ -5,13 +5,48 @@ import { Badge } from '@/components/ui/badge'
 import { API_BASE_URL } from '@/lib/gateway-url'
 
 const sources = [
-  { label: 'FAA NASR', url: 'https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/', format: 'CSV', cycle: '28d' },
-  { label: 'FAA DOF', url: 'https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/dof/', format: 'CSV', cycle: '56d' },
-  { label: 'FAA d-TPPs', url: 'https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/dtpp/', format: 'PDF', cycle: '28d' },
-  { label: 'FAA d-CS', url: 'https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/dafd/', format: 'PDF', cycle: '56d' },
-  { label: 'FAA ADDS', url: 'https://adds-faa.opendata.arcgis.com/', format: 'GeoJSON', cycle: '56d' },
-  { label: 'FAA NMS', url: 'https://nms.aim.faa.gov/', format: 'JSON', cycle: '3min' },
-  { label: 'AWC', url: 'https://aviationweather.gov/', format: 'XML', cycle: '5-30m' },
+  {
+    label: 'FAA NASR',
+    url: 'https://www.faa.gov/air_traffic/flight_info/aeronav/aero_data/NASR_Subscription/',
+    format: 'CSV',
+    cycle: '28d',
+  },
+  {
+    label: 'FAA DOF',
+    url: 'https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/dof/',
+    format: 'CSV',
+    cycle: '56d',
+  },
+  {
+    label: 'FAA d-TPPs',
+    url: 'https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/dtpp/',
+    format: 'PDF',
+    cycle: '28d',
+  },
+  {
+    label: 'FAA d-CS',
+    url: 'https://www.faa.gov/air_traffic/flight_info/aeronav/digital_products/dafd/',
+    format: 'PDF',
+    cycle: '56d',
+  },
+  {
+    label: 'FAA ADDS',
+    url: 'https://adds-faa.opendata.arcgis.com/',
+    format: 'GeoJSON',
+    cycle: '56d',
+  },
+  {
+    label: 'FAA NMS',
+    url: 'https://nms.aim.faa.gov/',
+    format: 'JSON',
+    cycle: '3min',
+  },
+  {
+    label: 'AWC',
+    url: 'https://aviationweather.gov/',
+    format: 'XML',
+    cycle: '5-30m',
+  },
 ]
 
 const infraStages = [
@@ -24,7 +59,7 @@ const infraStages = [
 
 const fetchSnippet = `const airport = await fetch(
   \`${API_BASE_URL}/airports/KJFK\`,
-  { headers: { 'Ocp-Apim-Subscription-Key': key } },
+  { headers: { 'X-API-Key': key } },
 ).then(r => r.json())`
 
 export function DataPipelineSection() {

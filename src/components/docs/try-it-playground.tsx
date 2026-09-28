@@ -7,6 +7,7 @@ import {
   Loader2,
   Send,
 } from 'lucide-react'
+import { useAuth } from '@clerk/tanstack-react-start'
 import { MethodBadge } from './method-badge'
 import { ParameterInputs } from './playground/parameter-inputs'
 import { ResponseDisplay } from './playground/response-display'
@@ -46,6 +47,7 @@ function initParamValues(
 
 export function TryItPlayground({ endpoint }: TryItPlaygroundProps) {
   const [apiKey, setApiKey] = useApiKeyStorage()
+  const { isSignedIn } = useAuth()
   const [showKey, setShowKey] = useState(false)
   const [paramValues, setParamValues] = useState<Record<string, string>>(() =>
     initParamValues(endpoint.parameters),
@@ -62,7 +64,8 @@ export function TryItPlayground({ endpoint }: TryItPlaygroundProps) {
   const hasBody = ['POST', 'PUT', 'PATCH'].includes(endpoint.method)
 
   const canSend = useMemo(() => {
-    if (!apiKey.trim()) return false
+    // Signed-in users can leave the key empty and use their account
+    if (!apiKey.trim() && !isSignedIn) return false
     if (isLoading) return false
     for (const p of endpoint.parameters) {
       if (
@@ -73,7 +76,7 @@ export function TryItPlayground({ endpoint }: TryItPlaygroundProps) {
         return false
     }
     return true
-  }, [apiKey, isLoading, endpoint.parameters, paramValues])
+  }, [apiKey, isSignedIn, isLoading, endpoint.parameters, paramValues])
 
   // Build the URL preview
   const urlPreview = useMemo(() => {
@@ -130,7 +133,11 @@ export function TryItPlayground({ endpoint }: TryItPlaygroundProps) {
           <div className="relative flex-1">
             <Input
               type={showKey ? 'text' : 'password'}
-              placeholder="Enter your Ocp-Apim-Subscription-Key"
+              placeholder={
+                isSignedIn
+                  ? 'Optional — leave empty to use your account'
+                  : 'Enter your API key (sign in to try without one)'
+              }
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
               className="pr-9 font-mono text-xs"

@@ -1,6 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
-import { demoExclusion } from '../apim/analytics'
+import { scopeFilter } from '../gateway/analytics'
+import { gatewayDb, isGatewayDbConfigured } from '../gateway/db'
 import { createLogger } from '../logger'
 import { requireAdmin } from './auth'
 import { env } from '@/env'
@@ -8,16 +9,14 @@ import { env } from '@/env'
 const log = createLogger('admin-search')
 
 export interface AdminSearchResult {
-  type: 'user' | 'subscription' | 'ip'
+  type: 'user' | 'api-key' | 'ip'
   title: string
   subtitle: string
   href: string
 }
 
-function extractUserIdFromSubscription(subscriptionId: string): string | null {
-  const match = subscriptionId.match(/^(user_[^-]+)/)
-  return match?.[1] ?? null
-}
+// API keys are stored hashed; their first 12 characters are kept as a display prefix
+const API_KEY_PREFIX_LENGTH = 12
 
 export const adminGlobalSearch = createServerFn({ method: 'POST' })
   .inputValidator(z.object({ query: z.string().min(1).max(200) }))
@@ -28,7 +27,8 @@ export const adminGlobalSearch = createServerFn({ method: 'POST' })
     const results: Array<AdminSearchResult> = []
 
     const isIp = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(q)
-    const isSubscriptionId = /^user_\w/.test(q)
+    const isUserId = /^user_\w+$/.test(q)
+    const isApiKey = /^pf_live_\w{4}/.test(q)
     const isStripeId = /^cus_\w/.test(q)
 
     const searches: Array<Promise<void>> = []
@@ -50,8 +50,7 @@ export const adminGlobalSearch = createServerFn({ method: 'POST' })
               user.emailAddresses.find(
                 (e) => e.id === user.primaryEmailAddressId,
               )?.emailAddress ?? ''
-            const name =
-              `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim()
+            const name = `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim()
             results.push({
               type: 'user',
               title: name || email,
@@ -65,37 +64,28 @@ export const adminGlobalSearch = createServerFn({ method: 'POST' })
       })(),
     )
 
-    // IP address search via KQL
-    if (isIp && env.APIM_LOG_ANALYTICS_WORKSPACE_ID) {
+    // IP address search over the gateway request log
+    if (isIp && isGatewayDbConfigured()) {
       searches.push(
         (async () => {
           try {
-            const { logAnalyticsQuery } = await import(
-              '../log-analytics-client'
-            )
-            const safeIp = q.replace(/[^0-9.]/g, '')
-            const kql = `
-ApiManagementGatewayLogs
-| where TimeGenerated >= ago(7d) and CallerIpAddress == '${safeIp}'
-  ${demoExclusion()}
-| summarize calls = count() by ApimSubscriptionId
-| top 5 by calls desc`.trim()
-
-            const result = await logAnalyticsQuery(kql)
-            const table = result.tables[0]
-            if (table && table.rows.length > 0) {
-              for (const row of table.rows) {
-                const subId = String(row[0])
-                const userId = extractUserIdFromSubscription(subId)
-                if (userId) {
-                  results.push({
-                    type: 'ip',
-                    title: `IP ${safeIp}`,
-                    subtitle: subId,
-                    href: `/dashboard/admin/users/${userId}`,
-                  })
-                }
-              }
+            const sql = await gatewayDb()
+            const rows = await sql<Array<{ userId: string; calls: number }>>`
+              select user_id as "userId", count(*)::int as "calls"
+              from gateway.api_requests
+              where ts >= now() - interval '7 days' and client_ip = ${q}
+                and user_id is not null ${scopeFilter(sql, 'all')}
+              group by user_id
+              order by "calls" desc
+              limit 5
+            `
+            for (const row of rows) {
+              results.push({
+                type: 'ip',
+                title: `IP ${q}`,
+                subtitle: `${row.userId} · ${row.calls} calls (7d)`,
+                href: `/dashboard/admin/users/${row.userId}`,
+              })
             }
           } catch (err) {
             log.error({ err }, 'IP search failed')
@@ -104,17 +94,44 @@ ApiManagementGatewayLogs
       )
     }
 
-    // Subscription ID direct lookup
-    if (isSubscriptionId) {
-      const userId = extractUserIdFromSubscription(q)
-      if (userId) {
-        results.push({
-          type: 'subscription',
-          title: q,
-          subtitle: 'APIM Subscription',
-          href: `/dashboard/admin/users/${userId}`,
-        })
-      }
+    // API key lookup by its (non-secret) prefix
+    if (isApiKey && isGatewayDbConfigured()) {
+      searches.push(
+        (async () => {
+          try {
+            const sql = await gatewayDb()
+            const prefix = q.slice(0, API_KEY_PREFIX_LENGTH)
+            const rows = await sql<
+              Array<{ userId: string; name: string; revoked: boolean }>
+            >`
+              select user_id as "userId", name, revoked_at is not null as "revoked"
+              from gateway.api_keys
+              where prefix = ${prefix}
+              limit 5
+            `
+            for (const row of rows) {
+              results.push({
+                type: 'api-key',
+                title: `${prefix}… (${row.name})${row.revoked ? ' — revoked' : ''}`,
+                subtitle: row.userId,
+                href: `/dashboard/admin/users/${row.userId}`,
+              })
+            }
+          } catch (err) {
+            log.error({ err }, 'API key search failed')
+          }
+        })(),
+      )
+    }
+
+    // Clerk user ID direct lookup
+    if (isUserId) {
+      results.push({
+        type: 'user',
+        title: q,
+        subtitle: 'User ID',
+        href: `/dashboard/admin/users/${q}`,
+      })
     }
 
     // Stripe customer ID lookup
@@ -144,7 +161,8 @@ ApiManagementGatewayLogs
                 limit: 1,
               })
               if (clerkResult.data.length > 0) {
-                results[stripeResultIdx].href = `/dashboard/admin/users/${clerkResult.data[0].id}`
+                results[stripeResultIdx].href =
+                  `/dashboard/admin/users/${clerkResult.data[0].id}`
               }
             }
           } catch (err) {

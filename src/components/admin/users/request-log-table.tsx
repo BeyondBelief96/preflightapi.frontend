@@ -6,7 +6,7 @@ import type {
   RequestLogFilter,
   RequestLogTimeRange,
 } from '@/types/plans'
-import { cleanEndpointName, formatBytes, formatMs  } from '@/lib/format'
+import { cleanEndpointName, formatBytes, formatMs } from '@/lib/format'
 import { getAdminRequestLog } from '@/lib/server/admin/users'
 import { adminKeys } from '@/lib/server/queries'
 import { Badge } from '@/components/ui/badge'
@@ -97,7 +97,7 @@ function ErrorDetail({ entry }: { entry: RequestLogEntry }) {
     entry.backendStatusCode != null &&
     entry.backendStatusCode !== entry.statusCode
   const queryParams = entry.url ? parseQueryParams(entry.url) : []
-  const apimOverhead =
+  const gatewayOverhead =
     entry.backendTimeMs > 0 ? entry.totalTimeMs - entry.backendTimeMs : null
 
   if (!hasError && !showBackend && !entry.url) return null
@@ -142,9 +142,9 @@ function ErrorDetail({ entry }: { entry: RequestLogEntry }) {
                 Backend Time:{' '}
               </span>
               <span>{formatMs(entry.backendTimeMs)}</span>
-              {apimOverhead != null && (
+              {gatewayOverhead != null && (
                 <span className="ml-2 text-muted-foreground">
-                  (APIM overhead: {formatMs(apimOverhead)})
+                  (gateway overhead: {formatMs(gatewayOverhead)})
                 </span>
               )}
             </div>
@@ -247,39 +247,38 @@ function RequestRow({ entry }: { entry: RequestLogEntry }) {
   )
 }
 
-export function RequestLogTable({
-  subscriptionId,
-}: {
-  subscriptionId: string
-}) {
+export function RequestLogTable({ userId }: { userId: string }) {
   const [timeRange, setTimeRange] = useState<RequestLogTimeRange>('24h')
   const [statusFilter, setStatusFilter] = useState<RequestLogFilter>('all')
 
-  const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage, isError, error } =
-    useInfiniteQuery({
-      queryKey: adminKeys.requestLog(
-        subscriptionId,
-        timeRange,
-        statusFilter,
-      ),
-      queryFn: ({ pageParam }) =>
-        getAdminRequestLog({
-          data: {
-            subscriptionId,
-            timeRange,
-            statusFilter,
-            cursor: pageParam,
-            limit: PAGE_SIZE,
-          },
-        }),
-      initialPageParam: undefined as string | undefined,
-      getNextPageParam: (lastPage) => {
-        if (lastPage.length < PAGE_SIZE) return undefined
-        const last = lastPage[lastPage.length - 1]
-        return last ? `${last.timestamp}|${last.id}` : undefined
-      },
-      staleTime: 30_000,
-    })
+  const {
+    data,
+    isLoading,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+    isError,
+    error,
+  } = useInfiniteQuery({
+    queryKey: adminKeys.requestLog(userId, timeRange, statusFilter),
+    queryFn: ({ pageParam }) =>
+      getAdminRequestLog({
+        data: {
+          userId,
+          timeRange,
+          statusFilter,
+          cursor: pageParam,
+          limit: PAGE_SIZE,
+        },
+      }),
+    initialPageParam: undefined as string | undefined,
+    getNextPageParam: (lastPage) => {
+      if (lastPage.length < PAGE_SIZE) return undefined
+      const last = lastPage[lastPage.length - 1]
+      return last ? `${last.timestamp}|${last.id}` : undefined
+    },
+    staleTime: 30_000,
+  })
 
   const allEntries = data?.pages.flat() ?? []
 
@@ -327,7 +326,8 @@ export function RequestLogTable({
           </div>
         ) : isError && allEntries.length === 0 ? (
           <div className="flex h-[120px] items-center justify-center text-sm text-destructive">
-            Failed to load request logs.{error?.message && ` (${error.message})`}
+            Failed to load request logs.
+            {error?.message && ` (${error.message})`}
           </div>
         ) : allEntries.length === 0 ? (
           <div className="flex h-[120px] items-center justify-center text-sm text-muted-foreground">
@@ -337,7 +337,8 @@ export function RequestLogTable({
           <>
             {isError && (
               <div className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
-                Failed to refresh request logs.{error?.message && ` (${error.message})`}
+                Failed to refresh request logs.
+                {error?.message && ` (${error.message})`}
               </div>
             )}
             <div className="overflow-x-auto">

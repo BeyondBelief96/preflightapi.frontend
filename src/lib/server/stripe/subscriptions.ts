@@ -1,12 +1,11 @@
 import { createServerFn } from '@tanstack/react-start'
 import { clerkClient } from '@clerk/tanstack-react-start/server'
-import { apimFetch } from '../apim/client'
-import { getApimProductIds, planIdFromProductId } from '../apim/products'
 import { requireAuth } from '../auth'
+import { adminFetch } from '../gateway/client'
 import { getPriceIdForPlan, planIdFromPriceId } from './utils'
 import { getStripe } from './client'
-import type { StripeSubscriptionStatus } from '@/types/plans'
-import type { SubscriptionListResponse } from '@/types/apim'
+import type { PlanId, StripeSubscriptionStatus } from '@/types/plans'
+import type { AdminAccountDetail } from '@/types/gateway'
 import { env } from '@/env'
 
 async function getOrCreateStripeCustomer(clerkUserId: string): Promise<string> {
@@ -187,85 +186,55 @@ export const getStripeSubscription = createServerFn({ method: 'GET' }).handler(
 // --- Reconciliation ---
 
 export type ReconcileResult =
-  | { status: 'synced'; stripePlanId: string; apimPlanId: string }
-  | { status: 'already_in_sync'; stripePlanId: string; apimPlanId: string }
+  | { status: 'synced'; stripePlanId: string; gatewayPlanId: string }
+  | { status: 'already_in_sync'; stripePlanId: string; gatewayPlanId: string }
   | { status: 'no_stripe_sub' }
-  | { status: 'no_apim_sub' }
 
+/**
+ * Safety net for missed or delayed Stripe webhooks: makes the gateway's tier
+ * for the signed-in user match their Stripe subscription.
+ */
 export const reconcileSubscription = createServerFn({
   method: 'POST',
 }).handler(async (): Promise<ReconcileResult> => {
   const userId = await requireAuth()
-  const productIds = getApimProductIds()
 
-  // 1. Get Stripe subscription state
   const stripeSub = await getStripeSubscriptionInternal(userId)
   if (!stripeSub) {
     return { status: 'no_stripe_sub' }
   }
 
-  // 2. Get APIM subscription state
-  const apimSubs = await apimFetch<SubscriptionListResponse>(
-    `/users/${userId}/subscriptions`,
-  )
-  const activeSubs = apimSubs.value.filter(
-    (s) => s.properties.state === 'active',
-  )
-  if (activeSubs.length === 0) {
-    return { status: 'no_apim_sub' }
-  }
+  // Matches the gateway's Stripe webhook: only active subscriptions get paid
+  // access (past_due is downgraded until payment recovers).
+  const expectedTier: PlanId =
+    stripeSub.status === 'active' || stripeSub.status === 'trialing'
+      ? stripeSub.planId
+      : 'student'
 
-  const expectedProductId = productIds[stripeSub.planId] ?? productIds.student
-  if (!expectedProductId) {
+  // Server-to-server call (internal secret); ownership is established by
+  // requireAuth above, since we only ever touch the caller's own account.
+  const account = await adminFetch<AdminAccountDetail>(
+    `/users/${encodeURIComponent(userId)}`,
+  ).catch(() => null)
+  const currentTier = account?.tier ?? 'student'
+
+  if (currentTier === expectedTier) {
     return {
       status: 'already_in_sync',
       stripePlanId: stripeSub.planId,
-      apimPlanId: stripeSub.planId,
+      gatewayPlanId: currentTier,
     }
   }
 
-  // Check if any active sub is mismatched
-  const mismatched = activeSubs.filter(
-    (s) => s.properties.scope.split('/').pop() !== expectedProductId,
-  )
-
-  if (mismatched.length === 0) {
-    return {
-      status: 'already_in_sync',
-      stripePlanId: stripeSub.planId,
-      apimPlanId: stripeSub.planId,
-    }
-  }
-
-  // 3. Mismatch detected — sync ALL active APIM subs to match Stripe
-  const previousProductId =
-    mismatched[0].properties.scope.split('/').pop() ?? ''
-  const previousPlanId = planIdFromProductId(previousProductId)
-
-  const results = await Promise.allSettled(
-    mismatched.map((sub) =>
-      apimFetch(`/subscriptions/${sub.name}`, {
-        method: 'PATCH',
-        body: JSON.stringify({
-          properties: { scope: `/products/${expectedProductId}` },
-        }),
-      }),
-    ),
-  )
-
-  const failures = results.filter(
-    (r): r is PromiseRejectedResult => r.status === 'rejected',
-  )
-  if (failures.length > 0) {
-    throw new Error(
-      `Failed to sync ${failures.length}/${mismatched.length} APIM subscriptions`,
-    )
-  }
+  await adminFetch(`/users/${encodeURIComponent(userId)}/tier`, {
+    method: 'PUT',
+    body: JSON.stringify({ tier: expectedTier }),
+  })
 
   return {
     status: 'synced',
     stripePlanId: stripeSub.planId,
-    apimPlanId: previousPlanId,
+    gatewayPlanId: currentTier,
   }
 })
 

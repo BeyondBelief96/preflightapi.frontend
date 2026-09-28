@@ -2,7 +2,7 @@
  * Downloads the latest OpenAPI spec from the deployed API and saves it locally.
  *
  * Usage:
- *   npm run update-api-spec                          # uses default APIM gateway URL
+ *   npm run update-api-spec                          # uses the default deployed API URL
  *   npm run update-api-spec -- --url <custom-url>    # uses a custom spec URL
  *   npm run update-api-spec -- --local               # uses local dev API (https://localhost:7014)
  *
@@ -21,9 +21,12 @@ const OUTPUT_PATH = resolve(
   'preflightapi_swagger.json',
 )
 
+// Where to fetch the spec from, and the public gateway URL written into its
+// `servers` entry. Override with env vars once the Railway deployment is live.
 const DEFAULT_API_URL =
+  process.env.API_SPEC_SOURCE_URL ??
   'https://preflightapi-eastus-web-api-test-bmfecfftf6bgemdf.eastus-01.azurewebsites.net'
-const APIM_GATEWAY_URL = 'https://preflightapi-apim-service-test.azure-api.net'
+const PUBLIC_GATEWAY_URL = process.env.VITE_API_GATEWAY_URL
 const LOCAL_API_URL = 'https://localhost:7014'
 const SPEC_PATH = '/swagger/v1/swagger.json'
 
@@ -60,9 +63,9 @@ async function main() {
 
     const spec = await response.json()
 
-    // Normalize server URL to the APIM gateway (regardless of source)
-    if (spec.servers?.[0]) {
-      spec.servers[0].url = APIM_GATEWAY_URL
+    // Normalize server URL to the public API gateway (regardless of source)
+    if (PUBLIC_GATEWAY_URL && spec.servers?.[0]) {
+      spec.servers[0].url = PUBLIC_GATEWAY_URL
     }
 
     const specJson = JSON.stringify(spec, null, 2) + '\n'

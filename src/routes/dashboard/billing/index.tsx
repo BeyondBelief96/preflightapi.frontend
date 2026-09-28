@@ -10,14 +10,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { usePlans } from '@/hooks/use-plans'
-import { getUsageAnalytics } from '@/lib/server/apim/analytics'
-import { getUserSubscription } from '@/lib/server/apim/subscriptions'
+import { getUsageAnalytics } from '@/lib/server/gateway/analytics'
 import {
   createCheckoutSession,
   createPortalSession,
   getStripeSubscription,
 } from '@/lib/server/stripe/subscriptions'
-import { apimKeys, stripeKeys } from '@/lib/server/queries'
+import { accountKeys, stripeKeys } from '@/lib/server/queries'
 import { UpgradeSuccessBanner } from '@/components/dashboard/billing/upgrade-success-banner'
 import { CurrentPlanCard } from '@/components/dashboard/billing/current-plan-card'
 import { UpgradePlanCards } from '@/components/dashboard/billing/upgrade-plan-cards'
@@ -52,13 +51,6 @@ function BillingPage() {
     enabled: !!userId,
   })
 
-  // APIM query is only used to get the subscription ID for usage analytics
-  const subscriptionsQuery = useQuery({
-    queryKey: apimKeys.subscription(userId ?? ''),
-    queryFn: () => getUserSubscription(),
-    enabled: !!userId,
-  })
-
   const stripeSub = stripeSubQuery.data
   const currentPlan = plans.find((p) => p.id === stripeSub?.planId) ?? plans[0]
   const isPaid = stripeSub !== null && stripeSub !== undefined
@@ -67,10 +59,6 @@ function BillingPage() {
     stripeSub?.cancelAtPeriodEnd || stripeSub?.cancelAt,
   )
   const cancelDate = stripeSub?.cancelAt ?? stripeSub?.currentPeriodEnd
-
-  const activeSubscription = subscriptionsQuery.data?.find(
-    (s) => s.state === 'active',
-  )
 
   const upgradedPlan = upgradedPlanId
     ? plans.find((p) => p.id === upgradedPlanId)
@@ -92,7 +80,7 @@ function BillingPage() {
       queryKey: stripeKeys.subscription(userId ?? ''),
     })
     queryClient.invalidateQueries({
-      queryKey: apimKeys.subscription(userId ?? ''),
+      queryKey: accountKeys.summary(userId ?? ''),
     })
   }, [portal, queryClient, userId])
 
@@ -100,21 +88,18 @@ function BillingPage() {
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
     .toISOString()
     .split('T')[0]
-  const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0)
+  // Exclusive upper bound: the first day of next month
+  const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 1)
     .toISOString()
     .split('T')[0]
 
   const usageQuery = useQuery({
-    queryKey: apimKeys.usage(activeSubscription?.id ?? '', monthStart),
+    queryKey: accountKeys.usage(userId ?? '', monthStart),
     queryFn: () =>
       getUsageAnalytics({
-        data: {
-          subscriptionId: activeSubscription!.id,
-          fromDate: monthStart,
-          toDate: monthEnd,
-        },
+        data: { fromDate: monthStart, toDate: monthEnd },
       }),
-    enabled: !!activeSubscription?.id,
+    enabled: !!userId,
     staleTime: 0,
     refetchOnMount: 'always',
   })
@@ -122,8 +107,7 @@ function BillingPage() {
   const [pendingPlanId, setPendingPlanId] = useState<string | null>(null)
 
   const checkoutMutation = useMutation({
-    mutationFn: (planId: string) =>
-      createCheckoutSession({ data: { planId } }),
+    mutationFn: (planId: string) => createCheckoutSession({ data: { planId } }),
     onMutate: (planId) => {
       setPendingPlanId(planId)
     },
@@ -369,8 +353,7 @@ function BillingPage() {
           </div>
           {usageQuery.isError && (
             <p className="mt-4 text-sm text-muted-foreground">
-              Unable to load usage data. Usage will appear when APIM credentials
-              are configured.
+              Unable to load usage data right now. Please try again later.
             </p>
           )}
         </CardContent>

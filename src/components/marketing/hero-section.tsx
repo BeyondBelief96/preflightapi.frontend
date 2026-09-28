@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { ArrowRight, Terminal } from 'lucide-react'
-import {  useEffect, useState } from 'react'
-import type {ReactNode} from 'react';
+import { useEffect, useState } from 'react'
+import type { ReactNode } from 'react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { isWaitlistMode } from '@/lib/waitlist'
@@ -66,7 +66,7 @@ const EXAMPLES: Array<CodeExample> = [
       { text: ', {\n  ', className: 'text-white/30' },
       { text: 'headers', className: 'text-sky-300' },
       { text: ': { ', className: 'text-white/30' },
-      { text: "'Ocp-Apim-Subscription-Key'", className: 'text-green-400' },
+      { text: "'X-API-Key'", className: 'text-green-400' },
       { text: ': ', className: 'text-white/30' },
       { text: 'API_KEY', className: 'text-white/90' },
       { text: ' }\n})\n', className: 'text-white/30' },
@@ -107,7 +107,7 @@ const EXAMPLES: Array<CodeExample> = [
       { text: ', {\n  ', className: 'text-white/30' },
       { text: 'headers', className: 'text-sky-300' },
       { text: ': { ', className: 'text-white/30' },
-      { text: "'Ocp-Apim-Subscription-Key'", className: 'text-green-400' },
+      { text: "'X-API-Key'", className: 'text-green-400' },
       { text: ': ', className: 'text-white/30' },
       { text: 'API_KEY', className: 'text-white/90' },
       { text: ' }\n})\n', className: 'text-white/30' },
@@ -151,7 +151,7 @@ const EXAMPLES: Array<CodeExample> = [
       { text: ',\n  ', className: 'text-white/30' },
       { text: 'headers', className: 'text-sky-300' },
       { text: ': { ', className: 'text-white/30' },
-      { text: "'Ocp-Apim-Subscription-Key'", className: 'text-green-400' },
+      { text: "'X-API-Key'", className: 'text-green-400' },
       { text: ': ', className: 'text-white/30' },
       { text: 'API_KEY', className: 'text-white/90' },
       { text: ' },\n  ', className: 'text-white/30' },
@@ -181,19 +181,10 @@ const EXAMPLES: Array<CodeExample> = [
     response: (
       <>
         <span className="text-white/30">{'{\n'}</span>
-        <JsonLine
-          propKey="totalRouteDistance"
-          value={<Num>{2145.8}</Num>}
-        />
-        <JsonLine
-          propKey="totalRouteTimeHours"
-          value={<Num>{4.87}</Num>}
-        />
+        <JsonLine propKey="totalRouteDistance" value={<Num>{2145.8}</Num>} />
+        <JsonLine propKey="totalRouteTimeHours" value={<Num>{4.87}</Num>} />
         <JsonLine propKey="totalFuelUsed" value={<Num>{68.3}</Num>} />
-        <JsonLine
-          propKey="averageWindComponent"
-          value={<Num>{-12.5}</Num>}
-        />
+        <JsonLine propKey="averageWindComponent" value={<Num>{-12.5}</Num>} />
         <JsonLine
           propKey="legs"
           value={

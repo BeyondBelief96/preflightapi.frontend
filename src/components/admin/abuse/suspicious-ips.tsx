@@ -12,7 +12,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 interface SuspiciousIp {
   ip: string
   callCount: number
-  distinctSubscriptions: number
+  distinctUsers: number
   errorRate: number
 }
 
@@ -49,7 +49,7 @@ export function SuspiciousIps({
                   <TableHead>IP Address</TableHead>
                   <TableHead className="text-right">Calls</TableHead>
                   <TableHead className="hidden text-right sm:table-cell">
-                    Subscriptions
+                    Users
                   </TableHead>
                   <TableHead className="hidden text-right sm:table-cell">
                     Error Rate
@@ -66,7 +66,7 @@ export function SuspiciousIps({
                       {row.callCount.toLocaleString()}
                     </TableCell>
                     <TableCell className="hidden text-right sm:table-cell">
-                      {row.distinctSubscriptions}
+                      {row.distinctUsers}
                     </TableCell>
                     <TableCell className="hidden text-right sm:table-cell">
                       {row.errorRate}%

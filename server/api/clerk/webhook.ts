@@ -139,12 +139,12 @@ async function handleUserCreated(event: ClerkUserEvent) {
   }
 }
 
-// --- user.deleted: Cleanup Stripe customer and APIM user ---
+// --- user.deleted: Cleanup Stripe customer and API keys ---
 
 async function handleUserDeleted(event: ClerkUserEvent) {
   const userId = event.data.id
 
-  // 1. Delete the Stripe customer (triggers customer.deleted webhook → APIM downgrade)
+  // 1. Delete the Stripe customer (triggers customer.deleted webhook → gateway downgrade)
   try {
     const { getStripe } = await import('@/lib/server/stripe/client')
     const stripe = getStripe()
@@ -176,38 +176,29 @@ async function handleUserDeleted(event: ClerkUserEvent) {
     log.error({ err, userId }, 'Error cleaning up Stripe customer')
   }
 
-  // 2. Delete the APIM user
+  // 2. Revoke the user's API keys in the gateway
   try {
-    const { apimFetch } = await import('@/lib/server/apim/client')
-
-    // Delete subscriptions first, then the user
-    const subs = await apimFetch<{ value: Array<{ name: string }> }>(
-      `/users/${userId}/subscriptions`,
-    )
-
-    for (const sub of subs.value) {
-      try {
-        await apimFetch(`/subscriptions/${sub.name}`, {
-          method: 'DELETE',
-          headers: { 'If-Match': '*' },
-        })
-      } catch (err) {
-        log.warn(
-          { err, subscriptionName: sub.name },
-          'Failed to delete APIM subscription',
-        )
-      }
-    }
-
-    await apimFetch(`/users/${userId}`, {
-      method: 'DELETE',
-      headers: { 'If-Match': '*' },
+    const { adminFetch, GatewayError } =
+      await import('@/lib/server/gateway/client')
+    const path = `/users/${encodeURIComponent(userId)}`
+    const account = await adminFetch<{ keys: Array<{ id: string }> }>(
+      path,
+    ).catch((err: unknown) => {
+      // No gateway account means the user never created a key.
+      if (err instanceof GatewayError && err.status === 404) return null
+      throw err
     })
 
-    log.info({ userId }, 'Deleted APIM user and subscriptions')
+    for (const key of account?.keys ?? []) {
+      await adminFetch(`${path}/keys/${key.id}`, { method: 'DELETE' })
+    }
+    log.info(
+      { userId, revoked: account?.keys.length ?? 0 },
+      'Revoked API keys for deleted Clerk user',
+    )
   } catch (err) {
-    // Log but don't fail — APIM user may not exist
-    log.error({ err, userId }, 'Error cleaning up APIM user')
+    // Log but don't fail the webhook
+    log.error({ err, userId }, 'Error revoking API keys for deleted user')
   }
 
   // 3. Remove from Resend contacts

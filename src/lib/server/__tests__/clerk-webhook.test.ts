@@ -9,7 +9,7 @@ import handler from '../../../../server/api/clerk/webhook'
 const mockVerify = vi.fn()
 const mockEmailSend = vi.fn()
 const mockRender = vi.fn()
-const mockApimFetch = vi.fn()
+const mockAdminFetch = vi.fn()
 const mockCustomerSearch = vi.fn()
 const mockCustomerDel = vi.fn()
 
@@ -69,9 +69,20 @@ vi.mock('@/lib/server/stripe/client', () => ({
   }),
 }))
 
-vi.mock('@/lib/server/apim/client', () => ({
-  apimFetch: (...a: Array<any>) => mockApimFetch(...a),
-}))
+vi.mock('@/lib/server/gateway/client', () => {
+  class GatewayError extends Error {
+    constructor(
+      message: string,
+      readonly status: number,
+    ) {
+      super(message)
+    }
+  }
+  return {
+    GatewayError,
+    adminFetch: (...a: Array<any>) => mockAdminFetch(...a),
+  }
+})
 
 // --- Helpers ---
 
@@ -232,19 +243,18 @@ describe('Clerk webhook handler', () => {
 
   // -- user.deleted: cascade cleanup --
 
-  it('deletes Stripe customer and APIM user on user.deleted', async () => {
+  it('deletes the Stripe customer and revokes API keys on user.deleted', async () => {
     const evt = clerkEvent('user.deleted', { id: 'user_del123' })
     mockVerify.mockReturnValue(evt)
     mockCustomerSearch.mockResolvedValue({
       data: [{ id: 'cus_del', deleted: false }],
     })
     mockCustomerDel.mockResolvedValue({ id: 'cus_del', deleted: true })
-    mockApimFetch
-      // list subs
-      .mockResolvedValueOnce({ value: [{ name: 'sub-1' }] })
-      // delete sub
+    mockAdminFetch
+      // account detail
+      .mockResolvedValueOnce({ keys: [{ id: 'key-1' }, { id: 'key-2' }] })
+      // revoke each key
       .mockResolvedValueOnce(undefined)
-      // delete user
       .mockResolvedValueOnce(undefined)
 
     const result = await handler(mockEvent())
@@ -256,87 +266,64 @@ describe('Clerk webhook handler', () => {
       }),
     )
     expect(mockCustomerDel).toHaveBeenCalledWith('cus_del')
-    expect(mockApimFetch).toHaveBeenNthCalledWith(
-      1,
-      '/users/user_del123/subscriptions',
-    )
-    expect(mockApimFetch).toHaveBeenNthCalledWith(
+    expect(mockAdminFetch).toHaveBeenNthCalledWith(1, '/users/user_del123')
+    expect(mockAdminFetch).toHaveBeenNthCalledWith(
       2,
-      '/subscriptions/sub-1',
+      '/users/user_del123/keys/key-1',
       expect.objectContaining({ method: 'DELETE' }),
     )
-    expect(mockApimFetch).toHaveBeenNthCalledWith(
+    expect(mockAdminFetch).toHaveBeenNthCalledWith(
       3,
-      '/users/user_del123',
+      '/users/user_del123/keys/key-2',
       expect.objectContaining({ method: 'DELETE' }),
     )
   })
 
-  it('skips Stripe cleanup for invalid userId format', async () => {
+  it('skips cleanup for invalid userId format', async () => {
     const evt = clerkEvent('user.deleted', { id: 'bad; DROP TABLE' })
     mockVerify.mockReturnValue(evt)
 
     await handler(mockEvent())
 
     expect(mockCustomerSearch).not.toHaveBeenCalled()
-    expect(mockApimFetch).not.toHaveBeenCalled()
+    expect(mockAdminFetch).not.toHaveBeenCalled()
   })
 
-  it('continues APIM cleanup when Stripe customer not found', async () => {
-    const evt = clerkEvent('user.deleted', { id: 'user_nostripe' })
+  it('treats a missing gateway account as nothing to revoke', async () => {
+    const { GatewayError } = await import('@/lib/server/gateway/client')
+    const evt = clerkEvent('user.deleted', { id: 'user_nokeys' })
     mockVerify.mockReturnValue(evt)
     mockCustomerSearch.mockResolvedValue({ data: [] })
-    mockApimFetch
-      .mockResolvedValueOnce({ value: [] }) // no APIM subs
-      .mockResolvedValueOnce(undefined) // delete user
+    mockAdminFetch.mockRejectedValueOnce(new GatewayError('Not found', 404))
 
-    await handler(mockEvent())
+    const result = await handler(mockEvent())
 
+    expect(result).toEqual({ received: true })
     expect(mockCustomerDel).not.toHaveBeenCalled()
-    expect(mockApimFetch).toHaveBeenCalledWith(
-      '/users/user_nostripe/subscriptions',
-    )
+    expect(mockAdminFetch).toHaveBeenCalledTimes(1)
   })
 
-  it('continues APIM cleanup when Stripe delete throws', async () => {
+  it('still revokes API keys when Stripe cleanup throws', async () => {
     const evt = clerkEvent('user.deleted', { id: 'user_stripeerr' })
     mockVerify.mockReturnValue(evt)
     mockCustomerSearch.mockRejectedValue(new Error('Stripe API down'))
-    mockApimFetch
-      .mockResolvedValueOnce({ value: [] })
-      .mockResolvedValueOnce(undefined)
+    mockAdminFetch.mockResolvedValueOnce({ keys: [] })
 
     const result = await handler(mockEvent())
 
     expect(result).toEqual({ received: true })
-    // APIM cleanup still attempted despite Stripe error
-    expect(mockApimFetch).toHaveBeenCalled()
+    expect(mockAdminFetch).toHaveBeenCalledWith('/users/user_stripeerr')
   })
 
-  it('continues deleting remaining subs when one sub deletion fails', async () => {
-    const evt = clerkEvent('user.deleted', { id: 'user_partialfail' })
+  it('does not fail the webhook when the gateway is unreachable', async () => {
+    const evt = clerkEvent('user.deleted', { id: 'user_gatewaydown' })
     mockVerify.mockReturnValue(evt)
     mockCustomerSearch.mockResolvedValue({ data: [] })
-    mockApimFetch
-      // list subs
-      .mockResolvedValueOnce({ value: [{ name: 'sub-a' }, { name: 'sub-b' }] })
-      // sub-a delete fails
-      .mockRejectedValueOnce(new Error('sub-a failed'))
-      // sub-b delete succeeds
-      .mockResolvedValueOnce(undefined)
-      // user delete succeeds
-      .mockResolvedValueOnce(undefined)
+    mockAdminFetch.mockRejectedValueOnce(new Error('fetch failed'))
 
     const result = await handler(mockEvent())
 
     expect(result).toEqual({ received: true })
-    // All 4 calls made despite sub-a failure
-    expect(mockApimFetch).toHaveBeenCalledTimes(4)
-    expect(mockApimFetch).toHaveBeenNthCalledWith(
-      3,
-      '/subscriptions/sub-b',
-      expect.objectContaining({ method: 'DELETE' }),
-    )
   })
 
   // -- Unknown event type --

@@ -172,7 +172,7 @@ export function generateCurl(endpoint: ParsedEndpoint): string {
     lines.push(`  -X ${endpoint.method}`)
   }
 
-  lines.push('  -H "Ocp-Apim-Subscription-Key: YOUR_API_KEY"')
+  lines.push('  -H "X-API-Key: YOUR_API_KEY"')
 
   const body = getExampleBody(endpoint)
   if (body) {
@@ -193,7 +193,7 @@ export function generateTypeScript(endpoint: ParsedEndpoint): string {
   code += `  "${url}",\n  {\n`
   code += `    method: "${endpoint.method}",\n`
   code += '    headers: {\n'
-  code += '      "Ocp-Apim-Subscription-Key": process.env.PREFLIGHT_API_KEY!'
+  code += '      "X-API-Key": process.env.PREFLIGHT_API_KEY!'
 
   if (body) {
     code += ',\n      "Content-Type": "application/json"'
@@ -213,7 +213,10 @@ export function generateTypeScript(endpoint: ParsedEndpoint): string {
 
 /** Convert JSON string to Python-safe syntax (true/false/null → True/False/None) */
 function jsonToPython(json: string): string {
-  return json.replace(/: true/g, ': True').replace(/: false/g, ': False').replace(/: null/g, ': None')
+  return json
+    .replace(/: true/g, ': True')
+    .replace(/: false/g, ': False')
+    .replace(/: null/g, ': None')
 }
 
 export function generatePython(endpoint: ParsedEndpoint): string {
@@ -223,7 +226,7 @@ export function generatePython(endpoint: ParsedEndpoint): string {
   let code = 'import requests\n\n'
   code += `url = "${url}"\n`
   code += 'headers = {\n'
-  code += '    "Ocp-Apim-Subscription-Key": "YOUR_API_KEY"'
+  code += '    "X-API-Key": "YOUR_API_KEY"'
   if (body) {
     code += ',\n    "Content-Type": "application/json"'
   }
@@ -259,7 +262,7 @@ export function generateJava(endpoint: ParsedEndpoint): string {
 
   code += 'HttpRequest request = HttpRequest.newBuilder()\n'
   code += `    .uri(URI.create("${url}"))\n`
-  code += `    .header("Ocp-Apim-Subscription-Key", "YOUR_API_KEY")\n`
+  code += `    .header("X-API-Key", "YOUR_API_KEY")\n`
 
   if (body) {
     code += '    .header("Content-Type", "application/json")\n'
@@ -297,7 +300,7 @@ export function generateGo(endpoint: ParsedEndpoint): string {
     code += `    req, _ := http.NewRequest("${endpoint.method}", "${url}", nil)\n`
   }
 
-  code += '    req.Header.Set("Ocp-Apim-Subscription-Key", "YOUR_API_KEY")\n'
+  code += '    req.Header.Set("X-API-Key", "YOUR_API_KEY")\n'
   if (needsBody) {
     code += '    req.Header.Set("Content-Type", "application/json")\n'
   }
@@ -323,11 +326,12 @@ export function generateCSharp(endpoint: ParsedEndpoint): string {
 
   code += 'var client = new HttpClient();\n'
   code += 'client.DefaultRequestHeaders.Add(\n'
-  code += '    "Ocp-Apim-Subscription-Key", "YOUR_API_KEY"\n);\n'
+  code += '    "X-API-Key", "YOUR_API_KEY"\n);\n'
 
   if (body) {
     code += `\nvar json = @"\n${body}";\n`
-    code += 'var content = new StringContent(json, Encoding.UTF8, "application/json");\n'
+    code +=
+      'var content = new StringContent(json, Encoding.UTF8, "application/json");\n'
   }
 
   const methodMap: Record<string, string> = {
@@ -365,7 +369,7 @@ export function generatePhp(endpoint: ParsedEndpoint): string {
   }
 
   code += '\ncurl_setopt($ch, CURLOPT_HTTPHEADER, [\n'
-  code += '    "Ocp-Apim-Subscription-Key: YOUR_API_KEY"'
+  code += '    "X-API-Key: YOUR_API_KEY"'
   if (body) {
     code += ',\n    "Content-Type: application/json"'
   }
@@ -381,7 +385,14 @@ export function generatePhp(endpoint: ParsedEndpoint): string {
   return code
 }
 
-export type LanguageId = 'curl' | 'typescript' | 'python' | 'java' | 'go' | 'csharp' | 'php'
+export type LanguageId =
+  | 'curl'
+  | 'typescript'
+  | 'python'
+  | 'java'
+  | 'go'
+  | 'csharp'
+  | 'php'
 
 export interface LanguageOption {
   id: LanguageId
@@ -392,8 +403,18 @@ export interface LanguageOption {
 
 export const LANGUAGES: Array<LanguageOption> = [
   { id: 'curl', label: 'cURL', highlight: 'bash', generate: generateCurl },
-  { id: 'typescript', label: 'TypeScript', highlight: 'typescript', generate: generateTypeScript },
-  { id: 'python', label: 'Python', highlight: 'python', generate: generatePython },
+  {
+    id: 'typescript',
+    label: 'TypeScript',
+    highlight: 'typescript',
+    generate: generateTypeScript,
+  },
+  {
+    id: 'python',
+    label: 'Python',
+    highlight: 'python',
+    generate: generatePython,
+  },
   { id: 'java', label: 'Java', highlight: 'java', generate: generateJava },
   { id: 'go', label: 'Go', highlight: 'go', generate: generateGo },
   { id: 'csharp', label: 'C#', highlight: 'csharp', generate: generateCSharp },

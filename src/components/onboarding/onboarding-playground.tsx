@@ -32,7 +32,8 @@ export function OnboardingPlayground({
     return values
   })
 
-  const maskedKey = maskApiKey(apiKey)
+  // Without a key in memory, requests are made as the signed-in account
+  const maskedKey = apiKey ? maskApiKey(apiKey) : 'Using your account'
 
   const { isLoading, response, error, send } = useApiRequest()
 

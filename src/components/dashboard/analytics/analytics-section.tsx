@@ -5,49 +5,49 @@ import { DailyTrendChart } from './daily-trend-chart'
 import { EndpointBreakdownTable } from './endpoint-breakdown-table'
 import { RateLimitAccessCard } from './rate-limit-access-card'
 import { ServiceHealthCard } from './service-health-card'
-import type { ApimUsageReport } from '@/types/plans'
+import type { UsageReport } from '@/types/plans'
 import {
   getDailyUsageTrend,
   getEndpointBreakdown,
   getRateLimitAccess,
   getServiceHealth,
-} from '@/lib/server/apim/analytics'
-import { apimKeys } from '@/lib/server/queries'
+} from '@/lib/server/gateway/analytics'
+import { accountKeys } from '@/lib/server/queries'
 
 interface AnalyticsSectionProps {
-  subscriptionId: string
-  monthlyReport: ApimUsageReport | undefined
+  userId: string
+  monthlyReport: UsageReport | undefined
   isMonthlyLoading: boolean
   isPaid: boolean
 }
 
 export function AnalyticsSection({
-  subscriptionId,
+  userId,
   monthlyReport,
   isMonthlyLoading,
   isPaid,
 }: AnalyticsSectionProps) {
   const dailyTrendQuery = useQuery({
-    queryKey: apimKeys.dailyTrend(subscriptionId),
-    queryFn: () => getDailyUsageTrend({ data: { subscriptionId } }),
+    queryKey: accountKeys.dailyTrend(userId),
+    queryFn: () => getDailyUsageTrend(),
     staleTime: 5 * 60 * 1000,
   })
 
   const endpointBreakdownQuery = useQuery({
-    queryKey: apimKeys.endpointBreakdown(subscriptionId),
-    queryFn: () => getEndpointBreakdown({ data: { subscriptionId } }),
+    queryKey: accountKeys.endpointBreakdown(userId),
+    queryFn: () => getEndpointBreakdown(),
     staleTime: 5 * 60 * 1000,
   })
 
   const rateLimitQuery = useQuery({
-    queryKey: apimKeys.rateLimitAccess(subscriptionId),
-    queryFn: () => getRateLimitAccess({ data: { subscriptionId } }),
+    queryKey: accountKeys.rateLimitAccess(userId),
+    queryFn: () => getRateLimitAccess(),
     staleTime: 5 * 60 * 1000,
   })
 
   const serviceHealthQuery = useQuery({
-    queryKey: apimKeys.serviceHealth(subscriptionId),
-    queryFn: () => getServiceHealth({ data: { subscriptionId } }),
+    queryKey: accountKeys.serviceHealth(userId),
+    queryFn: () => getServiceHealth(),
     staleTime: 5 * 60 * 1000,
   })
 

@@ -15,9 +15,7 @@ import { UserFilterBar } from '@/components/admin/users/user-filter-bar'
 const searchSchema = z.object({
   page: z.number().catch(1),
   search: z.string().catch(''),
-  tier: z
-    .enum(['all', 'student', 'private', 'commercial'])
-    .catch('all'),
+  tier: z.enum(['all', 'student', 'private', 'commercial']).catch('all'),
   filter: z
     .enum(['all', 'high-error', 'near-quota', 'high-usage', 'rate-limited'])
     .catch('all'),
@@ -35,7 +33,12 @@ export const Route = createFileRoute('/dashboard/admin/users/')({
 })
 
 type TierFilter = 'all' | 'student' | 'private' | 'commercial'
-type StatusFilter = 'all' | 'high-error' | 'near-quota' | 'high-usage' | 'rate-limited'
+type StatusFilter =
+  | 'all'
+  | 'high-error'
+  | 'near-quota'
+  | 'high-usage'
+  | 'rate-limited'
 
 function AdminUsersPage() {
   const { page, search, tier, filter } = Route.useSearch()
@@ -58,15 +61,12 @@ function AdminUsersPage() {
     staleTime: 30_000,
   })
 
-  const subscriptionIds = (data?.users ?? [])
-    .map((u) => u.apimSubscriptionId)
-    .filter((id): id is string => id != null)
+  const userIds = (data?.users ?? []).map((u) => u.clerkId)
 
   const { data: healthData } = useQuery({
     queryKey: adminKeys.userHealth(page, search),
-    queryFn: () =>
-      getAdminUserHealthBatch({ data: { subscriptionIds } }),
-    enabled: subscriptionIds.length > 0,
+    queryFn: () => getAdminUserHealthBatch({ data: { userIds } }),
+    enabled: userIds.length > 0,
     staleTime: 30_000,
   })
 
@@ -106,7 +106,9 @@ function AdminUsersPage() {
           tier={tier}
           filter={filter}
           onTierChange={(value) => updateSearch({ tier: value as TierFilter })}
-          onFilterChange={(value) => updateSearch({ filter: value as StatusFilter })}
+          onFilterChange={(value) =>
+            updateSearch({ filter: value as StatusFilter })
+          }
         />
       </div>
 

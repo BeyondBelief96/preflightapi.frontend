@@ -6,7 +6,8 @@ import { proxyApiRequest } from '@/lib/server/api-proxy'
 interface UseApiRequestOptions {
   method: string
   path: string
-  apiKey: string
+  /** Optional when signed in: without a key the request uses the account. */
+  apiKey?: string
   pathParams: Array<ParsedParameter>
   queryParams?: Array<ParsedParameter>
   paramValues: Record<string, string>
@@ -30,11 +31,6 @@ export function useApiRequest() {
       body,
       onSuccess,
     } = options
-
-    if (!apiKey.trim()) {
-      setError('Please enter your API key')
-      return
-    }
 
     setIsLoading(true)
     setError(null)
@@ -67,7 +63,7 @@ export function useApiRequest() {
         data: {
           method,
           path,
-          apiKey,
+          apiKey: apiKey?.trim() || undefined,
           queryParams: qp,
           body: body?.trim() || undefined,
         },

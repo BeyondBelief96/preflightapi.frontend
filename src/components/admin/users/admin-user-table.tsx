@@ -1,11 +1,8 @@
 import { Link } from '@tanstack/react-router'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import type { AdminUser } from '@/lib/server/admin/users'
-import type { UserHealthData } from '@/lib/server/apim/analytics'
-import {
-  computeHealthLevel,
-  healthColors,
-} from '@/lib/admin/health-score'
+import type { UserHealthData } from '@/lib/server/gateway/analytics'
+import { computeHealthLevel, healthColors } from '@/lib/admin/health-score'
 import { formatRelativeTime } from '@/lib/format'
 import {
   Table,
@@ -112,9 +109,7 @@ export function AdminUserTable({
           </TableHeader>
           <TableBody>
             {users.map((user) => {
-              const health = user.apimSubscriptionId
-                ? healthData?.[user.apimSubscriptionId]
-                : undefined
+              const health = healthData?.[user.clerkId]
               const level = computeHealthLevel(health)
 
               return (
@@ -128,8 +123,10 @@ export function AdminUserTable({
                       </TooltipTrigger>
                       <TooltipContent side="right">
                         {level === 'healthy' && 'Healthy'}
-                        {level === 'warning' && 'Elevated errors or rate limits'}
-                        {level === 'critical' && 'High error rate or rate limiting'}
+                        {level === 'warning' &&
+                          'Elevated errors or rate limits'}
+                        {level === 'critical' &&
+                          'High error rate or rate limiting'}
                       </TooltipContent>
                     </Tooltip>
                   </TableCell>

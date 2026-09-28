@@ -11,13 +11,12 @@ const steps = [
     icon: Key,
     title: 'Get Your API Key',
     description:
-      'Your key is generated instantly. Copy it from your dashboard.',
+      'Create a key from your dashboard in one click. Copy it — it is shown only once.',
   },
   {
     icon: Code,
     title: 'Start Building',
-    description:
-      'Make your first API call. 40+ endpoints, one subscription key.',
+    description: 'Make your first API call. 40+ endpoints, one API key.',
   },
 ]
 

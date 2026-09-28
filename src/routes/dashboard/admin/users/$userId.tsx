@@ -3,10 +3,13 @@ import { useQuery } from '@tanstack/react-query'
 import { ArrowLeft } from 'lucide-react'
 import { createPageHead } from '@/lib/seo'
 import { adminKeys } from '@/lib/server/queries'
-import { getAdminUserAnalytics, getAdminUserDetail } from '@/lib/server/admin/users'
+import {
+  getAdminUserAnalytics,
+  getAdminUserDetail,
+} from '@/lib/server/admin/users'
 import { UserProfileCard } from '@/components/admin/users/user-profile-card'
 import { UserStripeCard } from '@/components/admin/users/user-stripe-card'
-import { UserApimCard } from '@/components/admin/users/user-apim-card'
+import { UserGatewayCard } from '@/components/admin/users/user-gateway-card'
 import { UserAdminActions } from '@/components/admin/users/user-admin-actions'
 import { UserQuotaCard } from '@/components/admin/users/user-quota-card'
 import { UserAnalyticsSection } from '@/components/admin/users/user-analytics-section'
@@ -33,17 +36,12 @@ function AdminUserDetailPage() {
     staleTime: 30_000,
   })
 
-  const activeSubscription = userDetail?.apim.subscriptions.find(
-    (s) => s.state === 'active',
-  )
+  const hasAccount = !!userDetail?.gateway
 
   const { data: analytics, isLoading: analyticsLoading } = useQuery({
-    queryKey: adminKeys.userAnalytics(activeSubscription?.id ?? ''),
-    queryFn: () =>
-      getAdminUserAnalytics({
-        data: { subscriptionId: activeSubscription!.id },
-      }),
-    enabled: !!activeSubscription?.id,
+    queryKey: adminKeys.userAnalytics(userId),
+    queryFn: () => getAdminUserAnalytics({ data: { userId } }),
+    enabled: hasAccount,
     staleTime: 60_000,
   })
 
@@ -69,27 +67,27 @@ function AdminUserDetailPage() {
         <UserStripeCard data={userDetail?.stripe} isLoading={isLoading} />
       </div>
 
-      <UserApimCard data={userDetail?.apim} isLoading={isLoading} />
+      <UserGatewayCard
+        userId={userId}
+        data={userDetail?.gateway}
+        isLoading={isLoading}
+      />
 
       <div className="grid gap-6 lg:grid-cols-2">
         <UserQuotaCard data={userDetail?.quota} isLoading={isLoading} />
         <UserAdminActions
           userId={userId}
-          currentTier={activeSubscription?.planId}
+          currentTier={userDetail?.gateway?.tier}
         />
       </div>
 
-      {activeSubscription && (
+      {hasAccount && (
         <UserAnalyticsSection data={analytics} isLoading={analyticsLoading} />
       )}
 
-      {activeSubscription && (
-        <ActivityHeatmap subscriptionId={activeSubscription.id} />
-      )}
+      {hasAccount && <ActivityHeatmap userId={userId} />}
 
-      {activeSubscription && (
-        <RequestLogTable subscriptionId={activeSubscription.id} />
-      )}
+      {hasAccount && <RequestLogTable userId={userId} />}
     </div>
   )
 }

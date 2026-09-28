@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toastError } from '@/lib/toast-error'
 import { SITE_CONFIG } from '@/lib/constants'
 import { reconcileSubscription } from '@/lib/server/stripe/subscriptions'
-import { apimKeys, stripeKeys } from '@/lib/server/queries'
+import { accountKeys, stripeKeys } from '@/lib/server/queries'
 
 const MAX_RECONCILE_RETRIES = 5
 const RECONCILE_BASE_DELAY = 8000
@@ -21,7 +21,7 @@ export function useReconcile(
     onSuccess: (result) => {
       if (result.status === 'synced') {
         queryClient.invalidateQueries({
-          queryKey: apimKeys.subscription(userId ?? ''),
+          queryKey: accountKeys.summary(userId ?? ''),
         })
         queryClient.invalidateQueries({
           queryKey: stripeKeys.subscription(userId ?? ''),

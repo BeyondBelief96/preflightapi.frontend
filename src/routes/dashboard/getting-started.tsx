@@ -1,11 +1,13 @@
 import { useCallback, useRef, useState } from 'react'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useAuth, useUser } from '@clerk/tanstack-react-start'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import type { CreatedApiKey } from '@/types/gateway'
 import { createPageHead } from '@/lib/seo'
-import { getSubscriptionKeys, getUserSubscription } from '@/lib/server/apim/subscriptions'
+import { createApiKey, listApiKeys } from '@/lib/server/gateway/keys'
 import { completeOnboarding } from '@/lib/server/onboarding'
-import { apimKeys } from '@/lib/server/queries'
+import { accountKeys } from '@/lib/server/queries'
+import { toastError } from '@/lib/toast-error'
 import { allEndpoints } from '@/lib/docs/spec-parser'
 import { API_BASE_PATH } from '@/lib/api-metadata'
 import { StepIndicator } from '@/components/onboarding/step-indicator'
@@ -44,28 +46,30 @@ function GettingStartedPage() {
     | 'research'
     | 'other'
   const [useCase, setUseCase] = useState<UseCase | null>(null)
-  const [revealKey, setRevealKey] = useState(false)
   const [hasFirstSuccess, setHasFirstSuccess] = useState(false)
+  // Only held in memory: keys can't be retrieved after creation
+  const [createdKey, setCreatedKey] = useState<CreatedApiKey | null>(null)
+  const queryClient = useQueryClient()
 
-  // Pre-fetch subscription and keys data
-  const subsQuery = useQuery({
-    queryKey: apimKeys.subscription(userId ?? ''),
-    queryFn: () => getUserSubscription(),
+  const keysQuery = useQuery({
+    queryKey: accountKeys.keys(userId ?? ''),
+    queryFn: () => listApiKeys(),
     enabled: !!userId,
   })
 
-  const activeSubscription = subsQuery.data?.find((s) => s.state === 'active')
-
-  const keysQuery = useQuery({
-    queryKey: apimKeys.keys(activeSubscription?.id ?? ''),
-    queryFn: () =>
-      getSubscriptionKeys({
-        data: { subscriptionId: activeSubscription!.id },
-      }),
-    enabled: !!activeSubscription?.id,
+  const createKeyMutation = useMutation({
+    mutationFn: () => createApiKey({ data: { name: 'Default' } }),
+    onSuccess: (created) => {
+      setCreatedKey(created)
+      queryClient.invalidateQueries({
+        queryKey: accountKeys.keys(userId ?? ''),
+      })
+    },
+    onError: (err) => toastError('Failed to create API key', err),
   })
 
-  const primaryKey = keysQuery.data?.primaryKey ?? ''
+  const existingKeyCount = keysQuery.data?.length ?? 0
+  const hasKey = !!createdKey || existingKeyCount > 0
 
   const metarEndpoint = allEndpoints.find(
     (e) =>
@@ -103,7 +107,7 @@ function GettingStartedPage() {
     setHasFirstSuccess(true)
   }, [])
 
-  const isDataLoading = subsQuery.isLoading || keysQuery.isLoading
+  const isDataLoading = keysQuery.isLoading
 
   return (
     <div className="mx-auto max-w-2xl space-y-8">
@@ -129,16 +133,17 @@ function GettingStartedPage() {
         {currentStep === 2 && (
           <ApiKeyStep
             isLoading={isDataLoading}
-            primaryKey={primaryKey}
-            revealKey={revealKey}
-            onToggleReveal={() => setRevealKey((r) => !r)}
+            existingKeyCount={existingKeyCount}
+            createdKey={createdKey}
+            isCreating={createKeyMutation.isPending}
+            onCreate={() => createKeyMutation.mutate()}
           />
         )}
 
         {currentStep === 3 && (
           <TryItStep
             endpoint={metarEndpoint}
-            apiKey={primaryKey}
+            apiKey={createdKey?.key ?? ''}
             hasFirstSuccess={hasFirstSuccess}
             onSuccess={handleTryItSuccess}
           />
@@ -150,7 +155,7 @@ function GettingStartedPage() {
       <WizardNavigation
         currentStep={currentStep}
         isDataLoading={isDataLoading}
-        hasKey={!!primaryKey}
+        hasKey={hasKey}
         hasFirstSuccess={hasFirstSuccess}
         onBack={() => setCurrentStep((s) => Math.max(0, s - 1))}
         onNext={() => goToStep(currentStep + 1)}

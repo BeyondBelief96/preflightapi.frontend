@@ -5,7 +5,7 @@ import type { EndpointBreakdownItem } from '@/types/plans'
 import { formatMs } from '@/lib/format'
 import { adminKeys } from '@/lib/server/queries'
 import { getEndpointTopUsers } from '@/lib/server/admin/analytics'
-import { SubscriptionLink } from '@/components/admin/abuse/subscription-link'
+import { UserLink } from '@/components/admin/abuse/user-link'
 import { useResolveEmails } from '@/components/admin/abuse/use-resolve-emails'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -43,7 +43,7 @@ function EndpointDrillDown({ operationId }: { operationId: string }) {
     staleTime: 60_000,
   })
 
-  useResolveEmails(data?.map((u) => u.subscriptionId) ?? [])
+  useResolveEmails(data?.map((u) => u.userId) ?? [])
 
   if (isLoading) {
     return (
@@ -77,15 +77,13 @@ function EndpointDrillDown({ operationId }: { operationId: string }) {
           </p>
           {data.slice(0, 10).map((user) => (
             <div
-              key={user.subscriptionId}
+              key={user.userId}
               className="flex items-center justify-between gap-4 text-xs"
             >
-              <SubscriptionLink subscriptionId={user.subscriptionId} />
+              <UserLink userId={user.userId} />
               <div className="flex gap-4 tabular-nums">
                 <span>{user.calls.toLocaleString()} calls</span>
-                <span
-                  className={errorRateColor(user.errorRate)}
-                >
+                <span className={errorRateColor(user.errorRate)}>
                   {user.errorRate.toFixed(1)}% err
                 </span>
                 <span className={latencyColor(user.avgLatencyMs)}>

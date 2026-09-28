@@ -1,27 +1,29 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
-import { apimFetch } from '../apim/client'
-import { planIdFromProductId } from '../apim/products'
 import { getStripe } from '../stripe/client'
 import {
-  _queryDailyTrend,
-  _queryEndpointBreakdown,
-  _queryErrorBreakdown,
-  _queryRateLimitAccess,
-  _queryRecentErrors,
-  _queryRequestLog,
-  _queryServiceHealth,
-  _queryUsageReport,
-  _queryUserHealthBatch,
-  demoExclusion,
-} from '../apim/analytics'
+  queryDailyTrend,
+  queryEndpointBreakdown,
+  queryErrorBreakdown,
+  queryRateLimitAccess,
+  queryRecentErrors,
+  queryRequestLog,
+  queryServiceHealth,
+  queryUsageReport,
+  queryUserHealthBatch,
+  scopeFilter,
+} from '../gateway/analytics'
+import { GatewayError, adminFetch } from '../gateway/client'
+import { gatewayDb, isGatewayDbConfigured } from '../gateway/db'
 import { createLogger } from '../logger'
 import { requireAdmin } from './auth'
-import type { SubscriptionListResponse } from '@/types/apim'
-import { PLANS } from '@/lib/constants'
+import type { User as ClerkUser } from '@clerk/backend'
+import type { AdminAccountDetail } from '@/types/gateway'
 import { env } from '@/env'
 
 const log = createLogger('admin')
+
+const userIdSchema = z.string().min(1).max(128)
 
 // --- User Management ---
 
@@ -34,8 +36,47 @@ export interface AdminUser {
   createdAt: number
   lastSignInAt: number | null
   stripeCustomerId: string | null
-  apimSubscriptionId: string | null
   tier: string
+}
+
+/** Gateway tiers for the given users (users without an account are Student Pilot). */
+async function tiersFor(userIds: Array<string>): Promise<Map<string, string>> {
+  const tiers = new Map<string, string>()
+  if (userIds.length === 0 || !isGatewayDbConfigured()) return tiers
+  try {
+    const sql = await gatewayDb()
+    const rows = await sql<Array<{ userId: string; tier: string }>>`
+      select user_id as "userId", tier from gateway.accounts
+      where user_id in ${sql(userIds)}
+    `
+    for (const row of rows) tiers.set(row.userId, row.tier)
+  } catch (err) {
+    log.error({ err }, 'Failed to load gateway tiers')
+  }
+  return tiers
+}
+
+function toAdminUser(user: ClerkUser, tier: string | undefined): AdminUser {
+  return {
+    clerkId: user.id,
+    email:
+      user.emailAddresses.find((e) => e.id === user.primaryEmailAddressId)
+        ?.emailAddress ?? '',
+    firstName: user.firstName,
+    lastName: user.lastName,
+    imageUrl: user.imageUrl,
+    createdAt: user.createdAt,
+    lastSignInAt: user.lastSignInAt,
+    stripeCustomerId:
+      (user.privateMetadata as { stripeCustomerId?: string })
+        ?.stripeCustomerId ?? null,
+    tier: tier ?? 'student',
+  }
+}
+
+async function clerk() {
+  const { createClerkClient } = await import('@clerk/backend')
+  return createClerkClient({ secretKey: env.CLERK_SECRET_KEY })
 }
 
 export const getAdminUsers = createServerFn({ method: 'POST' })
@@ -59,98 +100,44 @@ export const getAdminUsers = createServerFn({ method: 'POST' })
       page: number
     }> => {
       await requireAdmin()
-
-      const { createClerkClient } = await import('@clerk/backend')
-      const clerk = createClerkClient({ secretKey: env.CLERK_SECRET_KEY })
+      const client = await clerk()
 
       const isTierFiltered = data.tier !== 'all'
       const offset = (data.page - 1) * data.pageSize
 
-      // When filtering by tier we must fetch a larger batch and filter client-side
-      // since Clerk doesn't support tier as a server-side filter. This only works
-      // reliably for page 1 — pagination with tier filter is not supported.
-      const clerkResponse = await clerk.users.getUserList({
+      // When filtering by tier we must fetch a larger batch and filter here
+      // since Clerk doesn't know tiers. This only works reliably for page 1 —
+      // pagination with tier filter is not supported.
+      const clerkResponse = await client.users.getUserList({
         limit: isTierFiltered ? 100 : data.pageSize,
         offset: isTierFiltered ? 0 : offset,
         ...(data.search ? { query: data.search } : {}),
       })
 
-      const allUsers: Array<AdminUser> = await Promise.all(
-        clerkResponse.data.map(async (user) => {
-          const email =
-            user.emailAddresses.find((e) => e.id === user.primaryEmailAddressId)
-              ?.emailAddress ?? ''
-          const stripeCustomerId =
-            (user.privateMetadata as { stripeCustomerId?: string })
-              ?.stripeCustomerId ?? null
-
-          let apimSubscriptionId: string | null = null
-          let tier = 'student'
-
-          try {
-            const subs = await apimFetch<SubscriptionListResponse>(
-              `/users/${user.id}/subscriptions`,
-            )
-            const activeSub = subs.value.find(
-              (s) => s.properties.state === 'active',
-            )
-            if (activeSub) {
-              apimSubscriptionId = activeSub.name
-              const productId =
-                activeSub.properties.scope.split('/').pop() ?? ''
-              tier = planIdFromProductId(productId)
-            }
-          } catch {
-            // User may not exist in APIM yet
-          }
-
-          return {
-            clerkId: user.id,
-            email,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            imageUrl: user.imageUrl,
-            createdAt: user.createdAt,
-            lastSignInAt: user.lastSignInAt,
-            stripeCustomerId,
-            apimSubscriptionId,
-            tier,
-          }
-        }),
+      const tiers = await tiersFor(clerkResponse.data.map((u) => u.id))
+      const allUsers = clerkResponse.data.map((u) =>
+        toAdminUser(u, tiers.get(u.id)),
       )
 
-      // Apply tier filter if set (client-side — only reliable for page 1)
       const filtered = isTierFiltered
         ? allUsers.filter((u) => u.tier === data.tier)
         : allUsers
 
-      const users = isTierFiltered
-        ? filtered.slice(0, data.pageSize)
-        : filtered
-
-      // When tier-filtered, report filtered.length as total so the UI
-      // won't render pagination controls for pages we can't serve.
-      const totalCount = isTierFiltered
-        ? filtered.length
-        : clerkResponse.totalCount
-
       return {
-        users,
-        totalCount,
+        users: isTierFiltered ? filtered.slice(0, data.pageSize) : filtered,
+        // When tier-filtered, report filtered.length as total so the UI
+        // won't render pagination controls for pages we can't serve.
+        totalCount: isTierFiltered ? filtered.length : clerkResponse.totalCount,
         page: data.page,
       }
     },
   )
 
 export const getAdminUserHealthBatch = createServerFn({ method: 'POST' })
-  .inputValidator(
-    z.object({
-      subscriptionIds: z.array(z.string().regex(/^[\w-]+$/)).max(100),
-    }),
-  )
+  .inputValidator(z.object({ userIds: z.array(userIdSchema).max(100) }))
   .handler(async ({ data }) => {
     await requireAdmin()
-    const healthMap = await _queryUserHealthBatch(data.subscriptionIds)
+    const healthMap = await queryUserHealthBatch(data.userIds)
     return Object.fromEntries(healthMap)
   })
 
@@ -162,48 +149,51 @@ const advancedFilterSchema = z.enum([
 ])
 export type AdvancedFilter = z.infer<typeof advancedFilterSchema>
 
-function filterKql(filter: AdvancedFilter): string {
-  const exclude = demoExclusion()
-  const filters: Record<AdvancedFilter, string> = {
-    'high-error': `
-ApiManagementGatewayLogs
-| where TimeGenerated >= ago(7d)
-  ${exclude}
-| summarize totalCalls = count(), errorCount = countif(ResponseCode >= 500) by ApimSubscriptionId
-| where totalCalls >= 50
-| extend errorRate = round(todouble(errorCount) / todouble(totalCalls) * 100, 1)
-| where errorRate > 10
-| top 50 by errorRate desc
-| project ApimSubscriptionId`,
-    'near-quota': `
-ApiManagementGatewayLogs
-| where TimeGenerated >= ago(30d)
-  ${exclude}
-| summarize totalCalls = count() by ApimSubscriptionId
-| where totalCalls > 4000
-| top 50 by totalCalls desc
-| project ApimSubscriptionId`,
-    'high-usage': `
-ApiManagementGatewayLogs
-| where TimeGenerated >= ago(30d)
-  ${exclude}
-| summarize totalCalls = count() by ApimSubscriptionId
-| top 50 by totalCalls desc
-| project ApimSubscriptionId`,
-    'rate-limited': `
-ApiManagementGatewayLogs
-| where TimeGenerated >= ago(7d) and ResponseCode == 429
-  ${exclude}
-| summarize count429 = count() by ApimSubscriptionId
-| top 50 by count429 desc
-| project ApimSubscriptionId`,
-  }
-  return filters[filter]
-}
+/** User IDs matching an advanced filter, most notable first (max 50). */
+async function filteredUserIds(filter: AdvancedFilter): Promise<Array<string>> {
+  if (!isGatewayDbConfigured()) return []
+  const sql = await gatewayDb()
+  const scope = scopeFilter(sql, 'all')
 
-function extractUserIdFromSubscription(subscriptionId: string): string | null {
-  const match = subscriptionId.match(/^(user_[^-]+)/)
-  return match?.[1] ?? null
+  const queries: Record<
+    AdvancedFilter,
+    () => Promise<Array<{ userId: string }>>
+  > = {
+    'high-error': () => sql`
+      select user_id as "userId"
+      from gateway.api_requests
+      where ts >= now() - interval '7 days' and user_id is not null ${scope}
+      group by user_id
+      having count(*) >= 50
+        and 100.0 * count(*) filter (where status >= 500) / count(*) > 10
+      order by 100.0 * count(*) filter (where status >= 500) / count(*) desc
+      limit 50`,
+    'near-quota': () => sql`
+      select user_id as "userId"
+      from gateway.api_requests
+      where ts >= now() - interval '30 days' and user_id is not null ${scope}
+      group by user_id
+      having count(*) > 4000
+      order by count(*) desc
+      limit 50`,
+    'high-usage': () => sql`
+      select user_id as "userId"
+      from gateway.api_requests
+      where ts >= now() - interval '30 days' and user_id is not null ${scope}
+      group by user_id
+      order by count(*) desc
+      limit 50`,
+    'rate-limited': () => sql`
+      select user_id as "userId"
+      from gateway.api_requests
+      where ts >= now() - interval '7 days' and status = 429 and user_id is not null ${scope}
+      group by user_id
+      order by count(*) desc
+      limit 50`,
+  }
+
+  const rows = await queries[filter]()
+  return rows.map((r) => r.userId)
 }
 
 export const getFilteredAdminUsers = createServerFn({ method: 'POST' })
@@ -224,75 +214,22 @@ export const getFilteredAdminUsers = createServerFn({ method: 'POST' })
     }> => {
       await requireAdmin()
 
-      const { logAnalyticsQuery } = await import('../log-analytics-client')
-      const kql = filterKql(data.filter).trim()
-
-      const queryResult = await logAnalyticsQuery(kql)
-      const table = queryResult.tables[0]
-      if (!table || table.rows.length === 0) {
-        return { users: [], totalCount: 0, page: data.page }
-      }
-
-      const subIds = table.rows.map((row) => String(row[0]))
-      const userIds = subIds
-        .map(extractUserIdFromSubscription)
-        .filter((id): id is string => id != null)
-      const uniqueUserIds = [...new Set(userIds)]
-
-      // Paginate
+      const userIds = await filteredUserIds(data.filter)
       const offset = (data.page - 1) * data.pageSize
-      const pageIds = uniqueUserIds.slice(offset, offset + data.pageSize)
+      const pageIds = userIds.slice(offset, offset + data.pageSize)
       if (pageIds.length === 0) {
-        return { users: [], totalCount: uniqueUserIds.length, page: data.page }
+        return { users: [], totalCount: userIds.length, page: data.page }
       }
 
-      const { createClerkClient } = await import('@clerk/backend')
-      const clerk = createClerkClient({ secretKey: env.CLERK_SECRET_KEY })
-
-      const usersRaw = await Promise.all(
+      const client = await clerk()
+      const tiers = await tiersFor(pageIds)
+      const users = await Promise.all(
         pageIds.map(async (userId): Promise<AdminUser | null> => {
           try {
-            const user = await clerk.users.getUser(userId)
-            const email =
-              user.emailAddresses.find(
-                (e) => e.id === user.primaryEmailAddressId,
-              )?.emailAddress ?? ''
-            const stripeCustomerId =
-              (user.privateMetadata as { stripeCustomerId?: string })
-                ?.stripeCustomerId ?? null
-
-            let apimSubscriptionId: string | null = null
-            let tier = 'student'
-
-            try {
-              const subs = await apimFetch<SubscriptionListResponse>(
-                `/users/${userId}/subscriptions`,
-              )
-              const activeSub = subs.value.find(
-                (s) => s.properties.state === 'active',
-              )
-              if (activeSub) {
-                apimSubscriptionId = activeSub.name
-                const productId =
-                  activeSub.properties.scope.split('/').pop() ?? ''
-                tier = planIdFromProductId(productId)
-              }
-            } catch {
-              // APIM lookup may fail
-            }
-
-            return {
-              clerkId: user.id,
-              email,
-              firstName: user.firstName,
-              lastName: user.lastName,
-              imageUrl: user.imageUrl,
-              createdAt: user.createdAt,
-              lastSignInAt: user.lastSignInAt,
-              stripeCustomerId,
-              apimSubscriptionId,
-              tier,
-            }
+            return toAdminUser(
+              await client.users.getUser(userId),
+              tiers.get(userId),
+            )
           } catch {
             return null
           }
@@ -300,8 +237,8 @@ export const getFilteredAdminUsers = createServerFn({ method: 'POST' })
       )
 
       return {
-        users: usersRaw.filter((u): u is AdminUser => u != null),
-        totalCount: uniqueUserIds.length,
+        users: users.filter((u): u is AdminUser => u != null),
+        totalCount: userIds.length,
         page: data.page,
       }
     },
@@ -335,48 +272,35 @@ export interface AdminUserDetail {
       lastPaymentError: string | null
     }>
   }
-  apim: {
-    subscriptions: Array<{
-      id: string
-      productId: string
-      planId: string
-      state: string
-      createdDate: string
-    }>
-  }
+  /** Gateway account (tier, keys); null if the user has never used the API or created a key. */
+  gateway: AdminAccountDetail | null
   quota: {
     callsUsed: number
     callsLimit: number | null
-    resetEpoch: number
+    periodStart: string
+    periodEnd: string
   } | null
 }
 
-const subscriptionIdSchema = z
-  .string()
-  .regex(/^[\w-]+$/, 'Invalid subscription ID')
-
 export const getAdminUserDetail = createServerFn({ method: 'GET' })
-  .inputValidator(z.object({ userId: z.string() }))
+  .inputValidator(z.object({ userId: userIdSchema }))
   .handler(async ({ data }): Promise<AdminUserDetail> => {
     await requireAdmin()
 
-    const { createClerkClient } = await import('@clerk/backend')
-    const clerk = createClerkClient({ secretKey: env.CLERK_SECRET_KEY })
-    const user = await clerk.users.getUser(data.userId)
+    const user = await (await clerk()).users.getUser(data.userId)
+    const adminUser = toAdminUser(user, undefined)
+    const stripeCustomerId = adminUser.stripeCustomerId
 
-    const email =
-      user.emailAddresses.find((e) => e.id === user.primaryEmailAddressId)
-        ?.emailAddress ?? ''
-    const stripeCustomerId =
-      (user.privateMetadata as { stripeCustomerId?: string })
-        ?.stripeCustomerId ?? null
-
-    // Parallel fetch APIM + Stripe
-    const [apimSubs, stripeData] = await Promise.all([
-      apimFetch<SubscriptionListResponse>(
-        `/users/${data.userId}/subscriptions`,
-      ).catch(() => ({ value: [] }) as SubscriptionListResponse),
-      (async () => {
+    const [gateway, stripeData] = await Promise.all([
+      adminFetch<AdminAccountDetail>(
+        `/users/${encodeURIComponent(data.userId)}`,
+      ).catch((err: unknown) => {
+        if (!(err instanceof GatewayError && err.status === 404)) {
+          log.error({ err }, 'Failed to load gateway account')
+        }
+        return null
+      }),
+      (async (): Promise<AdminUserDetail['stripe']> => {
         if (!stripeCustomerId) {
           return {
             customerId: null,
@@ -384,20 +308,14 @@ export const getAdminUserDetail = createServerFn({ method: 'GET' })
             planId: null,
             currentPeriodEnd: null,
             cancelAtPeriodEnd: false,
-            recentInvoices: [] as AdminUserDetail['stripe']['recentInvoices'],
+            recentInvoices: [],
           }
         }
 
         const stripe = getStripe()
         const [subscriptions, invoices] = await Promise.all([
-          stripe.subscriptions.list({
-            customer: stripeCustomerId,
-            limit: 1,
-          }),
-          stripe.invoices.list({
-            customer: stripeCustomerId,
-            limit: 10,
-          }),
+          stripe.subscriptions.list({ customer: stripeCustomerId, limit: 1 }),
+          stripe.invoices.list({ customer: stripeCustomerId, limit: 10 }),
         ])
 
         const sub = subscriptions.data[0]
@@ -426,53 +344,10 @@ export const getAdminUserDetail = createServerFn({ method: 'GET' })
       })(),
     ])
 
-    const subscriptions = apimSubs.value.map((sub) => {
-      const productId = sub.properties.scope.split('/').pop() ?? ''
-      return {
-        id: sub.name,
-        productId,
-        planId: planIdFromProductId(productId),
-        state: sub.properties.state,
-        createdDate: sub.properties.createdDate,
-        displayName: sub.properties.displayName,
-      }
-    })
-
-    // Compute quota usage for the active subscription
-    let quota: AdminUserDetail['quota'] = null
-    const activeSub = subscriptions.find((s) => s.state === 'active')
-    if (activeSub && env.APIM_LOG_ANALYTICS_WORKSPACE_ID) {
-      try {
-        const parts = activeSub.displayName.split('|')
-        const resetEpoch = parts.length === 2 ? Number(parts[1]) : 0
-        const resetDate =
-          resetEpoch > 0
-            ? new Date(resetEpoch * 1000)
-            : new Date(activeSub.createdDate)
-
-        const safeId = subscriptionIdSchema.parse(activeSub.id)
-        const filter = `and ApimSubscriptionId == '${safeId}'`
-        const usageReport = await _queryUsageReport(
-          filter,
-          resetDate.toISOString(),
-          new Date().toISOString(),
-        )
-
-        const plan = PLANS.find((p) => p.id === activeSub.planId)
-        quota = {
-          callsUsed: usageReport.callCountTotal,
-          callsLimit: plan?.limits.callsPerMonth ?? null,
-          resetEpoch,
-        }
-      } catch (err) {
-        log.error({ err }, 'Failed to fetch quota usage for admin user detail')
-      }
-    }
-
     return {
       clerk: {
         id: user.id,
-        email,
+        email: adminUser.email,
         firstName: user.firstName,
         lastName: user.lastName,
         imageUrl: user.imageUrl,
@@ -480,19 +355,24 @@ export const getAdminUserDetail = createServerFn({ method: 'GET' })
         lastSignInAt: user.lastSignInAt,
       },
       stripe: stripeData,
-      apim: {
-        subscriptions: subscriptions.map(({ displayName: _, ...rest }) => rest),
-      },
-      quota,
+      gateway,
+      quota: gateway
+        ? {
+            callsUsed: gateway.quota.used,
+            callsLimit: gateway.limits.callsPerMonth,
+            periodStart: gateway.quota.periodStart,
+            periodEnd: gateway.quota.periodEnd,
+          }
+        : null,
     }
   })
 
 export const getAdminUserAnalytics = createServerFn({ method: 'GET' })
-  .inputValidator(z.object({ subscriptionId: subscriptionIdSchema }))
+  .inputValidator(z.object({ userId: userIdSchema }))
   .handler(async ({ data }) => {
     await requireAdmin()
 
-    const filter = `and ApimSubscriptionId == '${data.subscriptionId}'`
+    const scope = { userId: data.userId }
     const now = new Date()
     const monthStart = new Date(now)
     monthStart.setUTCDate(now.getUTCDate() - 30)
@@ -506,13 +386,13 @@ export const getAdminUserAnalytics = createServerFn({ method: 'GET' })
       rateLimitAccess,
       serviceHealth,
     ] = await Promise.all([
-      _queryUsageReport(filter, monthStart.toISOString(), now.toISOString()),
-      _queryDailyTrend(filter),
-      _queryEndpointBreakdown(filter),
-      _queryErrorBreakdown(filter),
-      _queryRecentErrors(filter),
-      _queryRateLimitAccess(filter),
-      _queryServiceHealth(filter),
+      queryUsageReport(scope, monthStart.toISOString(), now.toISOString()),
+      queryDailyTrend(scope),
+      queryEndpointBreakdown(scope),
+      queryErrorBreakdown(scope),
+      queryRecentErrors(scope),
+      queryRateLimitAccess(scope),
+      queryServiceHealth(scope),
     ])
 
     return {
@@ -526,11 +406,11 @@ export const getAdminUserAnalytics = createServerFn({ method: 'GET' })
     }
   })
 
-// Compound cursor: "timestamp|itemId" or legacy "timestamp"
-const cursorTimestampSchema = z
+// Compound cursor: "timestamp|id"
+const cursorSchema = z
   .string()
   .regex(
-    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z?(\|[\w-]+)?$/,
+    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z?\|\d+$/,
     'Invalid cursor',
   )
 
@@ -547,23 +427,25 @@ const requestLogTimeRangeSchema = z.enum(['1h', '6h', '24h', '7d', '30d'])
 export const getAdminRequestLog = createServerFn({ method: 'GET' })
   .inputValidator(
     z.object({
-      subscriptionId: subscriptionIdSchema,
+      userId: userIdSchema,
       timeRange: requestLogTimeRangeSchema,
       statusFilter: requestLogFilterSchema,
-      cursor: cursorTimestampSchema.optional(),
+      cursor: cursorSchema.optional(),
       limit: z.number().int().min(1).max(200).default(50),
     }),
   )
   .handler(async ({ data }) => {
     await requireAdmin()
 
-    const filter = `and ApimSubscriptionId == '${data.subscriptionId}'`
-    return _queryRequestLog(filter, {
-      timeRange: data.timeRange,
-      statusFilter: data.statusFilter,
-      cursor: data.cursor,
-      limit: data.limit,
-    })
+    return queryRequestLog(
+      { userId: data.userId },
+      {
+        timeRange: data.timeRange,
+        statusFilter: data.statusFilter,
+        cursor: data.cursor,
+        limit: data.limit,
+      },
+    )
   })
 
 // --- Activity Heatmap ---
@@ -575,39 +457,25 @@ export interface ActivityHeatmapCell {
 }
 
 export const getAdminUserActivityHeatmap = createServerFn({ method: 'GET' })
-  .inputValidator(z.object({ subscriptionId: subscriptionIdSchema }))
+  .inputValidator(z.object({ userId: userIdSchema }))
   .handler(async ({ data }): Promise<Array<ActivityHeatmapCell>> => {
     await requireAdmin()
-
-    const { logAnalyticsQuery } = await import('../log-analytics-client')
-    const { env } = await import('@/env')
-    if (!env.APIM_LOG_ANALYTICS_WORKSPACE_ID) return []
-
-    const kql = `
-ApiManagementGatewayLogs
-| where TimeGenerated >= ago(30d)
-  and ApimSubscriptionId == '${data.subscriptionId}'
-| extend dow = dayofweek(TimeGenerated) / 1d, hourOfDay = hourofday(TimeGenerated)
-| summarize calls = count() by toint(dow), toint(hourOfDay)
-| project dayOfWeek = dow, hour = hourOfDay, calls
-`.trim()
+    if (!isGatewayDbConfigured()) return []
 
     try {
-      const result = await logAnalyticsQuery(kql)
-      const table = result.tables[0]
-      if (!table || table.rows.length === 0) return []
-
-      const cols = table.columns.map((c) => c.name)
-      const dowIdx = cols.indexOf('dayOfWeek')
-      const hourIdx = cols.indexOf('hour')
-      const callsIdx = cols.indexOf('calls')
-
-      return table.rows.map((row) => ({
-        dayOfWeek: Number(row[dowIdx]) || 0,
-        hour: Number(row[hourIdx]) || 0,
-        calls: Number(row[callsIdx]) || 0,
-      }))
-    } catch {
+      const sql = await gatewayDb()
+      const rows = await sql<Array<ActivityHeatmapCell>>`
+        select
+          extract(dow from ts at time zone 'UTC')::int as "dayOfWeek",
+          extract(hour from ts at time zone 'UTC')::int as "hour",
+          count(*)::int as "calls"
+        from gateway.api_requests
+        where ts >= now() - interval '30 days' and user_id = ${data.userId}
+        group by 1, 2
+      `
+      return Array.from(rows)
+    } catch (err) {
+      log.error({ err }, 'Failed to load activity heatmap')
       return []
     }
   })

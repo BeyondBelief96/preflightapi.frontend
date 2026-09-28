@@ -290,8 +290,7 @@ function DocsIndex() {
           <code className="block text-sm text-accent">{API_BASE_URL}</code>
           <p className="mt-2 text-sm text-muted-foreground">
             All API endpoints are relative to this base URL. Every request must
-            include an{' '}
-            <code className="text-foreground">Ocp-Apim-Subscription-Key</code>{' '}
+            include an <code className="text-foreground">X-API-Key</code>{' '}
             header. See the{' '}
             <Link
               to="/docs/authentication"
@@ -330,15 +329,15 @@ function DocsIndex() {
           <li>
             <strong className="text-foreground">Cursor-based pagination</strong>{' '}
             — Endpoints that can return large result sets use a paginated
-            wrapper with bidirectional navigation. Use the{' '}
-            <code>cursor</code> query parameter with either{' '}
-            <code>nextCursor</code> or <code>previousCursor</code> to page
-            forward or backward. The <code>limit</code> parameter controls
-            page size (1–500, default 100).
+            wrapper with bidirectional navigation. Use the <code>cursor</code>{' '}
+            query parameter with either <code>nextCursor</code> or{' '}
+            <code>previousCursor</code> to page forward or backward. The{' '}
+            <code>limit</code> parameter controls page size (1–500, default
+            100).
           </li>
           <li>
-            <strong className="text-foreground">Structured errors</strong> —
-            All errors — gateway and backend — return a{' '}
+            <strong className="text-foreground">Structured errors</strong> — All
+            errors — gateway and backend — return a{' '}
             <Link to="/docs/errors" className="text-accent hover:underline">
               unified response format
             </Link>{' '}

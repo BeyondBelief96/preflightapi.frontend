@@ -38,12 +38,19 @@ function buildIndex(): Array<SearchItem> {
     {
       title: 'Authentication',
       href: '/docs/authentication',
-      keywords: ['api key', 'auth', 'header', 'ocp-apim'],
+      keywords: ['api key', 'auth', 'header', 'x-api-key', 'rotate', 'revoke'],
     },
     {
       title: 'Rate Limits',
       href: '/docs/rate-limits',
-      keywords: ['throttle', 'quota', '429', 'limit'],
+      keywords: [
+        'throttle',
+        'quota',
+        '429',
+        'limit',
+        'x-ratelimit',
+        'retry-after',
+      ],
     },
     {
       title: 'Error Handling',

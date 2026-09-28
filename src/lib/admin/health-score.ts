@@ -1,4 +1,4 @@
-import type { UserHealthData } from '@/lib/server/apim/analytics'
+import type { UserHealthData } from '@/lib/server/gateway/analytics'
 
 export type HealthLevel = 'healthy' | 'warning' | 'critical'
 

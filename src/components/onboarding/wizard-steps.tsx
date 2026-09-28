@@ -5,8 +5,6 @@ import {
   Check,
   CloudSun,
   CreditCard,
-  Eye,
-  EyeOff,
   FlaskConical,
   GraduationCap,
   Key,
@@ -15,9 +13,11 @@ import {
   Rocket,
   Sparkles,
   Tablet,
+  TriangleAlert,
   Zap,
 } from 'lucide-react'
 import type { ParsedEndpoint } from '@/lib/docs/types'
+import type { CreatedApiKey } from '@/types/gateway'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -140,14 +140,16 @@ export function UseCaseStep({
 
 export function ApiKeyStep({
   isLoading,
-  primaryKey,
-  revealKey,
-  onToggleReveal,
+  existingKeyCount,
+  createdKey,
+  isCreating,
+  onCreate,
 }: {
   isLoading: boolean
-  primaryKey: string
-  revealKey: boolean
-  onToggleReveal: () => void
+  existingKeyCount: number
+  createdKey: CreatedApiKey | null
+  isCreating: boolean
+  onCreate: () => void
 }) {
   return (
     <Card>
@@ -155,8 +157,8 @@ export function ApiKeyStep({
         <div>
           <h2 className="text-2xl font-bold">Your API Key</h2>
           <p className="mt-2 text-muted-foreground">
-            Your account has been provisioned with an API key. Use it to
-            authenticate every request.
+            Create a key to authenticate your requests. It's shown only once, so
+            copy it somewhere safe.
           </p>
         </div>
 
@@ -165,53 +167,55 @@ export function ApiKeyStep({
             <Skeleton className="h-4 w-24" />
             <Skeleton className="h-10 w-full" />
           </div>
-        ) : primaryKey ? (
+        ) : createdKey ? (
           <div className="space-y-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium">Primary Key</label>
+              <label className="text-sm font-medium">API Key</label>
               <div className="flex items-center gap-2">
                 <code className="min-w-0 flex-1 truncate rounded bg-muted px-3 py-2 font-mono text-sm">
-                  {revealKey ? primaryKey : maskApiKey(primaryKey)}
+                  {createdKey.key}
                 </code>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="shrink-0"
-                  onClick={onToggleReveal}
-                  title={revealKey ? 'Hide key' : 'Reveal key'}
-                >
-                  {revealKey ? (
-                    <EyeOff className="h-4 w-4" />
-                  ) : (
-                    <Eye className="h-4 w-4" />
-                  )}
-                </Button>
                 <CopyButton
-                  text={primaryKey}
+                  text={createdKey.key}
                   className="h-9 w-9 shrink-0 [&_svg]:h-4 [&_svg]:w-4"
                 />
               </div>
+              <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                <TriangleAlert className="h-3.5 w-3.5 shrink-0" />
+                This is the only time this key will be shown.
+              </p>
             </div>
 
             <p className="text-sm text-muted-foreground">
               Include this key in the{' '}
               <code className="rounded bg-muted px-1.5 py-0.5 text-xs">
-                Ocp-Apim-Subscription-Key
+                X-API-Key
               </code>{' '}
               header with every request.
             </p>
 
             <CodeBlock
-              code={`curl -H "Ocp-Apim-Subscription-Key: ${maskApiKey(primaryKey)}" \\
+              code={`curl -H "X-API-Key: ${maskApiKey(createdKey.key)}" \\
   ${API_BASE_URL}/metars/KJFK`}
               language="bash"
               className="max-w-full"
             />
           </div>
-        ) : (
+        ) : existingKeyCount > 0 ? (
           <p className="text-sm text-muted-foreground">
-            Unable to load your API key. Please try refreshing the page.
+            You already have{' '}
+            {existingKeyCount === 1 ? 'an API key' : 'API keys'}. Manage them on
+            the{' '}
+            <Link to="/dashboard/keys" className="text-accent hover:underline">
+              API Keys page
+            </Link>
+            . Continue to try a request with your account.
           </p>
+        ) : (
+          <Button className="gap-2" onClick={onCreate} disabled={isCreating}>
+            <Key className="h-4 w-4" />
+            {isCreating ? 'Creating…' : 'Create my API key'}
+          </Button>
         )}
       </CardContent>
     </Card>

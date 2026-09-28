@@ -6,15 +6,15 @@ import {
   TIER_UI,
   buildPlanFeatures,
 } from '@/lib/constants'
-import { fetchTierConfig } from '@/lib/server/apim/subscriptions'
-import { apimKeys } from '@/lib/server/queries'
+import { fetchTierConfig } from '@/lib/server/tier-config'
+import { accountKeys } from '@/lib/server/queries'
 
 export function usePlans(): {
   plans: Array<PlanDefinition>
   endpointAccess: Record<string, EndpointTier>
 } {
   const { data: tierConfig } = useQuery({
-    queryKey: apimKeys.tierConfig(),
+    queryKey: accountKeys.tierConfig(),
     queryFn: () => fetchTierConfig(),
     staleTime: 5 * 60 * 1000,
   })
@@ -32,7 +32,6 @@ export function usePlans(): {
     return {
       id: plan.id,
       name: product?.displayName ?? plan.name,
-      apimProductId: product?.apimProductId ?? plan.apimProductId,
       price: price?.price ?? plan.price,
       interval: price?.interval ?? plan.interval,
       limits,

@@ -14,7 +14,6 @@ export interface PlanDefinition {
   name: string
   price: number | null
   interval: 'month' | 'year' | null
-  apimProductId: string
   limits: {
     callsPerMonth: number | null
     ratePerMinute: number | null
@@ -109,7 +108,7 @@ export function buildPlanFeatures(
   ]
 }
 
-// --- Default plan definitions (fallback when APIM/Stripe are unavailable) ---
+// --- Plan definitions (limits mirror the API gateway; prices fall back to these when Stripe is unavailable) ---
 
 export const PLANS: Array<PlanDefinition> = [
   {
@@ -117,7 +116,6 @@ export const PLANS: Array<PlanDefinition> = [
     name: 'Student Pilot',
     price: 0,
     interval: 'month',
-    apimProductId: 'student-pilot',
     limits: { callsPerMonth: 5_000, ratePerMinute: 10 },
     features: buildPlanFeatures(
       'student',
@@ -131,7 +129,6 @@ export const PLANS: Array<PlanDefinition> = [
     name: 'Private Pilot',
     price: 14.99,
     interval: 'month',
-    apimProductId: 'private-pilot',
     limits: { callsPerMonth: 150_000, ratePerMinute: 60 },
     highlighted: true,
     features: buildPlanFeatures(
@@ -146,7 +143,6 @@ export const PLANS: Array<PlanDefinition> = [
     name: 'Commercial Pilot',
     price: 49.99,
     interval: 'month',
-    apimProductId: 'commercial-pilot',
     limits: { callsPerMonth: 750_000, ratePerMinute: 300 },
     features: buildPlanFeatures(
       'commercial',

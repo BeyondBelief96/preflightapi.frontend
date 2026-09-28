@@ -19,7 +19,7 @@ npx shadcn@latest add <component>  # Add shadcn/ui components
 
 ## Tech Stack
 
-TanStack Start (React 19, Vite 7, Nitro SSR) with TanStack Router (file-based), Query, Form, and Table. Clerk for auth, Stripe for billing (SDK v20, API `2026-01-28.clover`), Azure APIM for API gateway. Tailwind CSS v4 + shadcn/ui (New York style). TypeScript 5.7 strict mode, Zod v4 for validation. Node 25.6.0 (see `.nvmrc`). Deployed on Vercel.
+TanStack Start (React 19, Vite 7, Nitro SSR) with TanStack Router (file-based), Query, Form, and Table. Clerk for auth, Stripe for billing (SDK v20, API `2026-01-28.clover`), Self-hosted API gateway (`../preflight/apps/api`, Hono) for API keys, tiers, quotas and usage logs. Tailwind CSS v4 + shadcn/ui (New York style). TypeScript 5.7 strict mode, Zod v4 for validation. Node 25.6.0 (see `.nvmrc`). Deployed on Vercel.
 
 ## Architecture
 
@@ -45,38 +45,38 @@ Server-side logic uses `createServerFn()` from `@tanstack/react-start`. Two dist
 
 **`src/lib/server/`** — Organized into domain subdirectories:
 
-| Directory/Module          | Purpose                                              |
-| ------------------------- | ---------------------------------------------------- |
-| `apim/client.ts`          | Authenticated Azure APIM REST client                 |
-| `apim/products.ts`        | APIM product ID mapping (`getApimProductIds`)        |
-| `apim/subscriptions.ts`   | APIM user & subscription management                  |
-| `apim/analytics.ts`       | KQL analytics queries (usage, trends, errors)        |
-| `apim/tier-config.ts`     | Dynamic plan data (APIM limits + Stripe prices)      |
-| `stripe/client.ts`        | Stripe SDK singleton                                 |
-| `stripe/utils.ts`         | Price/plan ID mapping utilities                      |
-| `stripe/tier-resolver.ts` | Resolves Stripe price → APIM product ID              |
-| `stripe/subscriptions.ts` | Checkout, portal, subscription management            |
-| `admin/auth.ts`           | Admin email check, `requireAdmin()`, `checkIsAdmin`  |
-| `admin/analytics.ts`      | System overview, daily trends, top endpoints         |
-| `admin/users.ts`          | Admin user listing, detail, per-user analytics       |
-| `admin/abuse.ts`          | Abuse detection (error rates, spikes, IPs)           |
-| `admin/mutations.ts`      | Admin tier change, cancel subscription, reset quota  |
-| `admin/revenue.ts`        | MRR, churn, customer-by-tier revenue summary         |
-| `admin/email.ts`          | Email broadcast management (Resend)                  |
-| `email/client.ts`         | Resend SDK singleton                                 |
-| `email/contacts.ts`       | Resend contact management (create, remove, segment)  |
-| `email/contact-form.ts`   | Contact form handler with rate limiting              |
-| `auth.ts`                 | `requireAuth()` helper                               |
-| `queries.ts`              | React Query key factories                            |
-| `logger.ts`               | Pino logger                                          |
+| Directory/Module          | Purpose                                                                                                    |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `gateway/client.ts`       | Gateway HTTP client: `accountFetch` (Clerk session), `adminFetch` / `apiFetchOnBehalfOf` (internal secret) |
+| `gateway/keys.ts`         | API key list/create/rotate/revoke, account summary                                                         |
+| `gateway/db.ts`           | Read-only Postgres client for the `gateway` schema                                                         |
+| `gateway/analytics.ts`    | SQL usage analytics over `gateway.api_requests`                                                            |
+| `tier-config.ts`          | Plan data (static limits + Stripe prices)                                                                  |
+| `stripe/client.ts`        | Stripe SDK singleton                                                                                       |
+| `stripe/utils.ts`         | Price/plan ID mapping utilities                                                                            |
+| `stripe/tier-resolver.ts` | Resolves a Stripe subscription → plan ID                                                                   |
+| `stripe/subscriptions.ts` | Checkout, portal, subscription management                                                                  |
+| `admin/auth.ts`           | Admin email check, `requireAdmin()`, `checkIsAdmin`                                                        |
+| `admin/analytics.ts`      | System overview, daily trends, top endpoints                                                               |
+| `admin/users.ts`          | Admin user listing, detail, per-user analytics                                                             |
+| `admin/abuse.ts`          | Abuse detection (error rates, spikes, IPs)                                                                 |
+| `admin/mutations.ts`      | Admin tier change, cancel subscription, reset quota                                                        |
+| `admin/revenue.ts`        | MRR, churn, customer-by-tier revenue summary                                                               |
+| `admin/email.ts`          | Email broadcast management (Resend)                                                                        |
+| `email/client.ts`         | Resend SDK singleton                                                                                       |
+| `email/contacts.ts`       | Resend contact management (create, remove, segment)                                                        |
+| `email/contact-form.ts`   | Contact form handler with rate limiting                                                                    |
+| `auth.ts`                 | `requireAuth()` helper                                                                                     |
+| `queries.ts`              | React Query key factories                                                                                  |
+| `logger.ts`               | Pino logger                                                                                                |
 
 **`server/api/`** — Nitro HTTP endpoints (webhooks, public APIs):
 
-| Endpoint            | Purpose                                                        |
-| ------------------- | -------------------------------------------------------------- |
-| `stripe/webhook.ts` | Handles Stripe subscription events, syncs tier changes to APIM |
-| `clerk/webhook.ts`  | Clerk user event handlers                                      |
-| `openapi.get.ts`    | Serves the OpenAPI JSON spec                                   |
+| Endpoint            | Purpose                                                                                 |
+| ------------------- | --------------------------------------------------------------------------------------- |
+| `stripe/webhook.ts` | Resend segment sync + Clerk cleanup (tiers are set by the gateway's own Stripe webhook) |
+| `clerk/webhook.ts`  | Clerk user event handlers                                                               |
+| `openapi.get.ts`    | Serves the OpenAPI JSON spec                                                            |
 
 ### Server Function Conventions
 
@@ -99,13 +99,15 @@ const myServerFn = createServerFn()
 
 ### Subscription Tiers
 
-Three tiers defined in `src/lib/constants.ts`. Plan data (names, limits, prices) is fetched dynamically from APIM and Stripe at runtime — avoid hardcoding tier names or prices in UI.
+Three tiers defined in `src/lib/constants.ts`. Limits mirror the gateway's tier definitions (`@preflight/contracts`); prices come from Stripe at runtime — avoid hardcoding tier names or prices in UI.
 
-| Tier             | Plan ID      | APIM Product ID    | Default Price | Calls/Month | Rate Limit  |
-| ---------------- | ------------ | ------------------ | ------------- | ----------- | ----------- |
-| Student Pilot    | `student`    | `student-pilot`    | Free          | 5,000       | 10 req/min  |
-| Private Pilot    | `private`    | `private-pilot`    | $14.99/mo     | 150,000     | 60 req/min  |
-| Commercial Pilot | `commercial` | `commercial-pilot` | $49.99/mo     | 750,000     | 300 req/min |
+| Tier             | Plan ID      | Default Price | Calls/Month | Rate Limit  |
+| ---------------- | ------------ | ------------- | ----------- | ----------- |
+| Student Pilot    | `student`    | Free          | 5,000       | 10 req/min  |
+| Private Pilot    | `private`    | $14.99/mo     | 150,000     | 60 req/min  |
+| Commercial Pilot | `commercial` | $49.99/mo     | 750,000     | 300 req/min |
+
+The gateway owns tiers, keys and quotas. The frontend changes them only through the gateway (`/account/*` for the signed-in user, `/admin/*` with the internal secret) and reads usage analytics straight from Postgres. API keys (`X-API-Key: pf_live_…`) are shown only once at creation; users can have 2 active keys.
 
 - `ENDPOINT_ACCESS` maps API endpoints to minimum required tier (`EndpointTier`)
 - `src/lib/endpoint-registry.ts` is the single source of truth for endpoint categories, doc links, and tier access computation — used by pricing, docs overview, and upgrade banner
@@ -119,7 +121,7 @@ Three tiers defined in `src/lib/constants.ts`. Plan data (names, limits, prices)
 - Price IDs are server-only env vars (differ between test/live): `STRIPE_PRIVATE_PRICE_ID`, `STRIPE_COMMERCIAL_PRICE_ID`
 - Checkout is redirect-based (no `@stripe/stripe-js` on client)
 - `createCheckoutSession` prevents duplicate subscriptions server-side
-- APIM API keys stay the same across tier changes (subscription scope is PATCHed)
+- API keys stay the same across tier changes (the tier lives on the gateway account, not the key)
 
 ### Styling
 
@@ -130,7 +132,7 @@ Three tiers defined in `src/lib/constants.ts`. Plan data (names, limits, prices)
 
 ### Environment Variables
 
-Validated via T3Env in `src/env.ts`. Frontend vars use `VITE_` prefix. Server-only vars (Stripe keys, Azure credentials) have no prefix. Import as `import { env } from '@/env'`. See `.env.example` for the full list.
+Validated via T3Env in `src/env.ts`. Frontend vars use `VITE_` prefix. Server-only vars (Stripe keys, gateway secret/URLs) have no prefix. Import as `import { env } from '@/env'`. See `.env.example` for the full list.
 
 ### Generated Types
 

@@ -18,25 +18,7 @@ export interface UsageStats {
   endpointBreakdown: Array<{ endpoint: string; calls: number }>
 }
 
-export interface ApimSubscription {
-  id: string
-  name: string
-  productId: string
-  userId: string
-  state:
-    | 'active'
-    | 'suspended'
-    | 'submitted'
-    | 'rejected'
-    | 'cancelled'
-    | 'expired'
-  primaryKey: string
-  secondaryKey: string
-  createdDate: string
-  expirationDate: string | null
-}
-
-export interface ApimUsageReport {
+export interface UsageReport {
   callCountTotal: number
   callCountSuccess: number
   callCountBlocked: number
@@ -55,7 +37,7 @@ export interface DailyUsagePoint {
 }
 
 export interface EndpointBreakdownItem {
-  endpoint: string // APIM OperationId, e.g. 'get-metar'
+  endpoint: string // OpenAPI operationId
   calls: number
   clientErrorRate: number // 4xx percentage 0-100
   serverErrorRate: number // 5xx percentage 0-100
@@ -72,7 +54,7 @@ export interface ErrorCodeBreakdownItem {
 
 export interface RecentError {
   timestamp: string // ISO datetime
-  endpoint: string // APIM OperationId
+  endpoint: string // OpenAPI operationId
   statusCode: number // HTTP response code
   method: string // HTTP method (GET, POST, etc.)
 }

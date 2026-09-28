@@ -1,69 +1,43 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
-import { apimFetch } from '../apim/client'
-import { getApimProductIds } from '../apim/products'
+import { adminFetch } from '../gateway/client'
 import { getStripe } from '../stripe/client'
 import { createLogger } from '../logger'
 import { requireAdmin } from './auth'
-import type { SubscriptionListResponse } from '@/types/apim'
 import { env } from '@/env'
 
 const log = createLogger('admin')
 
-const planIdSchema = z.enum(['student', 'private', 'commercial', 'atp'])
+const planIdSchema = z.enum(['student', 'private', 'commercial'])
+const userIdSchema = z.string().min(1).max(128)
 
+function userPath(userId: string): string {
+  return `/users/${encodeURIComponent(userId)}`
+}
+
+/**
+ * Manual tier override in the gateway. A later Stripe event for the user
+ * (renewal, plan change, cancellation) will overwrite it.
+ */
 export const adminChangeTier = createServerFn({ method: 'POST' })
-  .inputValidator(z.object({ userId: z.string(), planId: planIdSchema }))
+  .inputValidator(z.object({ userId: userIdSchema, planId: planIdSchema }))
   .handler(async ({ data }) => {
     await requireAdmin()
 
-    const productIds = getApimProductIds()
-    const apimProductId = productIds[data.planId]
-    if (!apimProductId) {
-      throw new Error(`Unknown plan ID: ${data.planId}`)
-    }
-
-    const result = await apimFetch<SubscriptionListResponse>(
-      `/users/${data.userId}/subscriptions`,
-    )
-    const activeSubs = result.value.filter(
-      (s) => s.properties.state === 'active',
-    )
-
-    if (activeSubs.length === 0) {
-      throw new Error('No active APIM subscription found for user')
-    }
-
-    const patchResults = await Promise.allSettled(
-      activeSubs.map((sub) =>
-        apimFetch(`/subscriptions/${sub.name}`, {
-          method: 'PATCH',
-          body: JSON.stringify({
-            properties: { scope: `/products/${apimProductId}` },
-          }),
-        }),
-      ),
-    )
-
-    const failures = patchResults.filter(
-      (r): r is PromiseRejectedResult => r.status === 'rejected',
-    )
-    if (failures.length > 0) {
-      throw new Error(
-        `Failed to update ${failures.length}/${activeSubs.length} subscriptions`,
-      )
-    }
+    await adminFetch(`${userPath(data.userId)}/tier`, {
+      method: 'PUT',
+      body: JSON.stringify({ tier: data.planId }),
+    })
 
     log.info(
-      { userId: data.userId, planId: data.planId, apimProductId },
+      { userId: data.userId, planId: data.planId },
       'Admin changed user tier',
     )
-
     return { success: true, planId: data.planId }
   })
 
 export const adminCancelSubscription = createServerFn({ method: 'POST' })
-  .inputValidator(z.object({ userId: z.string() }))
+  .inputValidator(z.object({ userId: userIdSchema }))
   .handler(async ({ data }) => {
     await requireAdmin()
 
@@ -93,83 +67,45 @@ export const adminCancelSubscription = createServerFn({ method: 'POST' })
       }
     }
 
-    const productIds = getApimProductIds()
-    const apimResult = await apimFetch<SubscriptionListResponse>(
-      `/users/${data.userId}/subscriptions`,
-    )
-    const activeSubs = apimResult.value.filter(
-      (s) => s.properties.state === 'active',
-    )
-
-    const patchResults = await Promise.allSettled(
-      activeSubs.map((sub) =>
-        apimFetch(`/subscriptions/${sub.name}`, {
-          method: 'PATCH',
-          body: JSON.stringify({
-            properties: {
-              scope: `/products/${productIds.student}`,
-              displayName: `${data.userId}|0`,
-            },
-          }),
-        }),
-      ),
-    )
-
-    const failures = patchResults.filter(
-      (r): r is PromiseRejectedResult => r.status === 'rejected',
-    )
-    if (failures.length > 0) {
-      log.error(
-        { userId: data.userId, failures: failures.length },
-        'Failed to downgrade APIM subscriptions after cancellation',
-      )
-    }
+    // The gateway's Stripe webhook also downgrades on cancellation; do it
+    // here too so the change is immediate.
+    await adminFetch(`${userPath(data.userId)}/tier`, {
+      method: 'PUT',
+      body: JSON.stringify({ tier: 'student' }),
+    })
 
     log.info(
       { userId: data.userId },
       'Admin canceled subscription and downgraded to student',
     )
-
     return { success: true }
   })
 
 export const adminResetQuota = createServerFn({ method: 'POST' })
-  .inputValidator(z.object({ userId: z.string() }))
+  .inputValidator(z.object({ userId: userIdSchema }))
   .handler(async ({ data }) => {
     await requireAdmin()
 
-    const result = await apimFetch<SubscriptionListResponse>(
-      `/users/${data.userId}/subscriptions`,
-    )
-    const activeSubs = result.value.filter(
-      (s) => s.properties.state === 'active',
-    )
-
-    if (activeSubs.length === 0) {
-      throw new Error('No active APIM subscription found for user')
-    }
-
-    const patchResults = await Promise.allSettled(
-      activeSubs.map((sub) =>
-        apimFetch(`/subscriptions/${sub.name}`, {
-          method: 'PATCH',
-          body: JSON.stringify({
-            properties: { displayName: `${data.userId}|0` },
-          }),
-        }),
-      ),
-    )
-
-    const failures = patchResults.filter(
-      (r): r is PromiseRejectedResult => r.status === 'rejected',
-    )
-    if (failures.length > 0) {
-      throw new Error(
-        `Failed to reset quota for ${failures.length}/${activeSubs.length} subscriptions`,
-      )
-    }
+    await adminFetch(`${userPath(data.userId)}/quota/reset`, {
+      method: 'POST',
+    })
 
     log.info({ userId: data.userId }, 'Admin reset user quota')
+    return { success: true }
+  })
 
+export const adminRevokeApiKey = createServerFn({ method: 'POST' })
+  .inputValidator(z.object({ userId: userIdSchema, keyId: z.uuid() }))
+  .handler(async ({ data }) => {
+    await requireAdmin()
+
+    await adminFetch(`${userPath(data.userId)}/keys/${data.keyId}`, {
+      method: 'DELETE',
+    })
+
+    log.info(
+      { userId: data.userId, keyId: data.keyId },
+      'Admin revoked API key',
+    )
     return { success: true }
   })

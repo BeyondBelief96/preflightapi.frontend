@@ -4,27 +4,13 @@ import { resolveUserEmails } from '@/lib/server/admin/resolve-emails'
 import { adminKeys } from '@/lib/server/queries'
 
 /**
- * Extracts the Clerk user ID from an APIM subscription ID.
- * Subscription IDs follow the pattern: `{clerkUserId}-{productId}`
+ * Batch-resolves user emails and primes individual `adminKeys.userEmail()`
+ * query cache entries so that `UserLink` components get cache hits.
  */
-export function extractUserId(subscriptionId: string): string | null {
-  const match = subscriptionId.match(/^(user_[^-]+)/)
-  return match?.[1] ?? null
-}
-
-/**
- * Batch-resolves user emails for a list of subscription IDs and
- * primes individual `adminKeys.userEmail()` query cache entries
- * so that `SubscriptionLink` components get cache hits.
- */
-export function useResolveEmails(subscriptionIds: string[]) {
+export function useResolveEmails(ids: Array<string>) {
   const queryClient = useQueryClient()
 
-  const userIds = useMemo(
-    () =>
-      [...new Set(subscriptionIds.map(extractUserId).filter(Boolean))] as string[],
-    [subscriptionIds],
-  )
+  const userIds = useMemo(() => [...new Set(ids)], [ids])
 
   const { data } = useQuery({
     queryKey: adminKeys.userEmail(`batch:${userIds.join(',')}`),

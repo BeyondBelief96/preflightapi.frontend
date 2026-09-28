@@ -1,5 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
+import { requireAuth } from './auth'
+import { apiFetchOnBehalfOf } from './gateway/client'
 import { env } from '@/env'
 import { API_BASE_PATH } from '@/lib/api-metadata'
 
@@ -17,7 +19,8 @@ const proxyInputSchema = z.object({
     .string()
     .min(1)
     .regex(/^\/api\/v\d+\//, 'Path must start with /api/v{n}/'),
-  apiKey: z.string().min(1),
+  /** Optional: without a key the request is made as the signed-in user. */
+  apiKey: z.string().optional(),
   queryParams: z.record(z.string(), z.string()).optional(),
   body: z.string().optional(),
 })
@@ -25,7 +28,7 @@ const proxyInputSchema = z.object({
 type ProxyInput = {
   method: string
   path: string
-  apiKey: string
+  apiKey?: string
   queryParams?: Record<string, string>
   body?: string
 }
@@ -43,46 +46,43 @@ export const proxyApiRequest = createServerFn({ method: 'POST' })
       throw new Error('Invalid path: traversal not allowed')
     }
 
-    // Security: reject if no API key provided
-    if (!data.apiKey.trim()) {
-      throw new Error('API key is required')
-    }
-
-    const gatewayUrl = env.VITE_APIM_GATEWAY_URL
+    const gatewayUrl = env.GATEWAY_URL
     if (!gatewayUrl) {
-      throw new Error('VITE_APIM_GATEWAY_URL is not configured')
+      throw new Error('GATEWAY_URL is not configured')
     }
 
-    // Build URL with query params
-    let url = `${gatewayUrl}${data.path}`
+    // Build path with query params
+    let pathAndQuery = data.path
     if (data.queryParams && Object.keys(data.queryParams).length > 0) {
       const qs = new URLSearchParams(data.queryParams).toString()
-      url += `?${qs}`
+      pathAndQuery += `?${qs}`
     }
 
-    const headers: Record<string, string> = {
-      'Ocp-Apim-Subscription-Key': data.apiKey,
-    }
-
+    const headers: Record<string, string> = {}
     if (data.body) {
       headers['Content-Type'] = 'application/json'
     }
 
+    const apiKey = data.apiKey?.trim()
     const start = performance.now()
 
-    const controller = new AbortController()
-    const fetchTimer = setTimeout(() => controller.abort(), 15_000)
-
     let response: Response
-    try {
-      response = await fetch(url, {
+    if (apiKey) {
+      // Exactly what an API client would send
+      response = await fetch(new URL(pathAndQuery, gatewayUrl), {
+        method: data.method,
+        headers: { ...headers, 'X-API-Key': apiKey },
+        body: data.body ?? undefined,
+        signal: AbortSignal.timeout(15_000),
+      })
+    } else {
+      // No key: call as the signed-in user (counts against their quota)
+      const userId = await requireAuth()
+      response = await apiFetchOnBehalfOf(userId, pathAndQuery, {
         method: data.method,
         headers,
         body: data.body ?? undefined,
-        signal: controller.signal,
       })
-    } finally {
-      clearTimeout(fetchTimer)
     }
 
     const durationMs = Math.round(performance.now() - start)

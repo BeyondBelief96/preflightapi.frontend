@@ -1,11 +1,11 @@
 import { ArrowDownToLine, Clock, Gauge } from 'lucide-react'
-import type { ApimUsageReport } from '@/types/plans'
+import type { UsageReport } from '@/types/plans'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { formatBytes, formatMs } from '@/lib/format'
 
 interface PerformanceStatsCardProps {
-  report: ApimUsageReport | undefined
+  report: UsageReport | undefined
   isLoading: boolean
 }
 

@@ -8,7 +8,7 @@ export default defineEventHandler((event) => {
     'inline; filename="preflightapi_openapi.json"',
   )
 
-  const gatewayUrl = process.env.VITE_APIM_GATEWAY_URL
+  const gatewayUrl = process.env.VITE_API_GATEWAY_URL
   if (gatewayUrl && spec.servers?.[0]) {
     return { ...spec, servers: [{ url: gatewayUrl }] }
   }

@@ -13,14 +13,23 @@ import {
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 const HOURS = Array.from({ length: 24 }, (_, i) => i)
 
-function buildGrid(
-  cells: Array<ActivityHeatmapCell>,
-): { grid: Array<Array<number>>; max: number } {
+function buildGrid(cells: Array<ActivityHeatmapCell>): {
+  grid: Array<Array<number>>
+  max: number
+} {
   // 7 rows (days) x 24 columns (hours)
-  const grid = Array.from({ length: 7 }, () => Array(24).fill(0) as Array<number>)
+  const grid = Array.from(
+    { length: 7 },
+    () => Array(24).fill(0) as Array<number>,
+  )
   let max = 0
   for (const cell of cells) {
-    if (cell.dayOfWeek >= 0 && cell.dayOfWeek < 7 && cell.hour >= 0 && cell.hour < 24) {
+    if (
+      cell.dayOfWeek >= 0 &&
+      cell.dayOfWeek < 7 &&
+      cell.hour >= 0 &&
+      cell.hour < 24
+    ) {
       grid[cell.dayOfWeek][cell.hour] = cell.calls
       if (cell.calls > max) max = cell.calls
     }
@@ -37,15 +46,10 @@ function intensityColor(value: number, max: number): string {
   return 'bg-blue-500/25'
 }
 
-export function ActivityHeatmap({
-  subscriptionId,
-}: {
-  subscriptionId: string
-}) {
+export function ActivityHeatmap({ userId }: { userId: string }) {
   const { data, isLoading } = useQuery({
-    queryKey: adminKeys.userActivityHeatmap(subscriptionId),
-    queryFn: () =>
-      getAdminUserActivityHeatmap({ data: { subscriptionId } }),
+    queryKey: adminKeys.userActivityHeatmap(userId),
+    queryFn: () => getAdminUserActivityHeatmap({ data: { userId } }),
     staleTime: 60_000,
   })
 
@@ -70,7 +74,10 @@ export function ActivityHeatmap({
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <div className="inline-grid gap-px" style={{ gridTemplateColumns: `48px repeat(24, 1fr)` }}>
+            <div
+              className="inline-grid gap-px"
+              style={{ gridTemplateColumns: `48px repeat(24, 1fr)` }}
+            >
               {/* Hour labels */}
               <div />
               {HOURS.map((h) => (
@@ -99,7 +106,8 @@ export function ActivityHeatmap({
                         />
                       </TooltipTrigger>
                       <TooltipContent>
-                        {day} {hour}:00 — {grid[dayIdx][hour].toLocaleString()} calls
+                        {day} {hour}:00 — {grid[dayIdx][hour].toLocaleString()}{' '}
+                        calls
                       </TooltipContent>
                     </Tooltip>
                   ))}

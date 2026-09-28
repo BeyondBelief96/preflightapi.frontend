@@ -1,11 +1,11 @@
 import type {
-  ApimUsageReport,
   DailyUsagePoint,
   EndpointBreakdownItem,
   ErrorCodeBreakdownItem,
   RateLimitAccessStats,
   RecentError,
   ServiceHealthStats,
+  UsageReport,
 } from '@/types/plans'
 import { DailyTrendChart } from '@/components/dashboard/analytics/daily-trend-chart'
 import { EndpointBreakdownTable } from '@/components/dashboard/analytics/endpoint-breakdown-table'
@@ -17,7 +17,7 @@ import { PerformanceStatsCard } from '@/components/dashboard/analytics/performan
 import { ServiceHealthCard } from '@/components/dashboard/analytics/service-health-card'
 
 interface UserAnalyticsData {
-  usageReport: ApimUsageReport
+  usageReport: UsageReport
   dailyTrend: Array<DailyUsagePoint>
   endpoints: Array<EndpointBreakdownItem>
   errors: Array<ErrorCodeBreakdownItem>
@@ -54,10 +54,7 @@ export function UserAnalyticsSection({
           isLoading={isLoading}
           isPaid={true}
         />
-        <ServiceHealthCard
-          data={data?.serviceHealth}
-          isLoading={isLoading}
-        />
+        <ServiceHealthCard data={data?.serviceHealth} isLoading={isLoading} />
       </div>
 
       <DailyTrendChart data={data?.dailyTrend} isLoading={isLoading} />

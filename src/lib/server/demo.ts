@@ -1,6 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
 import { createLogger } from './logger'
+import { apiFetchOnBehalfOf } from './gateway/client'
 import type {
   AirportDto,
   CommunicationFrequencyDto,
@@ -16,7 +17,7 @@ import { API_BASE_PATH } from '@/lib/api-metadata'
 const logger = createLogger('demo')
 
 // --- In-memory response cache ---
-// Prevents redundant APIM calls when many users request the same airport.
+// Prevents redundant API calls when many users request the same airport.
 // Static data (airports, runways, frequencies) cached 1 hour.
 // Weather (METARs) cached 2 minutes — fresh enough for a demo.
 
@@ -49,7 +50,7 @@ function cleanupCache() {
   }
 }
 
-// --- Rate limiting (30 req/min global to APIM, not from cache) ---
+// --- Rate limiting (30 req/min global to the API, not from cache) ---
 const WINDOW_MS = 60 * 1000
 const MAX_GLOBAL = 30
 let globalAttempts: Array<number> = []
@@ -82,14 +83,8 @@ async function demoFetch<T>(
   ttl: number,
   options?: DemoFetchOptions,
 ): Promise<{ data: T; durationMs: number }> {
-  if (!env.DEMO_API_KEY) {
+  if (!env.GATEWAY_URL || !env.GATEWAY_INTERNAL_SECRET) {
     throw new Error('Demo API is not configured')
-  }
-  const apiKey = env.DEMO_API_KEY
-
-  const gatewayUrl = env.VITE_APIM_GATEWAY_URL
-  if (!gatewayUrl) {
-    throw new Error('Gateway URL is not configured')
   }
 
   // Check cache first
@@ -100,7 +95,7 @@ async function demoFetch<T>(
     return { data: cached.data, durationMs: cached.durationMs }
   }
 
-  // Rate limit only applies to actual APIM calls (cache hits bypass it)
+  // Rate limit only applies to actual API calls (cache hits bypass it)
   if (isRateLimited()) {
     // If we have stale data, serve it rather than erroring
     if (cached) {
@@ -120,22 +115,24 @@ async function demoFetch<T>(
   const isPost = method === 'POST'
 
   const fetchPromise = (async () => {
-    const url = `${gatewayUrl}${API_BASE_PATH}${path}`
     const start = performance.now()
 
-    const headers: Record<string, string> = {
-      'Ocp-Apim-Subscription-Key': apiKey,
-    }
+    const headers: Record<string, string> = {}
     if (isPost) {
       headers['Content-Type'] = 'application/json'
     }
 
-    const res = await fetch(url, {
-      method,
-      headers,
-      body: isPost ? JSON.stringify(options?.body) : undefined,
-      signal: AbortSignal.timeout(isPost ? 30_000 : 10_000),
-    })
+    // The demo user is Commercial Pilot in the gateway and excluded from analytics
+    const res = await apiFetchOnBehalfOf(
+      env.DEMO_USER_ID,
+      `${API_BASE_PATH}${path}`,
+      {
+        method,
+        headers,
+        body: isPost ? JSON.stringify(options?.body) : undefined,
+        timeoutMs: isPost ? 30_000 : 10_000,
+      },
+    )
 
     const durationMs = Math.round(performance.now() - start)
 

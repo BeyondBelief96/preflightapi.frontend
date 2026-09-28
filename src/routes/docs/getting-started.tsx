@@ -62,7 +62,7 @@ function getMetarExamples(
 ): Record<LanguageId, { code: string; highlight: string }> {
   return {
     curl: {
-      code: `curl -H "Ocp-Apim-Subscription-Key: YOUR_API_KEY" \\
+      code: `curl -H "X-API-Key: YOUR_API_KEY" \\
   "${baseUrl}/metars/KJFK"`,
       highlight: 'bash',
     },
@@ -71,7 +71,7 @@ function getMetarExamples(
   '${baseUrl}/metars/KJFK',
   {
     headers: {
-      'Ocp-Apim-Subscription-Key': process.env.PREFLIGHT_API_KEY!,
+      'X-API-Key': process.env.PREFLIGHT_API_KEY!,
     },
   },
 )
@@ -85,7 +85,7 @@ console.log(metar.flightCategory) // "VFR"`,
 
 response = requests.get(
     "${baseUrl}/metars/KJFK",
-    headers={"Ocp-Apim-Subscription-Key": "YOUR_API_KEY"},
+    headers={"X-API-Key": "YOUR_API_KEY"},
 )
 
 metar = response.json()
@@ -102,7 +102,7 @@ HttpClient client = HttpClient.newHttpClient();
 
 HttpRequest request = HttpRequest.newBuilder()
     .uri(URI.create("${baseUrl}/metars/KJFK"))
-    .header("Ocp-Apim-Subscription-Key", "YOUR_API_KEY")
+    .header("X-API-Key", "YOUR_API_KEY")
     .GET()
     .build();
 
@@ -123,7 +123,7 @@ import (
 
 func main() {
     req, _ := http.NewRequest("GET", "${baseUrl}/metars/KJFK", nil)
-    req.Header.Set("Ocp-Apim-Subscription-Key", "YOUR_API_KEY")
+    req.Header.Set("X-API-Key", "YOUR_API_KEY")
 
     resp, _ := http.DefaultClient.Do(req)
     defer resp.Body.Close()
@@ -137,7 +137,7 @@ func main() {
 
 var client = new HttpClient();
 client.DefaultRequestHeaders.Add(
-    "Ocp-Apim-Subscription-Key", "YOUR_API_KEY"
+    "X-API-Key", "YOUR_API_KEY"
 );
 
 var response = await client.GetAsync("${baseUrl}/metars/KJFK");
@@ -153,7 +153,7 @@ curl_setopt($ch, CURLOPT_URL, "${baseUrl}/metars/KJFK");
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    "Ocp-Apim-Subscription-Key: YOUR_API_KEY",
+    "X-API-Key: YOUR_API_KEY",
 ]);
 
 $response = curl_exec($ch);
@@ -276,11 +276,10 @@ function GettingStartedDocs() {
 
       {/* Aviation Glossary */}
       <Callout variant="note" title="New to aviation data?">
-        <strong>METAR</strong> — Hourly weather observation for an airport (wind,
-        visibility, clouds, temp).{' '}
-        <strong>TAF</strong> — Terminal forecast covering the next 24-30 hours.{' '}
-        <strong>ICAO code</strong> — 4-letter airport identifier (e.g., KJFK for
-        JFK International).{' '}
+        <strong>METAR</strong> — Hourly weather observation for an airport
+        (wind, visibility, clouds, temp). <strong>TAF</strong> — Terminal
+        forecast covering the next 24-30 hours. <strong>ICAO code</strong> —
+        4-letter airport identifier (e.g., KJFK for JFK International).{' '}
         <strong>NOTAM</strong> — Notice to Air Missions: alerts about closed
         runways, airspace restrictions, etc.
       </Callout>
@@ -304,8 +303,10 @@ function GettingStartedDocs() {
           <Link to="/dashboard/keys" className="text-accent hover:underline">
             API Keys
           </Link>{' '}
-          page and copy either your primary or secondary key. Both work
-          identically — having two lets you rotate without downtime.
+          page and create a key. It starts with <code>pf_live_</code> and is{' '}
+          <strong className="text-foreground">shown only once</strong>, so copy
+          it somewhere safe right away. You can have up to two active keys,
+          which lets you rotate without downtime.
         </p>
         <div className="rounded-lg border bg-muted/30 p-4">
           <p className="text-sm text-muted-foreground">
@@ -326,8 +327,8 @@ function GettingStartedDocs() {
       <section className="space-y-4">
         <h2 className="text-2xl font-semibold">2. Make Your First Request</h2>
         <p className="text-muted-foreground">
-          Include your API key in the <code>Ocp-Apim-Subscription-Key</code>{' '}
-          header. Let's fetch the current METAR for JFK International:
+          Include your API key in the <code>X-API-Key</code> header. Let's fetch
+          the current METAR for JFK International:
         </p>
 
         <LanguageTabs
@@ -388,8 +389,8 @@ function GettingStartedDocs() {
 
         <Callout variant="tip">
           Single-resource endpoints return the object directly. Collection
-          endpoints use a paginated wrapper with{' '}
-          <code>data</code> and <code>pagination</code> fields. See the{' '}
+          endpoints use a paginated wrapper with <code>data</code> and{' '}
+          <code>pagination</code> fields. See the{' '}
           <Link to="/docs" className="text-accent hover:underline">
             API overview
           </Link>{' '}
@@ -428,9 +429,7 @@ function GettingStartedDocs() {
                   <Plane className="h-4 w-4" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-semibold">
-                    Airports & Airspace
-                  </h3>
+                  <h3 className="text-sm font-semibold">Airports & Airspace</h3>
                   <p className="mt-0.5 text-xs text-muted-foreground">
                     19,600+ airports, airspace boundaries, NOTAMs
                   </p>
@@ -445,9 +444,7 @@ function GettingStartedDocs() {
                   <Calculator className="h-4 w-4" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-semibold">
-                    E6B Flight Computer
-                  </h3>
+                  <h3 className="text-sm font-semibold">E6B Flight Computer</h3>
                   <p className="mt-0.5 text-xs text-muted-foreground">
                     Crosswind, density altitude, wind triangle, TAS
                   </p>

@@ -92,9 +92,7 @@ export function ErrorCorrelationTable() {
                   <TableHead>Time</TableHead>
                   <TableHead>Endpoint</TableHead>
                   <TableHead className="w-[70px]">Code</TableHead>
-                  <TableHead className="w-[100px] text-right">
-                    Users
-                  </TableHead>
+                  <TableHead className="w-[100px] text-right">Users</TableHead>
                   <TableHead className="hidden w-[100px] text-right md:table-cell">
                     Errors
                   </TableHead>
@@ -113,9 +111,9 @@ export function ErrorCorrelationTable() {
                       <Badge variant="destructive">{item.errorCode}</Badge>
                     </TableCell>
                     <TableCell
-                      className={`tabular-nums text-right text-sm font-medium ${affectedColor(item.affectedSubscriptions)}`}
+                      className={`tabular-nums text-right text-sm font-medium ${affectedColor(item.affectedUsers)}`}
                     >
-                      {item.affectedSubscriptions}
+                      {item.affectedUsers}
                     </TableCell>
                     <TableCell className="hidden tabular-nums text-right text-sm md:table-cell">
                       {item.totalErrors.toLocaleString()}

@@ -1,16 +1,12 @@
 import { describe, expect, it, vi } from 'vitest'
 
 import { getPriceIdForPlan, planIdFromPriceId } from '../stripe/utils'
-import { getApimProductIds, planIdFromProductId } from '../apim/products'
 
 // Mock the env module before importing anything that uses it
 vi.mock('@/env', () => ({
   env: {
     STRIPE_PRIVATE_PRICE_ID: 'price_private_test',
     STRIPE_COMMERCIAL_PRICE_ID: 'price_commercial_test',
-    APIM_STUDENT_PRODUCT_ID: 'student-pilot',
-    APIM_PRIVATE_PRODUCT_ID: 'private-pilot',
-    APIM_COMMERCIAL_PRODUCT_ID: 'commercial-pilot',
   },
 }))
 
@@ -47,34 +43,5 @@ describe('getPriceIdForPlan', () => {
 
   it('returns undefined for unknown plan IDs', () => {
     expect(getPriceIdForPlan('enterprise')).toBeUndefined()
-  })
-})
-
-describe('planIdFromProductId', () => {
-  it('maps student-pilot → student', () => {
-    expect(planIdFromProductId('student-pilot')).toBe('student')
-  })
-
-  it('maps private-pilot → private', () => {
-    expect(planIdFromProductId('private-pilot')).toBe('private')
-  })
-
-  it('maps commercial-pilot → commercial', () => {
-    expect(planIdFromProductId('commercial-pilot')).toBe('commercial')
-  })
-
-  it('falls back to "student" for unknown product IDs', () => {
-    expect(planIdFromProductId('unknown-product')).toBe('student')
-  })
-})
-
-describe('getApimProductIds', () => {
-  it('returns all product IDs', () => {
-    const ids = getApimProductIds()
-    expect(ids).toEqual({
-      student: 'student-pilot',
-      private: 'private-pilot',
-      commercial: 'commercial-pilot',
-    })
   })
 })

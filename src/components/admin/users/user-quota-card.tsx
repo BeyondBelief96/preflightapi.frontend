@@ -2,9 +2,8 @@ import type { AdminUserDetail } from '@/lib/server/admin/users'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 
-function formatDate(epoch: number): string {
-  if (!epoch) return 'Account creation'
-  return new Date(epoch * 1000).toLocaleDateString('en-US', {
+function formatDate(iso: string): string {
+  return new Date(iso).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
@@ -41,9 +40,7 @@ export function UserQuotaCard({
           <CardTitle className="text-sm font-medium">Quota Usage</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground">
-            No active subscription or Log Analytics not configured
-          </p>
+          <p className="text-sm text-muted-foreground">No API account yet</p>
         </CardContent>
       </Card>
     )
@@ -104,7 +101,7 @@ export function UserQuotaCard({
           )}
         </div>
         <div className="text-xs text-muted-foreground">
-          Counter reset: {formatDate(data.resetEpoch)}
+          Period: {formatDate(data.periodStart)} – {formatDate(data.periodEnd)}
         </div>
       </CardContent>
     </Card>

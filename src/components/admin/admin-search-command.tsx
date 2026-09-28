@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
-import { Globe, Search, User, Wifi } from 'lucide-react'
+import { KeyRound, Search, User, Wifi } from 'lucide-react'
 import type { AdminSearchResult } from '@/lib/server/admin/search'
 import { adminKeys } from '@/lib/server/queries'
 import { adminGlobalSearch } from '@/lib/server/admin/search'
@@ -16,13 +16,13 @@ import {
 
 const ICONS: Record<AdminSearchResult['type'], typeof User> = {
   user: User,
-  subscription: Globe,
+  'api-key': KeyRound,
   ip: Wifi,
 }
 
 const GROUP_LABELS: Record<AdminSearchResult['type'], string> = {
   user: 'Users',
-  subscription: 'Subscriptions',
+  'api-key': 'API Keys',
   ip: 'IP Addresses',
 }
 
@@ -88,9 +88,11 @@ export function AdminSearchCommand() {
         onValueChange={setQuery}
       />
       <CommandList>
-        {debouncedQuery.length > 0 && !isLoading && (results?.length ?? 0) === 0 && (
-          <CommandEmpty>No results found.</CommandEmpty>
-        )}
+        {debouncedQuery.length > 0 &&
+          !isLoading &&
+          (results?.length ?? 0) === 0 && (
+            <CommandEmpty>No results found.</CommandEmpty>
+          )}
         {isLoading && debouncedQuery.length > 0 && (
           <div className="py-6 text-center text-sm text-muted-foreground">
             Searching...

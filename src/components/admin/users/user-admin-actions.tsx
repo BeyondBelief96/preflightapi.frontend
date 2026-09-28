@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { ArrowDownUp, RefreshCw, XCircle } from 'lucide-react'
+import type { PlanId } from '@/types/plans'
 import {
   adminCancelSubscription,
   adminChangeTier,
@@ -51,7 +52,7 @@ export function UserAdminActions({
   }
 
   const changeTier = useMutation({
-    mutationFn: (planId: string) =>
+    mutationFn: (planId: PlanId) =>
       adminChangeTier({ data: { userId, planId } }),
     onSuccess: (result) => {
       toast.success(
@@ -124,7 +125,7 @@ export function UserAdminActions({
                 <AlertDialogHeader>
                   <AlertDialogTitle>Change User Tier</AlertDialogTitle>
                   <AlertDialogDescription>
-                    This will change the user&apos;s APIM subscription scope to{' '}
+                    This will change the user&apos;s API tier to{' '}
                     <strong>
                       {TIERS.find((t) => t.value === selectedTier)?.label}
                     </strong>
@@ -134,7 +135,7 @@ export function UserAdminActions({
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
                   <AlertDialogAction
-                    onClick={() => changeTier.mutate(selectedTier)}
+                    onClick={() => changeTier.mutate(selectedTier as PlanId)}
                   >
                     Confirm Change
                   </AlertDialogAction>
@@ -157,9 +158,9 @@ export function UserAdminActions({
               <AlertDialogHeader>
                 <AlertDialogTitle>Reset Quota Counter</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This will reset the user&apos;s APIM quota counter to zero,
-                  allowing them to make API calls even if they&apos;ve exceeded
-                  their monthly limit.
+                  This will reset the user&apos;s quota counter for the current
+                  period to zero, allowing them to make API calls even if
+                  they&apos;ve exceeded their monthly limit.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -186,7 +187,7 @@ export function UserAdminActions({
                 <AlertDialogTitle>Cancel Subscription</AlertDialogTitle>
                 <AlertDialogDescription>
                   This will immediately cancel the user&apos;s Stripe
-                  subscription and downgrade their APIM access to Student Pilot.
+                  subscription and downgrade their API access to Student Pilot.
                   This action cannot be undone.
                 </AlertDialogDescription>
               </AlertDialogHeader>

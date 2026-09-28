@@ -31,10 +31,9 @@ function deriveOverallStatus(
 }
 
 async function checkGateway(): Promise<ServiceHealthStatus> {
-  const gatewayUrl = env.VITE_APIM_GATEWAY_URL
-  const statusPath = env.APIM_HEALTH_CHECK_PATH
+  const gatewayUrl = env.GATEWAY_URL
 
-  if (!gatewayUrl || !statusPath) {
+  if (!gatewayUrl) {
     return {
       name: 'API Gateway',
       status: 'operational',
@@ -43,7 +42,7 @@ async function checkGateway(): Promise<ServiceHealthStatus> {
     }
   }
 
-  const url = `${gatewayUrl}${statusPath}`
+  const url = new URL('/healthz', gatewayUrl).toString()
   const start = performance.now()
 
   try {
