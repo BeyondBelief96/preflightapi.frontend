@@ -31,6 +31,8 @@ export const env = createEnv({
 
     /** Gateway user ID for marketing-demo calls; excluded from analytics. Must match the gateway's DEMO_USER_ID. */
     DEMO_USER_ID: z.string().optional().default('demo'),
+    /** Set to "true" on staging to allow sk_test_ keys in a production build. */
+    ALLOW_STRIPE_TEST_KEYS: z.string().optional(),
 
     PREFLIGHT_API_BASE_URL: z.url().optional(),
     PREFLIGHT_API_GATEWAY_SECRET: z.string().optional(),
