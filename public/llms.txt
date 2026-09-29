@@ -38,7 +38,7 @@ Every data response includes currency headers (`X-Data-Currency`, `X-Data-Last-U
 
 ## Pricing
 
-- [Pricing](https://preflightapi.io/pricing): Three tiers — Student Pilot (free, 5K calls/mo), Private Pilot ($14.99/mo, 150K calls/mo), Commercial Pilot ($49.99/mo, 750K calls/mo)
+- [Pricing](https://preflightapi.io/pricing): Three tiers — Student Pilot (free, 5K calls/mo), Private Pilot ($19.99/mo, 150K calls/mo), Commercial Pilot ($69.99/mo, 750K calls/mo)
 
 ## Optional
 

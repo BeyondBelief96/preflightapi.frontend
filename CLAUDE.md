@@ -104,8 +104,8 @@ Three tiers defined in `src/lib/constants.ts`. Limits mirror the gateway's tier 
 | Tier             | Plan ID      | Default Price | Calls/Month | Rate Limit  |
 | ---------------- | ------------ | ------------- | ----------- | ----------- |
 | Student Pilot    | `student`    | Free          | 5,000       | 10 req/min  |
-| Private Pilot    | `private`    | $14.99/mo     | 150,000     | 60 req/min  |
-| Commercial Pilot | `commercial` | $49.99/mo     | 750,000     | 300 req/min |
+| Private Pilot    | `private`    | $19.99/mo     | 150,000     | 60 req/min  |
+| Commercial Pilot | `commercial` | $69.99/mo     | 750,000     | 300 req/min |
 
 The gateway owns tiers, keys and quotas. The frontend changes them only through the gateway (`/account/*` for the signed-in user, `/admin/*` with the internal secret) and reads usage analytics straight from Postgres. API keys (`X-API-Key: pf_live_…`) are shown only once at creation; users can have 2 active keys.
 

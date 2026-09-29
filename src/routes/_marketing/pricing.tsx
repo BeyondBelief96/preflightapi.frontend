@@ -14,7 +14,7 @@ export const Route = createFileRoute('/_marketing/pricing')({
     createPageHead({
       title: 'Pricing',
       description:
-        'Free tier with 5,000 API calls/month. Paid plans from $14.99/mo for aviation weather, airports, NAVAIDs, NOTAMs, airspace, obstacles, and flight planning endpoints.',
+        'Free tier with 5,000 API calls/month. Paid plans from $19.99/mo for aviation weather, airports, NAVAIDs, NOTAMs, airspace, obstacles, and flight planning endpoints.',
       path: '/pricing',
     }),
   component: PricingPage,

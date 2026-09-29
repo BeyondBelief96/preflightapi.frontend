@@ -276,8 +276,8 @@ Three subscription tiers. Limits match what the API gateway enforces; prices are
 | Tier             | Plan ID      | Default Price | Calls/Month | Rate Limit  |
 | ---------------- | ------------ | ------------- | ----------- | ----------- |
 | Student Pilot    | `student`    | Free          | 5,000       | 10 req/min  |
-| Private Pilot    | `private`    | $14.99/mo     | 150,000     | 60 req/min  |
-| Commercial Pilot | `commercial` | $49.99/mo     | 750,000     | 300 req/min |
+| Private Pilot    | `private`    | $19.99/mo     | 150,000     | 60 req/min  |
+| Commercial Pilot | `commercial` | $69.99/mo     | 750,000     | 300 req/min |
 
 - `ENDPOINT_ACCESS` in `src/lib/constants.ts` maps each API endpoint to its minimum required tier
 - UI pages use the `usePlans()` hook for dynamic plan data — avoid hardcoding tier names or prices
